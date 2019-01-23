@@ -26,12 +26,6 @@ class App extends Component {
   }
 
   deleteTodo = (id) => {
-    // let prevTodos = [...this.state.todos]
-    // let todoIndex = this.state.todos.findIndex((todo) => todo.id === id)
-
-    // this.setState({
-    //   todos: [...prevTodos.slice(0, todoIndex), ...prevTodos.slice(todoIndex)] 
-    // })
     this.setState({
       todos: this.state.todos.filter((todo) => todo.id !== id)
     })
@@ -62,6 +56,14 @@ class App extends Component {
     this.titleInput.value = ''
   }
 
+  get incompleteTodos() {
+    return this.state.todos.filter(todo => todo.done === false)
+  }
+
+  get completedTodos() {
+    return this.state.todos.filter(todo => todo.done)
+  }
+
   setError = (err) => {
     this.setState({ 
       error: err
@@ -73,12 +75,22 @@ class App extends Component {
       <React.Fragment>
         { this.state.error.length > 0 && (<p className="Error" onClick={(e) => { this.setError("") }}>{ this.state.error }</p>) }
         <header className="App-header">
-          <h1>To do</h1>
+          <h1 className="App-heading">To do</h1>
         </header>
         <main>
-          <TodoList todos={ this.state.todos } 
+          <h2 className="App-heading">Incomplete</h2>
+          <TodoList todos={ this.incompleteTodos } 
             onDeleteTodo={ this.deleteTodo }
             onToggleDone={ this.toggleDone }></TodoList>
+
+          { this.completedTodos.length > 0 && (
+            <React.Fragment>
+            <h2 className="App-heading">Completed</h2>
+            <TodoList todos={ this.completedTodos } 
+              onDeleteTodo={ this.deleteTodo }
+              onToggleDone={ this.toggleDone }></TodoList>
+            </React.Fragment>
+          )}
         </main>
         <footer>
           <form className="App-form" onSubmit={ this.handleSubmit }>

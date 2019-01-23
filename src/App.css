@@ -1,3 +1,7 @@
+html {
+  font-size: 1.2vw;
+}
+
 .App {
   --space: 1.25rem;
   --half-space: calc(var(--space) / 2);
@@ -10,7 +14,8 @@
   --border: 3px;
   --border-thin: 1px;
   --size-1: 1rem;
-  --size-2: 2.42rem;
+  --size-2: 1.25rem;
+  --size-3: 1.56rem;
 
   color: var(--black);
   background: var(--white);
@@ -19,12 +24,12 @@
 }
 
 .App-header {
-  padding: var(--space);
   border-bottom: var(--border-thin) solid var(--light-gray);
 }
 
-.App-header > * {
+.App-heading {
   margin: 0;
+  padding: var(--space);
 }
 
 .App-form {
@@ -44,7 +49,7 @@
 
 .App-form input {
   margin: 0;
-  padding: 0 var(--half-space);
+  padding: var(--half-space);
   flex: 1;
   border: none;
   border-bottom: var(--border) solid var(--primary);
@@ -56,6 +61,7 @@
   background: var(--primary);
   color: var(--white);
   padding: var(--half-space);
+  font-size: var(--size-1);
 }
 
 .App-form button {
@@ -70,9 +76,9 @@
 
 .Todo {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   margin: var(--space);
-  padding: 0 0 0 var(--half-space);
+  font-size: var(--size-2);
 }
 
 .Todo:hover {
@@ -91,6 +97,7 @@
 .Todo-title {
   flex: 1;
   cursor: pointer;
+  padding: var(--half-space);
 }
 
 .Todo-placeholder {
