@@ -1,8 +1,4 @@
-html {
-  font-size: 1.2vw;
-}
-
-.App {
+:root {
   --space: 1.25rem;
   --half-space: calc(var(--space) / 2);
   --black: hsl(0, 0%, 3%);
@@ -10,13 +6,22 @@ html {
   --gray: hsl(0, 0%, 63%);
   --light-gray: hsl(0, 0%, 83%);
   --red: hsl(0, 72%, 49%);
+  --green: hsl(146, 72%, 42%);
   --primary: hsl(208, 76%, 61%);
   --border: 3px;
   --border-thin: 1px;
+  --font-size: 2.1vmax;
   --size-1: 1rem;
   --size-2: 1.25rem;
   --size-3: 1.56rem;
 
+}
+
+html {
+  font-size: var(--font-size);
+}
+
+.App {
   color: var(--black);
   background: var(--white);
   display: flex;
@@ -108,7 +113,25 @@ html {
   color: var(--gray);
 }
 
-.Error {
-  margin: var(--space);
-  color: var(--red);
+.App-notification {
+  --color: var(--white);
+  --background: var(--black);
+  margin: 0;
+  padding: var(--space);
+  color: var(--color);
+  background: var(--background);
+}
+
+.App-notification.error {
+  --background: var(--red);
+}
+
+.App-notification.success {
+  --background: var(--green);
+}
+
+@media (min-device-aspect-ratio: 1/1) and (orientation: landscape) {
+  :root {
+    --font-size: 1.2vw;
+  }
 }

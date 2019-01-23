@@ -7,7 +7,7 @@ class App extends Component {
     super(props)
     this.state = {
       todos: [],
-      error: ""
+      notification: {}
     }
   }
 
@@ -29,15 +29,15 @@ class App extends Component {
     this.setState({
       todos: this.state.todos.filter((todo) => todo.id !== id)
     })
+    this.setNotification({ msg: "Deleted successfully", class: "success" })
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
-    this.setError("")
     // Validate and sanitize
     let title = this.titleInput.value.trim()
     if (title.length <= 0) {
-      this.setError("Todo can not be blank")
+      this.setNotification({ msg: "Todo can not be blank", class: "error" })
       return false
     }
     
@@ -54,6 +54,7 @@ class App extends Component {
     
     // Clear input
     this.titleInput.value = ''
+    this.clearNotification()
   }
 
   get incompleteTodos() {
@@ -64,16 +65,18 @@ class App extends Component {
     return this.state.todos.filter(todo => todo.done)
   }
 
-  setError = (err) => {
+  setNotification = (notification) => {
     this.setState({ 
-      error: err
+      notification
     })
   }
+
+  clearNotification = (e) => this.setState({ notification: {} })
 
   render() {
     return (
       <React.Fragment>
-        { this.state.error.length > 0 && (<p className="Error" onClick={(e) => { this.setError("") }}>{ this.state.error }</p>) }
+        { Object.keys(this.state.notification).length > 0 && (<p className={ "App-notification " + (this.state.notification.class ? this.state.notification.class : '') } onClick={ this.clearNotification }>{ this.state.notification.msg }</p>) }
         <header className="App-header">
           <h1 className="App-heading">To do</h1>
         </header>
