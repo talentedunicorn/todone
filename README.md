@@ -7,3 +7,4 @@ Running the app requires `yarn` or `npm` (in which case replace the `yarn` to `n
 yarn install
 yarn
 ```
+![screenshot](screenshot.png)
