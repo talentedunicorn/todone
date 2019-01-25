@@ -10,9 +10,19 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --coverage",
+    "test:watch": "react-scripts test --coverage --watch",
     "eject": "react-scripts eject",
     "deploy": "npm run build && cd ./build && now --public --name todolist"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!**/data.js",
+      "!src/index.js",
+      "!src/serviceWorker.js",
+      "!**/setupTests.js"
+    ]
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -22,5 +32,10 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.8.0",
+    "react-test-renderer": "^16.7.0"
+  }
 }

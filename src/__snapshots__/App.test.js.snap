@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App.js renders without crashing 1`] = `
+Array [
+  <header
+    className="App-header"
+  >
+    <h1
+      className="App-heading"
+    >
+      To do
+    </h1>
+  </header>,
+  <main>
+    <h2
+      className="App-heading"
+    >
+      Incomplete
+    </h2>
+    <p
+      className="Todo-placeholder"
+    >
+      No items found, add an item.
+    </p>
+  </main>,
+  <footer>
+    <form
+      className="App-form"
+      onSubmit={[Function]}
+    >
+      <label>
+        <span>
+          title
+        </span>
+        <input
+          name="title"
+          onChange={[Function]}
+          type="text"
+        />
+      </label>
+      <button>
+        Add
+      </button>
+    </form>
+  </footer>,
+]
+`;

@@ -7,7 +7,8 @@ class App extends Component {
     super(props)
     this.state = {
       todos: [],
-      notification: {}
+      notification: {},
+      todo: ""
     }
   }
 
@@ -16,7 +17,6 @@ class App extends Component {
     this.setState({
       todos: prevTodos.map(todo => {
         if (todo.id === id) {
-          todo.id = `todo_${new Date().getTime()}`
           todo.done = !todo.done
         }
 
@@ -26,8 +26,9 @@ class App extends Component {
   }
 
   deleteTodo = (id) => {
+    const prevTodos = [...this.state.todos]
     this.setState({
-      todos: this.state.todos.filter((todo) => todo.id !== id)
+      todos: prevTodos.filter((todo) => todo.id !== id)
     })
     this.setNotification({ msg: "Deleted successfully", class: "success" })
   }
@@ -35,7 +36,7 @@ class App extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     // Validate and sanitize
-    let title = this.titleInput.value.trim()
+    let title = this.state.todo.trim()
     if (title.length <= 0) {
       this.setNotification({ msg: "Todo can not be blank", class: "error" })
       return false
@@ -53,9 +54,10 @@ class App extends Component {
     })
     
     // Clear input
-    this.titleInput.value = ''
     this.clearNotification()
   }
+  
+  handleInputChange = (e) => this.setState({ todo: e.target.value })
 
   get incompleteTodos() {
     return this.state.todos.filter(todo => todo.done === false)
@@ -99,7 +101,7 @@ class App extends Component {
           <form className="App-form" onSubmit={ this.handleSubmit }>
             <label>
               <span>title</span>
-              <input type="text" name="title" ref={e => this.titleInput = e }/>
+              <input type="text" name="title" onChange={ this.handleInputChange } />
             </label>
             <button>Add</button>
           </form>
