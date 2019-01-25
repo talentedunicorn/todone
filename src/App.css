@@ -10,11 +10,10 @@
   --primary: hsl(208, 76%, 61%);
   --border: 3px;
   --border-thin: 1px;
-  --font-size: 2.1vmax;
+  --font-size: 2.1vh;
   --size-1: 1rem;
   --size-2: 1.25rem;
   --size-3: 1.56rem;
-
 }
 
 html {
@@ -58,6 +57,7 @@ html {
   flex: 1;
   border: none;
   border-bottom: var(--border) solid var(--primary);
+  font-size: var(--size-2);
 }
 
 .App-form button,
@@ -81,9 +81,10 @@ html {
 
 .Todo {
   display: flex;
-  align-items: stretch;
+  align-items: center;
   margin: var(--space);
   font-size: var(--size-2);
+  padding: var(--half-space);
 }
 
 .Todo:hover {
@@ -102,7 +103,6 @@ html {
 .Todo-title {
   flex: 1;
   cursor: pointer;
-  padding: var(--half-space);
 }
 
 .Todo-placeholder {

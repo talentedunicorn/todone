@@ -1,5 +1,5 @@
 {
-  "name": "soda",
+  "name": "todolist",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -11,7 +11,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "npm run build && cd ./build && now --public --name todolist"
   },
   "eslintConfig": {
     "extends": "react-app"
