@@ -4,12 +4,6 @@ import Layout from "./components/layout";
 import List from "./components/list";
 import Form from "./components/form";
 
-const fakeTodos = [
-  { id: 1, text: "Refactor todo", completed: true },
-  { id: 2, text: "Write tests", completed: false },
-  { id: 3, text: "Deploy something new", completed: false }
-];
-
 const HeaderContent = _ => (
   <>
     <button>Clear</button>
@@ -20,22 +14,39 @@ const App = _ => {
   const [todos, setTodos] = useState([]);
 
   const toggleTodo = id => {
-    console.log("toggle todo...");
+    console.log(`toggle todo ${id}`);
   };
 
-  const deleteTodo = id => console.log("Delete todo: " + id);
+  const deleteTodo = id => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
 
-  const handleAddTodo = todo => console.log(`Adding todo: ${todo}`);
+  const handleAddTodo = todo => {
+    todo.id = new Date().getTime();
+    setTodos([...todos, todo]);
+  };
+
+  const cacheTodos = _ => {
+    window.localStorage.setItem(
+      process.env.REACT_APP_DB_NAME,
+      JSON.stringify(todos)
+    );
+  };
 
   useEffect(() => {
-    // fetch todos
-    setTodos(fakeTodos);
-  }, []);
+    // fetch todos from localstorage
+    const cachedTodos = window.localStorage.getItem(
+      process.env.REACT_APP_DB_NAME
+    );
+    if (cachedTodos) {
+      setTodos(todos.concat(JSON.parse(cachedTodos)));
+    }
+  }, [todos]);
 
   return (
     <main data-testid="App">
       <Layout headerContent={<HeaderContent />}>
-        <Form addTodo={todo => handleAddTodo(todo)} />
+        <Form handleFormSubmit={todo => handleAddTodo(todo)} />
         <List
           items={todos}
           handleItemClick={id => toggleTodo(id)}
