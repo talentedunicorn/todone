@@ -2,8 +2,15 @@
 
 > Todo list app with localStorage
 
-# Install
+# Features
 
-- Clone repository
-- Run `yarn` or `npm install`
-- Run `yarn start` for development server
+- [x] Add new todo
+- [x] Set todo completed status
+- [x] Delete todo
+- [x] Clear completed todos
+- [x] Sync todo to localStorage
+- [ ] Edit todo text
+
+## Nice to have
+
+- [ ] Task categories
