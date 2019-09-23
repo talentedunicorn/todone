@@ -4,9 +4,10 @@ import Layout from "./components/layout";
 import List from "./components/list";
 import Form from "./components/form";
 
-const HeaderContent = _ => (
+const HeaderContent = ({ clear, cache }) => (
   <>
-    <button>Clear</button>
+    <button onClick={clear}>Clear completed</button>
+    <button onClick={cache}>Sync</button>
   </>
 );
 
@@ -33,6 +34,13 @@ const App = _ => {
     setTodos([...todos, todo]);
   };
 
+  const clearCompletedTodos = _ => {
+    if (completedTodos.length > 0) {
+      window.confirm("Clear all completed todos?") &&
+        setTodos(todos.filter(todo => todo.completed === false));
+    }
+  };
+
   const cacheTodos = _ => {
     window.localStorage.setItem(
       process.env.REACT_APP_DB_NAME,
@@ -46,19 +54,40 @@ const App = _ => {
       process.env.REACT_APP_DB_NAME
     );
     if (cachedTodos) {
-      setTodos(todos.concat(JSON.parse(cachedTodos)));
+      setTodos(JSON.parse(cachedTodos));
     }
-  }, [todos]);
+  }, []);
+
+  const completedTodos = todos.filter(todo => todo.completed === true);
+  const incompleteTodos = todos.filter(todo => todo.completed === false);
 
   return (
     <main data-testid="App">
-      <Layout headerContent={<HeaderContent />}>
+      <Layout
+        headerContent={
+          <HeaderContent
+            clear={clearCompletedTodos}
+            cache={_ => cacheTodos()}
+          />
+        }
+      >
         <Form handleFormSubmit={todo => handleAddTodo(todo)} />
         <List
-          items={todos}
+          items={incompleteTodos}
           handleItemClick={id => toggleTodoCompleted(id)}
           handleDelete={id => deleteTodo(id)}
         />
+
+        {completedTodos.length > 0 && (
+          <>
+            <h3>Completed</h3>
+            <List
+              items={completedTodos}
+              handleItemClick={id => toggleTodoCompleted(id)}
+              handleDelete={id => deleteTodo(id)}
+            />
+          </>
+        )}
       </Layout>
     </main>
   );

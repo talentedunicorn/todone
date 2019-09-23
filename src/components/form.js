@@ -19,7 +19,7 @@ const Form = ({ handleFormSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form data-testid="form" onSubmit={handleSubmit}>
       <input value={text} onChange={e => setText(e.target.value)} />
       <button>Add</button>
     </form>
