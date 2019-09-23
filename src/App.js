@@ -13,8 +13,15 @@ const HeaderContent = _ => (
 const App = _ => {
   const [todos, setTodos] = useState([]);
 
-  const toggleTodo = id => {
-    console.log(`toggle todo ${id}`);
+  const toggleTodoCompleted = id => {
+    setTodos(
+      todos.map(todo => {
+        if (todo.id === id) {
+          todo.completed = !todo.completed;
+        }
+        return todo;
+      })
+    );
   };
 
   const deleteTodo = id => {
@@ -49,7 +56,7 @@ const App = _ => {
         <Form handleFormSubmit={todo => handleAddTodo(todo)} />
         <List
           items={todos}
-          handleItemClick={id => toggleTodo(id)}
+          handleItemClick={id => toggleTodoCompleted(id)}
           handleDelete={id => deleteTodo(id)}
         />
       </Layout>
