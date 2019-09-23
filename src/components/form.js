@@ -20,7 +20,11 @@ const Form = ({ handleFormSubmit }) => {
 
   return (
     <form data-testid="form" onSubmit={handleSubmit}>
-      <input value={text} onChange={e => setText(e.target.value)} />
+      <input
+        data-testid="form-input"
+        value={text}
+        onChange={e => setText(e.target.value)}
+      />
       <button>Add</button>
     </form>
   );
