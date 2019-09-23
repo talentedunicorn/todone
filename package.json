@@ -45,8 +45,8 @@
       "html"
     ],
     "collectCoverageFrom": [
-      "**/*.js",
-      "!**/node_modules/**"
+      "./**/*.{js, jsx}",
+      "!node_modules"
     ]
   }
 }
