@@ -1,7 +1,7 @@
 import React from "react";
 
 const List = ({ items, handleItemClick, handleDelete }) => {
-  if (items.length < 1) {
+  if (!items || items.length === 0) {
     return <p data-testid="EmptyMessage">No items found...</p>;
   }
 
