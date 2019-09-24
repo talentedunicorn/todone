@@ -45,8 +45,9 @@
       "html"
     ],
     "collectCoverageFrom": [
-      "./**/*.{js, jsx}",
-      "!node_modules"
+      "src/**/*.{js, jsx}",
+      "!src/index.js",
+      "!src/serviceWorker.js"
     ]
   }
 }
