@@ -9,7 +9,12 @@ const List = ({ items, handleItemClick, handleDelete }) => {
     <ol data-testid="List">
       {items.map(item => (
         <li key={item.id}>
-          <p onClick={() => handleItemClick(item.id)}>{item.text}</p>
+          <p
+            onClick={() => handleItemClick(item.id)}
+            data-completed={item.completed}
+          >
+            {item.text}
+          </p>
           <button onClick={() => handleDelete(item.id)}>Delete</button>
         </li>
       ))}

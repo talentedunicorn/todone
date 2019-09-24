@@ -6,7 +6,9 @@ import Form from "./components/form";
 
 const HeaderContent = ({ clear, cache }) => (
   <>
-    <button onClick={clear}>Clear completed</button>
+    <button data-testid="clear-completed-button" onClick={clear}>
+      Clear completed
+    </button>
     <button onClick={cache}>Sync</button>
   </>
 );
@@ -80,7 +82,7 @@ const App = _ => {
 
         {completedTodos.length > 0 && (
           <>
-            <h3>Completed</h3>
+            <h3 data-testid="completed-list-title">Completed</h3>
             <List
               items={completedTodos}
               handleItemClick={id => toggleTodoCompleted(id)}
