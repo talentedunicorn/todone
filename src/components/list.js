@@ -1,14 +1,14 @@
 import React from "react";
 import "./list.css";
 
-const List = ({ items, handleItemClick, handleDelete }) => {
-  if (!items || items.length === 0) {
-    return <p data-testid="EmptyMessage">No items found...</p>;
-  }
-
-  return (
-    <ol data-testid="List" className="List">
-      {items.map(item => (
+const List = ({ items, handleItemClick, handleDelete }) => (
+  <ol
+    data-testid="List"
+    className="List"
+    data-empty-message="No items added..."
+  >
+    {items &&
+      items.map(item => (
         <li key={item.id}>
           <p
             title={item.text}
@@ -25,8 +25,7 @@ const List = ({ items, handleItemClick, handleDelete }) => {
           </button>
         </li>
       ))}
-    </ol>
-  );
-};
+  </ol>
+);
 
 export default List;

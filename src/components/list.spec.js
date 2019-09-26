@@ -3,9 +3,9 @@ import { render, fireEvent } from "@testing-library/react";
 import List from "./list";
 
 describe("<List/>", () => {
-  it("should render without crashing and display empty message", () => {
+  it("should render without crashing", () => {
     const { getByTestId } = render(<List />);
-    expect(getByTestId("EmptyMessage")).toBeTruthy();
+    expect(getByTestId("List")).toBeTruthy();
   });
 
   it("should render items passed", () => {

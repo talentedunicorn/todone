@@ -78,6 +78,18 @@ const App = _ => {
             cache={_ => cacheTodos()}
           />
         }
+        footerContent={
+          <>
+            <p>
+              Made with{" "}
+              <span role="img" aria-label="heart">
+                ❤️
+              </span>{" "}
+              by <a href="https://talentedunicorn.com">TalentedUnicorn</a>{" "}
+              <sup>&copy;</sup>&nbsp;{new Date().getFullYear()}.
+            </p>
+          </>
+        }
       >
         <Form handleFormSubmit={todo => handleAddTodo(todo)} />
         <List

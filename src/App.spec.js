@@ -21,10 +21,10 @@ describe("<App/>", () => {
   });
 
   it("should be able to delete todo", () => {
-    const { getByText, getByTestId } = render(<App />);
+    const { queryByText, getByTestId } = render(<App />);
     addTodo(getByTestId, "Testing todo");
-    fireEvent.click(getByText(/delete/i));
-    expect(getByTestId("EmptyMessage")).toBeTruthy();
+    fireEvent.click(queryByText(/delete/i));
+    expect(queryByText(/Testing todo/i)).toBeFalsy();
   });
 
   it("should be able to toggle todo completed", () => {

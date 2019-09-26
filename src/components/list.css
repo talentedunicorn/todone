@@ -4,6 +4,14 @@
   margin: 2rem 0;
 }
 
+.List:empty:before {
+  content: attr(data-empty-message);
+  padding: 1rem;
+  color: var(--gray);
+  font-weight: bold;
+  font-size: 2rem;
+}
+
 .List li {
   display: flex;
   align-items: center;
@@ -25,7 +33,7 @@
   color: var(--gray);
 }
 
-.List li .delete {
+.delete {
   --icon: var(--icon-x);
   --button-bg: var(--red);
 }
