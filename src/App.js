@@ -6,10 +6,16 @@ import Form from "./components/form";
 
 const HeaderContent = ({ clear, cache }) => (
   <>
-    <button data-testid="clear-completed-button" onClick={clear}>
+    <button
+      data-testid="clear-completed-button"
+      onClick={clear}
+      className="Button Button-icon clear"
+    >
       Clear completed
     </button>
-    <button onClick={cache}>Sync</button>
+    <button onClick={cache} className="Button Button-icon sync">
+      Sync
+    </button>
   </>
 );
 
@@ -64,7 +70,7 @@ const App = _ => {
   const incompleteTodos = todos.filter(todo => todo.completed === false);
 
   return (
-    <main data-testid="App">
+    <main data-testid="App" className="App">
       <Layout
         headerContent={
           <HeaderContent
@@ -82,7 +88,9 @@ const App = _ => {
 
         {completedTodos.length > 0 && (
           <>
-            <h3 data-testid="completed-list-title">Completed</h3>
+            <h3 data-testid="completed-list-title" className="SectionTitle">
+              Completed
+            </h3>
             <List
               items={completedTodos}
               handleItemClick={id => toggleTodoCompleted(id)}

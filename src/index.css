@@ -1,7 +1,10 @@
 :root {
+  --brand-color: hsl(208, 76%, 61%);
   --white: hsl(0, 0%, 99%);
   --black: hsl(0, 0%, 5%);
-  --gray: hsl(0, 0%, 65%);
+  --gray: hsl(210, 11%, 71%);
+  --gray-light: hsl(210, 11%, 96%);
+  --red: hsl(0, 100%, 71%);
   --font: sans-serif;
 }
 

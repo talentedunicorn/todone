@@ -1,0 +1,31 @@
+.List {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+}
+
+.List li {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+}
+
+.List li:hover {
+  background: var(--gray-light);
+}
+
+.List p {
+  margin-right: 1rem;
+  flex: 1;
+  cursor: pointer;
+}
+
+.List p[data-completed] {
+  text-decoration: line-through;
+  color: var(--gray);
+}
+
+.List li .delete {
+  --icon: var(--icon-x);
+  --button-bg: var(--red);
+}

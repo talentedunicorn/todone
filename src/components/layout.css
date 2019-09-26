@@ -1,0 +1,25 @@
+.Layout-Header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: var(--gray-light);
+}
+
+.Logo {
+  margin: 0;
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+  color: transparent;
+  background: var(--logo) no-repeat center center/contain;
+}
+
+.Header-Content {
+  display: flex;
+  align-items: center;
+}
+
+.Header-Content .Button {
+  margin: 0.5rem 0 0.5rem 2rem;
+}
