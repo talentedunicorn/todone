@@ -11,7 +11,7 @@ const List = ({ items, handleItemClick, handleDelete }) => {
         <li key={item.id}>
           <p
             onClick={() => handleItemClick(item.id)}
-            data-completed={item.completed}
+            data-completed={item.completed ? true : undefined}
           >
             {item.text}
           </p>
