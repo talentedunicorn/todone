@@ -1,5 +1,7 @@
 .Form {
+  --input-size: 80%;
   display: flex;
+  flex-wrap: wrap;
   margin: 2rem 0;
   position: sticky;
   top: 0;
@@ -9,7 +11,7 @@
 
 .Form input {
   --color: var(--brand-color);
-  flex: 1;
+  flex: var(--input-size);
   padding: 1rem;
   border: none;
   border-bottom: 2px solid var(--color);
@@ -23,9 +25,11 @@
 }
 
 .Form button {
+  flex: 1;
   background: var(--brand-color);
   color: var(--white);
   border: none;
   padding: 1rem 2rem;
   font-weight: bold;
+  white-space: nowrap;
 }
