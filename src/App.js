@@ -106,7 +106,6 @@ const App = _ => {
             <List
               items={completedTodos}
               handleItemClick={id => toggleTodoCompleted(id)}
-              handleDelete={id => deleteTodo(id)}
             />
           </>
         )}

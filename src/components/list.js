@@ -17,12 +17,14 @@ const List = ({ items, handleItemClick, handleDelete }) => (
           >
             {item.text}
           </p>
-          <button
-            onClick={() => handleDelete(item.id)}
-            className="Button-icon delete"
-          >
-            Delete
-          </button>
+          {handleDelete && (
+            <button
+              onClick={() => handleDelete(item.id)}
+              className="Button-icon delete"
+            >
+              Delete
+            </button>
+          )}
         </li>
       ))}
   </ol>

@@ -32,6 +32,8 @@ describe("<App/>", () => {
     addTodo(getByTestId, "Testing todo");
     fireEvent.click(getByText(/Testing todo/i));
     expect(getByText(/Testing todo/i).dataset.completed).toBeTruthy();
+    fireEvent.click(getByText(/Testing todo/i));
+    expect(getByText(/Testing todo/i).dataset.completed).toBeFalsy();
   });
 
   it("should be able to clear completed todos after confirm", () => {
