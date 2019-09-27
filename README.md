@@ -1,3 +1,5 @@
+![Logo](src/logo.svg)
+
 # ToDone
 
 > Todo list app with localStorage
