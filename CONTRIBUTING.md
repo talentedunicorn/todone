@@ -30,3 +30,4 @@ It is prefered if your code contributions include testing. Currently it's not pe
 > Be nice and reasonable
 
 Basically, no sexism, no racism, no prejudice of any sort. Attempt to be understanding and empathetic and enjoy coding.
+Also have a look at our [code of conduct](CODE_OF_CONDUCT.md) document
