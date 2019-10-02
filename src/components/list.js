@@ -17,6 +17,7 @@ const List = ({ items, handleItemClick, handleDelete }) => (
           >
             {item.text}
           </p>
+          <button className="Button-icon edit">Edit</button>
           {handleDelete && (
             <button
               onClick={() => handleDelete(item.id)}

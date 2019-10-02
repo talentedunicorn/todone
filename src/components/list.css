@@ -33,7 +33,16 @@
   color: var(--gray);
 }
 
+.List button {
+  margin-left: 1rem;
+}
+
 .delete {
   --icon: var(--icon-x);
   --button-bg: var(--red);
+}
+
+.edit {
+  --icon: var(--icon-edit);
+  --button-bg: var(--brand-color);
 }
