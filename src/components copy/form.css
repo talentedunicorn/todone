@@ -1,0 +1,35 @@
+.Form {
+  --input-size: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 2rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--white);
+}
+
+.Form input {
+  --color: var(--brand-color);
+  flex: var(--input-size);
+  padding: 1rem;
+  border: none;
+  border-bottom: 2px solid var(--color);
+}
+
+.Form input:focus {
+  --color: var(--black);
+  background: var(--color);
+  color: var(--white);
+  outline: none;
+}
+
+.Form button {
+  flex: 1;
+  background: var(--brand-color);
+  color: var(--white);
+  border: none;
+  padding: 1rem 2rem;
+  font-weight: bold;
+  white-space: nowrap;
+}

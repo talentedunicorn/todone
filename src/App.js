@@ -21,6 +21,7 @@ const HeaderContent = ({ clear, cache }) => (
 
 const App = _ => {
   const [todos, setTodos] = useState([]);
+  const [text, setText] = useState("");
 
   const toggleTodoCompleted = id => {
     setTodos(
@@ -37,9 +38,30 @@ const App = _ => {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
-  const handleAddTodo = todo => {
-    todo.id = new Date().getTime();
+  const editTodo = id => {
+    const todo = todos.find(todo => todo.id === id);
+    setText(todo.text);
+  };
+
+  const handleAddTodo = e => {
+    e.preventDefault();
+
+    if (text.trim().length < 3) {
+      return false;
+    }
+
+    const todo = {
+      id: new Date().getTime(),
+      text: text,
+      completed: false
+    };
+
     setTodos([...todos, todo]);
+    setText("");
+  };
+
+  const handleFormChange = formInput => {
+    setText(formInput);
   };
 
   const clearCompletedTodos = _ => {
@@ -91,11 +113,16 @@ const App = _ => {
           </>
         }
       >
-        <Form handleFormSubmit={todo => handleAddTodo(todo)} />
+        <Form
+          text={text}
+          formChange={handleFormChange}
+          formSubmit={handleAddTodo}
+        />
         <List
           items={incompleteTodos}
           handleItemClick={id => toggleTodoCompleted(id)}
           handleDelete={id => deleteTodo(id)}
+          handleEdit={id => editTodo(id)}
         />
 
         {completedTodos.length > 0 && (
