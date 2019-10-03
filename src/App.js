@@ -39,38 +39,47 @@ const App = _ => {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
-  const editTodo = id => {
+  const findTodoToEdit = id => {
     const todo = todos.find(todo => todo.id === id);
     setText(todo.text);
     setId(id);
+    console.log(text);
   };
 
-  const handleAddTodo = e => {
+  const handleFormSubmit = e => {
     e.preventDefault();
-
     if (text.trim().length < 3) {
       return false;
     }
 
-    let todo = {};
-
-    if (!id) {
-      todo = {
-        id: new Date().getTime(),
-        text: text,
-        completed: false
-      };
-      setTodos([...todos, todo]);
+    if (id) {
+      handleEditTodo(id);
     } else {
-      const todosToKeep = todos.filter(todo => todo.id !== id);
-      todo = {
-        id,
-        text,
-        completed: false
-      };
-      setTodos([...todosToKeep, todo]);
+      handleAddTodo();
     }
+  };
 
+  const handleEditTodo = id => {
+    const todoIndex = todos.findIndex(todo => todo.id === id);
+    const todo = {
+      id,
+      text,
+      completed: false
+    };
+    const newTodos = todos.filter(todo => todo.id !== id);
+    newTodos.splice(todoIndex, 0, todo);
+    setTodos(newTodos);
+    setText("");
+    setId(null);
+  };
+
+  const handleAddTodo = () => {
+    const todo = {
+      id: new Date().getTime(),
+      text: text,
+      completed: false
+    };
+    setTodos([...todos, todo]);
     setText("");
     setId(null);
   };
@@ -131,13 +140,13 @@ const App = _ => {
         <Form
           text={text}
           formChange={handleFormChange}
-          formSubmit={handleAddTodo}
+          formSubmit={handleFormSubmit}
         />
         <List
           items={incompleteTodos}
           handleItemClick={id => toggleTodoCompleted(id)}
           handleDelete={id => deleteTodo(id)}
-          handleEdit={id => editTodo(id)}
+          handleEdit={id => findTodoToEdit(id)}
         />
 
         {completedTodos.length > 0 && (
