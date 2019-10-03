@@ -1,7 +1,7 @@
 import React from "react";
 import "./list.css";
 
-const List = ({ items, handleItemClick, handleDelete }) => (
+const List = ({ items, handleItemClick, handleDelete, handleEdit }) => (
   <ol
     data-testid="List"
     className="List"
@@ -17,7 +17,12 @@ const List = ({ items, handleItemClick, handleDelete }) => (
           >
             {item.text}
           </p>
-          <button className="Button-icon edit">Edit</button>
+          <button
+            onClick={() => handleEdit(item.id)}
+            className="Button-icon edit"
+          >
+            Edit
+          </button>
           {handleDelete && (
             <button
               onClick={() => handleDelete(item.id)}

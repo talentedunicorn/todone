@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./form.css";
 
-const Form = ({ handleFormSubmit }) => {
+const Form = ({ handleFormSubmit, todoToEdit }) => {
   const [text, setText] = useState("");
   const handleSubmit = e => {
     e.preventDefault();
