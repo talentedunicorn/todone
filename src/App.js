@@ -21,7 +21,6 @@ const HeaderContent = ({ clear, cache }) => (
 
 const App = _ => {
   const [todos, setTodos] = useState([]);
-  const [todoToEdit, setTodoToEdit] = useState({});
 
   const toggleTodoCompleted = id => {
     setTodos(
@@ -36,12 +35,6 @@ const App = _ => {
 
   const deleteTodo = id => {
     setTodos(todos.filter(todo => todo.id !== id));
-  };
-
-  const editTodo = id => {
-    const todoToEdit = todos.find(todo => todo.id === id);
-    setTodoToEdit(todoToEdit);
-    console.log("Made it here");
   };
 
   const handleAddTodo = todo => {
