@@ -91,15 +91,13 @@ const App = _ => {
           </>
         }
       >
-        <Form
-          handleFormSubmit={todo => handleAddTodo(todo)}
-          todoToEdit={todoToEdit}
-        />
+        <Form handleFormSubmit={todo => handleAddTodo(todo)} />
         <List
           items={incompleteTodos}
           handleItemClick={id => toggleTodoCompleted(id)}
           handleDelete={id => deleteTodo(id)}
-          handleEdit={id => editTodo(id)}
+          setTodos={setTodos}
+          todos={todos}
         />
 
         {completedTodos.length > 0 && (
