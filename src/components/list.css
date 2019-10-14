@@ -46,3 +46,25 @@
   --icon: var(--icon-edit);
   --button-bg: var(--brand-color);
 }
+
+.EditForm {
+  width: 100%;
+  display: flex;
+}
+
+.EditForm input {
+  width: 100%;
+}
+
+.EditForm button {
+  background: var(--brand-color);
+  color: var(--white);
+  border: none;
+  padding: 1rem 2rem;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.EditForm button.cancel {
+  background: var(--red);
+}
