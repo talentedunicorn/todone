@@ -10,6 +10,10 @@ const List = ({ items, handleItemClick, handleDelete, setTodos, todos }) => {
 
   const editTodo = e => {
     e.preventDefault();
+    if (todoToEdit.text.trim().length < 3) {
+      return false;
+    }
+
     const newTodos = todos.map(todo =>
       todo.id === todoToEdit.id ? todoToEdit : todo
     );
