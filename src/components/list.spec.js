@@ -42,4 +42,17 @@ describe("<List/>", () => {
     fireEvent.click(getByText("Delete"));
     expect(mockedHandleDelete).toHaveBeenCalledWith(1);
   });
+
+  it("should trigger handleEdit when element is clicked", () => {
+    const mockedHandleEdit = jest.fn();
+    const { getByText } = render(
+      <List
+        items={[{ id: 1, text: "edit me" }]}
+        handleItemClick={mockedHandleEdit}
+      />
+    );
+    fireEvent.click(getByText("edit me"));
+
+    expect(mockedHandleEdit).toHaveBeenCalledWith(1);
+  });
 });
