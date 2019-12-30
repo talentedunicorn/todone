@@ -1,56 +1,67 @@
-import React, { useState } from "react";
+import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import App from "./App";
-import { get } from "http";
+import { TodoContext } from "./context/todoContext";
 
-function addTodo(getByTestId, value) {
-  fireEvent.change(getByTestId("form-input"), { target: { value } });
-  fireEvent.submit(getByTestId("form"));
-}
+let renderedApp;
+const mockedAddTodo = jest.fn();
+const mockedDeleteTodo = jest.fn();
+const mockedToggleTodo = jest.fn();
+
+beforeEach(() => {
+  renderedApp = _ =>
+    render(
+      <TodoContext.Provider
+        value={{
+          todolist: [
+            {
+              id: 1,
+              text: "First todo",
+              completed: false
+            },
+            {
+              id: 2,
+              text: "Second todo",
+              completed: true
+            }
+          ],
+          getList: jest.fn(),
+          onAddTodo: mockedAddTodo,
+          deleteTodo: mockedDeleteTodo,
+          toggleTodo: mockedToggleTodo
+        }}
+      >
+        <App />
+      </TodoContext.Provider>
+    );
+});
 
 describe("<App/>", () => {
-  it("renders without crashing", () => {
-    const { getByTestId } = render(<App />);
-    expect(getByTestId("App")).toBeTruthy();
-  });
-
   it("should be able to add todo", () => {
-    const { getByTestId, getAllByText, debug } = render(<App />);
-    addTodo(getByTestId, "Test todo");
-    expect(getAllByText(/Test todo/i)).toHaveLength(1);
+    const { getByTestId } = renderedApp();
+    fireEvent.change(getByTestId("form-input"), {
+      target: { value: "Test todo" }
+    });
+    fireEvent.submit(getByTestId("form"));
+    expect(mockedAddTodo).toHaveBeenCalledTimes(1);
+    expect(mockedAddTodo).toHaveBeenCalledWith({
+      completed: false,
+      text: "Test todo"
+    });
   });
 
   it("should be able to delete todo", () => {
-    const { queryByText, getByTestId } = render(<App />);
-    addTodo(getByTestId, "Testing todo");
+    const { queryByText } = renderedApp();
     fireEvent.click(queryByText(/delete/i));
-    expect(queryByText(/Testing todo/i)).toBeFalsy();
+    expect(mockedDeleteTodo).toHaveBeenCalledTimes(1);
+    expect(mockedDeleteTodo).toHaveBeenCalledWith(1);
   });
 
   it("should be able to toggle todo completed", () => {
-    const { getByTestId, getByText } = render(<App />);
-    addTodo(getByTestId, "Testing todo");
-    fireEvent.click(getByText(/Testing todo/i));
-    expect(getByText(/Testing todo/i).dataset.completed).toBeTruthy();
-    fireEvent.click(getByText(/Testing todo/i));
-    expect(getByText(/Testing todo/i).dataset.completed).toBeFalsy();
-  });
-
-  it("should be able to clear completed todos after confirm", () => {
-    global.confirm = () => true;
-    const { getByTestId, getAllByText, getByText, queryByTestId } = render(
-      <App />
-    );
-    addTodo(getByTestId, "New todo");
-    addTodo(getByTestId, "Another new todo");
-    addTodo(getByTestId, "One more todo");
-
-    const todos = getAllByText(/New todo/i);
-    todos.forEach(todo => fireEvent.click(todo));
-    expect(getByTestId("completed-list-title")).toBeTruthy();
-
-    fireEvent.click(getByTestId("clear-completed-button"));
-
-    expect(queryByTestId("completed-list-title")).toBeFalsy();
+    const { getByText } = renderedApp();
+    expect(getByText(/Second todo/i).dataset.completed).toBe("true");
+    fireEvent.click(getByText(/Second todo/i));
+    expect(mockedToggleTodo).toBeCalledTimes(1);
+    expect(mockedToggleTodo).toHaveBeenCalledWith(2);
   });
 });

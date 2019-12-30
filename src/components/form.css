@@ -12,6 +12,7 @@
 .Form input {
   --color: var(--brand-color);
   flex: var(--input-size);
+  font-size: 1rem;
   padding: 1rem;
   border: none;
   border-bottom: 2px solid var(--color);

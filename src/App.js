@@ -1,83 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import "./App.css";
 import Layout from "./components/layout";
 import List from "./components/list";
 import Form from "./components/form";
 
-const HeaderContent = ({ clear, cache }) => (
-  <>
-    <button
-      data-testid="clear-completed-button"
-      onClick={clear}
-      className="Button Button-icon clear"
+import { TodoContext } from "./context/todoContext";
+
+const HeaderContent = _ => (
+  <p>
+    <a
+      href="//github.com/talentedunicorn/todolist"
+      style={{ "--icon": "var(--icon-github)" }}
+      className="Button-icon"
     >
-      Clear completed
-    </button>
-    <button onClick={cache} className="Button Button-icon sync">
-      Sync
-    </button>
-  </>
+      <span className="visually-hidden">Source Code</span>
+    </a>
+  </p>
 );
 
 const App = _ => {
-  const [todos, setTodos] = useState([]);
-
-  const toggleTodoCompleted = id => {
-    setTodos(
-      todos.map(todo => {
-        if (todo.id === id) {
-          todo.completed = !todo.completed;
-        }
-        return todo;
-      })
-    );
-  };
-
-  const deleteTodo = id => {
-    setTodos(todos.filter(todo => todo.id !== id));
-  };
-
-  const handleAddTodo = todo => {
-    todo.id = new Date().getTime();
-    setTodos([...todos, todo]);
-  };
-
-  const clearCompletedTodos = _ => {
-    if (completedTodos.length > 0) {
-      window.confirm("Clear all completed todos?") &&
-        setTodos(todos.filter(todo => todo.completed === false));
-    }
-  };
-
-  const cacheTodos = _ => {
-    window.localStorage.setItem(
-      process.env.REACT_APP_DB_NAME,
-      JSON.stringify(todos)
-    );
-  };
+  const { todolist, getList, toggleTodo, deleteTodo, onAddTodo } = useContext(
+    TodoContext
+  );
 
   useEffect(() => {
-    // fetch todos from localstorage
-    const cachedTodos = window.localStorage.getItem(
-      process.env.REACT_APP_DB_NAME
-    );
-    if (cachedTodos) {
-      setTodos(JSON.parse(cachedTodos));
-    }
+    getList();
   }, []);
 
-  const completedTodos = todos.filter(todo => todo.completed === true);
-  const incompleteTodos = todos.filter(todo => todo.completed === false);
+  const completedTodos = todolist.filter(todo => todo.completed === true);
+  const incompleteTodos = todolist.filter(todo => todo.completed === false);
 
   return (
     <main data-testid="App" className="App">
       <Layout
-        headerContent={
-          <HeaderContent
-            clear={clearCompletedTodos}
-            cache={_ => cacheTodos()}
-          />
-        }
+        headerContent={<HeaderContent />}
         footerContent={
           <>
             <p>
@@ -91,10 +47,10 @@ const App = _ => {
           </>
         }
       >
-        <Form handleFormSubmit={todo => handleAddTodo(todo)} />
+        <Form handleFormSubmit={todo => onAddTodo(todo)} />
         <List
           items={incompleteTodos}
-          handleItemClick={id => toggleTodoCompleted(id)}
+          handleItemClick={id => toggleTodo(id)}
           handleDelete={id => deleteTodo(id)}
         />
 
@@ -105,7 +61,7 @@ const App = _ => {
             </h3>
             <List
               items={completedTodos}
-              handleItemClick={id => toggleTodoCompleted(id)}
+              handleItemClick={id => toggleTodo(id)}
             />
           </>
         )}

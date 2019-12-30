@@ -26,7 +26,7 @@ const Form = ({ handleFormSubmit }) => {
         value={text}
         onChange={e => setText(e.target.value)}
       />
-      <button>Add task</button>
+      <button className="Button">Add task</button>
     </form>
   );
 };
