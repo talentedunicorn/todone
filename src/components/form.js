@@ -24,6 +24,7 @@ const Form = ({ handleFormSubmit }) => {
       <input
         data-testid="form-input"
         value={text}
+        placeholder="Start typing..."
         onChange={e => setText(e.target.value)}
       />
       <button className="Button">Add task</button>

@@ -62,6 +62,7 @@ const App = _ => {
             <List
               items={completedTodos}
               handleItemClick={id => toggleTodo(id)}
+              handleDelete={id => deleteTodo(id)}
             />
           </>
         )}

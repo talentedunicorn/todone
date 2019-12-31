@@ -51,17 +51,19 @@ describe("<App/>", () => {
   });
 
   it("should be able to delete todo", () => {
-    const { queryByText } = renderedApp();
-    fireEvent.click(queryByText(/delete/i));
-    expect(mockedDeleteTodo).toHaveBeenCalledTimes(1);
-    expect(mockedDeleteTodo).toHaveBeenCalledWith(1);
+    const { getAllByText } = renderedApp();
+    Array.from(getAllByText(/delete/i)).forEach(button =>
+      fireEvent.click(button)
+    );
+    expect(mockedDeleteTodo).toHaveBeenCalledTimes(2);
+    expect(mockedDeleteTodo).toHaveBeenLastCalledWith(2);
   });
 
   it("should be able to toggle todo completed", () => {
-    const { getByText } = renderedApp();
-    expect(getByText(/Second todo/i).dataset.completed).toBe("true");
+    const { getByText, debug } = renderedApp();
+    fireEvent.click(getByText(/First todo/i));
     fireEvent.click(getByText(/Second todo/i));
-    expect(mockedToggleTodo).toBeCalledTimes(1);
-    expect(mockedToggleTodo).toHaveBeenCalledWith(2);
+    expect(mockedToggleTodo).toBeCalledTimes(2);
+    expect(mockedToggleTodo).toHaveBeenLastCalledWith(2);
   });
 });
