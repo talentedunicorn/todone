@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "react-scripts": "3.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --coverage",
+    "test": "REACT_APP_DB_NAME=test react-scripts test --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -29,9 +29,9 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/react": "^9.1.4",
-    "husky": "^3.0.5",
-    "prettier": "^1.18.2",
+    "@testing-library/react": "^9.4.0",
+    "husky": "^3.1.0",
+    "prettier": "^1.19.1",
     "pretty-quick": "^1.11.1"
   },
   "husky": {
