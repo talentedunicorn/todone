@@ -9,7 +9,7 @@ const TodoProvider = props => {
       process.env.REACT_APP_DB_NAME
     );
     if (cachedTodos) {
-      setTodolist(JSON.parse(cachedTodos));
+      setTodolist([...JSON.parse(cachedTodos)]);
     }
   };
 
@@ -36,7 +36,7 @@ const TodoProvider = props => {
 
   const onAddTodo = todo => {
     todo.id = new Date().getTime();
-    setTodolist([...todolist, todo]);
+    setTodolist([...todolist, { ...todo }]);
   };
 
   useEffect(() => {
