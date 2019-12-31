@@ -13,12 +13,6 @@ const TodoProvider = props => {
     }
   };
 
-  const saveList = _ =>
-    window.localStorage.setItem(
-      process.env.REACT_APP_DB_NAME,
-      JSON.stringify(todolist)
-    );
-
   const toggleTodo = id =>
     setTodolist(
       todolist.map(todo => {
@@ -31,7 +25,6 @@ const TodoProvider = props => {
 
   const deleteTodo = id => {
     setTodolist(todolist.filter(todo => todo.id !== id));
-    saveList();
   };
 
   const onAddTodo = todo => {
@@ -41,7 +34,10 @@ const TodoProvider = props => {
 
   useEffect(() => {
     if (Boolean(todolist.length)) {
-      saveList();
+      window.localStorage.setItem(
+        process.env.REACT_APP_DB_NAME,
+        JSON.stringify(todolist)
+      );
     }
   }, [todolist]);
 

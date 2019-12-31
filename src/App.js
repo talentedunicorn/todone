@@ -25,7 +25,7 @@ const App = _ => {
 
   useEffect(() => {
     getList();
-  }, []);
+  }, [getList]);
 
   const completedTodos = todolist.filter(todo => todo.completed === true);
   const incompleteTodos = todolist.filter(todo => todo.completed === false);
