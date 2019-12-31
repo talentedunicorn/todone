@@ -10,7 +10,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --coverage",
+    "test": "REACT_APP_DB_NAME=test react-scripts test --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
