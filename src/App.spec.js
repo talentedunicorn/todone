@@ -25,7 +25,6 @@ beforeEach(() => {
               completed: true
             }
           ],
-          getList: jest.fn(),
           onAddTodo: mockedAddTodo,
           deleteTodo: mockedDeleteTodo,
           toggleTodo: mockedToggleTodo

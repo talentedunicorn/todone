@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import "./App.css";
 import Layout from "./components/layout";
 import List from "./components/list";
@@ -19,13 +19,9 @@ const HeaderContent = _ => (
 );
 
 const App = _ => {
-  const { todolist, getList, toggleTodo, deleteTodo, onAddTodo } = useContext(
+  const { todolist, toggleTodo, deleteTodo, onAddTodo } = useContext(
     TodoContext
   );
-
-  useEffect(() => {
-    getList();
-  }, [getList]);
 
   const completedTodos = todolist.filter(todo => todo.completed === true);
   const incompleteTodos = todolist.filter(todo => todo.completed === false);

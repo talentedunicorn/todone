@@ -4,7 +4,7 @@ const TodoContext = React.createContext();
 const TodoProvider = props => {
   const [todolist, setTodolist] = useState([]);
 
-  const getList = _ => {
+  const getCachedList = _ => {
     const cachedTodos = window.localStorage.getItem(
       process.env.REACT_APP_DB_NAME
     );
@@ -38,12 +38,13 @@ const TodoProvider = props => {
         process.env.REACT_APP_DB_NAME,
         JSON.stringify(todolist)
       );
+    } else {
+      getCachedList();
     }
   }, [todolist]);
 
   const implementation = {
     todolist,
-    getList,
     toggleTodo,
     deleteTodo,
     onAddTodo

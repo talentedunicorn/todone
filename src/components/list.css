@@ -35,6 +35,6 @@
 }
 
 .delete {
-  --icon: var(--icon-x);
+  --icon: var(--icon-trash);
   --button-bg: var(--red);
 }
