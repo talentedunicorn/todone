@@ -32,6 +32,18 @@ const TodoProvider = props => {
     setTodolist([...todolist, { ...todo }]);
   };
 
+  const editTodo = (id, text) => {
+    setTodolist(
+      todolist.map(todo => {
+        if (id === todo.id) {
+          todo.text = text;
+        }
+
+        return todo;
+      })
+    );
+  };
+
   useEffect(() => {
     if (Boolean(todolist.length)) {
       window.localStorage.setItem(
@@ -47,7 +59,8 @@ const TodoProvider = props => {
     todolist,
     toggleTodo,
     deleteTodo,
-    onAddTodo
+    onAddTodo,
+    editTodo
   };
 
   return (

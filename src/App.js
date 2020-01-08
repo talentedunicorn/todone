@@ -19,9 +19,7 @@ const HeaderContent = _ => (
 );
 
 const App = _ => {
-  const { todolist, toggleTodo, deleteTodo, onAddTodo } = useContext(
-    TodoContext
-  );
+  const { todolist, onAddTodo } = useContext(TodoContext);
 
   const completedTodos = todolist.filter(todo => todo.completed === true);
   const incompleteTodos = todolist.filter(todo => todo.completed === false);
@@ -44,22 +42,14 @@ const App = _ => {
         }
       >
         <Form handleFormSubmit={todo => onAddTodo(todo)} />
-        <List
-          items={incompleteTodos}
-          handleItemClick={id => toggleTodo(id)}
-          handleDelete={id => deleteTodo(id)}
-        />
+        <List items={incompleteTodos} />
 
         {completedTodos.length > 0 && (
           <>
             <h3 data-testid="completed-list-title" className="SectionTitle">
               Completed
             </h3>
-            <List
-              items={completedTodos}
-              handleItemClick={id => toggleTodo(id)}
-              handleDelete={id => deleteTodo(id)}
-            />
+            <List items={completedTodos} />
           </>
         )}
       </Layout>

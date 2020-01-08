@@ -41,7 +41,7 @@ describe("TodoContext", () => {
         </TodoContext.Consumer>
       </TodoProvider>
     );
-    const { getByText, debug } = render(tree);
+    const { getByText } = render(tree);
     expect(getByText(/There are/i).textContent).toContain("0");
     fireEvent.click(getByText(/add/i));
     expect(getByText(/There are/i).textContent).toContain("1");
@@ -111,5 +111,32 @@ describe("TodoContext", () => {
     expect(container.querySelectorAll("li")).toHaveLength(2);
     fireEvent.click(container.querySelector("button"));
     expect(container.querySelectorAll("li")).toHaveLength(1);
+  });
+
+  it("should be able to edit todo", () => {
+    localStorage.setItem(
+      process.env.REACT_APP_DB_NAME,
+      JSON.stringify([{ id: 1, text: "Edit me", completed: false }])
+    );
+    const TestComponent = _ => {
+      const { todolist, editTodo } = React.useContext(TodoContext);
+      return (
+        <ul>
+          {todolist.map(todo => (
+            <li key={todo.id}>
+              <p>{todo.text}</p>
+              <button onClick={_ => editTodo(todo.id, "Edited")}>Edit</button>
+            </li>
+          ))}
+        </ul>
+      );
+    };
+    const { getByText, getByRole } = render(
+      <TodoProvider>
+        <TestComponent />
+      </TodoProvider>
+    );
+    fireEvent.click(getByRole("button"));
+    expect(getByText(/edited/i)).toBeTruthy();
   });
 });
