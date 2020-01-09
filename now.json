@@ -1,0 +1,7 @@
+{
+  "build": {
+    "env": {
+      "REACT_APP_DB_NAME": "@todone_db_name"
+    }
+  }
+}
