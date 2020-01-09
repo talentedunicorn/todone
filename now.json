@@ -1,7 +1,8 @@
 {
   "build": {
     "env": {
-      "REACT_APP_WEBSITE_NAME": "todone",
+      "REACT_APP_WEBSITE_NAME": "ToDone",
+      "REACT_APP_WEBSITE_DESCRIPTION": "Simple ToDo app with LocalStorage",
       "REACT_APP_DB_NAME": "@todone_db_name"
     }
   }
