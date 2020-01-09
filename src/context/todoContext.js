@@ -33,15 +33,17 @@ const TodoProvider = props => {
   };
 
   const editTodo = (id, text) => {
-    setTodolist(
-      todolist.map(todo => {
-        if (id === todo.id) {
-          todo.text = text;
-        }
+    if (Boolean(text.trim().length)) {
+      setTodolist(
+        todolist.map(todo => {
+          if (id === todo.id) {
+            todo.text = text;
+          }
 
-        return todo;
-      })
-    );
+          return todo;
+        })
+      );
+    }
   };
 
   useEffect(() => {

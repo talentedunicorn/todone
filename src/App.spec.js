@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, waitForDomChange } from "@testing-library/react";
 import App from "./App";
 import { TodoContext } from "./context/todoContext";
 
@@ -63,5 +63,24 @@ describe("<App/>", () => {
     const { getAllByRole } = renderedApp();
     getAllByRole("checkbox").forEach(el => fireEvent.click(el));
     expect(mockedToggleTodo).toBeCalledTimes(2);
+  });
+
+  it("should be able to edit todo text", () => {
+    const { getByText, container } = renderedApp();
+    fireEvent.click(getByText(/first/i));
+    waitForDomChange({ container });
+    fireEvent.change(container.querySelector("li form input"), {
+      target: { value: "Updated" }
+    });
+    fireEvent.submit(container.querySelector("li form"));
+    expect(mockedEditTodo).toHaveBeenCalledTimes(1);
+  });
+
+  it("should be able to cancel edit", () => {
+    const { getByText, container } = renderedApp();
+    fireEvent.click(getByText(/second/i));
+    expect(container.querySelector("li form input").value).toBe("Second todo");
+    fireEvent.click(container.querySelector("li form .cancel"));
+    expect(container.querySelector("li form")).toBeFalsy();
   });
 });
