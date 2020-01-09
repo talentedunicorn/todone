@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 const TodoContext = React.createContext();
 const TodoProvider = props => {
-  const [todolist, setTodolist] = useState([]);
+  const [todolist, setTodolist] = useState(null);
 
   const getCachedList = _ => {
     const cachedTodos = window.localStorage.getItem(
@@ -47,7 +47,7 @@ const TodoProvider = props => {
   };
 
   useEffect(() => {
-    if (Boolean(todolist.length)) {
+    if (todolist) {
       window.localStorage.setItem(
         process.env.REACT_APP_DB_NAME,
         JSON.stringify(todolist)

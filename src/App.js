@@ -21,8 +21,12 @@ const HeaderContent = _ => (
 const App = _ => {
   const { todolist, onAddTodo } = useContext(TodoContext);
 
-  const completedTodos = todolist.filter(todo => todo.completed === true);
-  const incompleteTodos = todolist.filter(todo => todo.completed === false);
+  const completedTodos = todolist
+    ? todolist.filter(todo => todo.completed === true)
+    : [];
+  const incompleteTodos = todolist
+    ? todolist.filter(todo => todo.completed === false)
+    : [];
 
   return (
     <main data-testid="App" className="App">
