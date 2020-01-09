@@ -9,8 +9,6 @@ const List = ({ items }) => {
   const handleEdit = e =>
     setSelected({ ...selectedTodo, text: e.target.value });
   const canDelete = item => {
-    if (item.completed === true) return false;
-
     if (selectedTodo) {
       return selectedTodo.id !== item.id && !item.completed;
     }

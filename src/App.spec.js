@@ -56,7 +56,7 @@ describe("<App/>", () => {
     Array.from(getAllByRole("button")).forEach(button => {
       fireEvent.click(button);
     });
-    expect(mockedDeleteTodo).toHaveBeenCalledTimes(1);
+    expect(mockedDeleteTodo).toHaveBeenCalledTimes(2);
   });
 
   it("should be able to toggle todo completed", () => {
