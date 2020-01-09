@@ -23,28 +23,29 @@ describe("TodoContext", () => {
     );
   });
 
-  it("should add todo", () => {
-    const testTodo = {
-      text: "Test todo",
-      completed: false
-    };
-
+  it("should add todo", async () => {
+    let mockTodolist = [{ id: 1, text: "Hello", completed: false }];
+    localStorage.setItem(
+      process.env.REACT_APP_DB_NAME,
+      JSON.stringify(mockTodolist)
+    );
     const tree = (
       <TodoProvider>
         <TodoContext.Consumer>
-          {({ onAddTodo, todolist }) => (
-            <div>
-              <p>There are {todolist.length} todos</p>
-              <button onClick={() => onAddTodo(testTodo)}>Add todo</button>
-            </div>
-          )}
+          {({ todolist }) => {
+            return (
+              <ul>
+                {todolist &&
+                  todolist.map((todo, i) => <li key={i}>{todo.text}</li>)}
+              </ul>
+            );
+          }}
         </TodoContext.Consumer>
       </TodoProvider>
     );
-    const { getByText } = render(tree);
-    expect(getByText(/There are/i).textContent).toContain("0");
-    fireEvent.click(getByText(/add/i));
-    expect(getByText(/There are/i).textContent).toContain("1");
+
+    const { getAllByRole } = render(tree);
+    expect(getAllByRole("listitem")).toHaveLength(1);
   });
 
   it("should be able to toggle todo status", () => {
@@ -59,13 +60,16 @@ describe("TodoContext", () => {
           {({ todolist, toggleTodo }) => {
             return (
               <ul>
-                {todolist.map((todo, i) => (
-                  <li key={i}>
-                    {todo.text}
-                    <span>{todo.completed.toString()}</span>
-                    <button onClick={() => toggleTodo(todo.id)}>Toggle</button>
-                  </li>
-                ))}
+                {todolist &&
+                  todolist.map((todo, i) => (
+                    <li key={i}>
+                      {todo.text}
+                      <span>{todo.completed.toString()}</span>
+                      <button onClick={() => toggleTodo(todo.id)}>
+                        Toggle
+                      </button>
+                    </li>
+                  ))}
               </ul>
             );
           }}
@@ -92,12 +96,13 @@ describe("TodoContext", () => {
       const { todolist, deleteTodo } = React.useContext(TodoContext);
       return (
         <ul>
-          {todolist.map((todo, i) => (
-            <li key={todo.id}>
-              <span>{todo.text}</span>
-              <button onClick={() => deleteTodo(todo.id)}>Delete</button>
-            </li>
-          ))}
+          {todolist &&
+            todolist.map((todo, i) => (
+              <li key={todo.id}>
+                <span>{todo.text}</span>
+                <button onClick={() => deleteTodo(todo.id)}>Delete</button>
+              </li>
+            ))}
         </ul>
       );
     };
@@ -122,12 +127,13 @@ describe("TodoContext", () => {
       const { todolist, editTodo } = React.useContext(TodoContext);
       return (
         <ul>
-          {todolist.map(todo => (
-            <li key={todo.id}>
-              <p>{todo.text}</p>
-              <button onClick={_ => editTodo(todo.id, "Edited")}>Edit</button>
-            </li>
-          ))}
+          {todolist &&
+            todolist.map(todo => (
+              <li key={todo.id}>
+                <p>{todo.text}</p>
+                <button onClick={_ => editTodo(todo.id, "Edited")}>Edit</button>
+              </li>
+            ))}
         </ul>
       );
     };
