@@ -27,10 +27,8 @@ const TodoProvider = props => {
     setTodolist(todolist.filter(todo => todo.id !== id));
   };
 
-  const onAddTodo = todo => {
-    todo.id = new Date().getTime();
-    setTodolist([...todolist, { ...todo }]);
-  };
+  const onAddTodo = todo =>
+    setTodolist([...todolist, { ...todo, id: new Date().getTime() }]);
 
   const editTodo = (id, text) => {
     if (Boolean(text.trim().length)) {

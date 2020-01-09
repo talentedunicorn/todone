@@ -24,7 +24,7 @@ describe("TodoContext", () => {
   });
 
   it("should add todo", async () => {
-    let mockTodolist = [{ id: 1, text: "Hello", completed: false }];
+    let mockTodolist = [{ text: "Hello", completed: false }];
     localStorage.setItem(
       process.env.REACT_APP_DB_NAME,
       JSON.stringify(mockTodolist)
