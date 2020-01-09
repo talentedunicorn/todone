@@ -23,47 +23,49 @@ const List = ({ items }) => {
   return (
     <ol data-testid="List" className="List" data-empty-message="All done...">
       {items &&
-        items.map(item => (
-          <li key={item.id}>
-            <input
-              type="checkbox"
-              defaultChecked={item.completed}
-              onClick={() => toggleTodo(item.id)}
-            />
-            {selectedTodo && selectedTodo.id === item.id ? (
-              <form onSubmit={handleSave}>
-                <input
-                  type="text"
-                  value={selectedTodo.text}
-                  onChange={handleEdit}
-                />
-                <button className="Button-icon save">Save</button>
-                <button
-                  className="Button-icon cancel"
-                  onClick={_ => setSelected()}
+        items
+          .sort((a, b) => b.id - a.id)
+          .map(item => (
+            <li key={item.id}>
+              <input
+                type="checkbox"
+                defaultChecked={item.completed}
+                onClick={() => toggleTodo(item.id)}
+              />
+              {selectedTodo && selectedTodo.id === item.id ? (
+                <form onSubmit={handleSave}>
+                  <input
+                    type="text"
+                    value={selectedTodo.text}
+                    onChange={handleEdit}
+                  />
+                  <button className="Button-icon save">Save</button>
+                  <button
+                    className="Button-icon cancel"
+                    onClick={_ => setSelected()}
+                  >
+                    Cancel
+                  </button>
+                </form>
+              ) : (
+                <p
+                  title={item.text}
+                  data-completed={item.completed ? true : undefined}
+                  onClick={() => setSelected(item)}
                 >
-                  Cancel
+                  {item.text}
+                </p>
+              )}
+              {canDelete(item) && (
+                <button
+                  onClick={() => deleteTodo(item.id)}
+                  className="Button-icon delete"
+                >
+                  Delete
                 </button>
-              </form>
-            ) : (
-              <p
-                title={item.text}
-                data-completed={item.completed ? true : undefined}
-                onClick={() => setSelected(item)}
-              >
-                {item.text}
-              </p>
-            )}
-            {canDelete(item) && (
-              <button
-                onClick={() => deleteTodo(item.id)}
-                className="Button-icon delete"
-              >
-                Delete
-              </button>
-            )}
-          </li>
-        ))}
+              )}
+            </li>
+          ))}
     </ol>
   );
 };
