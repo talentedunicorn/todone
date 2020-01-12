@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/talentedunicorn/todolist.svg?branch=master)](https://travis-ci.org/talentedunicorn/todolist)
+
 ![Logo](src/logo.svg)
 
 # ToDone
