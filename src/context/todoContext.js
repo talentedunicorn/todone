@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 
 const TodoContext = React.createContext();
 const TodoProvider = props => {
-  const [todolist, setTodolist] = useState([]);
+  const [todolist, setTodolist] = useState(null);
 
-  const getList = _ => {
+  const getCachedList = _ => {
     const cachedTodos = window.localStorage.getItem(
       process.env.REACT_APP_DB_NAME
     );
@@ -12,12 +12,6 @@ const TodoProvider = props => {
       setTodolist([...JSON.parse(cachedTodos)]);
     }
   };
-
-  const saveList = _ =>
-    window.localStorage.setItem(
-      process.env.REACT_APP_DB_NAME,
-      JSON.stringify(todolist)
-    );
 
   const toggleTodo = id =>
     setTodolist(
@@ -31,26 +25,42 @@ const TodoProvider = props => {
 
   const deleteTodo = id => {
     setTodolist(todolist.filter(todo => todo.id !== id));
-    saveList();
   };
 
-  const onAddTodo = todo => {
-    todo.id = new Date().getTime();
-    setTodolist([...todolist, { ...todo }]);
+  const onAddTodo = todo =>
+    setTodolist([...(todolist || []), { ...todo, id: new Date().getTime() }]);
+
+  const editTodo = (id, text) => {
+    if (Boolean(text.trim().length)) {
+      setTodolist(
+        todolist.map(todo => {
+          if (id === todo.id) {
+            todo.text = text;
+          }
+
+          return todo;
+        })
+      );
+    }
   };
 
   useEffect(() => {
-    if (Boolean(todolist.length)) {
-      saveList();
+    if (todolist) {
+      window.localStorage.setItem(
+        process.env.REACT_APP_DB_NAME,
+        JSON.stringify(todolist)
+      );
+    } else {
+      getCachedList();
     }
   }, [todolist]);
 
   const implementation = {
     todolist,
-    getList,
     toggleTodo,
     deleteTodo,
-    onAddTodo
+    onAddTodo,
+    editTodo
   };
 
   return (

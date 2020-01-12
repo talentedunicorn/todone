@@ -11,7 +11,7 @@
 - [x] Delete todo
 - [x] Clear completed todos
 - [x] Sync todo to localStorage
-- [ ] Edit todo text
+- [x] Edit todo text
 
 ## Nice to have
 

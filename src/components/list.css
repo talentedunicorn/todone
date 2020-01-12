@@ -22,9 +22,18 @@
   background: var(--gray-light);
 }
 
-.List p {
-  margin-right: 1rem;
+.List p,
+.List form {
   flex: 1;
+}
+
+.List p,
+.List input[type="text"] {
+  font-size: 1rem;
+  margin-left: 1rem;
+}
+
+.List p {
   cursor: pointer;
   line-height: 1.5;
 }
@@ -34,7 +43,61 @@
   color: var(--gray);
 }
 
-.delete {
-  --icon: var(--icon-x);
+.List form {
+  display: flex;
+  align-items: center;
+}
+
+.List input[type="text"] {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  background: none;
+  box-shadow: 0 5px 0 0 var(--brand-color);
+}
+
+.List button {
+  margin-left: 1rem;
+}
+
+.List input[type="checkbox"] {
+  --color: var(--brand-color);
+  --background: var(--white);
+  position: relative;
+}
+
+.List input[type="checkbox"]:hover,
+.List input[type="checkbox"]:checked {
+  --background: var(--brand-color);
+}
+
+.List input[type="checkbox"]:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--background);
+  border: 3px solid var(--color);
+  border-radius: 2px;
+}
+
+.delete,
+.cancel {
   --button-bg: var(--red);
+}
+
+.delete {
+  --icon: var(--icon-trash);
+  mask-size: 80%; /* To match other icons */
+}
+
+.save {
+  --icon: var(--icon-check);
+  --button-bg: var(--green);
+}
+
+.cancel {
+  --icon: var(--icon-x);
 }

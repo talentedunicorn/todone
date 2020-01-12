@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import "./App.css";
 import Layout from "./components/layout";
 import List from "./components/list";
@@ -19,16 +19,14 @@ const HeaderContent = _ => (
 );
 
 const App = _ => {
-  const { todolist, getList, toggleTodo, deleteTodo, onAddTodo } = useContext(
-    TodoContext
-  );
+  const { todolist, onAddTodo } = useContext(TodoContext);
 
-  useEffect(() => {
-    getList();
-  }, []);
-
-  const completedTodos = todolist.filter(todo => todo.completed === true);
-  const incompleteTodos = todolist.filter(todo => todo.completed === false);
+  const completedTodos = todolist
+    ? todolist.filter(todo => todo.completed === true)
+    : [];
+  const incompleteTodos = todolist
+    ? todolist.filter(todo => todo.completed === false)
+    : [];
 
   return (
     <main data-testid="App" className="App">
@@ -48,22 +46,14 @@ const App = _ => {
         }
       >
         <Form handleFormSubmit={todo => onAddTodo(todo)} />
-        <List
-          items={incompleteTodos}
-          handleItemClick={id => toggleTodo(id)}
-          handleDelete={id => deleteTodo(id)}
-        />
+        <List items={incompleteTodos} />
 
         {completedTodos.length > 0 && (
           <>
             <h3 data-testid="completed-list-title" className="SectionTitle">
               Completed
             </h3>
-            <List
-              items={completedTodos}
-              handleItemClick={id => toggleTodo(id)}
-              handleDelete={id => deleteTodo(id)}
-            />
+            <List items={completedTodos} />
           </>
         )}
       </Layout>
