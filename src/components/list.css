@@ -63,7 +63,10 @@
 .List input[type="checkbox"] {
   --color: var(--brand-color);
   --background: var(--white);
+  --checkbox-size: 1.5em;
   position: relative;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
 }
 
 .List input[type="checkbox"]:hover,
