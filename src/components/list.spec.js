@@ -12,4 +12,18 @@ describe("<List/>", () => {
     );
     expect(getByTestId("List")).toBeTruthy();
   });
+
+  it("should render list sorted latest first", () => {
+    const testTodos = [
+      { id: 1, text: "First todo", completed: false },
+      { id: 2, text: "Second todo", completed: false },
+      { id: 3, text: "Third todo", completed: false }
+    ];
+    const { getAllByRole } = render(
+      <TodoProvider>
+        <List items={testTodos} />
+      </TodoProvider>
+    );
+    expect(getAllByRole("listitem")[0].textContent).toContain("Third todo");
+  });
 });

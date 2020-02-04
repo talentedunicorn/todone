@@ -9,16 +9,17 @@
   background: var(--white);
 }
 
-.Form input {
+.Form-input {
   --color: var(--brand-color);
   flex: var(--input-size);
   font-size: 1rem;
+  font-family: inherit;
   padding: 1rem;
   border: none;
   border-bottom: 5px solid var(--color);
 }
 
-.Form input:focus {
+.Form-input:focus {
   --color: var(--black);
   background: var(--color);
   color: var(--white);
