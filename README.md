@@ -12,7 +12,9 @@
 - [x] Clear completed todos
 - [x] Sync todo to localStorage
 - [x] Edit todo text
+- [x] Markdown support
 
 ## Nice to have
 
 - [ ] Task categories
+- [ ] Online accounts

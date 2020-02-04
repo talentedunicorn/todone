@@ -21,8 +21,10 @@ const Form = ({ handleFormSubmit }) => {
 
   return (
     <form data-testid="form" onSubmit={handleSubmit} className="Form">
-      <input
+      <textarea
         data-testid="form-input"
+        className="Form-input"
+        rows={1}
         value={text}
         placeholder="Start typing..."
         onChange={e => setText(e.target.value)}

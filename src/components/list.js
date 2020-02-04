@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import "./list.css";
 import { TodoContext } from "../context/todoContext";
 
@@ -53,8 +54,8 @@ const List = ({ items }) => {
                   data-completed={item.completed ? true : undefined}
                   onClick={() => setSelected(item)}
                 >
-                  {item.text}
-                </p>
+                  <ReactMarkdown source={item.text} />
+                </div>
               )}
               {canDelete(item) && (
                 <button
