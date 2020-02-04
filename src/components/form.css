@@ -17,6 +17,7 @@
   padding: 1rem;
   border: none;
   border-bottom: 5px solid var(--color);
+  resize: vertical;
 }
 
 .Form-input:focus {
