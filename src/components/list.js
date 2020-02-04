@@ -9,6 +9,7 @@ const List = ({ items }) => {
 
   const handleEdit = e =>
     setSelected({ ...selectedTodo, text: e.target.value });
+
   const canDelete = item => {
     if (selectedTodo) {
       return selectedTodo.id !== item.id && !item.completed;
@@ -27,15 +28,18 @@ const List = ({ items }) => {
         items
           .sort((a, b) => b.id - a.id)
           .map(item => (
-            <li key={item.id}>
+            <li className="List-item" key={item.id}>
               <input
+                className="List-toggle"
                 type="checkbox"
                 defaultChecked={item.completed}
                 onClick={() => toggleTodo(item.id)}
               />
               {selectedTodo && selectedTodo.id === item.id ? (
                 <form onSubmit={handleSave}>
-                  <input
+                  <textarea
+                    rows={1}
+                    className="List-input"
                     type="text"
                     value={selectedTodo.text}
                     onChange={handleEdit}
@@ -49,7 +53,8 @@ const List = ({ items }) => {
                   </button>
                 </form>
               ) : (
-                <p
+                <div
+                  className="List-content"
                   title={item.text}
                   data-completed={item.completed ? true : undefined}
                   onClick={() => setSelected(item)}

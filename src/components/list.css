@@ -12,33 +12,33 @@
   font-size: 2rem;
 }
 
-.List li {
+.List-item {
   display: flex;
   align-items: center;
   padding: 1rem;
 }
 
-.List li:hover {
+.List-item:hover {
   background: var(--gray-light);
 }
 
-.List p,
+.List-content,
 .List form {
   flex: 1;
 }
 
-.List p,
-.List input[type="text"] {
+.List-content,
+.List-input {
   font-size: 1rem;
   margin-left: 1rem;
 }
 
-.List p {
+.List-content {
   cursor: pointer;
   line-height: 1.5;
 }
 
-.List p[data-completed] {
+.List-content[data-completed] {
   text-decoration: line-through;
   color: var(--gray);
 }
@@ -48,7 +48,8 @@
   align-items: center;
 }
 
-.List input[type="text"] {
+.List-input {
+  font-family: inherit;
   flex: 1;
   padding: 0.5rem;
   border: none;

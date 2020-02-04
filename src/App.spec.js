@@ -69,7 +69,7 @@ describe("<App/>", () => {
     const { getByText, container } = renderedApp();
     fireEvent.click(getByText(/first/i));
     waitForDomChange({ container });
-    fireEvent.change(container.querySelector("li form input"), {
+    fireEvent.change(container.querySelector(".List-input"), {
       target: { value: "Updated" }
     });
     fireEvent.submit(container.querySelector("li form"));
@@ -79,7 +79,7 @@ describe("<App/>", () => {
   it("should be able to cancel edit", () => {
     const { getByText, container } = renderedApp();
     fireEvent.click(getByText(/second/i));
-    expect(container.querySelector("li form input").value).toBe("Second todo");
+    expect(container.querySelector(".List-input").value).toBe("Second todo");
     fireEvent.click(container.querySelector("li form .cancel"));
     expect(container.querySelector("li form")).toBeFalsy();
   });
