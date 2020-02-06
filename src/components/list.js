@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import "./list.css";
+import Styles from "./list.module.css";
 import { TodoContext } from "../context/todoContext";
 
 const List = ({ items }) => {
@@ -23,23 +23,27 @@ const List = ({ items }) => {
     setSelected(null);
   };
   return (
-    <ol data-testid="List" className="List" data-empty-message="All done...">
+    <ol
+      data-testid="List"
+      className={Styles.List}
+      data-empty-message="All done..."
+    >
       {items &&
         items
           .sort((a, b) => b.id - a.id)
           .map(item => (
-            <li className="List-item" key={item.id}>
+            <li className={Styles.ListItem} key={item.id}>
               <input
-                className="List-toggle"
+                className={Styles.ListCheckbox}
                 type="checkbox"
                 defaultChecked={item.completed}
                 onClick={() => toggleTodo(item.id)}
               />
               {selectedTodo && selectedTodo.id === item.id ? (
-                <form onSubmit={handleSave}>
+                <form onSubmit={handleSave} className={Styles.ListForm}>
                   <textarea
                     rows={1}
-                    className="List-input"
+                    className={Styles.ListInput}
                     type="text"
                     value={selectedTodo.text}
                     onChange={handleEdit}
@@ -54,7 +58,7 @@ const List = ({ items }) => {
                 </form>
               ) : (
                 <div
-                  className="List-content"
+                  className={Styles.ListContent}
                   title={item.text}
                   data-completed={item.completed ? true : undefined}
                   onClick={() => setSelected(item)}

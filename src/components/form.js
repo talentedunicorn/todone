@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./form.css";
+import Styles from "./form.module.css";
 
 const Form = ({ handleFormSubmit }) => {
   const [text, setText] = useState("");
@@ -20,16 +20,16 @@ const Form = ({ handleFormSubmit }) => {
   };
 
   return (
-    <form data-testid="form" onSubmit={handleSubmit} className="Form">
+    <form data-testid="form" onSubmit={handleSubmit} className={Styles.Form}>
       <textarea
         data-testid="form-input"
-        className="Form-input"
+        className={Styles.Input}
         rows={1}
         value={text}
         placeholder="Start typing..."
         onChange={e => setText(e.target.value)}
       />
-      <button className="Button">Add task</button>
+      <button className={Styles.Button}>Add task</button>
     </form>
   );
 };
