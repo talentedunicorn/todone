@@ -1,4 +1,4 @@
-.Layout-Header {
+.Header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -6,7 +6,7 @@
   background: var(--gray-light);
 }
 
-.Layout-Footer {
+.Footer {
   padding: 1rem;
   margin-top: auto;
 }
@@ -20,11 +20,7 @@
   background: var(--logo) no-repeat center center/contain;
 }
 
-.Header-Content {
+.HeaderContent {
   display: flex;
   align-items: center;
-}
-
-.Header-Content .Button {
-  margin: 0.5rem 0 0.5rem 2rem;
 }

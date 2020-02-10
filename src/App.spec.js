@@ -69,18 +69,18 @@ describe("<App/>", () => {
     const { getByText, container } = renderedApp();
     fireEvent.click(getByText(/first/i));
     waitForDomChange({ container });
-    fireEvent.change(container.querySelector(".List-input"), {
+    fireEvent.change(container.querySelector(".ListInput"), {
       target: { value: "Updated" }
     });
-    fireEvent.submit(container.querySelector("li form"));
+    fireEvent.submit(container.querySelector(".ListForm"));
     expect(mockedEditTodo).toHaveBeenCalledTimes(1);
   });
 
   it("should be able to cancel edit", () => {
     const { getByText, container } = renderedApp();
     fireEvent.click(getByText(/second/i));
-    expect(container.querySelector(".List-input").value).toBe("Second todo");
-    fireEvent.click(container.querySelector("li form .cancel"));
-    expect(container.querySelector("li form")).toBeFalsy();
+    expect(container.querySelector(".ListInput").value).toBe("Second todo");
+    fireEvent.click(container.querySelector(".ListForm .cancel"));
+    expect(container.querySelector(".ListForm")).toBeFalsy();
   });
 });

@@ -56,3 +56,22 @@
 .sync {
   --icon: var(--icon-sync);
 }
+
+.delete,
+.cancel {
+  --button-bg: var(--red);
+}
+
+.delete {
+  --icon: var(--icon-trash);
+  mask-size: 80%; /* To match other icons */
+}
+
+.save {
+  --icon: var(--icon-check);
+  --button-bg: var(--green);
+}
+
+.cancel {
+  --icon: var(--icon-x);
+}
