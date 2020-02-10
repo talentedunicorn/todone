@@ -12,43 +12,43 @@
   font-size: 2rem;
 }
 
-.List-item {
+.ListItem {
   display: flex;
   align-items: center;
   padding: 1rem;
 }
 
-.List-item:hover {
+.ListItem:hover {
   background: var(--gray-light);
 }
 
-.List-content,
-.List form {
+.ListContent,
+.ListForm {
   flex: 1;
 }
 
-.List-content,
-.List-input {
+.ListContent,
+.ListInput {
   font-size: 1rem;
   margin-left: 1rem;
 }
 
-.List-content {
+.ListContent {
   cursor: pointer;
   line-height: 1.5;
 }
 
-.List-content[data-completed] {
+.ListContent[data-completed] {
   text-decoration: line-through;
   color: var(--gray);
 }
 
-.List form {
+.ListForm {
   display: flex;
   align-items: center;
 }
 
-.List-input {
+.ListInput {
   font-family: inherit;
   flex: 1;
   padding: 0.5rem;
@@ -62,18 +62,18 @@
   margin-left: 1rem;
 }
 
-.List input[type="checkbox"] {
+.ListInput[type="checkbox"] {
   --color: var(--brand-color);
   --background: var(--white);
   position: relative;
 }
 
-.List input[type="checkbox"]:hover,
-.List input[type="checkbox"]:checked {
+.ListCheckbox:hover,
+.ListCheckbox:checked {
   --background: var(--brand-color);
 }
 
-.List input[type="checkbox"]:after {
+.ListCheckbox:after {
   content: "";
   position: absolute;
   top: 0;
@@ -83,23 +83,4 @@
   background: var(--background);
   border: 3px solid var(--color);
   border-radius: 2px;
-}
-
-.delete,
-.cancel {
-  --button-bg: var(--red);
-}
-
-.delete {
-  --icon: var(--icon-trash);
-  mask-size: 80%; /* To match other icons */
-}
-
-.save {
-  --icon: var(--icon-check);
-  --button-bg: var(--green);
-}
-
-.cancel {
-  --icon: var(--icon-x);
 }
