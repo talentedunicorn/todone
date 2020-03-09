@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Styles from "./form.module.css";
 
-const Form = ({ handleFormSubmit }) => {
+const Form = ({ handleFormSubmit }: any) => {
   const [text, setText] = useState("");
-  const handleSubmit = e => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
 
     // Todo is atleast 3 characters long

@@ -1,7 +1,7 @@
 import React from "react";
 import Styles from "./layout.module.css";
 
-const Layout = ({ children, headerContent, footerContent }) => (
+const Layout = ({ children, headerContent, footerContent }: any) => (
   <div data-testid="layout">
     <header className={Styles.Header}>
       <h1 className={Styles.Logo}>{process.env.REACT_APP_WEBSITE_NAME}</h1>
