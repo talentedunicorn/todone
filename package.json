@@ -49,8 +49,9 @@
   },
   "jest": {
     "coverageReporters": [
-      "text",
-      "html"
+      "html",
+      "lcov",
+      "text"
     ],
     "collectCoverageFrom": [
       "src/**/*.(ts|tsx)",
