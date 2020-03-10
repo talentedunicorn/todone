@@ -9,14 +9,16 @@ type contextProps = {
   editTodo: any;
 };
 
+const DB_NAME = process.env.REACT_APP_DB_NAME
+  ? process.env.REACT_APP_DB_NAME
+  : "todone";
+
 const TodoContext = React.createContext<Partial<contextProps>>({});
 const TodoProvider = (props: any) => {
   const [todolist, setTodolist] = useState<Array<Todo> | null>(null);
 
   const getCachedList = () => {
-    const cachedTodos: string | null = window.localStorage.getItem(
-      process.env.REACT_APP_DB_NAME || ""
-    );
+    const cachedTodos: string | null = window.localStorage.getItem(DB_NAME);
     if (cachedTodos) {
       setTodolist([...JSON.parse(cachedTodos)]);
     }
@@ -57,10 +59,7 @@ const TodoProvider = (props: any) => {
 
   useEffect(() => {
     if (todolist) {
-      window.localStorage.setItem(
-        process.env.REACT_APP_DB_NAME || "todo_db",
-        JSON.stringify(todolist)
-      );
+      window.localStorage.setItem(DB_NAME, JSON.stringify(todolist));
     } else {
       getCachedList();
     }
