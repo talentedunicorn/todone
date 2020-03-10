@@ -16,7 +16,8 @@
   "scripts": {
     "start": "BROWSER=none && react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --coverage",
+    "test": "react-scripts test",
+    "test:coverage": "npm run test -- --coverage --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -52,9 +53,10 @@
       "html"
     ],
     "collectCoverageFrom": [
-      "src/**/*.{ts, tsx}",
-      "!src/index.js",
-      "!src/serviceWorker.js"
+      "src/**/*.(ts|tsx)",
+      "!src/index.tsx",
+      "!src/react-app-env.d.ts",
+      "!src/models/**.ts"
     ]
   }
 }

@@ -3,14 +3,14 @@ import { render, fireEvent, waitForDomChange } from "@testing-library/react";
 import App from "./App";
 import { TodoContext } from "./context/todoContext";
 
-let renderedApp;
+let renderedApp: any;
 const mockedAddTodo = jest.fn();
 const mockedDeleteTodo = jest.fn();
 const mockedToggleTodo = jest.fn();
 const mockedEditTodo = jest.fn();
 
 beforeEach(() => {
-  renderedApp = _ =>
+  renderedApp = () =>
     render(
       <TodoContext.Provider
         value={{
