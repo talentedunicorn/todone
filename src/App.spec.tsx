@@ -53,7 +53,7 @@ describe("<App/>", () => {
 
   it("should be able to delete todo", () => {
     const { getAllByRole } = renderedApp();
-    Array.from(getAllByRole("button")).forEach(button => {
+    Array.from(getAllByRole("button")).forEach((button: any) => {
       fireEvent.click(button);
     });
     expect(mockedDeleteTodo).toHaveBeenCalledTimes(2);
@@ -61,7 +61,7 @@ describe("<App/>", () => {
 
   it("should be able to toggle todo completed", () => {
     const { getAllByRole } = renderedApp();
-    getAllByRole("checkbox").forEach(el => fireEvent.click(el));
+    getAllByRole("checkbox").forEach((el: HTMLElement) => fireEvent.click(el));
     expect(mockedToggleTodo).toBeCalledTimes(2);
   });
 
