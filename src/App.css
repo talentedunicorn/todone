@@ -75,3 +75,7 @@
 .cancel {
   --icon: var(--icon-x);
 }
+
+.github {
+  --icon: var(--icon-github);
+}

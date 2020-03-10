@@ -3,29 +3,29 @@ import "./App.css";
 import Layout from "./components/layout";
 import List from "./components/list";
 import Form from "./components/form";
+import { Todo } from "./models/todo";
 
 import { TodoContext } from "./context/todoContext";
 
-const HeaderContent = _ => (
+const HeaderContent = () => (
   <p>
     <a
       href="//github.com/talentedunicorn/todolist"
-      style={{ "--icon": "var(--icon-github)" }}
-      className="Button-icon"
+      className="Button-icon github"
     >
       <span className="visually-hidden">Source Code</span>
     </a>
   </p>
 );
 
-const App = _ => {
+const App = () => {
   const { todolist, onAddTodo } = useContext(TodoContext);
 
   const completedTodos = todolist
-    ? todolist.filter(todo => todo.completed === true)
+    ? todolist.filter((todo: Todo) => todo.completed === true)
     : [];
   const incompleteTodos = todolist
-    ? todolist.filter(todo => todo.completed === false)
+    ? todolist.filter((todo: Todo) => todo.completed === false)
     : [];
 
   return (
@@ -45,7 +45,7 @@ const App = _ => {
           </>
         }
       >
-        <Form handleFormSubmit={todo => onAddTodo(todo)} />
+        <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo)} />
         <List items={incompleteTodos} />
 
         {completedTodos.length > 0 && (

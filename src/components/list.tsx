@@ -2,22 +2,23 @@ import React, { useContext, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import Styles from "./list.module.css";
 import { TodoContext } from "../context/todoContext";
+import { Todo } from "../models/todo";
 
-const List = ({ items }) => {
+const List = ({ items }: { items: Array<Todo> }) => {
   const { toggleTodo, deleteTodo, editTodo } = useContext(TodoContext);
-  const [selectedTodo, setSelected] = useState(null);
+  const [selectedTodo, setSelected] = useState<null | any>(null);
 
-  const handleEdit = e =>
+  const handleEdit = (e: any) =>
     setSelected({ ...selectedTodo, text: e.target.value });
 
-  const canDelete = item => {
+  const canDelete = (item: Todo) => {
     if (selectedTodo) {
       return selectedTodo.id !== item.id && !item.completed;
     }
 
     return true;
   };
-  const handleSave = e => {
+  const handleSave = (e: any) => {
     e.preventDefault();
     editTodo(selectedTodo.id, selectedTodo.text);
     setSelected(null);
@@ -44,14 +45,13 @@ const List = ({ items }) => {
                   <textarea
                     rows={1}
                     className={Styles.ListInput}
-                    type="text"
                     value={selectedTodo.text}
                     onChange={handleEdit}
                   />
                   <button className="Button-icon save">Save</button>
                   <button
                     className="Button-icon cancel"
-                    onClick={_ => setSelected()}
+                    onClick={_ => setSelected(null)}
                   >
                     Cancel
                   </button>
