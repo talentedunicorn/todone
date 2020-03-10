@@ -6,6 +6,10 @@ afterEach(() => {
   localStorage.clear();
 });
 
+const DB_NAME = process.env.REACT_APP_DB_NAME
+  ? process.env.REACT_APP_DB_NAME
+  : "test_db";
+
 describe("TodoContext", () => {
   it("should render correct context", () => {
     const todolist = [1, 2, 3];
@@ -24,36 +28,36 @@ describe("TodoContext", () => {
   });
 
   it("should add todo", async () => {
-    let mockTodolist = [{ text: "Hello", completed: false }];
-    localStorage.setItem(
-      process.env.REACT_APP_DB_NAME,
-      JSON.stringify(mockTodolist)
-    );
     const tree = (
       <TodoProvider>
         <TodoContext.Consumer>
-          {({ todolist }) => {
+          {({ todolist, onAddTodo }) => {
+            const addTodo = () =>
+              onAddTodo({ text: "new task", completed: false });
             return (
-              <ul>
-                {todolist &&
-                  todolist.map((todo, i) => <li key={i}>{todo.text}</li>)}
-              </ul>
+              <>
+                <ul>
+                  {todolist &&
+                    todolist.map((todo, i) => <li key={i}>{todo.text}</li>)}
+                </ul>
+                <button data-testid="addButton" onClick={addTodo}>
+                  Add todo
+                </button>
+              </>
             );
           }}
         </TodoContext.Consumer>
       </TodoProvider>
     );
 
-    const { getAllByRole } = render(tree);
+    const { getAllByRole, getByTestId } = render(tree);
+    fireEvent.click(getByTestId("addButton"));
     expect(getAllByRole("listitem")).toHaveLength(1);
   });
 
   it("should be able to toggle todo status", () => {
     let mockTodolist = [{ id: 1, text: "Hello", completed: false }];
-    localStorage.setItem(
-      process.env.REACT_APP_DB_NAME,
-      JSON.stringify(mockTodolist)
-    );
+    localStorage.setItem(DB_NAME, JSON.stringify(mockTodolist));
     const tree = (
       <TodoProvider>
         <TodoContext.Consumer>
@@ -88,11 +92,8 @@ describe("TodoContext", () => {
       { id: 1, text: "Hello world", completed: false },
       { id: 2, text: "I remain", completed: false }
     ];
-    localStorage.setItem(
-      process.env.REACT_APP_DB_NAME,
-      JSON.stringify(mockTodolist)
-    );
-    const TestComponent = _ => {
+    localStorage.setItem(DB_NAME, JSON.stringify(mockTodolist));
+    const TestComponent = () => {
       const { todolist, deleteTodo } = React.useContext(TodoContext);
       return (
         <ul>
@@ -113,17 +114,20 @@ describe("TodoContext", () => {
     );
 
     const { container } = render(tree);
+    const button = container.querySelector("button");
     expect(container.querySelectorAll("li")).toHaveLength(2);
-    fireEvent.click(container.querySelector("button"));
+    if (button) {
+      fireEvent.click(button);
+    }
     expect(container.querySelectorAll("li")).toHaveLength(1);
   });
 
   it("should be able to edit todo", () => {
     localStorage.setItem(
-      process.env.REACT_APP_DB_NAME,
+      DB_NAME,
       JSON.stringify([{ id: 1, text: "Edit me", completed: false }])
     );
-    const TestComponent = _ => {
+    const TestComponent = () => {
       const { todolist, editTodo } = React.useContext(TodoContext);
       return (
         <ul>

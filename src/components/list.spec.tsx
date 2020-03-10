@@ -7,7 +7,7 @@ describe("<List/>", () => {
   it("should render without crashing", () => {
     const { getByTestId } = render(
       <TodoProvider>
-        <List />
+        <List items={[]} />
       </TodoProvider>
     );
     expect(getByTestId("List")).toBeTruthy();

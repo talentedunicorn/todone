@@ -38,6 +38,16 @@ beforeEach(() => {
 });
 
 describe("<App/>", () => {
+  it("should render without crashing", () => {
+    const { getAllByTestId } = render(
+      <TodoContext.Provider value={{ todolist: null }}>
+        <App />
+      </TodoContext.Provider>
+    );
+    expect(getAllByTestId("List").length).toBe(1);
+    expect(getAllByTestId("List")[0].children).toHaveLength(0);
+  });
+
   it("should be able to add todo", () => {
     const { getByTestId } = renderedApp();
     fireEvent.change(getByTestId("form-input"), {
