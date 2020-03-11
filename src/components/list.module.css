@@ -62,19 +62,19 @@
   margin-left: 1rem;
 }
 
-.ListInput[type="checkbox"] {
+.ListCheckbox {
   --color: var(--brand-color);
   --background: var(--white);
   position: relative;
 }
 
-.ListCheckbox {
-  position: relative;
+.ListCheckbox:hover {
+  --background: var(--brand-color);
 }
 
-.ListCheckbox:hover,
 .ListCheckbox:checked {
-  --background: var(--brand-color);
+  --background: var(--gray);
+  --color: var(--background);
 }
 
 .ListCheckbox:after {
