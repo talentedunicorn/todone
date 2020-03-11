@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/talentedunicorn/todolist.svg?branch=master)](https://travis-ci.org/talentedunicorn/todolist)
-[![codecov](https://codecov.io/gh/talentedunicorn/todolist/branch/master/graph/badge.svg)](https://codecov.io/gh/talentedunicorn/todolist)
+[![Build Status](https://travis-ci.org/talentedunicorn/todone.svg?branch=master)](https://travis-ci.org/talentedunicorn/todone)
+[![codecov](https://codecov.io/gh/talentedunicorn/todone/branch/master/graph/badge.svg)](https://codecov.io/gh/talentedunicorn/todone)
 
 ![Logo](src/logo.svg)
 
