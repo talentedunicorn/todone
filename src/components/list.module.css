@@ -68,6 +68,10 @@
   position: relative;
 }
 
+.ListCheckbox {
+  position: relative;
+}
+
 .ListCheckbox:hover,
 .ListCheckbox:checked {
   --background: var(--brand-color);
