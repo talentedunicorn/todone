@@ -9,6 +9,7 @@
 .Footer {
   padding: 1rem;
   margin-top: auto;
+  color: var(--gray);
 }
 
 .Logo {
