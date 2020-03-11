@@ -26,4 +26,17 @@ describe("<List/>", () => {
     );
     expect(getAllByRole("listitem")[0].textContent).toContain("Third todo");
   });
+
+  it("should not trigger select on clicking links", () => {
+    const todos = [
+      { id: 1, text: "Click [me](https://google.com)", completed: false }
+    ];
+    const { getByRole, queryByRole } = render(
+      <TodoProvider>
+        <List items={todos} />
+      </TodoProvider>
+    );
+    fireEvent.click(getByRole("link"));
+    expect(queryByRole("form")).toBe(null);
+  });
 });
