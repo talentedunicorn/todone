@@ -23,6 +23,17 @@ const List = ({ items }: { items: Array<Todo> }) => {
     editTodo(selectedTodo.id, selectedTodo.text);
     setSelected(null);
   };
+  const handleSelected = (item: any, e: any) => {
+    // Prevent links triggering click events
+    if (e.target.tagName.toLowerCase() === "a") {
+      e.target.target = "blank";
+      e.stopPropagation();
+      return;
+    }
+
+    setSelected(item);
+  };
+
   return (
     <ol
       data-testid="List"
@@ -61,7 +72,7 @@ const List = ({ items }: { items: Array<Todo> }) => {
                   className={Styles.ListContent}
                   title={item.text}
                   data-completed={item.completed ? true : undefined}
-                  onClick={() => setSelected(item)}
+                  onClick={e => handleSelected(item, e)}
                 >
                   <ReactMarkdown source={item.text} />
                 </div>

@@ -21,3 +21,7 @@ body {
   color: var(--black);
   font-family: var(--font);
 }
+
+a {
+  color: var(--brand-color);
+}
