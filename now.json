@@ -1,5 +1,4 @@
 {
-  "name": "todone",
   "build": {
     "env": {
       "REACT_APP_WEBSITE_NAME": "ToDone",
