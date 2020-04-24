@@ -49,13 +49,8 @@
 }
 
 .ListInput {
-  font-family: inherit;
+  composes: Input from "../App.css";
   flex: 1;
-  padding: 0.5rem;
-  border: none;
-  background: none;
-  box-shadow: 0 5px 0 0 var(--brand-color);
-  resize: vertical;
 }
 
 .List button {

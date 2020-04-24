@@ -10,19 +10,14 @@
 }
 
 .Input {
-  --color: var(--brand-color);
+  composes: Input from "../App.css";
+  --border-color: var(--brand-color);
   flex: var(--input-size);
-  font-size: 1rem;
-  font-family: inherit;
-  padding: 1rem;
-  border: none;
-  border-bottom: 5px solid var(--color);
-  resize: vertical;
 }
 
 .Input:focus {
-  --color: var(--black);
-  background: var(--color);
+  --border-color: var(--black);
+  background: var(--black);
   color: var(--white);
   outline: none;
 }
