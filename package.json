@@ -14,7 +14,7 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "start": "BROWSER=none && react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:coverage": "npm run test -- --coverage --watchAll=false",
