@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Todo } from "../models/todo";
-import {
-  GET_TODOS,
-  ADD_TODO,
-  EDIT_TODO,
-  TOGGLE_TODO,
-  DELETE_TODOS
-} from "../services/localStorage";
+import localService from "../services/localStorage";
+import keystoneService from "../services/keystone";
 
 type contextProps = {
   todolist: Array<Todo> | null;
@@ -19,13 +14,19 @@ type contextProps = {
 const TodoContext = React.createContext<Partial<contextProps>>({});
 const TodoProvider = (props: any) => {
   const [todolist, setTodolist] = useState<Array<Todo> | null>(null);
+  const { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS } =
+    process.env.REACT_APP_STORAGE_TYPE === "keystone"
+      ? keystoneService
+      : localService;
 
   const getCachedList = () =>
-    GET_TODOS.then((todos: Array<Todo>) => {
-      setTodolist([...todos]);
-    }).catch((error: any) => {
-      debugger;
-    });
+    GET_TODOS()
+      .then((todos: Array<Todo>) => {
+        setTodolist([...todos]);
+      })
+      .catch((error: any) => {
+        debugger;
+      });
 
   const toggleTodo = (id: number) => {
     const todo = (todolist && todolist.find(todo => todo.id === id)) || null;

@@ -8,11 +8,12 @@ const setDB = (data: Todo[]) =>
   window.localStorage.setItem(DB_NAME, JSON.stringify(data));
 
 // Queries
-const GET_TODOS = new Promise<any>(resolve => {
-  console.log("Getting Todos");
-  const data = getDB();
-  resolve(data);
-});
+const GET_TODOS = () =>
+  new Promise<any>(resolve => {
+    console.log("Getting Todos");
+    const data = getDB();
+    resolve(data);
+  });
 
 const ADD_TODO = (text: string) =>
   new Promise<Todo>(resolve => {
@@ -45,20 +46,24 @@ const TOGGLE_TODO = (id: Number, completed: boolean) =>
     console.log(`Set ${id} to ${completed ? "completed" : "incomplete"}`);
     const data = getDB();
     const selected = data.find((todo: Todo) => todo.id === id);
-    const newData: Todo[] = data.map((todo: any) => {
-      if (todo.id === id) {
-        todo.completed = !selected?.completed;
-      }
-      return todo;
-    });
-
     if (selected) {
+      const newData: Todo[] = data.map((todo: any) => {
+        if (todo.id === id) {
+          todo.completed = !selected.completed;
+        }
+        return todo;
+      });
       setDB(newData);
       resolve({ id, completed, text: selected?.text });
     }
   });
 
 const DELETE_TODOS = (ids: Array<Number>) =>
-  new Promise<any>(resolve => resolve(console.log(`Delete: ${ids.join(",")}`)));
+  new Promise<any>(resolve => {
+    const data = getDB();
+    const newData = data.filter((todo: Todo) => !ids.includes(todo.id));
+    setDB(newData);
+    resolve(console.log(`Delete: ${ids.join(",")}`));
+  });
 
-export { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS };
+export default { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS };

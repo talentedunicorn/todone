@@ -8,9 +8,10 @@ const keystoneGraphQL = axios.create({
 });
 
 // Queries
-const GET_TODOS = keystoneGraphQL
-  .post("", {
-    query: `
+const GET_TODOS = () =>
+  keystoneGraphQL
+    .post("", {
+      query: `
   query {
     allTodos {
       id
@@ -19,8 +20,8 @@ const GET_TODOS = keystoneGraphQL
     }
   }
 `
-  })
-  .then(data => data.data.data.allTodos);
+    })
+    .then(data => data.data.data.allTodos);
 
 const ADD_TODO = (text: String) =>
   keystoneGraphQL
@@ -92,4 +93,4 @@ const EDIT_TODO = (id: Number, text: String) =>
     })
     .then(data => data.data.data.updateTodo);
 
-export { GET_TODOS, ADD_TODO, TOGGLE_TODO, EDIT_TODO, DELETE_TODOS };
+export default { GET_TODOS, ADD_TODO, TOGGLE_TODO, EDIT_TODO, DELETE_TODOS };
