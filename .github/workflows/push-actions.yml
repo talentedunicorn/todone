@@ -4,6 +4,9 @@ on:
   push:
     branches: [master, development]
 
+env:
+  REACT_APP_DB_NAME: todone_github
+
 jobs:
   test_push:
     runs-on: ubuntu-latest

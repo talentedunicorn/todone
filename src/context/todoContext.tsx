@@ -9,9 +9,7 @@ type contextProps = {
   editTodo: any;
 };
 
-const DB_NAME = process.env.REACT_APP_DB_NAME
-  ? process.env.REACT_APP_DB_NAME
-  : "todone";
+const DB_NAME = process.env.REACT_APP_DB_NAME;
 
 const TodoContext = React.createContext<Partial<contextProps>>({});
 const TodoProvider = (props: any) => {
