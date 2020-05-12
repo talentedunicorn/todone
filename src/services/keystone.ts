@@ -41,8 +41,9 @@ const ADD_TODO = (text: String) =>
     .then(data => data.data.data.createTodo);
 
 const TOGGLE_TODO = (id: Number, completed: Boolean) =>
-  keystoneGraphQL.post("", {
-    query: `
+  keystoneGraphQL
+    .post("", {
+      query: `
     mutation ($id: ID!, $completed: Boolean) {
       updateTodo(id: $id, data: { completed: $completed }) {
         id
@@ -51,11 +52,12 @@ const TOGGLE_TODO = (id: Number, completed: Boolean) =>
       }
     }
   `,
-    variables: {
-      id,
-      completed
-    }
-  });
+      variables: {
+        id,
+        completed
+      }
+    })
+    .then(data => data.data.data.updateTodo);
 
 const DELETE_TODOS = (ids: Number[]) =>
   keystoneGraphQL.post("", {

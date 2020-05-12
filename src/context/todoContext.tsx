@@ -6,7 +6,7 @@ import {
   EDIT_TODO,
   TOGGLE_TODO,
   DELETE_TODOS
-} from "../services/keystone";
+} from "../services/localStorage";
 
 type contextProps = {
   todolist: Array<Todo> | null;
@@ -23,7 +23,7 @@ const TodoProvider = (props: any) => {
   const getCachedList = () =>
     GET_TODOS.then((todos: Array<Todo>) => {
       setTodolist([...todos]);
-    }).catch(error => {
+    }).catch((error: any) => {
       debugger;
     });
 
@@ -31,12 +31,9 @@ const TodoProvider = (props: any) => {
     const todo = (todolist && todolist.find(todo => todo.id === id)) || null;
     todo &&
       TOGGLE_TODO(id, !todo.completed)
-        .then((data: any) => {
+        .then((data: Todo) => {
           setTodolist(
-            todolist &&
-              todolist.map(todo =>
-                todo.id === id ? data.data.data.updateTodo : todo
-              )
+            todolist && todolist.map(todo => (todo.id === id ? data : todo))
           );
         })
         .catch(error => {
@@ -45,7 +42,7 @@ const TodoProvider = (props: any) => {
   };
 
   const deleteTodo = (id: number) => {
-    DELETE_TODOS([id]).then(_ =>
+    DELETE_TODOS([id]).then(() =>
       setTodolist(todolist && todolist.filter(todo => todo.id !== id))
     );
   };
