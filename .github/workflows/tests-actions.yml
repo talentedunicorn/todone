@@ -1,14 +1,21 @@
-name: Push Actions
+name: Testing push and PRs
 
 on:
   push:
-    branches: [master, development]
+    branches:
+      - master
+      - development
+  pull_request:
+    branches:
+      - master
+      - development
 
 env:
   REACT_APP_DB_NAME: todone_github
 
 jobs:
-  test_push:
+  unit-test:
+    name: Unit tests with coverage
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
