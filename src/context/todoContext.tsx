@@ -14,19 +14,18 @@ type contextProps = {
 const TodoContext = React.createContext<Partial<contextProps>>({});
 const TodoProvider = (props: any) => {
   const [todolist, setTodolist] = useState<Array<Todo> | null>(null);
-  const { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS } =
-    process.env.REACT_APP_STORAGE_TYPE === "keystone"
-      ? keystoneService
-      : localService;
+  let service;
 
-  const getCachedList = () =>
-    GET_TODOS()
-      .then((todos: Array<Todo>) => {
-        setTodolist([...todos]);
-      })
-      .catch((error: any) => {
-        debugger;
-      });
+  // Select storage service
+  switch (process.env.REACT_APP_STORAGE_TYPE) {
+    case "keystone":
+      service = keystoneService;
+      break;
+    default:
+      service = localService;
+  }
+
+  const { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS } = service;
 
   const toggleTodo = (id: number) => {
     const todo = (todolist && todolist.find(todo => todo.id === id)) || null;
@@ -74,8 +73,14 @@ const TodoProvider = (props: any) => {
   };
 
   useEffect(() => {
-    getCachedList();
-  }, []);
+    GET_TODOS()
+      .then((todos: Array<Todo>) => {
+        setTodolist([...todos]);
+      })
+      .catch((error: any) => {
+        debugger;
+      });
+  }, [GET_TODOS]);
 
   const implementation: contextProps = {
     todolist,
