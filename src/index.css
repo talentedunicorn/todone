@@ -31,3 +31,7 @@ body {
 a {
   color: var(--brand-color);
 }
+
+img {
+  max-width: 100%;
+}
