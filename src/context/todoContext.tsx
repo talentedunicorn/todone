@@ -30,15 +30,11 @@ const TodoProvider = (props: any) => {
   const toggleTodo = (id: number) => {
     const todo = (todolist && todolist.find(todo => todo.id === id)) || null;
     todo &&
-      TOGGLE_TODO(id, !todo.completed)
-        .then((data: Todo) => {
-          setTodolist(
-            todolist && todolist.map(todo => (todo.id === id ? data : todo))
-          );
-        })
-        .catch(error => {
-          debugger;
-        });
+      TOGGLE_TODO(id, !todo.completed).then((data: Todo) => {
+        setTodolist(
+          todolist && todolist.map(todo => (todo.id === id ? data : todo))
+        );
+      });
   };
 
   const deleteTodo = (id: number) => {
@@ -48,13 +44,9 @@ const TodoProvider = (props: any) => {
   };
 
   const onAddTodo = (todo: Todo) =>
-    ADD_TODO(todo.text)
-      .then((todo: Todo) => {
-        setTodolist([...(todolist || []), todo]);
-      })
-      .catch(error => {
-        debugger;
-      });
+    ADD_TODO(todo.text).then((todo: Todo) => {
+      setTodolist([...(todolist || []), todo]);
+    });
 
   const editTodo = (id: number, text: string) => {
     if (Boolean(text.trim().length)) {
@@ -73,13 +65,9 @@ const TodoProvider = (props: any) => {
   };
 
   useEffect(() => {
-    GET_TODOS()
-      .then((todos: Array<Todo>) => {
-        setTodolist([...todos]);
-      })
-      .catch((error: any) => {
-        debugger;
-      });
+    GET_TODOS().then((todos: Array<Todo>) => {
+      setTodolist([...(todos || [])]);
+    });
   }, [GET_TODOS]);
 
   const implementation: contextProps = {
