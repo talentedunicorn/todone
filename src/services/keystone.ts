@@ -1,35 +1,17 @@
 import axios from "axios";
 
-const authString = process.env.REACT_APP_KEYSTONE_TOKEN || ":";
 let userId = "";
 const keystoneGraphQL = axios.create({
   baseURL: `${process.env.REACT_APP_KEYSTONE_URL}/admin/api`
 });
 
 const LOGIN = () =>
-  keystoneGraphQL
-    .post("", {
-      query: `
-    mutation ($email: String!, $password: String!) {
-      authenticateUserWithPassword(email: $email, password: $password) {
-        token
-        item {
-          id
-        }
-      }
-    }
-  `,
-      variables: {
-        email: authString.substr(0, authString.indexOf(":")),
-        password: authString.substr(authString.indexOf(":") + 1)
-      }
-    })
-    .then(data => {
-      userId = data.data.data.authenticateUserWithPassword.item.id;
-      keystoneGraphQL.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${data.data.data.authenticateUserWithPassword.token}`;
-    });
+  axios("/api/login").then((data: any) => {
+    userId = data.data.userId;
+    keystoneGraphQL.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${data.data.token}`;
+  });
 
 // Queries
 const GET_TODOS = () =>
