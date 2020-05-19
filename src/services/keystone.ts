@@ -1,11 +1,35 @@
 import axios from "axios";
 
+const authString = process.env.REACT_APP_KEYSTONE_TOKEN || ":";
+let userId = "";
 const keystoneGraphQL = axios.create({
-  baseURL: `${process.env.REACT_APP_KEYSTONE_URL}/admin/api`,
-  headers: {
-    Authorization: `Bearer ${process.env.REACT_APP_KEYSTONE_TOKEN}`
-  }
+  baseURL: `${process.env.REACT_APP_KEYSTONE_URL}/admin/api`
 });
+
+const LOGIN = () =>
+  keystoneGraphQL
+    .post("", {
+      query: `
+    mutation ($email: String!, $password: String!) {
+      authenticateUserWithPassword(email: $email, password: $password) {
+        token
+        item {
+          id
+        }
+      }
+    }
+  `,
+      variables: {
+        email: authString.substr(0, authString.indexOf(":")),
+        password: authString.substr(authString.indexOf(":") + 1)
+      }
+    })
+    .then(data => {
+      userId = data.data.data.authenticateUserWithPassword.item.id;
+      keystoneGraphQL.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${data.data.data.authenticateUserWithPassword.token}`;
+    });
 
 // Queries
 const GET_TODOS = () =>
@@ -27,8 +51,8 @@ const ADD_TODO = (text: String) =>
   keystoneGraphQL
     .post("", {
       query: `
-    mutation ($text: String!){
-      createTodo(data: { text: $text }) {
+    mutation ($text: String!, $id: ID!){
+      createTodo(data: { text: $text, title: $text, owner: { connect: { id: $id } } }) {
         id
         text
         completed
@@ -36,7 +60,8 @@ const ADD_TODO = (text: String) =>
     }
     `,
       variables: {
-        text
+        text,
+        id: userId
       }
     })
     .then(data => data.data.data.createTodo);
@@ -93,4 +118,11 @@ const EDIT_TODO = (id: Number, text: String) =>
     })
     .then(data => data.data.data.updateTodo);
 
-export default { GET_TODOS, ADD_TODO, TOGGLE_TODO, EDIT_TODO, DELETE_TODOS };
+export default {
+  GET_TODOS,
+  ADD_TODO,
+  TOGGLE_TODO,
+  EDIT_TODO,
+  DELETE_TODOS,
+  LOGIN
+};

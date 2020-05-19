@@ -65,9 +65,17 @@ const TodoProvider = (props: any) => {
   };
 
   useEffect(() => {
-    GET_TODOS().then((todos: Array<Todo>) => {
-      setTodolist([...(todos || [])]);
-    });
+    if (process.env.REACT_APP_STORAGE_TYPE === "keystone") {
+      keystoneService.LOGIN().then(() =>
+        GET_TODOS().then((todos: Array<Todo>) => {
+          setTodolist([...(todos || [])]);
+        })
+      );
+    } else {
+      GET_TODOS().then((todos: Array<Todo>) => {
+        setTodolist([...(todos || [])]);
+      });
+    }
   }, [GET_TODOS]);
 
   const implementation: contextProps = {
