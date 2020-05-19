@@ -5,5 +5,16 @@
       "REACT_APP_WEBSITE_DESCRIPTION": "Simple ToDo app with LocalStorage",
       "REACT_APP_DB_NAME": "@todone_db_name"
     }
-  }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "access-control-allow-origin",
+          "value": "same-origin"
+        }
+      ]
+    }
+  ]
 }
