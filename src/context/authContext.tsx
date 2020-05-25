@@ -33,6 +33,7 @@ const AuthProvider = (props: any) => {
   const logout = () => {
     setToken(null);
     window.localStorage.removeItem("todone");
+    return history.push("/");
   };
 
   useEffect(() => {

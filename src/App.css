@@ -29,8 +29,10 @@
 .Button {
   padding: 0.5rem 1rem;
   background: var(--button-bg, var(--brand-color));
+  color: var(--button-color, var(--white));
   border: none;
   font-size: 1rem;
+  font-weight: bold;
 }
 
 .Button:disabled {
@@ -40,13 +42,13 @@
 .Button-icon {
   --icon-size: 1em;
   --button-bg: var(--brand-color);
+  --button-color: transparent;
   padding: var(--icon-size);
   width: 0;
   height: 0;
   overflow: hidden;
   mask: var(--icon) no-repeat center center/contain;
   background: var(--button-bg);
-  color: transparent;
   border: none;
 }
 
@@ -84,6 +86,11 @@
 
 .github {
   --icon: var(--icon-github);
+}
+
+.logout {
+  border-radius: 5px;
+  text-transform: lowercase;
 }
 
 .Input {
