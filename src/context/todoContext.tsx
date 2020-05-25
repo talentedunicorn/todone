@@ -79,7 +79,6 @@ const TodoProvider = (props: any) => {
     const fetchData = async () => {
       if (token) {
         const todos = await GET_TODOS();
-        debugger;
         setTodolist(todos);
       }
     };

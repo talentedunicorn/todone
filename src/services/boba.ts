@@ -1,18 +1,22 @@
 import axios from "axios";
 
 const backend = axios.create({
-  baseURL: `https://boba-dev.herokuapp.com`
+  baseURL: process.env.REACT_APP_BACKEND_URL
 });
 
-const LOGIN = ({ username, password }: any) =>
-  backend
+const LOGIN = ({ username, password }: any) => {
+  return backend
     .post("/auth/local", { identifier: username, password })
     .then((data: any) => {
-      backend.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${data.data.jwt}`;
+      SET_TOKEN(data.data.jwt);
       return data.data.jwt;
     });
+};
+
+const SET_TOKEN = (token: string) => {
+  backend.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  window.localStorage.setItem("todone", JSON.stringify(token));
+};
 
 // Queries
 const GET_TODOS = () => backend.get("/todos").then(res => res.data);
@@ -36,4 +40,4 @@ export default {
   DELETE_TODOS
 };
 
-export { GET_TODOS, ADD_TODO, TOGGLE_TODO, EDIT_TODO, DELETE_TODOS, LOGIN };
+export { LOGIN, SET_TOKEN };
