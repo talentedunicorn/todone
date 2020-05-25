@@ -1,0 +1,65 @@
+.Wrapper {
+  --border-radius: 5px;
+  --logo-size: 5rem;
+  padding: 2rem;
+}
+
+.Wrapper,
+.Form,
+.Controls {
+  display: flex;
+  flex-flow: column;
+}
+
+.Title {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.Title::before {
+  content: "";
+  background: var(--logo) no-repeat center center/contain;
+  padding: var(--logo-size);
+  margin: 0 1rem 1rem;
+  box-shadow: 0 2px 4px var(--gray), 2px 0 6px var(--gray);
+  border-radius: var(--border-radius);
+}
+
+.Title span {
+  font-size: 1.2rem;
+}
+
+.Form {
+  padding: 1rem;
+}
+
+.Controls {
+  margin: 1rem 0;
+}
+
+.Input {
+  composes: Input from "./App.css";
+  --border-color: var(--brand-color);
+  margin-bottom: 1rem;
+  width: 100%;
+  border-radius: var(--border-radius);
+}
+
+.Login,
+.Offline {
+  composes: Button from "./App.css";
+  margin-bottom: 1rem;
+  padding: 1rem;
+  color: var(--white);
+  font-weight: bold;
+  border-radius: var(--border-radius);
+}
+
+.Login {
+}
+
+.Offline {
+  background: none;
+  color: var(--link-color);
+}

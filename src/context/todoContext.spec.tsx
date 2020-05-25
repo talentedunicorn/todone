@@ -13,8 +13,8 @@ const DB_NAME = process.env.REACT_APP_DB_NAME
 describe("TodoContext", () => {
   xit("should render correct context", () => {
     let mockTodolist = [
-      { id: 1, text: "Hello world", completed: false },
-      { id: 2, text: "I remain", completed: false }
+      { id: 1, content: "Hello world", completed: false },
+      { id: 2, content: "I remain", completed: false }
     ];
     localStorage.setItem(DB_NAME, JSON.stringify(mockTodolist));
 
@@ -43,7 +43,7 @@ describe("TodoContext", () => {
               <>
                 <ul>
                   {todolist &&
-                    todolist.map((todo, i) => <li key={i}>{todo.text}</li>)}
+                    todolist.map((todo, i) => <li key={i}>{todo.content}</li>)}
                 </ul>
                 <button data-testid="addButton" onClick={addTodo}>
                   Add todo
@@ -72,7 +72,7 @@ describe("TodoContext", () => {
                 {todolist &&
                   todolist.map((todo, i) => (
                     <li key={i}>
-                      {todo.text}
+                      {todo.content}
                       <span>{todo.completed.toString()}</span>
                       <button onClick={() => toggleTodo(todo.id)}>
                         Toggle
@@ -105,7 +105,7 @@ describe("TodoContext", () => {
           {todolist &&
             todolist.map((todo, i) => (
               <li key={todo.id}>
-                <span>{todo.text}</span>
+                <span>{todo.content}</span>
                 <button onClick={() => deleteTodo(todo.id)}>Delete</button>
               </li>
             ))}
@@ -139,7 +139,7 @@ describe("TodoContext", () => {
           {todolist &&
             todolist.map(todo => (
               <li key={todo.id}>
-                <p>{todo.text}</p>
+                <p>{todo.content}</p>
                 <button onClick={_ => editTodo(todo.id, "Edited")}>Edit</button>
               </li>
             ))}

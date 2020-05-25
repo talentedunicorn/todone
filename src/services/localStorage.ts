@@ -14,27 +14,27 @@ const GET_TODOS = () =>
     resolve(data);
   });
 
-const ADD_TODO = (text: string) =>
+const ADD_TODO = (content: string) =>
   new Promise<Todo>(resolve => {
     const data = getDB();
-    const newTodo: Todo = { id: new Date(), text, completed: false };
+    const newTodo: Todo = { id: new Date(), content, completed: false };
     setDB([...data, newTodo]);
     resolve(newTodo);
   });
 
-const EDIT_TODO = (id: Number, text: string) =>
+const EDIT_TODO = (id: Number, content: string) =>
   new Promise<Todo>(resolve => {
     const data = getDB();
     const selected = data.find((todo: Todo) => todo.id === id);
     const newData: Todo[] = data.map((todo: any) => {
       if (todo.id === id) {
-        todo.text = text;
+        todo.content = content;
       }
       return todo;
     });
     if (selected) {
       setDB(newData);
-      resolve({ id, text, completed: selected && selected.completed });
+      resolve({ id, content, completed: selected && selected.completed });
     }
   });
 
@@ -50,7 +50,7 @@ const TOGGLE_TODO = (id: Number, completed: boolean) =>
         return todo;
       });
       setDB(newData);
-      resolve({ id, completed, text: selected?.text });
+      resolve({ id, completed, content: selected?.content });
     }
   });
 

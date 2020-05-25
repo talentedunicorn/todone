@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useLocation, useHistory } from "react-router-dom";
 import { Todo } from "../models/todo";
 import localService from "../services/localStorage";
-import keystoneService from "../services/keystone";
+// import keystoneService from '../services/keystone';
+import { AuthContext } from "./authContext";
+import bobaService from "../services/boba";
 
 type contextProps = {
   todolist: Array<Todo> | null;
@@ -14,12 +17,15 @@ type contextProps = {
 const TodoContext = React.createContext<Partial<contextProps>>({});
 const TodoProvider = (props: any) => {
   const [todolist, setTodolist] = useState<Array<Todo> | null>(null);
+  const { token } = useContext(AuthContext);
+  const location = useLocation();
+  const history = useHistory();
   let service;
 
   // Select storage service
   switch (process.env.REACT_APP_STORAGE_TYPE) {
-    case "keystone":
-      service = keystoneService;
+    case "backend":
+      service = bobaService;
       break;
     default:
       service = localService;
@@ -44,13 +50,13 @@ const TodoProvider = (props: any) => {
   };
 
   const onAddTodo = (todo: Todo) =>
-    ADD_TODO(todo.text).then((todo: Todo) => {
+    ADD_TODO(todo.content).then((todo: Todo) => {
       setTodolist([...(todolist || []), todo]);
     });
 
-  const editTodo = (id: number, text: string) => {
-    if (Boolean(text.trim().length)) {
-      EDIT_TODO(id, text).then((updatedTodo: Todo) =>
+  const editTodo = (id: number, content: string) => {
+    if (Boolean(content.trim().length)) {
+      EDIT_TODO(id, content).then((updatedTodo: Todo) =>
         setTodolist(
           todolist &&
             todolist.map((todo: Todo) => {
@@ -65,18 +71,21 @@ const TodoProvider = (props: any) => {
   };
 
   useEffect(() => {
-    if (process.env.REACT_APP_STORAGE_TYPE === "keystone") {
-      keystoneService.LOGIN().then(() =>
-        GET_TODOS().then((todos: Array<Todo>) => {
-          setTodolist([...(todos || [])]);
-        })
-      );
-    } else {
-      GET_TODOS().then((todos: Array<Todo>) => {
-        setTodolist([...(todos || [])]);
-      });
+    // Check for token
+    if (location.pathname === "/app" && !Boolean(token)) {
+      return history.push("/");
     }
-  }, [GET_TODOS]);
+
+    const fetchData = async () => {
+      if (token) {
+        const todos = await GET_TODOS();
+        debugger;
+        setTodolist(todos);
+      }
+    };
+
+    fetchData();
+  }, [GET_TODOS, location, history, token]);
 
   const implementation: contextProps = {
     todolist,
