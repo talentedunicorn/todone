@@ -9,7 +9,7 @@ const List = ({ items }: { items: Array<Todo> }) => {
   const [selectedTodo, setSelected] = useState<null | any>(null);
 
   const handleEdit = (e: any) =>
-    setSelected({ ...selectedTodo, text: e.target.value });
+    setSelected({ ...selectedTodo, content: e.target.value });
 
   const canDelete = (item: Todo) => {
     if (selectedTodo) {
@@ -20,7 +20,7 @@ const List = ({ items }: { items: Array<Todo> }) => {
   };
   const handleSave = (e: any) => {
     e.preventDefault();
-    editTodo(selectedTodo.id, selectedTodo.text);
+    editTodo(selectedTodo.id, selectedTodo.content);
     setSelected(null);
   };
   const handleSelected = (item: any, e: any) => {
@@ -56,7 +56,7 @@ const List = ({ items }: { items: Array<Todo> }) => {
                   <textarea
                     rows={1}
                     className={Styles.ListInput}
-                    value={selectedTodo.text}
+                    value={selectedTodo.content}
                     onChange={handleEdit}
                   />
                   <button className="Button-icon save">Save</button>
@@ -70,11 +70,11 @@ const List = ({ items }: { items: Array<Todo> }) => {
               ) : (
                 <div
                   className={Styles.ListContent}
-                  title={item.text}
+                  title={item.content}
                   data-completed={item.completed ? true : undefined}
                   onClick={e => handleSelected(item, e)}
                 >
-                  <ReactMarkdown source={item.text} />
+                  <ReactMarkdown source={item.content} />
                 </div>
               )}
               {canDelete(item) && (

@@ -27,7 +27,6 @@
   --background: var(--black);
   flex: 1;
   background: var(--background);
-  color: var(--white);
   border: none;
   padding: 1rem 2rem;
   font-weight: bold;

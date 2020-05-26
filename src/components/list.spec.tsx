@@ -10,9 +10,9 @@ describe("<List/>", () => {
 
   it("should render list sorted latest first", () => {
     const testTodos = [
-      { id: 1, text: "First todo", completed: false },
-      { id: 2, text: "Second todo", completed: false },
-      { id: 3, text: "Third todo", completed: false }
+      { id: 1, content: "First todo", completed: false },
+      { id: 2, content: "Second todo", completed: false },
+      { id: 3, content: "Third todo", completed: false }
     ];
     const { getAllByRole } = render(<List items={testTodos} />);
     expect(getAllByRole("listitem")[0].textContent).toContain("Third todo");
@@ -20,7 +20,7 @@ describe("<List/>", () => {
 
   it("should not trigger select on clicking links", () => {
     const todos = [
-      { id: 1, text: "Click [me](https://google.com)", completed: false }
+      { id: 1, content: "Click [me](https://google.com)", completed: false }
     ];
     const { getByRole, queryByRole } = render(<List items={todos} />);
     fireEvent.click(getByRole("link"));

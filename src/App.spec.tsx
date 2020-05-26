@@ -17,12 +17,12 @@ beforeEach(() => {
           todolist: [
             {
               id: 1,
-              text: "First todo",
+              content: "First todo",
               completed: false
             },
             {
               id: 2,
-              text: "Second todo",
+              content: "Second todo",
               completed: true
             }
           ],
@@ -57,7 +57,7 @@ describe("<App/>", () => {
     expect(mockedAddTodo).toHaveBeenCalledTimes(1);
     expect(mockedAddTodo).toHaveBeenCalledWith({
       completed: false,
-      text: "Test todo"
+      content: "Test todo"
     });
   });
 

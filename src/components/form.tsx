@@ -2,21 +2,21 @@ import React, { useState } from "react";
 import Styles from "./form.module.css";
 
 const Form = ({ handleFormSubmit }: any) => {
-  const [text, setText] = useState("");
+  const [content, setContent] = useState("");
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
     // Todo is atleast 3 characters long
-    if (text.trim().length < 3) {
+    if (content.trim().length < 3) {
       return false;
     }
 
     handleFormSubmit({
-      text,
+      content,
       completed: false
     });
 
-    setText("");
+    setContent("");
   };
 
   return (
@@ -25,9 +25,9 @@ const Form = ({ handleFormSubmit }: any) => {
         data-testid="form-input"
         className={Styles.Input}
         rows={1}
-        value={text}
+        value={content}
         placeholder="Start typing..."
-        onChange={e => setText(e.target.value)}
+        onChange={e => setContent(e.target.value)}
       />
       <button className={Styles.Button}>Add task</button>
     </form>

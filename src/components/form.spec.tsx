@@ -20,10 +20,10 @@ describe("<Form />", () => {
     fireEvent.change(input, { target: { value: testTodo } });
     fireEvent.submit(getByTestId("form"));
     expect(mockHandleSubmit).toHaveBeenCalledWith({
-      text: testTodo,
+      content: testTodo,
       completed: false
     });
-    expect(input.value).toBe("");
+    expect(input.textContent).toBe("");
   });
 
   it("should not add todo with less than 3 characters", () => {

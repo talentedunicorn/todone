@@ -6,17 +6,21 @@ import Form from "./components/form";
 import { Todo } from "./models/todo";
 
 import { TodoContext } from "./context/todoContext";
+import { AuthContext } from "./context/authContext";
 
-const HeaderContent = () => (
-  <p>
-    <a
-      href="//github.com/talentedunicorn/todolist"
-      className="Button-icon github"
-    >
-      <span className="visually-hidden">Source Code</span>
-    </a>
-  </p>
-);
+const HeaderContent = () => {
+  const { logout, token } = useContext(AuthContext);
+  return (
+    <>
+      {token && (
+        <button className="Button logout" onClick={logout}>
+          {" "}
+          Logout
+        </button>
+      )}
+    </>
+  );
+};
 
 const App = () => {
   const { todolist, onAddTodo } = useContext(TodoContext);
