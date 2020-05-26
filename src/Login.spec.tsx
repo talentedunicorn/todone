@@ -7,6 +7,5 @@ describe("Login page", () => {
     const { getByText, getByTestId } = render(<Login />);
     expect(getByTestId("Login")).toBeInTheDocument();
     expect(getByText(/log in/i)).toBeInTheDocument();
-    expect(getByText(/use offline/i)).toBeInTheDocument();
   });
 });
