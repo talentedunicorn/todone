@@ -1,10 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { Todo } from "../models/todo";
-import localService from "../services/localStorage";
-// import keystoneService from '../services/keystone';
-import { AuthContext } from "./authContext";
-import bobaService from "../services/boba";
+import service from "../services/index";
 
 type contextProps = {
   todolist: Array<Todo> | null;
@@ -17,19 +14,8 @@ type contextProps = {
 const TodoContext = React.createContext<Partial<contextProps>>({});
 const TodoProvider = (props: any) => {
   const [todolist, setTodolist] = useState<Array<Todo> | null>(null);
-  const { token } = useContext(AuthContext);
   const location = useLocation();
   const history = useHistory();
-  let service;
-
-  // Select storage service
-  switch (process.env.REACT_APP_STORAGE_TYPE) {
-    case "backend":
-      service = bobaService;
-      break;
-    default:
-      service = localService;
-  }
 
   const { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS } = service;
 
@@ -71,20 +57,16 @@ const TodoProvider = (props: any) => {
   };
 
   useEffect(() => {
-    // Check for token
-    if (location.pathname === "/app" && !Boolean(token)) {
-      return history.push("/");
-    }
-
     const fetchData = async () => {
-      if (token) {
+      const token = window.localStorage.getItem("token");
+      if (token || process.env.REACT_APP_STORAGE_TYPE === "offline") {
         const todos = await GET_TODOS();
         setTodolist(todos);
       }
     };
 
     fetchData();
-  }, [GET_TODOS, location, history, token]);
+  }, [GET_TODOS, location, history]);
 
   const implementation: contextProps = {
     todolist,

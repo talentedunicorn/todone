@@ -15,7 +15,7 @@ const Login = () => {
   return (
     <div data-testid="Login" className={Styles.Wrapper}>
       <h2 className={Styles.Title}>
-        <span>ToDone</span>
+        <span className="visually-hidden">ToDone</span>
       </h2>
 
       <form className={Styles.Form} onSubmit={handleSubmit}>
@@ -48,9 +48,6 @@ const Login = () => {
             disabled={!username || !password}
           >
             Log in
-          </button>
-          <button className={Styles.Offline} onClick={_ => login("offline")}>
-            Use offline
           </button>
         </div>
       </form>

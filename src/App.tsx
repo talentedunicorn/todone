@@ -9,11 +9,16 @@ import { TodoContext } from "./context/todoContext";
 import { AuthContext } from "./context/authContext";
 
 const HeaderContent = () => {
-  const { logout } = useContext(AuthContext);
+  const { logout, token } = useContext(AuthContext);
   return (
-    <button className="Button logout" onClick={logout}>
-      Logout
-    </button>
+    <>
+      {token && (
+        <button className="Button logout" onClick={logout}>
+          {" "}
+          Logout
+        </button>
+      )}
+    </>
   );
 };
 

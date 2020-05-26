@@ -1,10 +1,10 @@
 .Wrapper {
   --border-radius: 5px;
-  --logo-size: 5rem;
+  --logo-size: 3rem;
+  --form-width: 30rem;
   padding: 2rem;
 }
 
-.Wrapper,
 .Form,
 .Controls {
   display: flex;
@@ -26,12 +26,10 @@
   border-radius: var(--border-radius);
 }
 
-.Title span {
-  font-size: 1.2rem;
-}
-
 .Form {
   padding: 1rem;
+  margin: 2rem auto;
+  max-width: var(--form-width);
 }
 
 .Controls {
@@ -46,8 +44,7 @@
   border-radius: var(--border-radius);
 }
 
-.Login,
-.Offline {
+.Login {
   composes: Button from "./App.css";
   margin-bottom: 1rem;
   padding: 1rem;
@@ -56,10 +53,8 @@
   border-radius: var(--border-radius);
 }
 
-.Login {
-}
-
-.Offline {
-  background: none;
-  color: var(--link-color);
+@media screen and (min-width: 50rem) {
+  .Wrapper {
+    --logo-size: 5rem;
+  }
 }
