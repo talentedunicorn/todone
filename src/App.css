@@ -1,9 +1,5 @@
-.App,
 .App > div {
-  height: inherit;
-}
-
-.App > div {
+  height: 100vh;
   display: flex;
   flex-flow: column;
 }

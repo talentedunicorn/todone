@@ -3,6 +3,7 @@ import "./App.css";
 import Layout from "./components/layout";
 import List from "./components/list";
 import Form from "./components/form";
+import Loading from "./components/loading";
 import { Todo } from "./models/todo";
 
 import { TodoContext } from "./context/todoContext";
@@ -21,6 +22,15 @@ const HeaderContent = () => {
     </>
   );
 };
+
+const RenderedList = ({ title, data }: any) => (
+  <div>
+    <h3 data-testid="completed-list-title" className="SectionTitle">
+      {title}
+    </h3>
+    <List items={data} />
+  </div>
+);
 
 const App = () => {
   const { todolist, onAddTodo } = useContext(TodoContext);
@@ -49,15 +59,15 @@ const App = () => {
           </>
         }
       >
-        <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo)} />
-        <List items={incompleteTodos} />
-
-        {completedTodos.length > 0 && (
+        {!todolist ? (
+          <Loading loading={true} />
+        ) : (
           <>
-            <h3 data-testid="completed-list-title" className="SectionTitle">
-              Completed
-            </h3>
-            <List items={completedTodos} />
+            {completedTodos.length > 0 && (
+              <RenderedList title="Completed" data={completedTodos} />
+            )}
+            <RenderedList title="Incomplete" data={incompleteTodos} />
+            <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo)} />
           </>
         )}
       </Layout>

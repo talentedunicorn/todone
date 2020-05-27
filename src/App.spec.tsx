@@ -44,8 +44,7 @@ describe("<App/>", () => {
         <App />
       </TodoContext.Provider>
     );
-    expect(getAllByTestId("List").length).toBe(1);
-    expect(getAllByTestId("List")[0].children).toHaveLength(0);
+    expect(getAllByTestId("Loading").length).toBe(1);
   });
 
   it("should be able to add todo", () => {

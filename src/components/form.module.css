@@ -4,7 +4,7 @@
   flex-wrap: wrap;
   margin: 0;
   position: sticky;
-  top: 0;
+  bottom: 0;
   z-index: 2;
   background: var(--white);
 }
