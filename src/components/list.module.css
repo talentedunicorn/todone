@@ -14,9 +14,9 @@
 
 .ListItem {
   display: flex;
-  align-items: center;
   padding: 1rem;
   position: relative;
+  border-top: 1px solid var(--gray-light);
 }
 
 .ListItem:hover {
@@ -64,6 +64,7 @@
 .ListContent {
   cursor: pointer;
   line-height: 1.5;
+  margin-top: -1em; /* Hack to fix alignment to controls */
 }
 
 .ListContent[data-completed] {
