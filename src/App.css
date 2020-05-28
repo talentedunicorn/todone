@@ -90,6 +90,8 @@
 }
 
 .Input {
+  color: var(--input-color);
+  background: var(--input-background);
   font-size: 1rem;
   font-family: inherit;
   padding: 1rem;

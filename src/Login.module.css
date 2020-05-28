@@ -1,7 +1,11 @@
 .Wrapper {
-  --border-radius: 5px;
+  --border-radius: 3px;
   --logo-size: 3rem;
   --form-width: 30rem;
+  min-height: 100vh;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
   padding: 2rem;
 }
 
@@ -23,13 +27,11 @@
   padding: var(--logo-size);
   margin: 0 1rem 1rem;
   box-shadow: 0 2px 4px var(--gray), 2px 0 6px var(--gray);
-  border-radius: var(--border-radius);
+  border-radius: 6px;
 }
 
 .Form {
   padding: 1rem;
-  margin: 2rem auto;
-  max-width: var(--form-width);
 }
 
 .Controls {
@@ -39,9 +41,15 @@
 .Input {
   composes: Input from "./App.css";
   --border-color: var(--brand-color);
+  --input-background: var(--gray-light);
   margin-bottom: 1rem;
   width: 100%;
   border-radius: var(--border-radius);
+}
+
+.Input:focus {
+  --input-background: var(--black);
+  --input-color: var(--white);
 }
 
 .Login {
@@ -55,6 +63,16 @@
 
 @media screen and (min-width: 50rem) {
   .Wrapper {
-    --logo-size: 5rem;
+    --logo-size: 6rem;
+    flex-flow: row wrap;
+    align-items: center;
+  }
+
+  .Title {
+    flex: 0 50%;
+  }
+
+  .Form {
+    flex: 0 var(--form-width);
   }
 }
