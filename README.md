@@ -6,6 +6,8 @@
 
 > Todo list app with localStorage
 
+![Screenshot](Screenshot.png)
+
 # Features
 
 - [x] Sync to localStorage
