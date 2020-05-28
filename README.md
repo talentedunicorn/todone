@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/talentedunicorn/todone.svg?branch=master)](https://travis-ci.org/talentedunicorn/todone)
-[![codecov](https://codecov.io/gh/talentedunicorn/todone/branch/master/graph/badge.svg)](https://codecov.io/gh/talentedunicorn/todone)
+![Tests](https://github.com/talentedunicorn/todone/workflows/Testing%20push%20and%20PRs/badge.svg)
 
 ![Logo](src/logo.svg)
 
@@ -11,8 +10,8 @@
 
 - [x] Sync to localStorage
 - [x] Markdown support
+- [x] Online accounts _In beta testing_
 
 ## Nice to have
 
 - [ ] Categories
-- [ ] Online accounts
