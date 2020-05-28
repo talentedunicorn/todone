@@ -40,7 +40,6 @@ const AuthProvider = (props: any) => {
       return history.push("/app");
     }
 
-    console.log("running auth", location.pathname);
     // Offline, skip login
     if (STORAGE_TYPE === "offline") {
       if (location.pathname === "/") {
