@@ -98,8 +98,10 @@
   border: none;
   border-bottom: 5px solid var(--border-color, var(--black));
   resize: vertical;
+  height: var(--input-height);
 }
 
 .Input:focus {
   --border-color: var(--black);
+  --input-height: 10rem;
 }
