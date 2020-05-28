@@ -66,7 +66,9 @@ const App = () => {
             {completedTodos.length > 0 && (
               <RenderedList title="Completed" data={completedTodos} />
             )}
-            <RenderedList title="Incomplete" data={incompleteTodos} />
+            {incompleteTodos.length > 0 && (
+              <RenderedList title="Incomplete" data={incompleteTodos} />
+            )}
             <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo)} />
           </>
         )}
