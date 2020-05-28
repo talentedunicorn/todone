@@ -4,10 +4,10 @@ import App from "./App";
 import { TodoContext } from "./context/todoContext";
 
 let renderedApp: any;
-const mockedAddTodo = jest.fn();
-const mockedDeleteTodo = jest.fn();
-const mockedToggleTodo = jest.fn();
-const mockedEditTodo = jest.fn();
+const mockedAddTodo = jest.fn().mockResolvedValue(true);
+const mockedDeleteTodo = jest.fn().mockResolvedValue(true);
+const mockedToggleTodo = jest.fn().mockResolvedValue(true);
+const mockedEditTodo = jest.fn().mockResolvedValue(true);
 
 beforeEach(() => {
   renderedApp = () =>

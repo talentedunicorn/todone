@@ -7,6 +7,7 @@ import { Todo } from "../models/todo";
 const List = ({ items }: { items: Array<Todo> }) => {
   const { toggleTodo, deleteTodo, editTodo } = useContext(TodoContext);
   const [selectedTodo, setSelected] = useState<null | any>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleEdit = (e: any) =>
     setSelected({ ...selectedTodo, content: e.target.value });
@@ -20,8 +21,11 @@ const List = ({ items }: { items: Array<Todo> }) => {
   };
   const handleSave = (e: any) => {
     e.preventDefault();
-    editTodo(selectedTodo.id, selectedTodo.content);
-    setSelected(null);
+    setLoading(true);
+    editTodo(selectedTodo.id, selectedTodo.content).finally(() => {
+      setSelected(null);
+      setLoading(false);
+    });
   };
   const handleSelected = (item: any, e: any) => {
     // Prevent links triggering click events
@@ -44,7 +48,13 @@ const List = ({ items }: { items: Array<Todo> }) => {
         items
           .sort((a, b) => b.id - a.id)
           .map(item => (
-            <li className={Styles.ListItem} key={item.id}>
+            <li
+              className={Styles.ListItem}
+              key={item.id}
+              data-loading={
+                loading && selectedTodo && selectedTodo.id === item.id
+              }
+            >
               <input
                 className={Styles.ListCheckbox}
                 type="checkbox"

@@ -21,19 +21,20 @@ const TodoProvider = (props: any) => {
 
   const toggleTodo = (id: number) => {
     const todo = (todolist && todolist.find(todo => todo.id === id)) || null;
-    todo &&
+    return (
+      todo &&
       TOGGLE_TODO(id, !todo.completed).then((data: Todo) => {
         setTodolist(
           todolist && todolist.map(todo => (todo.id === id ? data : todo))
         );
-      });
+      })
+    );
   };
 
-  const deleteTodo = (id: number) => {
+  const deleteTodo = (id: number) =>
     DELETE_TODOS([id]).then(() =>
       setTodolist(todolist && todolist.filter(todo => todo.id !== id))
     );
-  };
 
   const onAddTodo = (todo: Todo) =>
     ADD_TODO(todo.content).then((todo: Todo) => {
@@ -42,7 +43,7 @@ const TodoProvider = (props: any) => {
 
   const editTodo = (id: number, content: string) => {
     if (Boolean(content.trim().length)) {
-      EDIT_TODO(id, content).then((updatedTodo: Todo) =>
+      return EDIT_TODO(id, content).then((updatedTodo: Todo) =>
         setTodolist(
           todolist &&
             todolist.map((todo: Todo) => {
