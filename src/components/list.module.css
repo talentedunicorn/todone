@@ -14,12 +14,40 @@
 
 .ListItem {
   display: flex;
-  align-items: center;
   padding: 1rem;
+  position: relative;
+  border-top: 1px solid var(--gray-light);
 }
 
 .ListItem:hover {
   background: var(--gray-light);
+}
+
+.ListItem[data-loading="true"]:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: linear-gradient(
+    256deg,
+    var(--white),
+    var(--brand-color),
+    var(--white)
+  );
+  background-size: 300% 300%;
+  z-index: 4;
+  animation: pulse 2s infinite ease-in;
+}
+
+@keyframes pulse {
+  from {
+    background-position: 0% 100%;
+  }
+  to {
+    background-position: 100% 0%;
+  }
 }
 
 .ListContent,
@@ -36,6 +64,7 @@
 .ListContent {
   cursor: pointer;
   line-height: 1.5;
+  margin-top: -1em; /* Hack to fix alignment to controls */
 }
 
 .ListContent[data-completed] {

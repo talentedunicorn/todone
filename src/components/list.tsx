@@ -7,9 +7,10 @@ import { Todo } from "../models/todo";
 const List = ({ items }: { items: Array<Todo> }) => {
   const { toggleTodo, deleteTodo, editTodo } = useContext(TodoContext);
   const [selectedTodo, setSelected] = useState<null | any>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleEdit = (e: any) =>
-    setSelected({ ...selectedTodo, text: e.target.value });
+    setSelected({ ...selectedTodo, content: e.target.value });
 
   const canDelete = (item: Todo) => {
     if (selectedTodo) {
@@ -20,8 +21,11 @@ const List = ({ items }: { items: Array<Todo> }) => {
   };
   const handleSave = (e: any) => {
     e.preventDefault();
-    editTodo(selectedTodo.id, selectedTodo.text);
-    setSelected(null);
+    setLoading(true);
+    editTodo(selectedTodo.id, selectedTodo.content).finally(() => {
+      setSelected(null);
+      setLoading(false);
+    });
   };
   const handleSelected = (item: any, e: any) => {
     // Prevent links triggering click events
@@ -44,7 +48,13 @@ const List = ({ items }: { items: Array<Todo> }) => {
         items
           .sort((a, b) => b.id - a.id)
           .map(item => (
-            <li className={Styles.ListItem} key={item.id}>
+            <li
+              className={Styles.ListItem}
+              key={item.id}
+              data-loading={
+                loading && selectedTodo && selectedTodo.id === item.id
+              }
+            >
               <input
                 className={Styles.ListCheckbox}
                 type="checkbox"
@@ -56,7 +66,7 @@ const List = ({ items }: { items: Array<Todo> }) => {
                   <textarea
                     rows={1}
                     className={Styles.ListInput}
-                    value={selectedTodo.text}
+                    value={selectedTodo.content}
                     onChange={handleEdit}
                   />
                   <button className="Button-icon save">Save</button>
@@ -70,11 +80,11 @@ const List = ({ items }: { items: Array<Todo> }) => {
               ) : (
                 <div
                   className={Styles.ListContent}
-                  title={item.text}
+                  title={item.content}
                   data-completed={item.completed ? true : undefined}
                   onClick={e => handleSelected(item, e)}
                 >
-                  <ReactMarkdown source={item.text} />
+                  <ReactMarkdown source={item.content} />
                 </div>
               )}
               {canDelete(item) && (

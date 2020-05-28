@@ -1,15 +1,19 @@
 {
   "name": "todone",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@now/node": "^1.6.1",
     "@types/jest": "^25.1.4",
     "@types/node": "^13.9.0",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
+    "@types/react-router-dom": "^5.1.5",
+    "axios": "^0.19.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-markdown": "^4.3.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "3.1.2",
     "typescript": "^3.8.3"
   },
@@ -36,6 +40,7 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.8.0",
     "@testing-library/react": "^9.4.0",
     "codecov": "^3.6.5",
     "husky": "^3.1.0",

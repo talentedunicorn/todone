@@ -4,7 +4,7 @@
   flex-wrap: wrap;
   margin: 0;
   position: sticky;
-  top: 0;
+  bottom: 0;
   z-index: 2;
   background: var(--white);
 }
@@ -27,7 +27,6 @@
   --background: var(--black);
   flex: 1;
   background: var(--background);
-  color: var(--white);
   border: none;
   padding: 1rem 2rem;
   font-weight: bold;

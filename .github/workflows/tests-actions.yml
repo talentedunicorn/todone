@@ -1,0 +1,26 @@
+name: Testing push and PRs
+
+on:
+  push:
+    branches:
+      - master
+      - development
+  pull_request:
+    branches:
+      - master
+      - development
+
+env:
+  REACT_APP_DB_NAME: todone_github
+
+jobs:
+  unit-test:
+    name: Unit tests with coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - run: npm install
+      - run: npm run test:coverage

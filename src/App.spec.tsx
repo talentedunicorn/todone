@@ -4,10 +4,10 @@ import App from "./App";
 import { TodoContext } from "./context/todoContext";
 
 let renderedApp: any;
-const mockedAddTodo = jest.fn();
-const mockedDeleteTodo = jest.fn();
-const mockedToggleTodo = jest.fn();
-const mockedEditTodo = jest.fn();
+const mockedAddTodo = jest.fn().mockResolvedValue(true);
+const mockedDeleteTodo = jest.fn().mockResolvedValue(true);
+const mockedToggleTodo = jest.fn().mockResolvedValue(true);
+const mockedEditTodo = jest.fn().mockResolvedValue(true);
 
 beforeEach(() => {
   renderedApp = () =>
@@ -17,12 +17,12 @@ beforeEach(() => {
           todolist: [
             {
               id: 1,
-              text: "First todo",
+              content: "First todo",
               completed: false
             },
             {
               id: 2,
-              text: "Second todo",
+              content: "Second todo",
               completed: true
             }
           ],
@@ -44,8 +44,7 @@ describe("<App/>", () => {
         <App />
       </TodoContext.Provider>
     );
-    expect(getAllByTestId("List").length).toBe(1);
-    expect(getAllByTestId("List")[0].children).toHaveLength(0);
+    expect(getAllByTestId("Loading").length).toBe(1);
   });
 
   it("should be able to add todo", () => {
@@ -57,7 +56,7 @@ describe("<App/>", () => {
     expect(mockedAddTodo).toHaveBeenCalledTimes(1);
     expect(mockedAddTodo).toHaveBeenCalledWith({
       completed: false,
-      text: "Test todo"
+      content: "Test todo"
     });
   });
 

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useLocation, useHistory } from "react-router-dom";
 import { Todo } from "../models/todo";
+import service from "../services/index";
 
 type contextProps = {
   todolist: Array<Todo> | null;
@@ -9,61 +11,63 @@ type contextProps = {
   editTodo: any;
 };
 
-const DB_NAME = process.env.REACT_APP_DB_NAME
-  ? process.env.REACT_APP_DB_NAME
-  : "todone";
-
 const TodoContext = React.createContext<Partial<contextProps>>({});
 const TodoProvider = (props: any) => {
   const [todolist, setTodolist] = useState<Array<Todo> | null>(null);
+  const location = useLocation();
+  const history = useHistory();
 
-  const getCachedList = () => {
-    const cachedTodos: string | null = window.localStorage.getItem(DB_NAME);
-    if (cachedTodos) {
-      setTodolist([...JSON.parse(cachedTodos)]);
-    }
+  const { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS } = service;
+
+  const toggleTodo = (id: number) => {
+    const todo = (todolist && todolist.find(todo => todo.id === id)) || null;
+    return (
+      todo &&
+      TOGGLE_TODO(id, !todo.completed).then((data: Todo) => {
+        setTodolist(
+          todolist && todolist.map(todo => (todo.id === id ? data : todo))
+        );
+      })
+    );
   };
 
-  const toggleTodo = (id: number) =>
-    setTodolist(
-      todolist &&
-        todolist.map(todo => {
-          if (todo.id === id) {
-            todo.completed = !todo.completed;
-          }
-          return todo;
-        })
+  const deleteTodo = (id: number) =>
+    DELETE_TODOS([id]).then(() =>
+      setTodolist(todolist && todolist.filter(todo => todo.id !== id))
     );
 
-  const deleteTodo = (id: number) => {
-    setTodolist(todolist && todolist.filter(todo => todo.id !== id));
-  };
-
   const onAddTodo = (todo: Todo) =>
-    setTodolist([...(todolist || []), { ...todo, id: new Date().getTime() }]);
+    ADD_TODO(todo.content).then((todo: Todo) => {
+      setTodolist([...(todolist || []), todo]);
+    });
 
-  const editTodo = (id: number, text: string) => {
-    if (Boolean(text.trim().length)) {
-      setTodolist(
-        todolist &&
-          todolist.map(todo => {
-            if (id === todo.id) {
-              todo.text = text;
-            }
-
-            return todo;
-          })
+  const editTodo = (id: number, content: string) => {
+    if (Boolean(content.trim().length)) {
+      return EDIT_TODO(id, content).then((updatedTodo: Todo) =>
+        setTodolist(
+          todolist &&
+            todolist.map((todo: Todo) => {
+              if (todo.id === id) {
+                return updatedTodo;
+              }
+              return todo;
+            })
+        )
       );
     }
   };
 
   useEffect(() => {
-    if (todolist) {
-      window.localStorage.setItem(DB_NAME, JSON.stringify(todolist));
-    } else {
-      getCachedList();
-    }
-  }, [todolist]);
+    const fetchData = async () => {
+      const token = window.localStorage.getItem("token");
+      if (token || process.env.REACT_APP_STORAGE_TYPE === "offline") {
+        const todos = await GET_TODOS();
+        setTodolist(todos);
+      }
+    };
+
+    fetchData();
+  }, [GET_TODOS, location, history]);
 
   const implementation: contextProps = {
     todolist,
