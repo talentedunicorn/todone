@@ -16,10 +16,7 @@
 }
 
 .Input:focus {
-  --border-color: var(--black);
-  background: var(--black);
-  color: var(--white);
-  outline: none;
+  --input-height: 10rem;
 }
 
 .Button {
