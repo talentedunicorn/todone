@@ -36,6 +36,9 @@ img {
   max-width: 100%;
 }
 
-img {
-  max-width: 100%;
+code {
+  background: var(--brand-color);
+  color: var(--white);
+  padding: 0.1em 0.25em;
+  border-radius: 3px;
 }

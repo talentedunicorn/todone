@@ -78,7 +78,7 @@
 }
 
 .ListInput {
-  composes: Input from "../App.css";
+  composes: Input from "../components/form.module.css";
   flex: 1;
 }
 

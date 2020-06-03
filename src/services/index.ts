@@ -1,4 +1,4 @@
-import bobaService, { LOGIN as bobaLogin } from "./boba";
+import bobaService from "./boba";
 import localService from "./localStorage";
 
 let service;
@@ -12,21 +12,6 @@ switch (process.env.REACT_APP_STORAGE_TYPE) {
     service = localService;
 }
 
-const LOGIN = (creds: any) => {
-  if (process.env.REACT_APP_STORAGE_TYPE === "offline") {
-    return new Promise(resolve => resolve("offline"));
-  } else {
-    return bobaLogin(creds).then(data => {
-      window.localStorage.setItem("token", data);
-      return data;
-    });
-  }
-};
-
-const LOGOUT = () => {
-  return window.localStorage.removeItem("token");
-};
-
 let { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS } = service;
 
 export default {
@@ -36,5 +21,3 @@ export default {
   TOGGLE_TODO,
   DELETE_TODOS
 };
-
-export { LOGIN, LOGOUT };

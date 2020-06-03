@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
-import { LOGIN, LOGOUT } from "../services/index";
+import { LOGIN } from "../services/boba";
 
 type contextProps = {
   token: string | null;
@@ -21,6 +21,7 @@ const AuthProvider = (props: any) => {
     // Login then set token
     await LOGIN(creds).then((data: any) => {
       setToken(data);
+      window.localStorage.setItem("token", data);
       return history.push("/app");
     });
 
@@ -29,23 +30,23 @@ const AuthProvider = (props: any) => {
 
   const logout = () => {
     setToken(null);
-    LOGOUT();
+    window.localStorage.removeItem("token");
     return history.replace("/");
   };
 
   useEffect(() => {
-    const cachedToken = window.localStorage.getItem("token");
-    if (cachedToken) {
-      setToken(cachedToken);
-      return history.push("/app");
-    }
-
     // Offline, skip login
     if (STORAGE_TYPE === "offline") {
       if (location.pathname === "/") {
         return history.replace("/app");
       }
     } else {
+      const cachedToken = window.localStorage.getItem("token");
+      if (cachedToken) {
+        setToken(cachedToken);
+        return history.push("/app");
+      }
+
       if (location.pathname === "/app" && !Boolean(token)) {
         return history.replace("/");
       }
