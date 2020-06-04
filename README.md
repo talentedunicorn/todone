@@ -10,10 +10,16 @@
 
 # Features
 
-- [x] Offline support using [localforage](https://github.com/localForage/localForage)[![Build Status](https://travis-ci.org/localForage/localForage.svg?branch=master)](http://travis-ci.org/localForage/localForage) [![NPM version](https://badge.fury.io/js/localforage.svg)](http://badge.fury.io/js/localforage) [![Dependency Status](https://img.shields.io/david/localForage/localForage.svg)](https://david-dm.org/localForage/localForage) [![npm](https://img.shields.io/npm/dm/localforage.svg?maxAge=2592000)](https://npmcharts.com/compare/localforage?minimal=true)
+- [x] Offline support using [localForage](https://github.com/localForage/localForage)
+  - [![Build Status](https://travis-ci.org/localForage/localForage.svg?branch=master)](http://travis-ci.org/localForage/localForage)
+  - [![NPM version](https://badge.fury.io/js/localforage.svg)](http://badge.fury.io/js/localforage)
+  - [![Dependency Status](https://img.shields.io/david/localForage/localForage.svg)](https://david-dm.org/localForage/localForage)
+  - [![npm](https://img.shields.io/npm/dm/localforage.svg?maxAge=2592000)](https://npmcharts.com/compare/localforage?minimal=true)
 - [x] Markdown support with [react-markdown](https://github.com/rexxars/react-markdown)
-      [![npm version](https://img.shields.io/npm/v/react-markdown.svg?style=flat-square)](https://www.npmjs.com/package/react-markdown)[![Build Status](https://img.shields.io/travis/rexxars/react-markdown/master.svg?style=flat-square)](https://travis-ci.org/rexxars/react-markdown)
+  - [![npm version](https://img.shields.io/npm/v/react-markdown.svg?style=flat-square)](https://www.npmjs.com/package/react-markdown)
+  - [![Build Status](https://img.shields.io/travis/rexxars/react-markdown/master.svg?style=flat-square)](https://travis-ci.org/rexxars/react-markdown)
 
 ## Nice to have
 
 - [ ] Categories
+- [ ] Export/Import data
