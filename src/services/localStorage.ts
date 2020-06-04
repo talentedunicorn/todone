@@ -29,8 +29,7 @@ const TOGGLE_TODO = async (id: any, completed: boolean) => {
   return db.setItem(id, { ...todo, completed });
 };
 
-const DELETE_TODOS = async (ids: Array<Number>) => {
-  return await ids.forEach(id => db.removeItem(id.toString()));
-};
+const DELETE_TODOS = (ids: any[]) =>
+  new Promise<any>(resolve => resolve(db.removeItem(ids[0])));
 
 export default { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS };

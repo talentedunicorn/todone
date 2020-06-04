@@ -24,15 +24,15 @@ const LOGIN = ({ username, password }: any) => {
 // Queries
 const GET_TODOS = () => backend.get("/todos").then(res => res.data);
 
-const ADD_TODO = (content: String) =>
+const ADD_TODO = (content: string) =>
   backend.post("/todos", { content, completed: false }).then(res => res.data);
 
-const TOGGLE_TODO = (id: Number, completed: Boolean) =>
+const TOGGLE_TODO = (id: any, completed: Boolean) =>
   backend.put(`/todos/${id}`, { completed }).then(res => res.data);
 
-const DELETE_TODOS = (ids: Number[]) => backend.delete(`/todos/${ids[0]}`);
+const DELETE_TODOS = (ids: any[]) => backend.delete(`/todos/${ids[0]}`);
 
-const EDIT_TODO = (id: Number, content: String) =>
+const EDIT_TODO = (id: any, content: String) =>
   backend.put(`/todos/${id}`, { content }).then(res => res.data);
 
 export default {

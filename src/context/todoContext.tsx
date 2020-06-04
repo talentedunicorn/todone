@@ -31,7 +31,7 @@ const TodoProvider = (props: any) => {
     );
   };
 
-  const deleteTodo = (id: number) =>
+  const deleteTodo = (id: any) =>
     DELETE_TODOS([id]).then(() =>
       setTodolist(todolist && todolist.filter(todo => todo.id !== id))
     );
