@@ -4,6 +4,10 @@
   flex-flow: column;
 }
 
+.App-Content {
+  flex: 1;
+}
+
 .visually-hidden {
   position: absolute;
   margin: -1px;

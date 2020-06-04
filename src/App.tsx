@@ -63,12 +63,12 @@ const App = () => {
           <Loading loading={true} />
         ) : (
           <>
-            {completedTodos.length > 0 && (
-              <RenderedList title="Completed" data={completedTodos} />
-            )}
-            {incompleteTodos.length > 0 && (
+            <div className="App-Content">
+              {completedTodos.length > 0 && (
+                <RenderedList title="Completed" data={completedTodos} />
+              )}
               <RenderedList title="Incomplete" data={incompleteTodos} />
-            )}
+            </div>
             <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo)} />
           </>
         )}
