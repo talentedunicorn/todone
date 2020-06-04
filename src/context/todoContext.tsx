@@ -32,7 +32,7 @@ const TodoProvider = (props: any) => {
     );
   };
 
-  const deleteTodo = (id: number) =>
+  const deleteTodo = (id: any) =>
     DELETE_TODOS([id], token).then(() =>
       setTodolist(todolist && todolist.filter(todo => todo.id !== id))
     );
