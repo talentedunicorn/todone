@@ -1,66 +1,35 @@
+import localforage from "localforage";
 import { Todo } from "../models/todo";
 
-// LocalStorage API
 const DB_NAME = process.env.REACT_APP_DB_NAME || "todone_db";
 
-const db = {
-  get: () => JSON.parse(window.localStorage.getItem(DB_NAME) || "[]"),
-  set: (data: any) => window.localStorage.setItem(DB_NAME, JSON.stringify(data))
-};
+// Configure database
+const db = localforage.createInstance({
+  name: DB_NAME
+});
 
 // Queries
-const GET_TODOS = () =>
-  new Promise<any>(resolve => {
-    const data = db.get();
-    resolve(data);
-  });
+const GET_TODOS = async () => {
+  const allKeys = await db.keys();
+  return Promise.all(allKeys.map(key => db.getItem(key.toString())));
+};
 
-const ADD_TODO = (content: string) =>
-  new Promise<Todo>(resolve => {
-    const data = db.get();
-    const newTodo: Todo = { id: new Date(), content, completed: false };
-    db.set([...data, newTodo]);
-    resolve(newTodo);
-  });
+const ADD_TODO = (content: string) => {
+  const todo = { id: `${Date.now()}`, content, completed: false };
+  return db.setItem(todo.id, todo);
+};
 
-const EDIT_TODO = (id: Number, content: string) =>
-  new Promise<Todo>(resolve => {
-    const data = db.get();
-    const selected = data.find((todo: Todo) => todo.id === id);
-    const newData: Todo[] = data.map((todo: any) => {
-      if (todo.id === id) {
-        todo.content = content;
-      }
-      return todo;
-    });
-    if (selected) {
-      db.set(newData);
-      resolve({ id, content, completed: selected && selected.completed });
-    }
-  });
+const EDIT_TODO = async (id: any, content: string) => {
+  const todo: Todo = await db.getItem(id);
+  return db.setItem(id, { ...todo, content });
+};
 
-const TOGGLE_TODO = (id: Number, completed: boolean) =>
-  new Promise<Todo>(resolve => {
-    const data = db.get();
-    const selected = data.find((todo: Todo) => todo.id === id);
-    if (selected) {
-      const newData: Todo[] = data.map((todo: any) => {
-        if (todo.id === id) {
-          todo.completed = !selected.completed;
-        }
-        return todo;
-      });
-      db.set(newData);
-      resolve({ id, completed, content: selected?.content });
-    }
-  });
+const TOGGLE_TODO = async (id: any, completed: boolean) => {
+  const todo: Todo = await db.getItem(id);
+  return db.setItem(id, { ...todo, completed });
+};
 
-const DELETE_TODOS = (ids: Array<Number>) =>
-  new Promise<any>(resolve => {
-    const data = db.get();
-    const newData = data.filter((todo: Todo) => !ids.includes(todo.id));
-    db.set(newData);
-    resolve();
-  });
+const DELETE_TODOS = (ids: any[]) =>
+  new Promise<any>(resolve => resolve(db.removeItem(ids[0])));
 
 export default { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS };
