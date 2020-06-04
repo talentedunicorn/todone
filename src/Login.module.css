@@ -47,11 +47,6 @@
   border-radius: var(--border-radius);
 }
 
-.Input:focus {
-  --input-background: var(--black);
-  --input-color: var(--white);
-}
-
 .Login {
   composes: Button from "./App.css";
   margin-bottom: 1rem;

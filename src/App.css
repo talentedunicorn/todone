@@ -103,5 +103,6 @@
 
 .Input:focus {
   --border-color: var(--black);
-  --input-height: 10rem;
+  --input-background: var(--black);
+  --input-color: var(--white);
 }
