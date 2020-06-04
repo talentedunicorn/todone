@@ -68,6 +68,7 @@ const List = ({ items }: { items: Array<Todo> }) => {
                     className={Styles.ListInput}
                     value={selectedTodo.content}
                     onChange={handleEdit}
+                    data-expanded={true}
                   />
                   <button className="Button-icon save">Save</button>
                   <button

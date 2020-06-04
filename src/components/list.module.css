@@ -68,13 +68,13 @@
 }
 
 .ListContent[data-completed] {
-  text-decoration: line-through;
   color: var(--gray);
+  filter: grayscale(100%);
 }
 
 .ListForm {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
 }
 
 .ListInput {

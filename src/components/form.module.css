@@ -3,9 +3,6 @@
   display: flex;
   flex-wrap: wrap;
   margin: 0;
-  position: sticky;
-  bottom: 0;
-  z-index: 2;
   background: var(--white);
 }
 
@@ -15,7 +12,7 @@
   flex: var(--input-size);
 }
 
-.Input:focus {
+.Input[data-expanded="true"] {
   --input-height: 10rem;
 }
 

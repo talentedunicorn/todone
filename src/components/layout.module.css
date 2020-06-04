@@ -1,3 +1,15 @@
+.Layout {
+  height: 100vh;
+  display: flex;
+  flex-flow: column;
+}
+
+.Layout form {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
 .Header {
   display: flex;
   align-items: center;
