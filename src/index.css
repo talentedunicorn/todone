@@ -66,3 +66,13 @@ blockquote {
   font-size: 1.5rem;
   color: var(--gray);
 }
+
+.visually-hidden {
+  position: absolute;
+  margin: -1px;
+  padding: 0;
+  width: 1px;
+  height: 1px;
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}

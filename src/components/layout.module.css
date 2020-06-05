@@ -1,16 +1,24 @@
 .Layout {
-  height: 100vh;
-  display: flex;
-  flex-flow: column;
+  min-height: 100vh;
+  display: grid;
+  grid-template-areas: "header" "content" "form" "footer";
+  grid-template-rows: min-content auto min-content max-content;
+  align-items: start;
 }
 
-.Layout form {
+.Layout > form {
+  grid-area: form;
   position: sticky;
-  top: 0;
-  z-index: 2;
+  bottom: 0;
+  z-index: 1;
+}
+
+.Layout > div {
+  grid-area: content;
 }
 
 .Header {
+  grid-area: header;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -19,9 +27,10 @@
 }
 
 .Footer {
+  grid-area: footer;
   padding: 1rem;
   margin-top: auto;
-  color: var(--gray);
+  background: var(--gray-light);
 }
 
 .Logo {
@@ -36,4 +45,20 @@
 .HeaderContent {
   display: flex;
   align-items: center;
+}
+
+@media screen and (min-width: 70rem) {
+  .Layout {
+    grid-template-areas: "header header" "content form" "content ." "footer footer";
+    grid-template-rows: min-content min-content auto min-content;
+    grid-template-columns: 2fr 1fr;
+  }
+
+  .Layout > form {
+    top: 0;
+  }
+
+  .Layout > div {
+    border-right: 1px solid var(--gray-light);
+  }
 }

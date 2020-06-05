@@ -23,15 +23,6 @@ const HeaderContent = () => {
   );
 };
 
-const RenderedList = ({ title, data }: any) => (
-  <div>
-    <h3 data-testid="completed-list-title" className="SectionTitle">
-      {title}
-    </h3>
-    <List items={data} />
-  </div>
-);
-
 const App = () => {
   const { todolist, onAddTodo } = useContext(TodoContext);
 
@@ -64,10 +55,10 @@ const App = () => {
         ) : (
           <>
             <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo)} />
-            <div className="App-Content">
-              <RenderedList title="To be done" data={incompleteTodos} />
+            <div className="Content">
+              <List title="To be done" items={incompleteTodos} />
               {completedTodos.length > 0 && (
-                <RenderedList title="Done" data={completedTodos} />
+                <List title="Done" items={completedTodos} />
               )}
             </div>
           </>

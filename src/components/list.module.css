@@ -1,22 +1,28 @@
 .List {
+  --border-color: var(--gray-light);
   list-style: none;
   padding: 0;
-  margin: 2rem 0;
+  margin: 0;
+}
+
+.List:empty {
+  padding: 1rem;
+  background: var(--gray-light);
+  color: var(--gray);
 }
 
 .List:empty:before {
   content: attr(data-empty-message);
-  padding: 1rem;
-  color: var(--gray);
   font-weight: bold;
   font-size: 2rem;
 }
 
 .ListItem {
   display: flex;
-  padding: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem 2rem;
   position: relative;
-  border-top: 1px solid var(--gray-light);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .ListItem:hover {
@@ -41,6 +47,15 @@
   animation: pulse 2s infinite ease-in;
 }
 
+.ListTitle {
+  color: var(--brand-color);
+  padding: 1rem;
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 1rem;
+  letter-spacing: 2px;
+}
+
 @keyframes pulse {
   from {
     background-position: 0% 100%;
@@ -55,16 +70,10 @@
   flex: 1;
 }
 
-.ListContent,
-.ListInput {
-  font-size: 1rem;
-  margin-left: 1rem;
-}
-
 .ListContent {
   cursor: pointer;
   line-height: 1.5;
-  margin-top: -1em; /* Hack to fix alignment to controls */
+  margin: 0;
 }
 
 .ListContent[data-completed] {
@@ -74,7 +83,6 @@
 
 .ListForm {
   display: flex;
-  /* align-items: center; */
 }
 
 .ListInput {
@@ -82,17 +90,39 @@
   flex: 1;
 }
 
-.List button {
+.ListSave,
+.ListCancel {
+  composes: Button-icon from "../App.css";
   margin-left: 1rem;
+}
+
+.ListSave {
+  --icon: var(--icon-check);
+  --button-bg: var(--green);
+}
+
+.ListCancel {
+  --button-bg: var(--red);
+  --icon: var(--icon-x);
+}
+
+.ListDelete {
+  composes: Button-icon from "../App.css";
+  --button-bg: var(--red);
+  --icon: var(--icon-trash);
+  --icon-size: 0.7rem;
+  order: -1;
 }
 
 .ListCheckbox {
   --color: var(--brand-color);
   --background: var(--white);
-  --checkbox-size: 1.5em;
+  --checkbox-size: 1.3rem;
+  display: flex;
   position: relative;
   width: var(--checkbox-size);
   height: var(--checkbox-size);
+  margin: 0 0 0 auto;
 }
 
 .ListCheckbox:hover {
@@ -114,4 +144,11 @@
   background: var(--background);
   border: 3px solid var(--color);
   border-radius: 2px;
+}
+
+.ListControls {
+  flex: 100%;
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 0;
 }
