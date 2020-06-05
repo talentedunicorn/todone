@@ -2,7 +2,7 @@ import React from "react";
 import Styles from "./layout.module.css";
 
 const Layout = ({ children, headerContent, footerContent }: any) => (
-  <div data-testid="layout">
+  <main data-testid="layout" className={Styles.Layout}>
     <header className={Styles.Header}>
       <h1 className={Styles.Logo}>{process.env.REACT_APP_WEBSITE_NAME}</h1>
       {headerContent && (
@@ -13,7 +13,7 @@ const Layout = ({ children, headerContent, footerContent }: any) => (
     {footerContent && (
       <footer className={Styles.Footer}>{footerContent}</footer>
     )}
-  </div>
+  </main>
 );
 
 export default Layout;

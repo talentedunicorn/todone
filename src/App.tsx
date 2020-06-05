@@ -23,15 +23,6 @@ const HeaderContent = () => {
   );
 };
 
-const RenderedList = ({ title, data }: any) => (
-  <div>
-    <h3 data-testid="completed-list-title" className="SectionTitle">
-      {title}
-    </h3>
-    <List items={data} />
-  </div>
-);
-
 const App = () => {
   const { todolist, onAddTodo } = useContext(TodoContext);
 
@@ -43,7 +34,7 @@ const App = () => {
     : [];
 
   return (
-    <main data-testid="App" className="App">
+    <div data-testid="App" className="App">
       <Layout
         headerContent={<HeaderContent />}
         footerContent={
@@ -63,17 +54,17 @@ const App = () => {
           <Loading loading={true} />
         ) : (
           <>
-            <div className="App-Content">
-              {completedTodos.length > 0 && (
-                <RenderedList title="Completed" data={completedTodos} />
-              )}
-              <RenderedList title="Incomplete" data={incompleteTodos} />
-            </div>
             <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo)} />
+            <div className="Content">
+              <List title="To be done" items={incompleteTodos} />
+              {completedTodos.length > 0 && (
+                <List title="Done" items={completedTodos} />
+              )}
+            </div>
           </>
         )}
       </Layout>
-    </main>
+    </div>
   );
 };
 

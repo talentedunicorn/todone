@@ -3,6 +3,7 @@ import Styles from "./form.module.css";
 
 const Form = ({ handleFormSubmit }: any) => {
   const [content, setContent] = useState("");
+  const [focus, setFocus] = useState(false);
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
@@ -28,6 +29,9 @@ const Form = ({ handleFormSubmit }: any) => {
         value={content}
         placeholder="Start typing..."
         onChange={e => setContent(e.target.value)}
+        onFocus={_ => setFocus(true)}
+        onBlur={_ => setFocus(false)}
+        data-expanded={focus}
       />
       <button className={Styles.Button}>Add task</button>
     </form>

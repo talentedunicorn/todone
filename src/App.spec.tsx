@@ -86,10 +86,10 @@ describe("<App/>", () => {
   });
 
   it("should be able to cancel edit", () => {
-    const { getByText, container } = renderedApp();
+    const { getByText, container, debug } = renderedApp();
     fireEvent.click(getByText(/second/i));
     expect(container.querySelector(".ListInput").value).toBe("Second todo");
-    fireEvent.click(container.querySelector(".ListForm .cancel"));
+    fireEvent.click(container.querySelector(".ListForm .ListCancel"));
     expect(container.querySelector(".ListForm")).toBeFalsy();
   });
 });

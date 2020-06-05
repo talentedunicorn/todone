@@ -1,32 +1,5 @@
-.App > div {
-  height: 100vh;
-  display: flex;
-  flex-flow: column;
-}
-
-.App-Content {
-  flex: 1;
-}
-
-.visually-hidden {
-  position: absolute;
-  margin: -1px;
-  padding: 0;
-  width: 1px;
-  height: 1px;
-  clip: rect(0 0 0 0);
-  overflow: hidden;
-}
-
-.SectionTitle {
-  padding: 1rem;
-  margin: 1rem 0;
-  text-transform: uppercase;
-  font-size: 1rem;
-  letter-spacing: 2px;
-}
-
-.Button {
+.Button,
+.Button-icon {
   padding: 0.5rem 1rem;
   background: var(--button-bg, var(--brand-color));
   color: var(--button-color, var(--white));
@@ -40,7 +13,7 @@
 }
 
 .Button-icon {
-  --icon-size: 1em;
+  --icon-size: 1rem;
   --button-bg: var(--brand-color);
   --button-color: transparent;
   padding: var(--icon-size);
@@ -48,40 +21,10 @@
   height: 0;
   overflow: hidden;
   mask: var(--icon) no-repeat center center/contain;
-  background: var(--button-bg);
-  border: none;
 }
 
 .Button-icon:hover {
   --button-bg: var(--black);
-}
-
-.clear {
-  --icon: var(--icon-trash);
-  --button-bg: var(--red);
-}
-
-.sync {
-  --icon: var(--icon-sync);
-}
-
-.delete,
-.cancel {
-  --button-bg: var(--red);
-}
-
-.delete {
-  --icon: var(--icon-trash);
-  mask-size: 80%; /* To match other icons */
-}
-
-.save {
-  --icon: var(--icon-check);
-  --button-bg: var(--green);
-}
-
-.cancel {
-  --icon: var(--icon-x);
 }
 
 .github {
@@ -89,7 +32,7 @@
 }
 
 .logout {
-  border-radius: 5px;
+  border-radius: 3px;
   text-transform: lowercase;
 }
 
@@ -97,7 +40,6 @@
   color: var(--input-color);
   background: var(--input-background);
   font-size: 1rem;
-  font-family: inherit;
   padding: 1rem;
   border: none;
   border-bottom: 5px solid var(--border-color, var(--black));
