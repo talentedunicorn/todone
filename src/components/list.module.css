@@ -20,7 +20,7 @@
 .ListItem {
   display: flex;
   flex-wrap: wrap;
-  padding: 1rem 2rem;
+  padding: 1rem;
   position: relative;
   border-bottom: 1px solid var(--border-color);
 }
@@ -150,5 +150,5 @@
   flex: 100%;
   display: flex;
   align-items: center;
-  margin: 0.5rem 0;
+  margin: 1rem 0;
 }
