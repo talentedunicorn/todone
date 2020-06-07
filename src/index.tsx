@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import createHistory from "history/createBrowserHistory";
 import ReactGA from "react-ga";
 import "./index.css";
 import App from "./App";
@@ -12,12 +11,7 @@ import { AuthProvider } from "./context/authContext";
 
 if (process.env.REACT_APP_GOOGLE_TRACKING_ID) {
   ReactGA.initialize(process.env.REACT_APP_GOOGLE_TRACKING_ID);
-
-  const history = createHistory();
-  history.listen(location => {
-    ReactGA.set({ page: location.pathname });
-    ReactGA.pageview(location.pathname);
-  });
+  ReactGA.pageview(window.location.pathname);
 }
 
 ReactDOM.render(

@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
+import ReactGA from "react-ga";
 import "./App.css";
 import Layout from "./components/layout";
 import List from "./components/list";
@@ -32,6 +33,10 @@ const App = () => {
   const incompleteTodos = todolist
     ? todolist.filter((todo: Todo) => todo.completed === false)
     : [];
+
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname);
+  }, []);
 
   return (
     <div data-testid="App" className="App">
