@@ -1,3 +1,7 @@
+[data-expanded="true"] {
+  --input-height: 10rem;
+}
+
 .Form {
   display: flex;
   flex-flow: column;
@@ -10,17 +14,18 @@
   --border-color: var(--brand-color);
 }
 
-.Input[data-expanded="true"] {
-  --input-height: 10rem;
+.Toggle,
+.Submit {
+  composes: Button from "../shared.css";
+  padding: 1rem 2rem;
 }
 
-.Button {
-  composes: Button from "../shared.css";
-  --background: var(--black);
-  background: var(--background);
-  border: none;
-  padding: 1rem 2rem;
-  font-weight: bold;
+.Toggle {
+  --button-bg: var(--black);
+}
+
+.Submit {
+  --button-bg: var(--brand-color);
   white-space: nowrap;
 }
 
