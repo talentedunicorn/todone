@@ -1,11 +1,15 @@
-.Button,
-.Button-icon {
+.Button {
+  --button-bg: var(--brand-color);
   padding: 0.5rem 1rem;
-  background: var(--button-bg, var(--brand-color));
+  background: var(--button-bg);
   color: var(--button-color, var(--white));
   border: none;
   font-size: 1rem;
   font-weight: bold;
+}
+
+.Button:hover {
+  --button-bg: var(--black);
 }
 
 .Button:disabled {
@@ -14,8 +18,8 @@
 
 .Button-icon {
   --icon-size: 1rem;
-  --button-bg: var(--brand-color);
   --button-color: transparent;
+  composes: Button;
   padding: var(--icon-size);
   width: 0;
   height: 0;
@@ -23,23 +27,17 @@
   mask: var(--icon) no-repeat center center/contain;
 }
 
-.Button-icon:hover {
-  --button-bg: var(--black);
-}
-
 .Input {
   color: var(--input-color);
-  background: var(--input-background);
+  background: var(--input-background, var(--white));
   font-size: 1rem;
   padding: 1rem;
   border: none;
-  border-bottom: 5px solid var(--border-color, var(--black));
   resize: vertical;
   height: var(--input-height);
 }
 
 .Input:focus {
-  --border-color: var(--black);
   --input-background: var(--black);
   --input-color: var(--white);
 }
