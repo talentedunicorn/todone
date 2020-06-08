@@ -1,11 +1,28 @@
+.Wrapper {
+  --icon: var(--icon-minus);
+  --header-color: var(--brand-color);
+  --list-height: 100vh;
+  --transition: ease-in 0.3s;
+}
+
+[data-expanded="false"] {
+  --icon: var(--icon-plus);
+  --header-color: var(--black);
+  --list-height: 0px;
+  --empty-display: none;
+}
+
 .List {
-  --border-color: var(--gray-light);
   list-style: none;
   padding: 0;
   margin: 0;
+  max-height: var(--list-height);
+  overflow: hidden;
+  transition: var(--transition);
 }
 
 .List:empty {
+  display: var(--empty-display, block);
   padding: 1rem;
   background: var(--gray-light);
   color: var(--gray);
@@ -17,12 +34,16 @@
   font-size: 2rem;
 }
 
+.ListItem,
+.ListTitle {
+  border-bottom: var(--border);
+}
+
 .ListItem {
   display: flex;
   flex-wrap: wrap;
-  padding: 1rem 2rem;
+  padding: 1rem;
   position: relative;
-  border-bottom: 1px solid var(--border-color);
 }
 
 .ListItem:hover {
@@ -48,12 +69,23 @@
 }
 
 .ListTitle {
-  color: var(--brand-color);
+  color: var(--header-color);
   padding: 1rem;
   margin: 0;
   text-transform: uppercase;
   font-size: 1rem;
   letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: var(--transition);
+}
+
+.ListTitle::after {
+  content: "";
+  padding: 1rem;
+  background: var(--header-color);
+  mask: var(--icon) no-repeat center center/contain;
 }
 
 @keyframes pulse {
@@ -92,7 +124,7 @@
 
 .ListSave,
 .ListCancel {
-  composes: Button-icon from "../App.css";
+  composes: Button-icon from "../shared.css";
   margin-left: 1rem;
 }
 
@@ -107,10 +139,10 @@
 }
 
 .ListDelete {
-  composes: Button-icon from "../App.css";
+  composes: Button-icon from "../shared.css";
   --button-bg: var(--red);
   --icon: var(--icon-trash);
-  --icon-size: 0.7rem;
+  --icon-size: 0.8rem;
   order: -1;
 }
 
@@ -150,5 +182,11 @@
   flex: 100%;
   display: flex;
   align-items: center;
-  margin: 0.5rem 0;
+  margin: 1rem 0;
+}
+
+@media screen and (min-width: 70rem) {
+  .Wrapper {
+    border-right: var(--border);
+  }
 }

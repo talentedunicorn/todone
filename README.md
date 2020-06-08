@@ -6,7 +6,7 @@
 
 > Todo list app with offline storage
 
-![Screenshot](Screenshot.png)
+![Screenshot](desktop.png)
 
 # Features
 
@@ -23,3 +23,7 @@
 
 - [ ] Categories
 - [ ] Export/Import data
+
+## Contributions
+
+This project is free to use, code contributions are welcome - see [contributing guidelines](CONTRIBUTING.md). If you feel like buying me a coffee/beer you can [donate here](https://paypal.me/talentedunicorn).

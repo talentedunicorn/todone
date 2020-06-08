@@ -8,18 +8,40 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
   const { toggleTodo, deleteTodo, editTodo } = useContext(TodoContext);
   const [selectedTodo, setSelected] = useState<null | any>(null);
   const [loading, setLoading] = useState(false);
+  const [expanded, setExpanded] = useState(true);
 
   const handleEdit = (e: any) =>
     setSelected({ ...selectedTodo, content: e.target.value });
 
-  const handleSave = (e: any) => {
-    e.preventDefault();
+  const handleActions = (type: string, item: any) => {
+    setSelected(item);
     setLoading(true);
-    editTodo(selectedTodo.id, selectedTodo.content).finally(() => {
+    let action;
+    switch (type) {
+      case "edit":
+        action = editTodo(item.id, item.content);
+        break;
+      case "toggle":
+        action = toggleTodo(item.id);
+        break;
+      case "delete":
+        action = deleteTodo(item.id);
+        break;
+      default:
+        break;
+    }
+
+    action.finally(() => {
       setSelected(null);
       setLoading(false);
     });
   };
+
+  const handleSave = (e: any) => {
+    e.preventDefault();
+    handleActions("edit", selectedTodo);
+  };
+
   const handleSelected = (item: any, e: any) => {
     // Prevent links triggering click events
     if (e.target.tagName.toLowerCase() === "a") {
@@ -32,8 +54,10 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
   };
 
   return (
-    <>
-      <h3 className={Styles.ListTitle}>{title}</h3>
+    <section className={Styles.Wrapper} data-expanded={expanded}>
+      <h3 className={Styles.ListTitle} onClick={_ => setExpanded(!expanded)}>
+        {title}
+      </h3>
       <ol
         data-testid="List"
         className={Styles.List}
@@ -81,10 +105,10 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
                     className={Styles.ListCheckbox}
                     type="checkbox"
                     defaultChecked={item.completed}
-                    onClick={() => toggleTodo(item.id)}
+                    onClick={() => handleActions("toggle", item)}
                   />
                   <button
-                    onClick={() => deleteTodo(item.id)}
+                    onClick={() => handleActions("delete", item)}
                     className={Styles.ListDelete}
                   >
                     Delete
@@ -93,7 +117,7 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
               </li>
             ))}
       </ol>
-    </>
+    </section>
   );
 };
 

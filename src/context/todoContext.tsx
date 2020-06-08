@@ -60,7 +60,7 @@ const TodoProvider = (props: any) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = window.localStorage.getItem("token") || "";
+      const token = window.sessionStorage.getItem("token") || "";
       setToken(token);
       if (token || process.env.REACT_APP_STORAGE_TYPE === "offline") {
         const todos = await GET_TODOS(token);
