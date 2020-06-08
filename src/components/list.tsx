@@ -13,14 +13,35 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
   const handleEdit = (e: any) =>
     setSelected({ ...selectedTodo, content: e.target.value });
 
-  const handleSave = (e: any) => {
-    e.preventDefault();
+  const handleActions = (type: string, item: any) => {
+    setSelected(item);
     setLoading(true);
-    editTodo(selectedTodo.id, selectedTodo.content).finally(() => {
+    let action;
+    switch (type) {
+      case "edit":
+        action = editTodo(item.id, item.content);
+        break;
+      case "toggle":
+        action = toggleTodo(item.id);
+        break;
+      case "delete":
+        action = deleteTodo(item.id);
+        break;
+      default:
+        break;
+    }
+
+    action.finally(() => {
       setSelected(null);
       setLoading(false);
     });
   };
+
+  const handleSave = (e: any) => {
+    e.preventDefault();
+    handleActions("edit", selectedTodo);
+  };
+
   const handleSelected = (item: any, e: any) => {
     // Prevent links triggering click events
     if (e.target.tagName.toLowerCase() === "a") {
@@ -84,10 +105,10 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
                     className={Styles.ListCheckbox}
                     type="checkbox"
                     defaultChecked={item.completed}
-                    onClick={() => toggleTodo(item.id)}
+                    onClick={() => handleActions("toggle", item)}
                   />
                   <button
-                    onClick={() => deleteTodo(item.id)}
+                    onClick={() => handleActions("delete", item)}
                     className={Styles.ListDelete}
                   >
                     Delete
