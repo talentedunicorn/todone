@@ -7,7 +7,7 @@
 }
 
 .Input {
-  composes: Input from "../App.css";
+  composes: Input from "../shared.css";
   --border-color: var(--brand-color);
   flex: var(--input-size);
 }
@@ -17,7 +17,7 @@
 }
 
 .Button {
-  composes: Button from "../App.css";
+  composes: Button from "../shared.css";
   --background: var(--black);
   flex: 1;
   background: var(--background);

@@ -27,15 +27,6 @@
   --button-bg: var(--black);
 }
 
-.github {
-  --icon: var(--icon-github);
-}
-
-.logout {
-  border-radius: 3px;
-  text-transform: lowercase;
-}
-
 .Input {
   color: var(--input-color);
   background: var(--input-background);

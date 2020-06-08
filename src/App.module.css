@@ -13,7 +13,7 @@
   z-index: 1;
 }
 
-.Layout > div {
+.LayoutContent {
   grid-area: content;
 }
 
@@ -47,6 +47,12 @@
   align-items: center;
 }
 
+.Logout {
+  composes: Button from "./shared.css";
+  border-radius: 3px;
+  text-transform: lowercase;
+}
+
 @media screen and (min-width: 70rem) {
   .Layout {
     grid-template-areas: "header header" "content form" "content ." "footer footer";
@@ -58,7 +64,8 @@
     top: 0;
   }
 
-  .Layout > div {
+  .LayoutContent {
     border-right: 1px solid var(--gray-light);
+    margin-bottom: 2rem;
   }
 }

@@ -92,7 +92,7 @@
 
 .ListSave,
 .ListCancel {
-  composes: Button-icon from "../App.css";
+  composes: Button-icon from "../shared.css";
   margin-left: 1rem;
 }
 
@@ -107,7 +107,7 @@
 }
 
 .ListDelete {
-  composes: Button-icon from "../App.css";
+  composes: Button-icon from "../shared.css";
   --button-bg: var(--red);
   --icon: var(--icon-trash);
   --icon-size: 0.7rem;

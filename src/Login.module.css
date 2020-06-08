@@ -39,7 +39,7 @@
 }
 
 .Input {
-  composes: Input from "./App.css";
+  composes: Input from "./shared.css";
   --border-color: var(--brand-color);
   --input-background: var(--gray-light);
   margin-bottom: 1rem;
@@ -48,7 +48,7 @@
 }
 
 .Login {
-  composes: Button from "./App.css";
+  composes: Button from "./shared.css";
   margin-bottom: 1rem;
   padding: 1rem;
   color: var(--white);
