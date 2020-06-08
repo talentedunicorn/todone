@@ -7,7 +7,7 @@
 
 [data-expanded="false"] {
   --icon: var(--icon-plus);
-  --header-color: var(--gray);
+  --header-color: var(--black);
   --list-height: 0px;
   --empty-display: none;
 }
