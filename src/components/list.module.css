@@ -40,7 +40,6 @@
 .ListItem {
   display: flex;
   flex-wrap: wrap;
-  padding: 1rem;
   position: relative;
 }
 
@@ -95,15 +94,12 @@
   }
 }
 
-.ListContent,
-.ListForm {
-  flex: 1;
-}
-
 .ListContent {
   cursor: pointer;
   line-height: 1.5;
-  margin: 0;
+  max-width: calc(100vw - 2rem);
+  margin: 0 1rem;
+  overflow-x: auto;
 }
 
 .ListContent[data-completed] {
@@ -112,6 +108,7 @@
 }
 
 .ListForm {
+  flex: 1;
   display: flex;
 }
 
@@ -180,7 +177,7 @@
   flex: 100%;
   display: flex;
   align-items: center;
-  margin: 1rem 0;
+  margin: 1rem;
 }
 
 @media screen and (min-width: 70rem) {
