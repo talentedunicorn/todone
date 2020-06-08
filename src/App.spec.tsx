@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, waitForDomChange } from "@testing-library/react";
+import { render, fireEvent, wait } from "@testing-library/react";
 import App from "./App";
 import { TodoContext } from "./context/todoContext";
 
@@ -60,36 +60,35 @@ describe("<App/>", () => {
     });
   });
 
-  it("should be able to delete todo", () => {
-    const { getAllByRole } = renderedApp();
-    Array.from(getAllByRole("button")).forEach((button: any) => {
-      fireEvent.click(button);
-    });
-    expect(mockedDeleteTodo).toHaveBeenCalledTimes(2);
+  it("should be able to delete todo", async () => {
+    const { getAllByText } = renderedApp();
+    await wait(() => fireEvent.click(getAllByText(/delete/i)[0]));
+    expect(mockedDeleteTodo).toHaveBeenCalledTimes(1);
   });
 
-  it("should be able to toggle todo completed", () => {
+  it("should be able to toggle todo completed", async () => {
     const { getAllByRole } = renderedApp();
-    getAllByRole("checkbox").forEach((el: HTMLElement) => fireEvent.click(el));
-    expect(mockedToggleTodo).toBeCalledTimes(2);
+    await wait(() => fireEvent.click(getAllByRole("checkbox")[0]));
+    expect(mockedToggleTodo).toBeCalledTimes(1);
   });
 
-  it("should be able to edit todo text", () => {
+  it("should be able to edit todo text", async () => {
     const { getByText, container } = renderedApp();
-    fireEvent.click(getByText(/first/i));
-    waitForDomChange({ container });
-    fireEvent.change(container.querySelector(".ListInput"), {
-      target: { value: "Updated" }
+    await wait(() => {
+      fireEvent.click(getByText(/first/i));
+      fireEvent.change(container.querySelector(".ListInput"), {
+        target: { value: "Updated" }
+      });
+      fireEvent.submit(container.querySelector(".ListForm"));
     });
-    fireEvent.submit(container.querySelector(".ListForm"));
     expect(mockedEditTodo).toHaveBeenCalledTimes(1);
   });
 
-  it("should be able to cancel edit", () => {
+  it("should be able to cancel edit", async () => {
     const { getByText, container, debug } = renderedApp();
-    fireEvent.click(getByText(/second/i));
+    await wait(() => fireEvent.click(getByText(/second/i)));
     expect(container.querySelector(".ListInput").value).toBe("Second todo");
-    fireEvent.click(container.querySelector(".ListForm .ListCancel"));
+    await wait(() => fireEvent.click(container.querySelector(".ListCancel")));
     expect(container.querySelector(".ListForm")).toBeFalsy();
   });
 });
