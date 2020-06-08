@@ -47,10 +47,11 @@ pre {
   color: var(--color, var(--white));
   padding: 0.1em 0.3em;
   border-radius: 3px;
+  overflow: auto;
 }
 
 pre {
-  --background: var(--gray);
+  --background: var(--black);
   --color: inherit;
 }
 
