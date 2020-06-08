@@ -3,7 +3,7 @@ import Styles from "./form.module.css";
 
 const Form = ({ handleFormSubmit }: any) => {
   const [content, setContent] = useState("");
-  const [expanded, setExpaded] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
@@ -37,7 +37,7 @@ const Form = ({ handleFormSubmit }: any) => {
       />
       <button
         type="button"
-        onClick={_ => setExpaded(!expanded)}
+        onClick={_ => setExpanded(!expanded)}
         className={Styles.Toggle}
       >
         {expanded ? "Collapse" : "Expand"} input
