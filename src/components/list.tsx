@@ -8,6 +8,7 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
   const { toggleTodo, deleteTodo, editTodo } = useContext(TodoContext);
   const [selectedTodo, setSelected] = useState<null | any>(null);
   const [loading, setLoading] = useState(false);
+  const [expanded, setExpanded] = useState(true);
 
   const handleEdit = (e: any) =>
     setSelected({ ...selectedTodo, content: e.target.value });
@@ -32,8 +33,10 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
   };
 
   return (
-    <>
-      <h3 className={Styles.ListTitle}>{title}</h3>
+    <section className={Styles.Wrapper} data-expanded={expanded}>
+      <h3 className={Styles.ListTitle} onClick={_ => setExpanded(!expanded)}>
+        {title}
+      </h3>
       <ol
         data-testid="List"
         className={Styles.List}
@@ -93,7 +96,7 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
               </li>
             ))}
       </ol>
-    </>
+    </section>
   );
 };
 

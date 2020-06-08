@@ -57,7 +57,7 @@
   .Layout {
     grid-template-areas: "header header" "content form" "content ." "footer footer";
     grid-template-rows: min-content min-content auto min-content;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 2fr minmax(20rem, 1fr);
   }
 
   .Layout > form {
@@ -65,7 +65,6 @@
   }
 
   .LayoutContent {
-    border-right: 1px solid var(--gray-light);
     margin-bottom: 2rem;
   }
 }

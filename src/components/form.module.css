@@ -1,7 +1,6 @@
 .Form {
-  --input-size: 80%;
   display: flex;
-  flex-wrap: wrap;
+  flex-flow: column;
   margin: 0;
   background: var(--white);
 }
@@ -9,7 +8,6 @@
 .Input {
   composes: Input from "../shared.css";
   --border-color: var(--brand-color);
-  flex: var(--input-size);
 }
 
 .Input[data-expanded="true"] {
@@ -19,7 +17,6 @@
 .Button {
   composes: Button from "../shared.css";
   --background: var(--black);
-  flex: 1;
   background: var(--background);
   border: none;
   padding: 1rem 2rem;
