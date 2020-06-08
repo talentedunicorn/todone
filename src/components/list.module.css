@@ -1,7 +1,6 @@
 .Wrapper {
   --icon: var(--icon-minus);
   --header-color: var(--brand-color);
-  --list-height: 100vh;
   --transition: ease-in 0.3s;
 }
 
@@ -16,9 +15,8 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  max-height: var(--list-height);
   overflow: hidden;
-  transition: var(--transition);
+  max-height: var(--list-height);
 }
 
 .List:empty {
