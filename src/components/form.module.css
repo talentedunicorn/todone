@@ -1,3 +1,7 @@
+[data-expanded="true"] {
+  --input-height: 10rem;
+}
+
 .Form {
   --toggle-icon: var(--icon-expand);
   --border: 1px solid var(--gray-light);
