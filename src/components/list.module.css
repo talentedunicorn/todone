@@ -6,7 +6,7 @@
 
 [data-expanded="false"] {
   --icon: var(--icon-plus);
-  --header-color: var(--black);
+  --header-color: var(--gray);
   --list-height: 0px;
   --empty-display: none;
 }
@@ -43,10 +43,6 @@
   position: relative;
 }
 
-.ListItem:hover {
-  background: var(--gray-light);
-}
-
 .ListItem[data-loading="true"]:before {
   content: "";
   position: absolute;
@@ -72,17 +68,7 @@
   text-transform: uppercase;
   font-size: 1rem;
   letter-spacing: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: var(--transition);
-}
-
-.ListTitle::after {
-  content: "";
-  padding: 1rem;
-  background: var(--header-color);
-  mask: var(--icon) no-repeat center center/contain;
+  border-left: 5px solid var(--header-color);
 }
 
 @keyframes pulse {
@@ -97,9 +83,10 @@
 .ListContent {
   cursor: pointer;
   line-height: 1.5;
-  max-width: calc(100vw - 2rem);
-  margin: 0 1rem;
+  max-width: calc(100vw - 3rem);
+  margin: 1rem;
   overflow-x: auto;
+  flex: 1;
 }
 
 .ListContent[data-completed] {
@@ -119,13 +106,15 @@
 
 .ListSave,
 .ListCancel {
+  --icon-size: 0.8rem;
   composes: Button-icon from "../shared.css";
-  margin-left: 1rem;
+  margin: 1rem;
 }
 
 .ListSave {
   --icon: var(--icon-check);
   --button-bg: var(--green);
+  order: -1;
 }
 
 .ListCancel {
@@ -177,7 +166,8 @@
   flex: 100%;
   display: flex;
   align-items: center;
-  margin: 1rem;
+  padding: 1rem;
+  border-top: var(--border);
 }
 
 @media screen and (min-width: 70rem) {
