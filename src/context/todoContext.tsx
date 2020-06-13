@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import React, { useState } from "react";
 import { Todo } from "../models/todo";
 import service from "../services/index";
 
 type contextProps = {
   todolist: Array<Todo> | null;
+  getTodos: any;
   onAddTodo: any;
   toggleTodo: any;
   deleteTodo: any;
@@ -14,13 +14,10 @@ type contextProps = {
 const TodoContext = React.createContext<Partial<contextProps>>({});
 const TodoProvider = (props: any) => {
   const [todolist, setTodolist] = useState<Array<Todo> | null>(null);
-  const [token, setToken] = useState("");
-  const location = useLocation();
-  const history = useHistory();
 
   const { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS } = service;
 
-  const toggleTodo = (id: number) => {
+  const toggleTodo = (id: number, token?: any) => {
     const todo = (todolist && todolist.find(todo => todo.id === id)) || null;
     return (
       todo &&
@@ -32,17 +29,17 @@ const TodoProvider = (props: any) => {
     );
   };
 
-  const deleteTodo = (id: any) =>
+  const deleteTodo = (id: any, token?: any) =>
     DELETE_TODOS([id], token).then(() =>
       setTodolist(todolist && todolist.filter(todo => todo.id !== id))
     );
 
-  const onAddTodo = (todo: Todo) =>
+  const onAddTodo = (todo: Todo, token?: any) =>
     ADD_TODO(todo.content, token).then((todo: Todo) => {
       setTodolist([...(todolist || []), todo]);
     });
 
-  const editTodo = (id: number, content: string) => {
+  const editTodo = (id: number, content: string, token?: any) => {
     if (Boolean(content.trim().length)) {
       return EDIT_TODO(id, content, token).then((updatedTodo: Todo) =>
         setTodolist(
@@ -58,22 +55,11 @@ const TodoProvider = (props: any) => {
     }
   };
 
-  useEffect(() => {
-    const token = window.localStorage.getItem("token") || "";
-
-    const fetchData = async () => {
-      const token = window.sessionStorage.getItem("token") || "";
-      setToken(token);
-      if (token || process.env.REACT_APP_STORAGE_TYPE === "offline") {
-        const todos = await GET_TODOS(token);
-        setTodolist(todos);
-      }
-    };
-
-    fetchData();
-  }, [GET_TODOS, location, history]);
+  const getTodos = (token?: any) =>
+    GET_TODOS(token).then((data: Todo[]) => setTodolist(data));
 
   const implementation: contextProps = {
+    getTodos,
     todolist,
     toggleTodo,
     deleteTodo,

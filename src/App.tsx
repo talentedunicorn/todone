@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import List from "./components/list";
 import Form from "./components/form";
 import Loading from "./components/loading";
@@ -10,7 +10,7 @@ import { TodoContext } from "./context/todoContext";
 import { AuthContext } from "./context/authContext";
 
 const App = () => {
-  const { todolist, onAddTodo } = useContext(TodoContext);
+  const { todolist, onAddTodo, getTodos } = useContext(TodoContext);
   const { logout, token } = useContext(AuthContext);
 
   const completedTodos = todolist
@@ -19,6 +19,16 @@ const App = () => {
   const incompleteTodos = todolist
     ? todolist.filter((todo: Todo) => todo.completed === false)
     : [];
+
+  useEffect(() => {
+    const isAuthorized =
+      token || process.env.REACT_APP_STORAGE_TYPE === "offline";
+    const initialFetch = async () => await getTodos(token);
+
+    if (isAuthorized && !todolist) {
+      initialFetch();
+    }
+  }, [token, getTodos, todolist]);
 
   return (
     <main data-testid="App" className={Styles.Layout}>
@@ -35,7 +45,7 @@ const App = () => {
         <Loading loading={true} />
       ) : (
         <>
-          <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo)} />
+          <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo, token)} />
           <div className={Styles.LayoutContent}>
             <List title="To be done" items={incompleteTodos} />
             {completedTodos.length > 0 && (

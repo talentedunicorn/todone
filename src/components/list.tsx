@@ -2,10 +2,12 @@ import React, { useContext, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import Styles from "./list.module.css";
 import { TodoContext } from "../context/todoContext";
+import { AuthContext } from "../context/authContext";
 import { Todo } from "../models/todo";
 
 const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
   const { toggleTodo, deleteTodo, editTodo } = useContext(TodoContext);
+  const { token } = useContext(AuthContext);
   const [selectedTodo, setSelected] = useState<null | any>(null);
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState(true);
@@ -19,13 +21,13 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
     let action;
     switch (type) {
       case "edit":
-        action = editTodo(item.id, item.content);
+        action = editTodo(item.id, item.content, token);
         break;
       case "toggle":
-        action = toggleTodo(item.id);
+        action = toggleTodo(item.id, token);
         break;
       case "delete":
-        action = deleteTodo(item.id);
+        action = deleteTodo(item.id, token);
         break;
       default:
         break;
