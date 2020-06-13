@@ -59,6 +59,8 @@ const TodoProvider = (props: any) => {
   };
 
   useEffect(() => {
+    const token = window.localStorage.getItem("token") || "";
+
     const fetchData = async () => {
       const token = window.sessionStorage.getItem("token") || "";
       setToken(token);
