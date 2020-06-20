@@ -47,17 +47,13 @@ describe("<App/>", () => {
     expect(getAllByTestId("Loading").length).toBe(1);
   });
 
-  it("should be able to add todo", () => {
+  it("should be able to add todo", async () => {
     const { getByTestId } = renderedApp();
     fireEvent.change(getByTestId("form-input"), {
       target: { value: "Test todo" }
     });
     fireEvent.submit(getByTestId("form"));
     expect(mockedAddTodo).toHaveBeenCalledTimes(1);
-    expect(mockedAddTodo).toHaveBeenCalledWith({
-      completed: false,
-      content: "Test todo"
-    });
   });
 
   it("should be able to delete todo", async () => {

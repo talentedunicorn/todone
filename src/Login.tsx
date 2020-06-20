@@ -4,12 +4,17 @@ import { AuthContext } from "./context/authContext";
 
 const Login = () => {
   const { login } = useContext(AuthContext);
+  const [submitting, setSubmitting] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const isValidForm = () => username && password;
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
+    setSubmitting(true);
     login({ username, password });
+    setSubmitting(false);
   };
 
   return (
@@ -45,7 +50,7 @@ const Login = () => {
           <button
             className={Styles.Login}
             type="submit"
-            disabled={!username || !password}
+            disabled={submitting || !isValidForm()}
           >
             Log in
           </button>

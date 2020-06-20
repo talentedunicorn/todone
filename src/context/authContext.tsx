@@ -21,7 +21,7 @@ const AuthProvider = (props: any) => {
     // Login then set token
     await LOGIN(creds).then((data: any) => {
       setToken(data);
-      window.sessionStorage.setItem("token", data);
+      window.localStorage.setItem("token", data);
       return history.push("/app");
     });
 
@@ -30,7 +30,7 @@ const AuthProvider = (props: any) => {
 
   const logout = () => {
     setToken(null);
-    window.sessionStorage.removeItem("token");
+    window.localStorage.removeItem("token");
     return history.replace("/");
   };
 
@@ -41,7 +41,7 @@ const AuthProvider = (props: any) => {
         return history.replace("/app");
       }
     } else {
-      const cachedToken = window.sessionStorage.getItem("token");
+      const cachedToken = window.localStorage.getItem("token");
       if (cachedToken) {
         setToken(cachedToken);
         return history.push("/app");
