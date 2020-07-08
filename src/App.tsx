@@ -34,7 +34,7 @@ const App = () => {
     <main data-testid="App" className={Styles.Layout}>
       <header className={Styles.Header}>
         <h1 className={Styles.Logo}>{process.env.REACT_APP_WEBSITE_NAME}</h1>
-        {token && (
+        {process.env.REACT_APP_STORAGE_TYPE !== "offline" && token && (
           <button className={Styles.Logout} onClick={logout}>
             {" "}
             Logout
