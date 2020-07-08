@@ -1,3 +1,8 @@
+.Form,
+.Controls {
+  border-top: var(--border);
+}
+
 .Form {
   --toggle-icon: var(--icon-expand);
   --input-height: 1rem;
@@ -5,6 +10,7 @@
   flex-flow: column;
   margin: 0;
   background: var(--white);
+  border-bottom: var(--border);
 }
 
 [data-expanded="true"] {
@@ -13,23 +19,21 @@
 }
 
 .Controls {
-  border-top: var(--border);
-  border-bottom: var(--border);
   display: flex;
   align-items: center;
+  background: var(--white);
 }
 
 .Input {
   composes: Input from "../shared.css";
   transition: min-height 0.3s var(--ease);
-  border-top: var(--border);
 }
 
 .Submit {
   composes: Button from "../shared.css";
   flex: 1;
   white-space: nowrap;
-  padding: 1rem 2rem;
+  padding: 1rem;
 }
 
 .Toggle {
@@ -38,10 +42,4 @@
   --icon-size: 0.8rem;
   --button-bg: var(--black);
   margin: 0 1rem;
-}
-
-@media screen and (min-width: 70rem) {
-  .Input {
-    --border: none;
-  }
 }

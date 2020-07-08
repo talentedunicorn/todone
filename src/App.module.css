@@ -29,7 +29,6 @@
 .Footer {
   grid-area: footer;
   padding: 1rem;
-  margin-top: 2rem;
   color: var(--gray);
 }
 
@@ -67,8 +66,8 @@
 
   .Layout > form {
     top: 0;
-    border-left: var(--border);
-    margin-left: 0.5rem;
+    padding: 0 1rem 1rem;
+    background: var(--gray-light);
   }
 
   .LayoutContent {

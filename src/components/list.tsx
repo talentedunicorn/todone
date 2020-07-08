@@ -6,7 +6,7 @@ import { AuthContext } from "../context/authContext";
 import { Todo } from "../models/todo";
 
 const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
-  const listRef = useRef<any>();
+  const wrapperRef = useRef<any>();
   const { toggleTodo, deleteTodo, editTodo } = useContext(TodoContext);
   const { token } = useContext(AuthContext);
   const [selectedTodo, setSelected] = useState<null | any>(null);
@@ -57,22 +57,24 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
   };
 
   useEffect(() => {
-    if (listRef.current) {
-      const listEl = listRef.current;
-      listEl.parentNode.style.setProperty(
+    if (wrapperRef.current) {
+      wrapperRef.current.style.setProperty(
         "--list-height",
-        `${listEl.getBoundingClientRect().height}px`
+        `${wrapperRef.current.getBoundingClientRect().height}px`
       );
     }
   }, []);
 
   return (
-    <section className={Styles.Wrapper} data-expanded={expanded}>
+    <section
+      ref={wrapperRef}
+      className={Styles.Wrapper}
+      data-expanded={expanded}
+    >
       <h3 className={Styles.ListTitle} onClick={_ => setExpanded(!expanded)}>
         {title}
       </h3>
       <ol
-        ref={listRef}
         data-testid="List"
         className={Styles.List}
         data-empty-message="All done..."
