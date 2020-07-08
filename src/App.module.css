@@ -29,7 +29,6 @@
 .Footer {
   grid-area: footer;
   padding: 1rem;
-  margin-top: 2rem;
   color: var(--gray);
 }
 
@@ -47,6 +46,11 @@
   align-items: center;
 }
 
+.Hint {
+  margin: 0 0.5rem;
+  text-decoration: none;
+}
+
 .Logout {
   composes: Button from "./shared.css";
   border-radius: 3px;
@@ -62,6 +66,8 @@
 
   .Layout > form {
     top: 0;
+    padding: 0 1rem 1rem;
+    background: var(--gray-light);
   }
 
   .LayoutContent {

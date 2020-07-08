@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useRef, useContext, useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import Styles from "./list.module.css";
 import { TodoContext } from "../context/todoContext";
@@ -6,6 +6,7 @@ import { AuthContext } from "../context/authContext";
 import { Todo } from "../models/todo";
 
 const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
+  const wrapperRef = useRef<any>();
   const { toggleTodo, deleteTodo, editTodo } = useContext(TodoContext);
   const { token } = useContext(AuthContext);
   const [selectedTodo, setSelected] = useState<null | any>(null);
@@ -55,8 +56,21 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
     setSelected(item);
   };
 
+  useEffect(() => {
+    if (wrapperRef.current) {
+      wrapperRef.current.style.setProperty(
+        "--list-height",
+        `${wrapperRef.current.getBoundingClientRect().height}px`
+      );
+    }
+  }, []);
+
   return (
-    <section className={Styles.Wrapper} data-expanded={expanded}>
+    <section
+      ref={wrapperRef}
+      className={Styles.Wrapper}
+      data-expanded={expanded}
+    >
       <h3 className={Styles.ListTitle} onClick={_ => setExpanded(!expanded)}>
         {title}
       </h3>

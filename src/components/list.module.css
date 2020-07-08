@@ -1,14 +1,13 @@
 .Wrapper {
-  --icon: var(--icon-minus);
   --header-color: var(--brand-color);
-  --transition: ease-in 0.3s;
+  --transition: all 0.4s var(--ease);
+  border-bottom: var(--border);
 }
 
 [data-expanded="false"] {
-  --icon: var(--icon-plus);
-  --header-color: var(--gray);
-  --list-height: 0px;
+  --header-color: var(--gray-light);
   --empty-display: none;
+  --list-height: 0px !important;
 }
 
 .List {
@@ -17,6 +16,7 @@
   margin: 0;
   overflow: hidden;
   max-height: var(--list-height);
+  transition: var(--transition);
 }
 
 .List:empty {
@@ -32,15 +32,15 @@
   font-size: 2rem;
 }
 
-.ListItem,
-.ListTitle {
-  border-bottom: var(--border);
-}
-
 .ListItem {
   display: flex;
   flex-wrap: wrap;
   position: relative;
+  border-top: var(--border);
+}
+
+.ListItem:first-child {
+  border-top: none;
 }
 
 .ListItem[data-loading="true"]:before {
@@ -69,6 +69,8 @@
   font-size: 1rem;
   letter-spacing: 2px;
   border-left: 5px solid var(--header-color);
+  border-bottom: var(--border);
+  transition: var(--transition);
 }
 
 @keyframes pulse {
@@ -83,9 +85,8 @@
 .ListContent {
   cursor: pointer;
   line-height: 1.5;
-  max-width: calc(100vw - 3rem);
+  max-width: calc(100vw - 2rem);
   margin: 1rem;
-  overflow-x: auto;
   flex: 1;
 }
 
