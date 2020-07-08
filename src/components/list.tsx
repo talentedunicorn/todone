@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useRef, useContext, useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import Styles from "./list.module.css";
 import { TodoContext } from "../context/todoContext";
@@ -6,6 +6,7 @@ import { AuthContext } from "../context/authContext";
 import { Todo } from "../models/todo";
 
 const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
+  const listRef = useRef<any>();
   const { toggleTodo, deleteTodo, editTodo } = useContext(TodoContext);
   const { token } = useContext(AuthContext);
   const [selectedTodo, setSelected] = useState<null | any>(null);
@@ -55,12 +56,23 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
     setSelected(item);
   };
 
+  useEffect(() => {
+    if (listRef.current) {
+      const listEl = listRef.current;
+      listEl.parentNode.style.setProperty(
+        "--list-height",
+        `${listEl.getBoundingClientRect().height}px`
+      );
+    }
+  }, []);
+
   return (
     <section className={Styles.Wrapper} data-expanded={expanded}>
       <h3 className={Styles.ListTitle} onClick={_ => setExpanded(!expanded)}>
         {title}
       </h3>
       <ol
+        ref={listRef}
         data-testid="List"
         className={Styles.List}
         data-empty-message="All done..."
