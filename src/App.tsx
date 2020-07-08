@@ -34,12 +34,22 @@ const App = () => {
     <main data-testid="App" className={Styles.Layout}>
       <header className={Styles.Header}>
         <h1 className={Styles.Logo}>{process.env.REACT_APP_WEBSITE_NAME}</h1>
-        {process.env.REACT_APP_STORAGE_TYPE !== "offline" && token && (
-          <button className={Styles.Logout} onClick={logout}>
-            {" "}
-            Logout
-          </button>
-        )}
+        <div>
+          <a
+            className={Styles.Hint}
+            title="This app uses Markdown. Click to learn how to use it"
+            target="blank"
+            href="https://www.markdownguide.org/cheat-sheet"
+          >
+            Markdown cheatsheet
+          </a>
+          {process.env.REACT_APP_STORAGE_TYPE !== "offline" && token && (
+            <button className={Styles.Logout} onClick={logout}>
+              {" "}
+              Logout
+            </button>
+          )}
+        </div>
       </header>
       {!todolist ? (
         <Loading loading={true} />

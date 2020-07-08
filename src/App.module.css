@@ -47,6 +47,11 @@
   align-items: center;
 }
 
+.Hint {
+  margin: 0 0.5rem;
+  text-decoration: none;
+}
+
 .Logout {
   composes: Button from "./shared.css";
   border-radius: 3px;
