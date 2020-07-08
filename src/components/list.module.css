@@ -14,7 +14,7 @@
   margin: 0;
   overflow: hidden;
   max-height: var(--list-height);
-  transition: all 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
+  transition: all 0.4s var(--ease);
 }
 
 .List:empty {

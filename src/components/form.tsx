@@ -35,16 +35,18 @@ const Form = ({ handleFormSubmit }: any) => {
         placeholder="Start typing..."
         onChange={e => setContent(e.target.value)}
       />
-      <button
-        type="button"
-        onClick={_ => setExpanded(!expanded)}
-        className={Styles.Toggle}
-      >
-        {expanded ? "Collapse" : "Expand"} input
-      </button>
-      <button type="submit" className={Styles.Submit}>
-        Add task
-      </button>
+      <div className={Styles.Controls}>
+        <button
+          type="button"
+          onClick={_ => setExpanded(!expanded)}
+          className={Styles.Toggle}
+        >
+          {expanded ? "Collapse" : "Expand"} input
+        </button>
+        <button type="submit" className={Styles.Submit}>
+          Add task
+        </button>
+      </div>
     </form>
   );
 };

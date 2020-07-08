@@ -1,57 +1,47 @@
-[data-expanded="true"] {
-  --input-height: 10rem;
-}
-
 .Form {
   --toggle-icon: var(--icon-expand);
-  --border: 1px solid var(--gray-light);
+  --input-height: 1rem;
   display: flex;
   flex-flow: column;
   margin: 0;
   background: var(--white);
-  position: relative;
 }
 
 [data-expanded="true"] {
   --input-height: 10rem;
-  --toggle-icon: var(--icon-compress);
+  --toggle-icon: var(--icon-collapse);
+}
+
+.Controls {
+  border-top: var(--border);
+  border-bottom: var(--border);
+  display: flex;
+  align-items: center;
 }
 
 .Input {
   composes: Input from "../shared.css";
+  transition: min-height 0.3s var(--ease);
   border-top: var(--border);
 }
 
-.Toggle,
 .Submit {
   composes: Button from "../shared.css";
+  flex: 1;
+  white-space: nowrap;
+  padding: 1rem 2rem;
 }
 
 .Toggle {
+  composes: Button-icon from "../shared.css";
+  --icon: var(--toggle-icon);
+  --icon-size: 0.8rem;
   --button-bg: var(--black);
-  position: absolute;
-  top: 100%;
-  right: 0;
-  padding: 1rem;
-}
-
-.Submit {
-  padding: 1rem 2rem;
-  white-space: nowrap;
+  margin: 0 1rem;
 }
 
 @media screen and (min-width: 70rem) {
-  .Form {
-    padding: 0 1rem 1rem;
-    background: var(--gray-light);
-  }
-
   .Input {
-    --input-height: 20rem;
-    border-top: none;
-  }
-
-  .Toggle {
-    display: none;
+    --border: none;
   }
 }

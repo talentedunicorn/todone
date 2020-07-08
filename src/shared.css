@@ -34,7 +34,7 @@
   padding: 1rem;
   border: none;
   resize: vertical;
-  height: var(--input-height);
+  min-height: var(--input-height);
 }
 
 .Input:focus {
