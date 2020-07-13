@@ -23,12 +23,20 @@ const App = () => {
   useEffect(() => {
     const isAuthorized =
       token || process.env.REACT_APP_STORAGE_TYPE === "offline";
-    const initialFetch = async () => await getTodos(token);
-
-    if (isAuthorized && !todolist) {
-      initialFetch();
+    async function initialLoad() {
+      try {
+        if (isAuthorized && !todolist) {
+          await getTodos(token);
+        }
+      } catch (error) {
+        if (error.response.status && error.response.status === 401) {
+          logout();
+        }
+      }
     }
-  }, [token, getTodos, todolist]);
+
+    initialLoad();
+  }, [token, getTodos, todolist, logout]);
 
   return (
     <main data-testid="App" className={Styles.Layout}>
