@@ -57,13 +57,13 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
   };
 
   useEffect(() => {
-    if (wrapperRef.current) {
+    if (wrapperRef.current && items) {
       wrapperRef.current.style.setProperty(
         "--list-height",
         `${wrapperRef.current.getBoundingClientRect().height}px`
       );
     }
-  }, []);
+  }, [items]);
 
   return (
     <section
@@ -99,37 +99,41 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
                       onChange={handleEdit}
                       data-expanded={true}
                     />
-                    <button className={Styles.ListSave}>Save</button>
-                    <button
-                      className={Styles.ListCancel}
-                      onClick={_ => setSelected(null)}
-                    >
-                      Cancel
-                    </button>
+                    <section className={Styles.ListControls}>
+                      <button className={Styles.ListSave}>Save</button>
+                      <button
+                        className={Styles.ListCancel}
+                        onClick={_ => setSelected(null)}
+                      >
+                        Cancel
+                      </button>
+                    </section>
                   </form>
                 ) : (
-                  <div
-                    className={Styles.ListContent}
-                    data-completed={item.completed ? true : undefined}
-                    onClick={e => handleSelected(item, e)}
-                  >
-                    <ReactMarkdown source={item.content} />
-                  </div>
+                  <>
+                    <div
+                      className={Styles.ListContent}
+                      data-completed={item.completed ? true : undefined}
+                      onClick={e => handleSelected(item, e)}
+                    >
+                      <ReactMarkdown source={item.content} />
+                    </div>
+                    <section className={Styles.ListControls}>
+                      <input
+                        className={Styles.ListCheckbox}
+                        type="checkbox"
+                        defaultChecked={item.completed}
+                        onClick={() => handleActions("toggle", item)}
+                      />
+                      <button
+                        onClick={() => handleActions("delete", item)}
+                        className={Styles.ListDelete}
+                      >
+                        Delete
+                      </button>
+                    </section>
+                  </>
                 )}
-                <section className={Styles.ListControls}>
-                  <input
-                    className={Styles.ListCheckbox}
-                    type="checkbox"
-                    defaultChecked={item.completed}
-                    onClick={() => handleActions("toggle", item)}
-                  />
-                  <button
-                    onClick={() => handleActions("delete", item)}
-                    className={Styles.ListDelete}
-                  >
-                    Delete
-                  </button>
-                </section>
               </li>
             ))}
       </ol>

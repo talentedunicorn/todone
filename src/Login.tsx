@@ -11,10 +11,11 @@ const Login = () => {
   const isValidForm = () => username && password;
 
   const handleSubmit = (e: any) => {
-    e.preventDefault();
     setSubmitting(true);
-    login({ username, password });
-    setSubmitting(false);
+    e.preventDefault();
+    login({ username, password }).finally(() => {
+      setSubmitting(false);
+    });
   };
 
   return (

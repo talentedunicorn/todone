@@ -98,6 +98,7 @@
 .ListForm {
   flex: 1;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .ListInput {
@@ -109,13 +110,11 @@
 .ListCancel {
   --icon-size: 0.8rem;
   composes: Button-icon from "../shared.css";
-  margin: 1rem;
 }
 
 .ListSave {
   --icon: var(--icon-check);
   --button-bg: var(--green);
-  order: -1;
 }
 
 .ListCancel {
@@ -167,6 +166,7 @@
   flex: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 1rem;
   border-top: var(--border);
 }
