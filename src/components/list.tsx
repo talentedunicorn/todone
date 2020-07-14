@@ -57,13 +57,14 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
   };
 
   useEffect(() => {
-    if (wrapperRef.current && items) {
+    if (wrapperRef.current) {
+      const elRect = wrapperRef.current.getBoundingClientRect();
       wrapperRef.current.style.setProperty(
         "--list-height",
-        `${wrapperRef.current.getBoundingClientRect().height}px`
+        `${elRect.height + elRect.top}px`
       );
     }
-  }, [items]);
+  }, []);
 
   return (
     <section
