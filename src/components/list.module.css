@@ -15,7 +15,7 @@
   padding: 0;
   margin: 0;
   overflow: hidden;
-  max-height: var(--list-height);
+  max-height: calc(var(--list-height) * 2);
   transition: var(--transition);
 }
 
