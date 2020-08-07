@@ -21,7 +21,7 @@ const ADD_TODO = (content: string) => {
 
 const EDIT_TODO = async (id: any, content: string) => {
   const todo: Todo = await db.getItem(id);
-  return db.setItem(id, { ...todo, content });
+  return db.setItem(id, { ...todo, content, id: `${Date.now()}` });
 };
 
 const TOGGLE_TODO = async (id: any, completed: boolean) => {
