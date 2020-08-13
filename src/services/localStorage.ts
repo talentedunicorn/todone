@@ -15,18 +15,26 @@ const GET_TODOS = async () => {
 };
 
 const ADD_TODO = (content: string) => {
-  const todo = { id: `${Date.now()}`, content, completed: false };
+  const todo = {
+    id: `${Date.now()}`,
+    content,
+    completed: false,
+    updated_at: `${Date.now()}`
+  };
   return db.setItem(todo.id, todo);
 };
 
 const EDIT_TODO = async (id: any, content: string) => {
-  const todo: Todo = await db.getItem(id);
-  return db.setItem(id, { ...todo, content, id: `${Date.now()}` });
+  let todo: Todo = await db.getItem(id);
+  todo.updated_at = `${Date.now()}`;
+  todo.content = content;
+  return db.setItem(id, { ...todo });
 };
 
 const TOGGLE_TODO = async (id: any, completed: boolean) => {
-  const todo: Todo = await db.getItem(id);
-  return db.setItem(id, { ...todo, completed });
+  let todo: Todo = await db.getItem(id);
+  todo.completed = completed;
+  return db.setItem(id, { ...todo });
 };
 
 const DELETE_TODOS = (ids: any[]) =>
