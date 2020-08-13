@@ -60,7 +60,7 @@ const App = () => {
         </div>
       </header>
       {!todolist ? (
-        <Loading loading={true} />
+        <Loading />
       ) : (
         <>
           <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo, token)} />
