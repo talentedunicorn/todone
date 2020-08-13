@@ -82,13 +82,11 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
       >
         {items &&
           items
-            .sort((a, b) => {
-              // Sort by updated by value from backend
-              return process.env.REACT_APP_STORAGE_TYPE === "backend"
-                ? new Date(b.updated_at).getTime() -
-                    new Date(a.updated_at).getTime()
-                : b.id - a.id;
-            })
+            .sort(
+              (a, b) =>
+                new Date(b.updated_at).getTime() -
+                new Date(a.updated_at).getTime()
+            )
             .map(item => (
               <li
                 className={Styles.ListItem}
