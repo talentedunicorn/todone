@@ -22,8 +22,7 @@ const App = () => {
     : [];
 
   useEffect(() => {
-    const isAuthorized =
-      token || process.env.REACT_APP_STORAGE_TYPE === "offline";
+    const isAuthorized = token || process.env.REACT_APP_OFFLINE_MODE;
     async function initialLoad() {
       try {
         if (isAuthorized && !todolist) {
@@ -54,7 +53,7 @@ const App = () => {
           >
             Markdown cheatsheet
           </a>
-          {process.env.REACT_APP_STORAGE_TYPE !== "offline" && token && (
+          {!process.env.REACT_APP_OFFLINE_MODE && token && (
             <button className={Styles.Logout} onClick={logout}>
               {" "}
               Logout
