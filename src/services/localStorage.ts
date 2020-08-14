@@ -1,4 +1,5 @@
 import localforage from "localforage";
+import FileSaver from "file-saver";
 import { Todo } from "../models/todo";
 
 const DB_NAME = process.env.REACT_APP_DB_NAME || "todone_db";
@@ -41,3 +42,13 @@ const DELETE_TODOS = (ids: any[]) =>
   new Promise<any>(resolve => resolve(db.removeItem(ids[0])));
 
 export default { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS };
+
+export const exportData = async () => {
+  const keys = await db.keys();
+  const data = await Promise.all(keys.map(key => db.getItem(key.toString())));
+  // Build file from data and trigger download
+  const fileData = new Blob([JSON.stringify({ data })], {
+    type: "text/plain;charset=utf-8"
+  });
+  FileSaver.saveAs(fileData, `${DB_NAME}.json`);
+};
