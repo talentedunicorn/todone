@@ -44,7 +44,7 @@ describe("<App/>", () => {
         <App />
       </TodoContext.Provider>
     );
-    expect(getAllByTestId("Loading").length).toBe(1);
+    expect(getAllByTestId("App").length).toBeInTheDocument;
   });
 
   it("should be able to add todo", async () => {

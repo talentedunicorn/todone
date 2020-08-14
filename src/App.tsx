@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import List from "./components/list";
 import Form from "./components/form";
 import Loading from "./components/loading";
@@ -10,6 +10,7 @@ import { TodoContext } from "./context/todoContext";
 import { AuthContext } from "./context/authContext";
 
 const App = () => {
+  const [loading, setLoading] = useState(true);
   const { todolist, onAddTodo, getTodos } = useContext(TodoContext);
   const { logout, token } = useContext(AuthContext);
 
@@ -33,6 +34,8 @@ const App = () => {
           logout();
         }
       }
+
+      setLoading(false);
     }
 
     initialLoad();
@@ -59,8 +62,8 @@ const App = () => {
           )}
         </div>
       </header>
-      {!todolist ? (
-        <Loading loading={true} />
+      {loading ? (
+        <Loading />
       ) : (
         <>
           <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo, token)} />
