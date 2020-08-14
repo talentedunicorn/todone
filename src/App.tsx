@@ -8,6 +8,7 @@ import Styles from "./App.module.css";
 
 import { TodoContext } from "./context/todoContext";
 import { AuthContext } from "./context/authContext";
+import { exportData } from "./services/localStorage";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -44,22 +45,30 @@ const App = () => {
     <main data-testid="App" className={Styles.Layout}>
       <header className={Styles.Header}>
         <h1 className={Styles.Logo}>{process.env.REACT_APP_WEBSITE_NAME}</h1>
-        <div>
-          <a
-            className={Styles.Hint}
-            title="This app uses Markdown. Click to learn how to use it"
-            target="blank"
-            href="https://www.markdownguide.org/cheat-sheet"
+        <a
+          className={Styles.Hint}
+          title="This app uses Markdown. Click to learn how to use it"
+          target="blank"
+          href="https://www.markdownguide.org/cheat-sheet"
+        >
+          Markdown cheatsheet
+        </a>
+        {process.env.REACT_APP_OFFLINE_MODE && (
+          <button
+            title="Save to file"
+            className={Styles.Export}
+            disabled={!todolist || todolist.length < 1}
+            onClick={_ => exportData()}
           >
-            Markdown cheatsheet
-          </a>
-          {!process.env.REACT_APP_OFFLINE_MODE && token && (
-            <button className={Styles.Logout} onClick={logout}>
-              {" "}
-              Logout
-            </button>
-          )}
-        </div>
+            Save to file
+          </button>
+        )}
+        {!process.env.REACT_APP_OFFLINE_MODE && token && (
+          <button className={Styles.Logout} onClick={logout}>
+            {" "}
+            Logout
+          </button>
+        )}
       </header>
       {loading ? (
         <Loading />
