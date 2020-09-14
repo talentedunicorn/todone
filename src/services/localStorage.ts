@@ -1,6 +1,5 @@
 import localforage from "localforage";
 import FileSaver from "file-saver";
-import { Todo } from "../models/todo";
 
 const DB_NAME = process.env.REACT_APP_DB_NAME || "todone_db";
 
@@ -26,14 +25,14 @@ const ADD_TODO = (content: string) => {
 };
 
 const EDIT_TODO = async (id: any, content: string) => {
-  let todo: Todo = await db.getItem(id);
+  let todo: any = await db.getItem(id);
   todo.updated_at = `${Date.now()}`;
   todo.content = content;
   return db.setItem(id, { ...todo });
 };
 
 const TOGGLE_TODO = async (id: any, completed: boolean) => {
-  let todo: Todo = await db.getItem(id);
+  let todo: any = await db.getItem(id);
   todo.completed = completed;
   return db.setItem(id, { ...todo });
 };
