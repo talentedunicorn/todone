@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, wait } from "@testing-library/react";
+import { render, fireEvent, waitFor } from "@testing-library/react";
 import App from "./App";
 import { TodoContext } from "./context/todoContext";
 
@@ -18,18 +18,18 @@ beforeEach(() => {
             {
               id: 1,
               content: "First todo",
-              completed: false
+              completed: false,
             },
             {
               id: 2,
               content: "Second todo",
-              completed: true
-            }
+              completed: true,
+            },
           ],
           onAddTodo: mockedAddTodo,
           deleteTodo: mockedDeleteTodo,
           toggleTodo: mockedToggleTodo,
-          editTodo: mockedEditTodo
+          editTodo: mockedEditTodo,
         }}
       >
         <App />
@@ -50,7 +50,7 @@ describe("<App/>", () => {
   it("should be able to add todo", async () => {
     const { getByTestId } = renderedApp();
     fireEvent.change(getByTestId("form-input"), {
-      target: { value: "Test todo" }
+      target: { value: "Test todo" },
     });
     fireEvent.submit(getByTestId("form"));
     expect(mockedAddTodo).toHaveBeenCalledTimes(1);
@@ -58,33 +58,36 @@ describe("<App/>", () => {
 
   it("should be able to delete todo", async () => {
     const { getAllByText } = renderedApp();
-    await wait(() => fireEvent.click(getAllByText(/delete/i)[0]));
-    expect(mockedDeleteTodo).toHaveBeenCalledTimes(1);
+    fireEvent.click(getAllByText(/delete/i)[0]);
+    await waitFor(() => expect(mockedDeleteTodo).toHaveBeenCalledTimes(1));
   });
 
   it("should be able to toggle todo completed", async () => {
     const { getAllByRole } = renderedApp();
-    await wait(() => fireEvent.click(getAllByRole("checkbox")[0]));
+    const checkbox = getAllByRole("checkbox")[0];
+    fireEvent.click(checkbox);
+    await waitFor(() => expect(checkbox));
     expect(mockedToggleTodo).toBeCalledTimes(1);
   });
 
   it("should be able to edit todo text", async () => {
     const { container } = renderedApp();
-    await wait(() => {
-      fireEvent.click(container.querySelector(".ListEdit"));
-      fireEvent.change(container.querySelector(".ListInput"), {
-        target: { value: "Updated" }
-      });
-      fireEvent.submit(container.querySelector(".ListForm"));
+    fireEvent.click(container.querySelector(".ListEdit"));
+    fireEvent.change(container.querySelector(".ListInput"), {
+      target: { value: "Updated" },
     });
+    fireEvent.submit(container.querySelector(".ListForm"));
+    await waitFor(() => container.querySelector(".ListForm"));
     expect(mockedEditTodo).toHaveBeenCalledTimes(1);
   });
 
   it("should be able to cancel edit", async () => {
     const { container } = renderedApp();
-    await wait(() => fireEvent.click(container.querySelector(".ListEdit")));
+    fireEvent.click(container.querySelector(".ListEdit"));
+    await waitFor(() => container.querySelector(".ListForm"));
     expect(container.querySelector(".ListInput").value).toBe("First todo");
-    await wait(() => fireEvent.click(container.querySelector(".ListCancel")));
+    fireEvent.click(container.querySelector(".ListCancel"));
+    await waitFor(() => container.querySelector(".ListInput"));
     expect(container.querySelector(".ListForm")).toBeFalsy();
   });
 });

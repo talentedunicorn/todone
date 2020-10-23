@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, wait } from "@testing-library/react";
+import { render, fireEvent, waitFor } from "@testing-library/react";
 import Login from "./Login";
 import { AuthContext } from "./context/authContext";
 
@@ -30,8 +30,7 @@ describe("Login page", () => {
 
     // Check form button state
     expect(button.disabled).toBe(false);
-    await wait(() => fireEvent.click(button));
-
-    expect(login).toHaveBeenCalledTimes(1);
+    fireEvent.click(button);
+    await waitFor(() => expect(login).toHaveBeenCalledTimes(1));
   });
 });
