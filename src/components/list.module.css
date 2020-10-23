@@ -83,7 +83,6 @@
 }
 
 .ListContent {
-  cursor: pointer;
   line-height: 1.5;
   max-width: calc(100vw - 2rem);
   margin: 1rem;
@@ -107,6 +106,8 @@
 }
 
 .ListSave,
+.ListEdit,
+.ListDelete,
 .ListCancel {
   --icon-size: 0.8rem;
   composes: Button-icon from "../shared.css";
@@ -117,16 +118,20 @@
   --button-bg: var(--green);
 }
 
+.ListEdit {
+  --icon: var(--icon-edit);
+  --button-bg: var(--yellow);
+  margin: 0 2rem 0 auto;
+}
+
 .ListCancel {
   --button-bg: var(--red);
   --icon: var(--icon-x);
 }
 
 .ListDelete {
-  composes: Button-icon from "../shared.css";
   --button-bg: var(--red);
   --icon: var(--icon-trash);
-  --icon-size: 0.8rem;
   order: -1;
 }
 
@@ -138,7 +143,7 @@
   position: relative;
   width: var(--checkbox-size);
   height: var(--checkbox-size);
-  margin: 0 0 0 auto;
+  order: 1;
 }
 
 .ListCheckbox:hover {
