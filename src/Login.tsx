@@ -29,6 +29,7 @@ const Login = () => {
           <span className="visually-hidden">Username</span>
           <input
             type="text"
+            data-testid="usernameInput"
             value={username}
             onChange={e => setUsername(e.target.value)}
             className={Styles.Input}
@@ -40,6 +41,7 @@ const Login = () => {
           <span className="visually-hidden">Password</span>
           <input
             type="password"
+            data-testid="passwordInput"
             value={password}
             onChange={e => setPassword(e.target.value)}
             className={Styles.Input}

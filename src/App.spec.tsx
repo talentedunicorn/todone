@@ -69,9 +69,9 @@ describe("<App/>", () => {
   });
 
   it("should be able to edit todo text", async () => {
-    const { getByText, container } = renderedApp();
+    const { container } = renderedApp();
     await wait(() => {
-      fireEvent.click(getByText(/first/i));
+      fireEvent.click(container.querySelector(".ListEdit"));
       fireEvent.change(container.querySelector(".ListInput"), {
         target: { value: "Updated" }
       });
@@ -81,9 +81,9 @@ describe("<App/>", () => {
   });
 
   it("should be able to cancel edit", async () => {
-    const { getByText, container, debug } = renderedApp();
-    await wait(() => fireEvent.click(getByText(/second/i)));
-    expect(container.querySelector(".ListInput").value).toBe("Second todo");
+    const { container } = renderedApp();
+    await wait(() => fireEvent.click(container.querySelector(".ListEdit")));
+    expect(container.querySelector(".ListInput").value).toBe("First todo");
     await wait(() => fireEvent.click(container.querySelector(".ListCancel")));
     expect(container.querySelector(".ListForm")).toBeFalsy();
   });

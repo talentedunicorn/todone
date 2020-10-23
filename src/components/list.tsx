@@ -45,17 +45,6 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
     handleActions("edit", selectedTodo);
   };
 
-  const handleSelected = (item: any, e: any) => {
-    // Prevent links triggering click events
-    if (e.target.tagName.toLowerCase() === "a") {
-      e.target.target = "blank";
-      e.stopPropagation();
-      return;
-    }
-
-    setSelected(item);
-  };
-
   useEffect(() => {
     if (wrapperRef.current) {
       const elRect = wrapperRef.current.getBoundingClientRect();
@@ -119,7 +108,6 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
                     <div
                       className={Styles.ListContent}
                       data-completed={item.completed ? true : undefined}
-                      onClick={e => handleSelected(item, e)}
                     >
                       <ReactMarkdown source={item.content} />
                     </div>
@@ -130,6 +118,12 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
                         defaultChecked={item.completed}
                         onClick={() => handleActions("toggle", item)}
                       />
+                      <button
+                        onClick={() => setSelected(item)}
+                        className={Styles.ListEdit}
+                      >
+                        Edit
+                      </button>
                       <button
                         onClick={() => handleActions("delete", item)}
                         className={Styles.ListDelete}
