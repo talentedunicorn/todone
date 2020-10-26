@@ -1,5 +1,6 @@
 import React, { useRef, useContext, useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import gfm from "remark-gfm";
 import Styles from "./list.module.css";
 import { TodoContext } from "../context/todoContext";
 import { AuthContext } from "../context/authContext";
@@ -61,7 +62,7 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
       className={Styles.Wrapper}
       data-expanded={expanded}
     >
-      <h3 className={Styles.ListTitle} onClick={_ => setExpanded(!expanded)}>
+      <h3 className={Styles.ListTitle} onClick={(_) => setExpanded(!expanded)}>
         {title}
       </h3>
       <ol
@@ -76,7 +77,7 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
                 new Date(b.updated_at).getTime() -
                 new Date(a.updated_at).getTime()
             )
-            .map(item => (
+            .map((item) => (
               <li
                 className={Styles.ListItem}
                 key={item.id}
@@ -97,7 +98,7 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
                       <button className={Styles.ListSave}>Save</button>
                       <button
                         className={Styles.ListCancel}
-                        onClick={_ => setSelected(null)}
+                        onClick={(_) => setSelected(null)}
                       >
                         Cancel
                       </button>
@@ -109,7 +110,7 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
                       className={Styles.ListContent}
                       data-completed={item.completed ? true : undefined}
                     >
-                      <ReactMarkdown source={item.content} />
+                      <ReactMarkdown plugins={[gfm]} children={item.content} />
                     </div>
                     <section className={Styles.ListControls}>
                       <input
