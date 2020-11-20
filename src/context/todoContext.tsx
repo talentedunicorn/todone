@@ -18,20 +18,20 @@ const TodoProvider = (props: any) => {
   const { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS } = service;
 
   const toggleTodo = (id: number, token?: any) => {
-    const todo = (todolist && todolist.find(todo => todo.id === id)) || null;
+    const todo = (todolist && todolist.find((todo) => todo.id === id)) || null;
     return (
       todo &&
       TOGGLE_TODO(id, !todo.completed, token).then((data: Todo) => {
         setTodolist(
-          todolist && todolist.map(todo => (todo.id === id ? data : todo))
+          todolist && todolist.map((todo) => (todo.id === id ? data : todo))
         );
       })
     );
   };
 
   const deleteTodo = (id: any, token?: any) =>
-    DELETE_TODOS([id], token).then(() =>
-      setTodolist(todolist && todolist.filter(todo => todo.id !== id))
+    DELETE_TODOS([id], token).finally(() =>
+      setTodolist(todolist && todolist.filter((todo) => todo.id !== id))
     );
 
   const onAddTodo = (todo: Todo, token?: any) =>
@@ -64,7 +64,7 @@ const TodoProvider = (props: any) => {
     toggleTodo,
     deleteTodo,
     onAddTodo,
-    editTodo
+    editTodo,
   };
 
   return (
