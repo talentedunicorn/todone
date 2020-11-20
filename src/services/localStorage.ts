@@ -5,13 +5,13 @@ const DB_NAME = process.env.REACT_APP_DB_NAME || "todone_db";
 
 // Configure database
 const db = localforage.createInstance({
-  name: DB_NAME
+  name: DB_NAME,
 });
 
 // Queries
 const GET_TODOS = async () => {
   const allKeys = await db.keys();
-  return Promise.all(allKeys.map(key => db.getItem(key.toString())));
+  return Promise.all(allKeys.map((key) => db.getItem(key.toString())));
 };
 
 const ADD_TODO = (content: string) => {
@@ -19,7 +19,7 @@ const ADD_TODO = (content: string) => {
     id: `${Date.now()}`,
     content,
     completed: false,
-    updated_at: `${Date.now()}`
+    updated_at: `${Date.now()}`,
   };
   return db.setItem(todo.id, todo);
 };
@@ -38,16 +38,16 @@ const TOGGLE_TODO = async (id: any, completed: boolean) => {
 };
 
 const DELETE_TODOS = (ids: any[]) =>
-  new Promise<any>(resolve => resolve(db.removeItem(ids[0])));
+  Promise.all(ids.map((id) => db.removeItem(id)));
 
 export default { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS };
 
 export const exportData = async () => {
   const keys = await db.keys();
-  const data = await Promise.all(keys.map(key => db.getItem(key.toString())));
+  const data = await Promise.all(keys.map((key) => db.getItem(key.toString())));
   // Build file from data and trigger download
   const fileData = new Blob([JSON.stringify({ data })], {
-    type: "text/plain;charset=utf-8"
+    type: "text/plain;charset=utf-8",
   });
   FileSaver.saveAs(fileData, `${DB_NAME}.json`);
 };
