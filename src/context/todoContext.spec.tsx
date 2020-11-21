@@ -1,53 +1,115 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import service from "../services/index";
+import { render, fireEvent, cleanup, waitFor } from "@testing-library/react";
 import { TodoContext, TodoProvider } from "./todoContext";
+import { Todo } from "../models/todo";
+
+jest.mock("../services/index");
+const mockedService = service as jest.Mocked<typeof service>;
 
 afterEach(() => {
-  localStorage.clear();
+  cleanup();
+  jest.resetAllMocks();
 });
 
-const DB_NAME = process.env.REACT_APP_DB_NAME
-  ? process.env.REACT_APP_DB_NAME
-  : "test_db";
+const mockTodolist: Todo[] = [
+  {
+    id: 1,
+    content: "Hello world",
+    completed: false,
+    created_at: Date.now(),
+    updated_at: Date.now(),
+  },
+  {
+    id: 2,
+    content: "I remain",
+    completed: false,
+    created_at: Date.now(),
+    updated_at: Date.now(),
+  },
+];
 
 describe("TodoContext", () => {
-  xit("should render correct context", () => {
-    let mockTodolist = [
-      { id: 1, content: "Hello world", completed: false },
-      { id: 2, content: "I remain", completed: false }
-    ];
-    localStorage.setItem(DB_NAME, JSON.stringify(mockTodolist));
-
-    const tree = (
+  it("should get todos", async () => {
+    mockedService.GET_TODOS.mockResolvedValueOnce(mockTodolist);
+    const { getByText, getAllByRole } = render(
       <TodoProvider>
         <TodoContext.Consumer>
-          {value => <span>There are {mockTodolist.length} items</span>}
+          {({ getTodos, todolist }) => (
+            <>
+              <ul>
+                {todolist?.map((todo) => (
+                  <li key={todo.id}>{todo.content}</li>
+                ))}
+              </ul>
+              <button onClick={getTodos}>Get todos</button>
+            </>
+          )}
         </TodoContext.Consumer>
       </TodoProvider>
     );
-
-    const { getByText } = render(tree);
-    expect(getByText(/There are/i).textContent).toBe(
-      `There are ${mockTodolist.length} items`
-    );
+    fireEvent.click(getByText("Get todos"));
+    await waitFor(() => {
+      expect(mockedService.GET_TODOS).toHaveBeenCalledTimes(1);
+      expect(getAllByRole("listitem")).toHaveLength(mockTodolist.length);
+    });
   });
 
-  xit("should add todo", async () => {
-    const tree = (
+  it("should add todo", async () => {
+    mockedService.ADD_TODO.mockResolvedValueOnce(mockTodolist[0]);
+    const { getAllByRole } = render(
       <TodoProvider>
         <TodoContext.Consumer>
-          {({ todolist, onAddTodo }) => {
-            const addTodo = () =>
-              onAddTodo({ text: "new task", completed: false });
+          {({ onAddTodo, todolist }) => (
+            <>
+              <ul>
+                {todolist?.map((todo) => (
+                  <li key={todo.id}>{todo.content}</li>
+                ))}
+              </ul>
+              <button onClick={() => onAddTodo(mockTodolist[0])}>
+                Add todo
+              </button>
+            </>
+          )}
+        </TodoContext.Consumer>
+      </TodoProvider>
+    );
+    fireEvent.click(getAllByRole("button")[0]);
+    await waitFor(() => {
+      expect(mockedService.ADD_TODO).toHaveBeenCalledTimes(1);
+      expect(getAllByRole("listitem")).toHaveLength(1);
+    });
+  });
+
+  it("should be able to toggle todo status", async () => {
+    mockedService.TOGGLE_TODO.mockResolvedValue({
+      ...mockTodolist[0],
+      completed: !mockTodolist[0].completed,
+    });
+    mockedService.GET_TODOS.mockResolvedValue(mockTodolist);
+    const { getByText, getAllByRole, debug } = render(
+      <TodoProvider>
+        <TodoContext.Consumer>
+          {({ todolist, getTodos, toggleTodo }) => {
             return (
               <>
-                <ul>
-                  {todolist &&
-                    todolist.map((todo, i) => <li key={i}>{todo.content}</li>)}
-                </ul>
-                <button data-testid="addButton" onClick={addTodo}>
-                  Add todo
-                </button>
+                {todolist ? (
+                  <>
+                    <ul>
+                      {todolist
+                        ?.filter((todo) => !todo.completed)
+                        .map((todo) => (
+                          <li key={todo.id}>{todo.content}</li>
+                        ))}
+                    </ul>
+                    <button onClick={() => toggleTodo(todolist[0].id)}>
+                      Toggle todo
+                    </button>
+                  </>
+                ) : (
+                  <button onClick={getTodos}>Get todos</button>
+                )}
               </>
             );
           }}
@@ -55,103 +117,81 @@ describe("TodoContext", () => {
       </TodoProvider>
     );
 
-    const { getAllByRole, getByTestId } = render(tree);
-    fireEvent.click(getByTestId("addButton"));
-    expect(getAllByRole("listitem")).toHaveLength(1);
+    fireEvent.click(getByText(/Get todos/));
+    await waitFor(() => {
+      expect(mockedService.GET_TODOS).toHaveBeenCalledTimes(1);
+    });
+    fireEvent.click(getByText(/Toggle/));
+    await waitFor(() => {
+      expect(mockedService.TOGGLE_TODO).toHaveBeenCalledTimes(1);
+      expect(getAllByRole("listitem")).toHaveLength(mockTodolist.length - 1);
+    });
   });
 
-  xit("should be able to toggle todo status", () => {
-    let mockTodolist = [{ id: 1, text: "Hello", completed: false }];
-    localStorage.setItem(DB_NAME, JSON.stringify(mockTodolist));
-    const tree = (
-      <TodoProvider>
+  it("should be able to delete todo", async () => {
+    mockedService.GET_TODOS.mockResolvedValue(mockTodolist);
+    mockedService.DELETE_TODOS.mockResolvedValue([]);
+    const { getByText, getAllByText } = render(
+      <TodoProvider value={{ todolist: mockTodolist }}>
         <TodoContext.Consumer>
-          {({ todolist, toggleTodo }) => {
+          {({ deleteTodo, getTodos, todolist }) => {
             return (
-              <ul>
-                {todolist &&
-                  todolist.map((todo, i) => (
-                    <li key={i}>
-                      {todo.content}
-                      <span>{todo.completed.toString()}</span>
-                      <button onClick={() => toggleTodo(todo.id)}>
-                        Toggle
+              <>
+                <ul>
+                  {todolist?.map((todo) => (
+                    <li key={todo.id}>
+                      <p>{todo.content}</p>
+                      <button onClick={() => deleteTodo(todo.id)}>
+                        Delete
                       </button>
                     </li>
                   ))}
-              </ul>
+                </ul>
+                <button onClick={() => getTodos()}>Get todos</button>
+              </>
             );
           }}
         </TodoContext.Consumer>
       </TodoProvider>
     );
-
-    const { getByText } = render(tree);
-    expect(getByText(/false/i).textContent).toBe("false");
-    fireEvent.click(getByText(/toggle/i));
-    expect(getByText(/true/i).textContent).toBe("true");
+    fireEvent.click(getByText(/Get todos/));
+    await waitFor(() => {
+      expect(mockedService.GET_TODOS).toHaveBeenCalledTimes(1);
+      expect(getAllByText(/Delete/)).toHaveLength(mockTodolist.length);
+    });
+    fireEvent.click(getAllByText(/Delete/)[0]);
+    await waitFor(() => {
+      expect(mockedService.DELETE_TODOS).toHaveBeenCalledTimes(1);
+      expect(getAllByText(/Delete/)).toHaveLength(mockTodolist.length - 1);
+    });
   });
 
-  xit("should be able to delete todo", () => {
-    let mockTodolist = [
-      { id: 1, text: "Hello world", completed: false },
-      { id: 2, text: "I remain", completed: false }
-    ];
-    localStorage.setItem(DB_NAME, JSON.stringify(mockTodolist));
-    const TestComponent = () => {
-      const { todolist, deleteTodo } = React.useContext(TodoContext);
-      return (
-        <ul>
-          {todolist &&
-            todolist.map((todo, i) => (
-              <li key={todo.id}>
-                <span>{todo.content}</span>
-                <button onClick={() => deleteTodo(todo.id)}>Delete</button>
-              </li>
-            ))}
-        </ul>
-      );
-    };
-    const tree = (
+  it("should be able to edit todo", async () => {
+    mockedService.GET_TODOS.mockResolvedValue(mockTodolist);
+    mockedService.EDIT_TODO.mockResolvedValue({
+      ...mockTodolist[0],
+      content: "Edited",
+    });
+    const { getByText, debug } = render(
       <TodoProvider>
-        <TestComponent />
+        <TodoContext.Consumer>
+          {({ todolist, editTodo, getTodos }) => (
+            <>
+              {todolist && <p>{todolist[0].content}</p>}
+              <button onClick={getTodos}>Get todos</button>
+              <button onClick={() => editTodo(1, "test")}>Edit todo</button>
+            </>
+          )}
+        </TodoContext.Consumer>
       </TodoProvider>
     );
-
-    const { container } = render(tree);
-    const button = container.querySelector("button");
-    expect(container.querySelectorAll("li")).toHaveLength(2);
-    if (button) {
-      fireEvent.click(button);
-    }
-    expect(container.querySelectorAll("li")).toHaveLength(1);
-  });
-
-  xit("should be able to edit todo", () => {
-    localStorage.setItem(
-      DB_NAME,
-      JSON.stringify([{ id: 1, text: "Edit me", completed: false }])
-    );
-    const TestComponent = () => {
-      const { todolist, editTodo } = React.useContext(TodoContext);
-      return (
-        <ul>
-          {todolist &&
-            todolist.map(todo => (
-              <li key={todo.id}>
-                <p>{todo.content}</p>
-                <button onClick={_ => editTodo(todo.id, "Edited")}>Edit</button>
-              </li>
-            ))}
-        </ul>
-      );
-    };
-    const { getByText, getByRole } = render(
-      <TodoProvider>
-        <TestComponent />
-      </TodoProvider>
-    );
-    fireEvent.click(getByRole("button"));
-    expect(getByText(/edited/i)).toBeTruthy();
+    fireEvent.click(getByText(/Get todos/));
+    await waitFor(() => {
+      expect(getByText(mockTodolist[0].content)).toBeInTheDocument();
+    });
+    fireEvent.click(getByText(/Edit/));
+    await waitFor(() => {
+      expect(getByText(/Edited/)).toBeInTheDocument();
+    });
   });
 });
