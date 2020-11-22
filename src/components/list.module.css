@@ -100,6 +100,10 @@
   flex-wrap: wrap;
 }
 
+.ListForm > div {
+  flex: 1;
+}
+
 .ListInput {
   composes: Input from "../components/form.module.css";
   flex: 1;

@@ -1,21 +1,19 @@
-import React, { useRef, useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
+import { Editor } from "@toast-ui/react-editor";
 import Styles from "./list.module.css";
 import { TodoContext } from "../context/todoContext";
 import { AuthContext } from "../context/authContext";
 import { Todo } from "../models/todo";
 
 const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
-  const wrapperRef = useRef<any>();
   const { toggleTodo, deleteTodo, editTodo } = useContext(TodoContext);
   const { token } = useContext(AuthContext);
-  const [selectedTodo, setSelected] = useState<null | any>(null);
+  const [selectedTodo, setSelected] = useState<Todo | null>(null);
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState(true);
-
-  const handleEdit = (e: any) =>
-    setSelected({ ...selectedTodo, content: e.target.value });
+  const editorRef = useRef<Editor>(null);
 
   const handleActions = (type: string, item: any) => {
     setSelected(item);
@@ -43,25 +41,12 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
 
   const handleSave = (e: any) => {
     e.preventDefault();
-    handleActions("edit", selectedTodo);
+    const content = editorRef.current?.getInstance().getMarkdown();
+    handleActions("edit", { ...selectedTodo, content });
   };
 
-  useEffect(() => {
-    if (wrapperRef.current) {
-      const elRect = wrapperRef.current.getBoundingClientRect();
-      wrapperRef.current.style.setProperty(
-        "--list-height",
-        `${elRect.height + elRect.top}px`
-      );
-    }
-  }, []);
-
   return (
-    <section
-      ref={wrapperRef}
-      className={Styles.Wrapper}
-      data-expanded={expanded}
-    >
+    <section className={Styles.Wrapper} data-expanded={expanded}>
       <h3 className={Styles.ListTitle} onClick={(_) => setExpanded(!expanded)}>
         {title}
       </h3>
@@ -87,12 +72,10 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
               >
                 {selectedTodo && selectedTodo.id === item.id ? (
                   <form onSubmit={handleSave} className={Styles.ListForm}>
-                    <textarea
-                      rows={1}
-                      className={Styles.ListInput}
-                      value={selectedTodo.content}
-                      onChange={handleEdit}
-                      data-expanded={true}
+                    <Editor
+                      ref={editorRef}
+                      initialValue={selectedTodo.content}
+                      initialEditType="wysiwyg"
                     />
                     <section className={Styles.ListControls}>
                       <button className={Styles.ListSave}>Save</button>

@@ -24,22 +24,22 @@
   background: var(--white);
 }
 
-.Input {
+/* .Input {
   composes: Input from "../shared.css";
   transition: min-height 0.3s var(--ease);
+} */
+.Submit,
+.Toggle {
+  padding: 1rem;
 }
 
 .Submit {
   composes: Button from "../shared.css";
   flex: 1;
   white-space: nowrap;
-  padding: 1rem;
 }
 
 .Toggle {
-  composes: Button-icon from "../shared.css";
-  --icon: var(--toggle-icon);
-  --icon-size: 0.8rem;
+  composes: Button from "../shared.css";
   --button-bg: var(--black);
-  margin: 0 1rem;
 }
