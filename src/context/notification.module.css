@@ -1,0 +1,49 @@
+[data-status="error"] {
+  --notification-color: var(--red);
+}
+
+[data-status="success"] {
+  --notification-color: var(--green);
+}
+
+.Notifications {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  min-width: 100%;
+  padding: 1rem;
+  display: flex;
+  flex-flow: column;
+  align-items: flex-end;
+}
+
+.Notifications ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.Notification,
+.Clear {
+  margin-bottom: 1rem;
+}
+
+.Notification {
+  background: var(--white);
+  color: var(--notification-color, /**/);
+  border: var(--border);
+  border-radius: 0.3em;
+}
+
+.Notification p {
+  padding: 0.5rem;
+  margin: 0;
+}
+
+.Clear {
+  composes: Button-icon from "../shared.css";
+  --icon: var(--icon-x);
+  --button-bg: var(--black);
+  order: -1;
+}

@@ -7,6 +7,7 @@ import Login from "./Login";
 import * as serviceWorker from "./serviceWorker";
 import { TodoProvider } from "./context/todoContext";
 import { AuthProvider, AuthContext } from "./context/authContext";
+import { NotificationProvider } from "./context/notificationContext";
 
 if (process.env.REACT_APP_GOOGLE_TRACKING_ID) {
   ReactGA.initialize(process.env.REACT_APP_GOOGLE_TRACKING_ID);
@@ -14,19 +15,21 @@ if (process.env.REACT_APP_GOOGLE_TRACKING_ID) {
 }
 
 ReactDOM.render(
-  <AuthProvider>
-    <AuthContext.Consumer>
-      {({ token }) =>
-        token ? (
-          <TodoProvider>
-            <App />
-          </TodoProvider>
-        ) : (
-          <Login />
-        )
-      }
-    </AuthContext.Consumer>
-  </AuthProvider>,
+  <NotificationProvider>
+    <AuthProvider>
+      <AuthContext.Consumer>
+        {({ token }) =>
+          token ? (
+            <TodoProvider>
+              <App />
+            </TodoProvider>
+          ) : (
+            <Login />
+          )
+        }
+      </AuthContext.Consumer>
+    </AuthProvider>
+  </NotificationProvider>,
   document.getElementById("root")
 );
 
