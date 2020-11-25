@@ -13,7 +13,9 @@
   z-index: 10;
   min-width: 100%;
   padding: 1rem;
-  background: var(--white);
+  display: flex;
+  flex-flow: column;
+  align-items: flex-end;
 }
 
 .Notifications ol {
@@ -22,12 +24,16 @@
   padding: 0;
 }
 
+.Notification,
+.Clear {
+  margin-bottom: 1rem;
+}
+
 .Notification {
   background: var(--white);
   color: var(--notification-color, /**/);
   border: var(--border);
   border-radius: 0.3em;
-  margin-bottom: 1rem;
 }
 
 .Notification p {
@@ -36,13 +42,8 @@
 }
 
 .Clear {
-  background: none;
-  border: none;
-  margin: 1rem 0;
-}
-
-@media screen and (min-width: 60rem) {
-  .Notifications {
-    min-width: 20vw;
-  }
+  composes: Button-icon from "../shared.css";
+  --icon: var(--icon-x);
+  --button-bg: var(--black);
+  order: -1;
 }
