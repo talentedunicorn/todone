@@ -1,0 +1,48 @@
+[data-status="error"] {
+  --notification-color: var(--red);
+}
+
+[data-status="success"] {
+  --notification-color: var(--green);
+}
+
+.Notifications {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  min-width: 100%;
+  padding: 1rem;
+  background: var(--white);
+}
+
+.Notifications ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.Notification {
+  background: var(--white);
+  color: var(--notification-color, /**/);
+  border: var(--border);
+  border-radius: 0.3em;
+  margin-bottom: 1rem;
+}
+
+.Notification p {
+  padding: 0.5rem;
+  margin: 0;
+}
+
+.Clear {
+  background: none;
+  border: none;
+  margin: 1rem 0;
+}
+
+@media screen and (min-width: 60rem) {
+  .Notifications {
+    min-width: 20vw;
+  }
+}
