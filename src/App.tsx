@@ -71,7 +71,7 @@ const App = () => {
         )}
       </header>
       {loading ? (
-        <Loading />
+        <Loading className={Styles.Loading} />
       ) : (
         <>
           <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo, token)} />

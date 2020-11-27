@@ -19,6 +19,7 @@ beforeEach(() => {
           deleteTodo: mockedDeleteTodo,
           toggleTodo: mockedToggleTodo,
           editTodo: mockedEditTodo,
+          getTodos: jest.fn().mockResolvedValue(todolist),
         }}
       >
         <App />
