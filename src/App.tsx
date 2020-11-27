@@ -13,7 +13,8 @@ import { exportData } from "./services/localStorage";
 const App = () => {
   const [loading, setLoading] = useState(true);
   const { todolist, onAddTodo, getTodos } = useContext(TodoContext);
-  const { logout, token } = useContext(AuthContext);
+  const { logout } = useContext(AuthContext);
+  const OFFLINE_MODE = process.env.REACT_APP_OFFLINE_MODE;
 
   const completedTodos = todolist
     ? todolist.filter((todo: Todo) => todo.completed === true)
@@ -23,23 +24,21 @@ const App = () => {
     : [];
 
   useEffect(() => {
-    const isAuthorized = token || process.env.REACT_APP_OFFLINE_MODE;
     async function initialLoad() {
       try {
-        if (isAuthorized && !todolist) {
-          await getTodos(token);
+        if (!todolist) {
+          await getTodos();
         }
       } catch (error) {
-        if (error.response.status && error.response.status === 401) {
+        if (error.response?.status && error.response?.status === 401) {
           logout();
         }
       }
-
       setLoading(false);
     }
 
     initialLoad();
-  }, [token, getTodos, todolist, logout]);
+  }, [getTodos, todolist, logout]);
 
   return (
     <main data-testid="App" className={Styles.Layout}>
@@ -53,17 +52,16 @@ const App = () => {
         >
           Markdown cheatsheet
         </a>
-        {process.env.REACT_APP_OFFLINE_MODE && (
+        {OFFLINE_MODE === "true" ? (
           <button
             title="Save to file"
             className={Styles.Export}
             disabled={!todolist || todolist.length < 1}
-            onClick={_ => exportData()}
+            onClick={(_) => exportData()}
           >
             Save to file
           </button>
-        )}
-        {!process.env.REACT_APP_OFFLINE_MODE && token && (
+        ) : (
           <button className={Styles.Logout} onClick={logout}>
             {" "}
             Logout
@@ -71,10 +69,10 @@ const App = () => {
         )}
       </header>
       {loading ? (
-        <Loading />
+        <Loading className={Styles.Loading} />
       ) : (
         <>
-          <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo, token)} />
+          <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo)} />
           <div className={Styles.LayoutContent}>
             <List title="To be done" items={incompleteTodos} />
             {completedTodos.length > 0 && (

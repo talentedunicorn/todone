@@ -13,8 +13,8 @@
   border-bottom: var(--border);
 }
 
-[data-expanded="true"] {
-  --input-height: 10rem;
+.Form[data-expanded="true"] {
+  --input-height: 50vh;
   --toggle-icon: var(--icon-collapse);
 }
 

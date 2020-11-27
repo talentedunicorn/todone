@@ -1,57 +1,34 @@
 import React from "react";
-import service from "../services/index";
+import localStorage from "../services/localStorage";
 import { render, fireEvent, cleanup, waitFor } from "@testing-library/react";
 import { TodoContext, TodoProvider } from "./todoContext";
 import { Todo } from "../models/todo";
+import { NotificationProvider } from "./notificationContext";
+import { todolist } from "../test-utils/mocks";
 
-jest.mock("../services/index");
-const mockedService = service as jest.Mocked<typeof service>;
+jest.mock("../services/localStorage");
+const mockedService = localStorage as jest.Mocked<typeof localStorage>;
 
 afterEach(() => {
   cleanup();
   jest.resetAllMocks();
 });
 
-const mockTodolist: Todo[] = [
-  {
-    id: 1,
-    content: "Hello world",
-    completed: false,
-    created_at: Date.now(),
-    updated_at: Date.now(),
-  },
-  {
-    id: 2,
-    content: "I remain",
-    completed: false,
-    created_at: Date.now(),
-    updated_at: Date.now(),
-  },
-];
+const mockTodolist: Todo[] = todolist;
 
 describe("TodoContext", () => {
   it("should get todos", async () => {
-    mockedService.GET_TODOS.mockResolvedValueOnce(mockTodolist);
-    const { getByText, getAllByRole } = render(
+    mockedService.GET_TODOS = jest.fn().mockResolvedValueOnce(mockTodolist);
+    const { getByText } = render(
       <TodoProvider>
         <TodoContext.Consumer>
-          {({ getTodos, todolist }) => (
-            <>
-              <ul>
-                {todolist?.map((todo) => (
-                  <li key={todo.id}>{todo.content}</li>
-                ))}
-              </ul>
-              <button onClick={getTodos}>Get todos</button>
-            </>
-          )}
+          {({ getTodos }) => <button onClick={getTodos}>Get todos</button>}
         </TodoContext.Consumer>
       </TodoProvider>
     );
     fireEvent.click(getByText("Get todos"));
     await waitFor(() => {
       expect(mockedService.GET_TODOS).toHaveBeenCalledTimes(1);
-      expect(getAllByRole("listitem")).toHaveLength(mockTodolist.length);
     });
   });
 
@@ -88,7 +65,7 @@ describe("TodoContext", () => {
       completed: !mockTodolist[0].completed,
     });
     mockedService.GET_TODOS.mockResolvedValue(mockTodolist);
-    const { getByText, getAllByRole, debug } = render(
+    const { getByText, getAllByRole } = render(
       <TodoProvider>
         <TodoContext.Consumer>
           {({ todolist, getTodos, toggleTodo }) => {
@@ -132,37 +109,39 @@ describe("TodoContext", () => {
     mockedService.GET_TODOS.mockResolvedValue(mockTodolist);
     mockedService.DELETE_TODOS.mockResolvedValue([]);
     const { getByText, getAllByText } = render(
-      <TodoProvider value={{ todolist: mockTodolist }}>
-        <TodoContext.Consumer>
-          {({ deleteTodo, getTodos, todolist }) => {
-            return (
-              <>
-                <ul>
-                  {todolist?.map((todo) => (
-                    <li key={todo.id}>
-                      <p>{todo.content}</p>
-                      <button onClick={() => deleteTodo(todo.id)}>
-                        Delete
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-                <button onClick={() => getTodos()}>Get todos</button>
-              </>
-            );
-          }}
-        </TodoContext.Consumer>
-      </TodoProvider>
+      <NotificationProvider>
+        <TodoProvider value={{ todolist: mockTodolist }}>
+          <TodoContext.Consumer>
+            {({ deleteTodo, getTodos, todolist }) => {
+              return (
+                <>
+                  <ul>
+                    {todolist?.map((todo) => (
+                      <li key={todo.id}>
+                        <p>{todo.content}</p>
+                        <button onClick={() => deleteTodo(todo.id)}>
+                          Delete
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                  <button onClick={() => getTodos()}>Get todos</button>
+                </>
+              );
+            }}
+          </TodoContext.Consumer>
+        </TodoProvider>
+      </NotificationProvider>
     );
     fireEvent.click(getByText(/Get todos/));
     await waitFor(() => {
       expect(mockedService.GET_TODOS).toHaveBeenCalledTimes(1);
       expect(getAllByText(/Delete/)).toHaveLength(mockTodolist.length);
     });
-    fireEvent.click(getAllByText(/Delete/)[0]);
+    fireEvent.click(getAllByText("Delete")[0]);
     await waitFor(() => {
       expect(mockedService.DELETE_TODOS).toHaveBeenCalledTimes(1);
-      expect(getAllByText(/Delete/)).toHaveLength(mockTodolist.length - 1);
+      expect(getAllByText("Delete")).toHaveLength(mockTodolist.length - 1);
     });
   });
 
@@ -172,18 +151,20 @@ describe("TodoContext", () => {
       ...mockTodolist[0],
       content: "Edited",
     });
-    const { getByText, debug } = render(
-      <TodoProvider>
-        <TodoContext.Consumer>
-          {({ todolist, editTodo, getTodos }) => (
-            <>
-              {todolist && <p>{todolist[0].content}</p>}
-              <button onClick={getTodos}>Get todos</button>
-              <button onClick={() => editTodo(1, "test")}>Edit todo</button>
-            </>
-          )}
-        </TodoContext.Consumer>
-      </TodoProvider>
+    const { getByText } = render(
+      <NotificationProvider>
+        <TodoProvider>
+          <TodoContext.Consumer>
+            {({ todolist, editTodo, getTodos }) => (
+              <>
+                {todolist && <p>{todolist[0].content}</p>}
+                <button onClick={getTodos}>Get todos</button>
+                <button onClick={() => editTodo(1, "test")}>Edit todo</button>
+              </>
+            )}
+          </TodoContext.Consumer>
+        </TodoProvider>
+      </NotificationProvider>
     );
     fireEvent.click(getByText(/Get todos/));
     await waitFor(() => {

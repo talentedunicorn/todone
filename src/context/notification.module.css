@@ -1,0 +1,56 @@
+[data-status="error"] {
+  --notification-color: var(--red);
+}
+
+[data-status="success"] {
+  --notification-color: var(--green);
+}
+
+.Notifications {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 0.3em;
+  display: flex;
+  flex-flow: column;
+  align-items: flex-end;
+  background: hsla(0, 0%, 5%, 0.8);
+}
+
+.Notifications ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.Notification {
+  background: var(--white);
+  color: var(--notification-color, /**/);
+  border: var(--border);
+  border-radius: 0.3em;
+  margin-bottom: 1rem;
+  transform: translateY(100%);
+  opacity: 0;
+  animation: appear 0.3s ease-in forwards;
+}
+
+.Notification p {
+  padding: 0.5rem;
+  margin: 0;
+}
+
+.Clear {
+  background: none;
+  border: none;
+  color: var(--white);
+}
+
+@keyframes appear {
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}

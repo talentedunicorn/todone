@@ -20,6 +20,7 @@
   - [![Build Status](https://img.shields.io/travis/rexxars/react-markdown/master.svg?style=flat-square)](https://travis-ci.org/rexxars/react-markdown)
   - Plugins used:
     - [remark-gfm](https://github.com/remarkjs/remark-gfm)
+- [x] Export data with [FileSaver.js](https://www.npmjs.com/package/file-saver)
 
 ## Nice to have
 
