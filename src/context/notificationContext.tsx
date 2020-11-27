@@ -38,13 +38,14 @@ const NotificationProvider = (props: any) => {
                 key={index}
                 data-status={notification.type}
                 className={Style.Notification}
+                style={{ ["--index" as any]: index }}
               >
                 <p>{notification.message}</p>
               </li>
             ))}
           </ol>
           <button onClick={() => clearNotifications()} className={Style.Clear}>
-            Clear notifications
+            Clear all
           </button>
         </section>
       )}
