@@ -2,7 +2,7 @@ import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import App from "./App";
 import { TodoContext } from "./context/todoContext";
-
+import { todolist } from "./test-utils/mocks";
 let renderedApp: any;
 const mockedAddTodo = jest.fn().mockResolvedValue(true);
 const mockedDeleteTodo = jest.fn().mockResolvedValue(true);
@@ -14,18 +14,7 @@ beforeEach(() => {
     render(
       <TodoContext.Provider
         value={{
-          todolist: [
-            {
-              id: 1,
-              content: "First todo",
-              completed: false,
-            },
-            {
-              id: 2,
-              content: "Second todo",
-              completed: true,
-            },
-          ],
+          todolist,
           onAddTodo: mockedAddTodo,
           deleteTodo: mockedDeleteTodo,
           toggleTodo: mockedToggleTodo,
