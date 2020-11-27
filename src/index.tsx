@@ -14,12 +14,14 @@ if (process.env.REACT_APP_GOOGLE_TRACKING_ID) {
   ReactGA.pageview(window.location.pathname);
 }
 
+const IS_OFFLINE = process.env.REACT_APP_OFFLINE_MODE;
+
 ReactDOM.render(
   <NotificationProvider>
     <AuthProvider>
       <AuthContext.Consumer>
         {({ token }) =>
-          token ? (
+          token || IS_OFFLINE === "true" ? (
             <TodoProvider>
               <App />
             </TodoProvider>
