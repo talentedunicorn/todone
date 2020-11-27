@@ -10,7 +10,6 @@ type contextProps = {
 const AuthContext = React.createContext<Partial<contextProps>>({});
 
 const AuthProvider = (props: any) => {
-  const IS_OFFLINE = process.env.REACT_APP_OFFLINE_MODE;
   const [token, setToken] = useState<string | null>(null);
 
   const login = async (creds: any) => {
@@ -29,16 +28,9 @@ const AuthProvider = (props: any) => {
   };
 
   useEffect(() => {
-    // Offline, skip login
-    if (IS_OFFLINE) {
-      setToken("offline");
-    } else {
-      const cachedToken = window.localStorage.getItem("token");
-      if (cachedToken) {
-        setToken(cachedToken);
-      }
-    }
-  }, [IS_OFFLINE, token]);
+    const cachedToken = window.localStorage.getItem("token");
+    cachedToken && setToken(cachedToken);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ token, login, logout }}>

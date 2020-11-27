@@ -1,30 +1,20 @@
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  fireEvent,
+  waitFor,
+  wait,
+  cleanup,
+} from "@testing-library/react";
 import App from "./App";
 import { TodoContext } from "./context/todoContext";
 import { todolist } from "./test-utils/mocks";
-let renderedApp: any;
-const mockedAddTodo = jest.fn().mockResolvedValue(true);
-const mockedDeleteTodo = jest.fn().mockResolvedValue(true);
-const mockedToggleTodo = jest.fn().mockResolvedValue(true);
-const mockedEditTodo = jest.fn().mockResolvedValue(true);
+import { AuthContext } from "./context/authContext";
 
-beforeEach(() => {
-  renderedApp = () =>
-    render(
-      <TodoContext.Provider
-        value={{
-          todolist,
-          onAddTodo: mockedAddTodo,
-          deleteTodo: mockedDeleteTodo,
-          toggleTodo: mockedToggleTodo,
-          editTodo: mockedEditTodo,
-        }}
-      >
-        <App />
-      </TodoContext.Provider>
-    );
-});
+jest.mock("./services/localStorage");
+const mockedService = require("./services/localStorage");
+
+afterEach(() => cleanup());
 
 describe("<App/>", () => {
   it("should render without crashing", () => {
@@ -36,47 +26,48 @@ describe("<App/>", () => {
     expect(getAllByTestId("App").length).toBeInTheDocument;
   });
 
-  it("should be able to add todo", async () => {
-    const { getByTestId } = renderedApp();
+  it("should add todo", async () => {
+    const onAddTodo = jest.fn();
+    const { getByTestId } = render(
+      <TodoContext.Provider
+        value={{ todolist, onAddTodo, getTodos: jest.fn() }}
+      >
+        <App />
+      </TodoContext.Provider>
+    );
     fireEvent.change(getByTestId("form-input"), {
       target: { value: "Test todo" },
     });
     fireEvent.submit(getByTestId("form"));
-    expect(mockedAddTodo).toHaveBeenCalledTimes(1);
+    expect(onAddTodo).toHaveBeenCalledTimes(1);
   });
 
-  it("should be able to delete todo", async () => {
-    const { getAllByText } = renderedApp();
-    fireEvent.click(getAllByText(/delete/i)[0]);
-    await waitFor(() => expect(mockedDeleteTodo).toHaveBeenCalledTimes(1));
-  });
-
-  it("should be able to toggle todo completed", async () => {
-    const { getAllByRole } = renderedApp();
-    const checkbox = getAllByRole("checkbox")[0];
-    fireEvent.click(checkbox);
-    await waitFor(() => expect(checkbox));
-    expect(mockedToggleTodo).toBeCalledTimes(1);
-  });
-
-  it("should be able to edit todo text", async () => {
-    const { container } = renderedApp();
-    fireEvent.click(container.querySelector(".ListEdit"));
-    fireEvent.change(container.querySelector(".ListInput"), {
-      target: { value: "Updated" },
+  it("should log user out on error", async () => {
+    const logout = jest.fn();
+    const getTodos = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    render(
+      <AuthContext.Provider value={{ logout }}>
+        <TodoContext.Provider value={{ getTodos }}>
+          <App />
+        </TodoContext.Provider>
+      </AuthContext.Provider>
+    );
+    await waitFor(() => {
+      expect(logout).toHaveBeenCalledTimes(1);
     });
-    fireEvent.submit(container.querySelector(".ListForm"));
-    await waitFor(() => container.querySelector(".ListForm"));
-    expect(mockedEditTodo).toHaveBeenCalledTimes(1);
   });
 
-  it("should be able to cancel edit", async () => {
-    const { container } = renderedApp();
-    fireEvent.click(container.querySelector(".ListEdit"));
-    await waitFor(() => container.querySelector(".ListForm"));
-    expect(container.querySelector(".ListInput").value).toBe("First todo");
-    fireEvent.click(container.querySelector(".ListCancel"));
-    await waitFor(() => container.querySelector(".ListInput"));
-    expect(container.querySelector(".ListForm")).toBeFalsy();
+  it("should export data", async () => {
+    process.env.REACT_APP_OFFLINE_MODE = "true";
+    mockedService.exportData = jest.fn();
+    const { getByText } = render(
+      <TodoContext.Provider value={{ todolist }}>
+        <App />
+      </TodoContext.Provider>
+    );
+    fireEvent.click(getByText(/Save to file/));
+    await waitFor(() => {
+      expect(mockedService.exportData).toHaveBeenCalledTimes(1);
+    });
   });
 });

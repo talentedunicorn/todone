@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import { Todo } from "../models/todo";
-import service from "../services/index";
+import bobaService from "../services/boba";
+import localService from "../services/localStorage";
+import { AuthContext } from "./authContext";
 import { NotificationContext } from "./notificationContext";
 
 type contextProps = {
@@ -16,14 +18,17 @@ const TodoContext = React.createContext<Partial<contextProps>>({});
 const TodoProvider = (props: any) => {
   const [todolist, setTodolist] = useState<Array<Todo> | null>(null);
   const { notify } = useContext(NotificationContext);
+  const { token } = useContext(AuthContext);
 
-  const { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS } = service;
+  const { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS } = !token
+    ? localService
+    : bobaService;
 
-  const toggleTodo = (id: number, token?: any) => {
+  const toggleTodo = (id: number) => {
     const todo = (todolist && todolist.find((todo) => todo.id === id)) || null;
     return (
       todo &&
-      TOGGLE_TODO(id, !todo.completed, token).then((data: Todo) => {
+      TOGGLE_TODO(id, !todo.completed, token || "").then((data: Todo) => {
         setTodolist(
           todolist && todolist.map((todo) => (todo.id === id ? data : todo))
         );
@@ -31,14 +36,14 @@ const TodoProvider = (props: any) => {
     );
   };
 
-  const deleteTodo = (id: any, token?: any) =>
-    DELETE_TODOS([id], token).finally(() => {
+  const deleteTodo = (id: any) =>
+    DELETE_TODOS([id], token || "").finally(() => {
       setTodolist(todolist && todolist.filter((todo) => todo.id !== id));
       notify("Deleted successfully", "success");
     });
 
-  const onAddTodo = (todo: Todo, token?: any) =>
-    ADD_TODO(todo.content, token).then((todo: Todo) => {
+  const onAddTodo = (todo: Todo) =>
+    ADD_TODO(todo.content, token || "").then((todo: Todo) => {
       setTodolist([...(todolist || []), todo]);
     });
 
@@ -59,8 +64,9 @@ const TodoProvider = (props: any) => {
     }
   };
 
-  const getTodos = (token?: any) =>
-    GET_TODOS(token).then((data: Todo[]) => setTodolist(data));
+  const getTodos = () => {
+    return GET_TODOS(token || "").then((data: Todo[]) => setTodolist(data));
+  };
 
   const implementation: contextProps = {
     getTodos,

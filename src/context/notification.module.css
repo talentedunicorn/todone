@@ -12,12 +12,12 @@
   bottom: 0;
   z-index: 10;
   padding: 1rem;
-  margin: 2rem;
+  margin: 1rem;
   border-radius: 0.3em;
   display: flex;
   flex-flow: column;
   align-items: flex-end;
-  background: hsla(0, 2%, 5%, 0.4);
+  background: hsla(0, 0%, 5%, 0.8);
 }
 
 .Notifications ol {
@@ -26,16 +26,12 @@
   padding: 0;
 }
 
-.Notification,
-.Clear {
-  margin-bottom: 1rem;
-}
-
 .Notification {
   background: var(--white);
   color: var(--notification-color, /**/);
   border: var(--border);
   border-radius: 0.3em;
+  margin-bottom: 1rem;
   transform: translateY(100%);
   opacity: 0;
   animation: appear 0.3s ease-in forwards;
@@ -47,10 +43,9 @@
 }
 
 .Clear {
-  composes: Button-icon from "../shared.css";
-  --icon: var(--icon-x);
-  --button-bg: var(--white);
-  order: -1;
+  background: none;
+  border: none;
+  color: var(--white);
 }
 
 @keyframes appear {
