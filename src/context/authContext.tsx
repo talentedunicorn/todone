@@ -29,9 +29,7 @@ const AuthProvider = (props: any) => {
 
   useEffect(() => {
     const cachedToken = window.localStorage.getItem("token");
-    if (cachedToken) {
-      setToken(cachedToken);
-    }
+    cachedToken && setToken(cachedToken);
   }, []);
 
   return (

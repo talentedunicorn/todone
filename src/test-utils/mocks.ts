@@ -15,4 +15,11 @@ export const todolist: Todo[] = [
     created_at: Date.now(),
     updated_at: Date.now(),
   },
+  {
+    id: 3,
+    content: "Click [me](https://google.com)",
+    completed: false,
+    created_at: Date.now(),
+    updated_at: Date.now(),
+  },
 ];

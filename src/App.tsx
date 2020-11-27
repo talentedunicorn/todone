@@ -30,7 +30,7 @@ const App = () => {
           await getTodos();
         }
       } catch (error) {
-        if (error.response.status && error.response.status === 401) {
+        if (error.response?.status && error.response?.status === 401) {
           logout();
         }
       }

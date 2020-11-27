@@ -1,5 +1,5 @@
 import React from "react";
-import { render, cleanup, fireEvent } from "@testing-library/react";
+import { render, cleanup, fireEvent, waitFor } from "@testing-library/react";
 import Form from "./form";
 
 afterEach(() => cleanup());
@@ -10,7 +10,7 @@ describe("<Form />", () => {
     expect(getByTestId("form")).toBeTruthy();
   });
 
-  it("should be able to add todo and clear input", () => {
+  it("should be able to submit and clear input", () => {
     const mockHandleSubmit = jest.fn();
     const testTodo = "Testing...";
     const { getByTestId } = render(
@@ -21,12 +21,12 @@ describe("<Form />", () => {
     fireEvent.submit(getByTestId("form"));
     expect(mockHandleSubmit).toHaveBeenCalledWith({
       content: testTodo,
-      completed: false
+      completed: false,
     });
     expect(input.textContent).toBe("");
   });
 
-  it("should not add todo with less than 3 characters", () => {
+  it("should not submit todo with less than 3 characters", () => {
     const mockHandleSubmit = jest.fn();
     const { getByTestId } = render(
       <Form handleFormSubmit={mockHandleSubmit} />
@@ -34,5 +34,16 @@ describe("<Form />", () => {
     fireEvent.change(getByTestId("form-input"), { target: { value: "A" } });
     fireEvent.submit(getByTestId("form"));
     expect(mockHandleSubmit).not.toHaveBeenCalled();
+  });
+
+  it("should toggle expanded state", () => {
+    const { getByTestId, getByText } = render(
+      <Form handleFormSubmit={jest.fn()} />
+    );
+    expect(getByTestId("form").getAttribute("data-expanded")).toBe("false");
+    fireEvent.click(getByText(/Expand input/));
+    expect(getByTestId("form").getAttribute("data-expanded")).toBe("true");
+    fireEvent.click(getByText(/Collapse input/));
+    expect(getByTestId("form").getAttribute("data-expanded")).toBe("false");
   });
 });

@@ -43,24 +43,6 @@
   border-top: none;
 }
 
-.ListItem[data-loading="true"]:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  background: linear-gradient(
-    256deg,
-    var(--white),
-    var(--brand-color),
-    var(--white)
-  );
-  background-size: 300% 300%;
-  z-index: 4;
-  animation: pulse 2s infinite ease-in;
-}
-
 .ListTitle {
   color: var(--header-color);
   padding: 1rem;
