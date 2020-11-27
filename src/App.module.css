@@ -72,8 +72,7 @@
 
   .Layout > form {
     top: 0;
-    padding: 0 1rem 1rem;
-    background: var(--gray-light);
+    border-left: 1px solid var(--gray-light);
   }
 
   .LayoutContent {

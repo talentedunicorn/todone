@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 import Styles from "./list.module.css";
@@ -6,7 +6,6 @@ import { TodoContext } from "../context/todoContext";
 import { Todo } from "../models/todo";
 
 const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
-  const wrapperRef = useRef<any>();
   const { toggleTodo, deleteTodo, editTodo } = useContext(TodoContext);
   const [selectedTodo, setSelected] = useState<null | any>(null);
   const [expanded, setExpanded] = useState(true);
@@ -35,20 +34,9 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
     handleActions("edit", selectedTodo);
   };
 
-  useEffect(() => {
-    if (wrapperRef.current) {
-      const elRect = wrapperRef.current.getBoundingClientRect();
-      wrapperRef.current.style.setProperty(
-        "--list-height",
-        `${elRect.height + elRect.top}px`
-      );
-    }
-  }, []);
-
   return (
     <section
       data-testid="List"
-      ref={wrapperRef}
       className={Styles.Wrapper}
       data-expanded={expanded}
     >

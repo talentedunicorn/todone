@@ -87,6 +87,10 @@
   flex: 1;
 }
 
+.ListInput[data-expanded="true"] {
+  --input-height: 12rem;
+}
+
 .ListSave,
 .ListEdit,
 .ListDelete,
