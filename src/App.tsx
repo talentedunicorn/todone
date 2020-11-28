@@ -8,12 +8,17 @@ import Styles from "./App.module.css";
 
 import { TodoContext } from "./context/todoContext";
 import { AuthContext } from "./context/authContext";
+import { NotificationContext } from "./context/notificationContext";
 import { exportData } from "./services/localStorage";
+import * as serviceWorker from "./serviceWorker";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
+  const [hasUpdate, setHasUpdate] = useState(false);
+  const [waitingWorker, setWaitingWorker] = useState<any>();
   const { todolist, onAddTodo, getTodos } = useContext(TodoContext);
   const { logout } = useContext(AuthContext);
+  const { notify } = useContext(NotificationContext);
   const OFFLINE_MODE = process.env.REACT_APP_OFFLINE_MODE;
 
   const completedTodos = todolist
@@ -24,6 +29,17 @@ const App = () => {
     : [];
 
   useEffect(() => {
+    function onServiceWorkerUpdate(registration: any) {
+      registration && setWaitingWorker(registration.waiting);
+      setHasUpdate(true);
+    }
+
+    function updateServiceWorker() {
+      waitingWorker && waitingWorker.postMessage({ type: "SKIP_WAITING" });
+      setHasUpdate(false);
+      window.location.reload();
+    }
+
     async function initialLoad() {
       try {
         if (!todolist) {
@@ -37,8 +53,20 @@ const App = () => {
       setLoading(false);
     }
 
+    if (process.env.NODE_ENV === "production") {
+      setHasUpdate(false);
+      serviceWorker.register({ onUpdate: onServiceWorkerUpdate });
+    }
+
+    if (hasUpdate) {
+      notify("A new version is available", null, {
+        text: "Reload",
+        callback: updateServiceWorker,
+      });
+    }
+
     initialLoad();
-  }, [getTodos, todolist, logout]);
+  }, [getTodos, todolist, logout, hasUpdate, notify, waitingWorker]);
 
   return (
     <main data-testid="App" className={Styles.Layout}>
