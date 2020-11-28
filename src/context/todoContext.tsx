@@ -47,9 +47,9 @@ const TodoProvider = (props: any) => {
       setTodolist([...(todolist || []), todo]);
     });
 
-  const editTodo = (id: number, content: string, token?: any) => {
+  const editTodo = (id: number, content: string) => {
     if (Boolean(content.trim().length)) {
-      return EDIT_TODO(id, content, token).then((updatedTodo: Todo) => {
+      return EDIT_TODO(id, content, token || "").then((updatedTodo: Todo) => {
         setTodolist(
           todolist &&
             todolist.map((todo: Todo) => {
