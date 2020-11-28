@@ -29,12 +29,17 @@
 .Notification {
   background: var(--white);
   color: var(--notification-color, /**/);
-  border: var(--border);
   border-radius: 0.3em;
   margin-bottom: 1rem;
   transform: translateY(100%);
   opacity: 0;
   animation: appear 0.3s ease-in forwards;
+  display: flex;
+  overflow: hidden;
+}
+
+.Button {
+  composes: Button from "../shared.css";
 }
 
 .Notification p {

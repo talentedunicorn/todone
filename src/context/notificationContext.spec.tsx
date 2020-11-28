@@ -100,4 +100,36 @@ describe("NotificationContext", () => {
       expect(getByRole("listitem").getAttribute("data-status")).toBe("error");
     });
   });
+
+  it("should handle notification actions", async () => {
+    const callback = jest.fn();
+    const { getByText } = render(
+      <NotificationProvider>
+        <NotificationContext.Consumer>
+          {({ notify }) => (
+            <div>
+              <button
+                onClick={() =>
+                  notify("Notification with action", null, {
+                    text: "Click me",
+                    callback,
+                  })
+                }
+              >
+                Notify
+              </button>
+            </div>
+          )}
+        </NotificationContext.Consumer>
+      </NotificationProvider>
+    );
+
+    fireEvent.click(getByText(/Notify/));
+    await waitFor(() => {
+      expect(getByText("Click me")).toBeInTheDocument();
+      fireEvent.click(getByText("Click me"));
+    }).then(() => {
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+  });
 });

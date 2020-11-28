@@ -17,8 +17,8 @@ type contextProps = {
 const NotificationProvider = (props: any) => {
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
-  const notify = (message: string, type?: any) =>
-    setNotifications(notifications.concat({ message, type }));
+  const notify = (message: string, type?: any, options?: any) =>
+    setNotifications(notifications.concat({ message, type, options }));
 
   const clearNotifications = () => setNotifications([]);
 
@@ -41,6 +41,14 @@ const NotificationProvider = (props: any) => {
                 style={{ ["--index" as any]: index }}
               >
                 <p>{notification.message}</p>
+                {notification.options && (
+                  <button
+                    className={Style.Button}
+                    onClick={notification.options.callback}
+                  >
+                    {notification.options.text}
+                  </button>
+                )}
               </li>
             ))}
           </ol>
