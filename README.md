@@ -6,7 +6,7 @@
 
 > Todo list app with offline storage
 
-![Screenshot](desktop.png)
+![Screenshot](screenshot.png)
 
 # Features
 
