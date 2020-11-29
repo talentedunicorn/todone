@@ -14,7 +14,7 @@ const Form = ({ handleFormSubmit }: any) => {
 
     handleFormSubmit({
       content,
-      completed: false
+      completed: false,
     });
 
     setContent("");
@@ -33,18 +33,18 @@ const Form = ({ handleFormSubmit }: any) => {
         rows={1}
         value={content}
         placeholder="Start typing..."
-        onChange={e => setContent(e.target.value)}
+        onChange={(e) => setContent(e.target.value)}
       />
       <div className={Styles.Controls}>
+        <button type="submit" className={Styles.Submit}>
+          Add task
+        </button>
         <button
           type="button"
-          onClick={_ => setExpanded(!expanded)}
+          onClick={(_) => setExpanded(!expanded)}
           className={Styles.Toggle}
         >
           {expanded ? "Collapse" : "Expand"} input
-        </button>
-        <button type="submit" className={Styles.Submit}>
-          Add task
         </button>
       </div>
     </form>
