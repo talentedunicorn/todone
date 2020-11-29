@@ -9,6 +9,7 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
   const { toggleTodo, deleteTodo, editTodo } = useContext(TodoContext);
   const [selectedTodo, setSelected] = useState<null | any>(null);
   const [expanded, setExpanded] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleEdit = (e: any) =>
     setSelected({ ...selectedTodo, content: e.target.value });
@@ -17,7 +18,9 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
     switch (type) {
       case "edit":
         setSelected(item);
+        setSubmitting(true);
         await editTodo(item.id, item.content);
+        setSubmitting(false);
         break;
       case "toggle":
         await toggleTodo(item.id);
@@ -63,7 +66,9 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
                       data-expanded={true}
                     />
                     <section className={Styles.ListControls}>
-                      <button className={Styles.ListSave}>Save</button>
+                      <button className={Styles.ListSave} disabled={submitting}>
+                        Save
+                      </button>
                       <button
                         className={Styles.ListCancel}
                         onClick={(_) => setSelected(null)}
