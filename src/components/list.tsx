@@ -14,9 +14,9 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
     setSelected({ ...selectedTodo, content: e.target.value });
 
   const handleActions = async (type: string, item: any) => {
-    setSelected(item);
     switch (type) {
       case "edit":
+        setSelected(item);
         await editTodo(item.id, item.content);
         break;
       case "toggle":
