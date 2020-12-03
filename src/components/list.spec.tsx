@@ -91,12 +91,14 @@ describe("<List/>", () => {
   });
 
   it("should delete todo", async () => {
+    global.window.confirm = jest.fn().mockReturnValue(true);
     const { getAllByText } = customRender(
       <List title="Deleting" items={todolist} />
     );
     expect(mocks.deleteTodo).not.toHaveBeenCalled();
     fireEvent.click(getAllByText("Delete")[0]);
     await waitFor(() => {
+      expect(global.window.confirm).toHaveBeenCalledTimes(1);
       expect(mocks.deleteTodo).toHaveBeenCalledTimes(1);
     });
   });

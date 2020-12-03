@@ -26,7 +26,9 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
         await toggleTodo(item.id);
         break;
       case "delete":
-        await deleteTodo(item.id);
+        if (window.confirm("Are you sure?")) {
+          await deleteTodo(item.id);
+        }
         break;
     }
     setSelected(null);
