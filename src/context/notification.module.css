@@ -1,11 +1,3 @@
-[data-status="error"] {
-  --notification-color: var(--red);
-}
-
-[data-status="success"] {
-  --notification-color: var(--green);
-}
-
 .Notifications {
   position: fixed;
   right: 0;
@@ -28,7 +20,7 @@
 
 .Notification {
   background: var(--white);
-  color: var(--notification-color, /**/);
+  color: var(--notification-color);
   border-radius: 0.3em;
   margin-bottom: 1rem;
   transform: translateY(100%);
@@ -36,6 +28,14 @@
   animation: appear 0.3s ease-in forwards;
   display: flex;
   overflow: hidden;
+}
+
+[data-status="error"] {
+  --notification-color: var(--red);
+}
+
+[data-status="success"] {
+  --notification-color: var(--green);
 }
 
 .Button {

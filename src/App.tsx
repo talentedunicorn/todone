@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import List from "./components/list";
 import Form from "./components/form";
 import Loading from "./components/loading";
@@ -9,13 +9,14 @@ import Styles from "./App.module.css";
 import { TodoContext } from "./context/todoContext";
 import { AuthContext } from "./context/authContext";
 import { NotificationContext } from "./context/notificationContext";
-import { exportData } from "./services/localStorage";
+import { exportData, importData } from "./services/localStorage";
 import * as serviceWorker from "./serviceWorker";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
   const [hasUpdate, setHasUpdate] = useState(false);
   const [waitingWorker, setWaitingWorker] = useState<any>();
+  const inputRef = useRef<any>(null);
   const { todolist, onAddTodo, getTodos } = useContext(TodoContext);
   const { logout } = useContext(AuthContext);
   const { notify } = useContext(NotificationContext);
@@ -27,6 +28,45 @@ const App = () => {
   const incompleteTodos = todolist
     ? todolist.filter((todo: Todo) => todo.completed === false)
     : [];
+
+  const handleClick = async (e: any) => {
+    e.preventDefault();
+    inputRef.current.click();
+  };
+
+  const handleInputChange = async () => {
+    const FR = new FileReader();
+    if (!inputRef.current) return false;
+
+    const { files } = inputRef.current;
+    if (!files || files.length < 1) return false;
+
+    FR.addEventListener("load", (event: any) => {
+      const { result } = event.target;
+      if (!result) return false;
+
+      try {
+        const results = JSON.parse(event.target.result);
+        upload(results.data);
+      } catch (error: any) {
+        notify("Invalid file. Please try a different file", "error");
+      }
+    });
+
+    FR.readAsText(files[0]);
+  };
+
+  const upload = async (data: any) => {
+    try {
+      await importData(data);
+      await getTodos();
+      notify("Data restored", "success");
+    } catch (e) {
+      notify("Failed to restore data", "error");
+    }
+
+    inputRef.current.value = "";
+  };
 
   useEffect(() => {
     function onServiceWorkerUpdate(registration: any) {
@@ -40,6 +80,20 @@ const App = () => {
       window.location.reload();
     }
 
+    if (process.env.NODE_ENV === "production") {
+      setHasUpdate(false);
+      serviceWorker.register({ onUpdate: onServiceWorkerUpdate });
+    }
+
+    if (hasUpdate) {
+      notify("A new version is available", null, {
+        text: "Reload",
+        callback: updateServiceWorker,
+      });
+    }
+  }, [hasUpdate, notify, waitingWorker]);
+
+  useEffect(() => {
     async function initialLoad() {
       try {
         if (!todolist) {
@@ -53,20 +107,8 @@ const App = () => {
       setLoading(false);
     }
 
-    if (process.env.NODE_ENV === "production") {
-      setHasUpdate(false);
-      serviceWorker.register({ onUpdate: onServiceWorkerUpdate });
-    }
-
-    if (hasUpdate) {
-      notify("A new version is available", null, {
-        text: "Reload",
-        callback: updateServiceWorker,
-      });
-    }
-
     initialLoad();
-  }, [getTodos, todolist, logout, hasUpdate, notify, waitingWorker]);
+  }, [getTodos, todolist, logout]);
 
   return (
     <main data-testid="App" className={Styles.Layout}>
@@ -81,14 +123,32 @@ const App = () => {
           Markdown cheatsheet
         </a>
         {OFFLINE_MODE === "true" ? (
-          <button
-            title="Save to file"
-            className={Styles.Export}
-            disabled={!todolist || todolist.length < 1}
-            onClick={(_) => exportData()}
-          >
-            Save to file
-          </button>
+          <div className={Styles.OfflineControls}>
+            <form className={Styles.ImportForm}>
+              <input
+                data-testid="uploadInput"
+                ref={inputRef}
+                type="file"
+                accept=".json"
+                onChange={handleInputChange}
+              />
+              <button
+                onClick={handleClick}
+                title="Import from file"
+                className={Styles.Import}
+              >
+                Upload
+              </button>
+            </form>
+            <button
+              title="Save to file"
+              className={Styles.Export}
+              disabled={!todolist || todolist.length < 1}
+              onClick={(_) => exportData()}
+            >
+              Save to file
+            </button>
+          </div>
         ) : (
           <button className={Styles.Logout} onClick={logout}>
             {" "}
