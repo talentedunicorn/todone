@@ -1,6 +1,6 @@
 import localforage from "localforage";
 import FileSaver from "file-saver";
-import localStorage, { exportData } from "./localStorage";
+import localStorage, { exportData, importData } from "./localStorage";
 
 const mockLocalforage = localforage as jest.Mocked<typeof localforage>;
 const mockFileSaver = FileSaver as jest.Mocked<typeof FileSaver>;
@@ -63,5 +63,19 @@ describe("LocalStorage service", () => {
     await exportData();
     expect(mockLocalforage.getItem).toHaveBeenCalledTimes(testData.length);
     expect(mockFileSaver.saveAs).toHaveBeenCalledTimes(1);
+  });
+
+  it("imports data", async () => {
+    const data = [
+      {
+        id: Date.now,
+        content: "Imported task",
+        completed: false,
+        created_at: Date.now,
+        updated_at: Date.now,
+      },
+    ];
+    await importData(data);
+    expect(mockLocalforage.setItem).toHaveBeenCalledTimes(data.length);
   });
 });

@@ -7,9 +7,10 @@ import {
   cleanup,
 } from "@testing-library/react";
 import App from "./App";
-import { TodoContext } from "./context/todoContext";
+import { TodoContext, TodoProvider } from "./context/todoContext";
 import { todolist } from "./test-utils/mocks";
 import { AuthContext } from "./context/authContext";
+import { NotificationProvider } from "./context/notificationContext";
 
 jest.mock("./services/localStorage");
 const mockedService = require("./services/localStorage");
@@ -68,6 +69,37 @@ describe("<App/>", () => {
     fireEvent.click(getByText(/Save to file/));
     await waitFor(() => {
       expect(mockedService.exportData).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("should import data", async () => {
+    process.env.REACT_APP_OFFLINE_MODE = "true";
+    mockedService.importData = jest.fn();
+    const file = new Blob([JSON.stringify(todolist)], {
+      type: "application/json",
+    });
+    const { getByText, getByTestId } = render(
+      <NotificationProvider>
+        <TodoProvider>
+          <App />
+        </TodoProvider>
+      </NotificationProvider>
+    );
+    const input = getByTestId("uploadInput");
+
+    // Object.defineProperty(input, 'files', {
+    //   value: [file]
+    // })
+
+    await waitFor(() => {
+      fireEvent.change(input, { target: { files: [file] } });
+      fireEvent.input(input);
+    });
+
+    fireEvent.click(getByText(/Upload/));
+
+    await waitFor(() => {
+      expect(mockedService.importData).toHaveBeenCalledTimes(1);
     });
   });
 });

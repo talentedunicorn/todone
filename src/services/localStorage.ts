@@ -51,3 +51,11 @@ export const exportData = async () => {
   });
   FileSaver.saveAs(fileData, `${DB_NAME}.json`);
 };
+
+export const importData = async (data: any[]) => {
+  if (!Array.isArray(data)) {
+    throw new Error("Invalid data. Please try a different file");
+  } else {
+    await Promise.all(data.map((item: any) => db.setItem(item.id, item)));
+  }
+};
