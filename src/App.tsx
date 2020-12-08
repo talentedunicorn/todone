@@ -13,6 +13,7 @@ import { exportData, importData } from "./services/localStorage";
 import * as serviceWorker from "./serviceWorker";
 
 const App = () => {
+  const IS_PRODUCTION = process.env.NODE_ENV === "production";
   const [loading, setLoading] = useState(true);
   const [hasUpdate, setHasUpdate] = useState(false);
   const [waitingWorker, setWaitingWorker] = useState<any>();
@@ -69,27 +70,29 @@ const App = () => {
   };
 
   useEffect(() => {
-    function onServiceWorkerUpdate(registration: any) {
-      registration && setWaitingWorker(registration.waiting);
-      setHasUpdate(true);
-    }
+    // Listen to service worker onUpdate
+    IS_PRODUCTION &&
+      serviceWorker.register({
+        onUpdate: (registration: any) => {
+          setWaitingWorker(registration.waiting);
+          setHasUpdate(true);
+        },
+      });
+  }, []);
 
-    function updateServiceWorker() {
-      waitingWorker && waitingWorker.postMessage({ type: "SKIP_WAITING" });
+  useEffect(() => {
+    const updateServiceWorker = () => {
+      waitingWorker.postMessage({ type: "SKIP_WAITING" });
       setHasUpdate(false);
       window.location.reload();
-    }
+    };
 
-    if (process.env.NODE_ENV === "production") {
-      setHasUpdate(false);
-      serviceWorker.register({ onUpdate: onServiceWorkerUpdate });
-    }
-
-    if (hasUpdate) {
+    if (hasUpdate && IS_PRODUCTION) {
       notify("A new version is available", null, {
         text: "Reload",
         callback: updateServiceWorker,
       });
+      setHasUpdate(false);
     }
   }, [hasUpdate, notify, waitingWorker]);
 
