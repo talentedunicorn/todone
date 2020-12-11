@@ -1,4 +1,4 @@
-name: Testing push and PRs
+name: Tests
 
 on:
   push:
@@ -24,3 +24,4 @@ jobs:
           node-version: "10.x"
       - run: npm install
       - run: npm run test:coverage
+      - uses: codecov/codecov-action@v1
