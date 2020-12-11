@@ -1,4 +1,4 @@
-![Tests](https://github.com/talentedunicorn/todone/workflows/Testing%20push%20and%20PRs/badge.svg)
+![Tests](https://github.com/talentedunicorn/todone/workflows/Tests/badge.svg)
 
 ![Logo](src/logo.svg)
 
