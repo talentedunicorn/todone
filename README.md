@@ -1,5 +1,7 @@
 ![Tests](https://github.com/talentedunicorn/todone/workflows/Tests/badge.svg)
 
+[![codecov](https://codecov.io/gh/talentedunicorn/todone/branch/master/graph/badge.svg?token=97CXJCTKWJ)](https://codecov.io/gh/talentedunicorn/todone)
+
 ![Logo](src/logo.svg)
 
 # ToDone
