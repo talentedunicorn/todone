@@ -78,7 +78,7 @@ const App = () => {
           setHasUpdate(true);
         },
       });
-  }, []);
+  }, [IS_PRODUCTION]);
 
   useEffect(() => {
     const updateServiceWorker = () => {
@@ -94,7 +94,7 @@ const App = () => {
       });
       setHasUpdate(false);
     }
-  }, [hasUpdate, notify, waitingWorker]);
+  }, [hasUpdate, notify, waitingWorker, IS_PRODUCTION]);
 
   useEffect(() => {
     async function initialLoad() {

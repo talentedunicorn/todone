@@ -33,6 +33,13 @@ describe("<List/>", () => {
     expect(getByTestId("List")).toBeInTheDocument();
   });
 
+  it("should render items sorted by updated descending", () => {
+    const { getAllByRole, debug } = render(
+      <List title="Todos" items={todolist} />
+    );
+    expect(getAllByRole("listitem")[0]).toHaveTextContent("Updated last");
+  });
+
   it("should toggle expanded states", () => {
     const { getByTestId, getByRole } = render(
       <List title="Toggle expanded" items={todolist} />
