@@ -16,6 +16,7 @@
   margin: 0;
   overflow: hidden;
   max-height: calc(var(--list-height) * 2);
+  border-top: var(--border);
   transition: var(--transition);
 }
 
@@ -51,7 +52,6 @@
   font-size: 1rem;
   letter-spacing: 2px;
   border-left: 5px solid var(--header-color);
-  border-bottom: var(--border);
   transition: var(--transition);
 }
 
