@@ -4,18 +4,12 @@
 }
 
 .Form {
-  --toggle-icon: var(--icon-expand);
   --input-height: 1rem;
   display: flex;
   flex-flow: column;
   margin: 0;
   background: var(--white);
   border-bottom: var(--border);
-}
-
-.Form[data-expanded="true"] {
-  --input-height: 50vh;
-  --toggle-icon: var(--icon-collapse);
 }
 
 .Controls {
@@ -29,17 +23,13 @@
   transition: min-height 0.3s var(--ease);
 }
 
+.Input:focus {
+  --input-height: 50vh;
+}
+
 .Submit {
   composes: Button from "../shared.css";
   flex: 1;
   white-space: nowrap;
   padding: 1rem;
-}
-
-.Toggle {
-  composes: Button-icon from "../shared.css";
-  --icon: var(--toggle-icon);
-  --icon-size: 0.8rem;
-  --button-bg: var(--black);
-  margin: 0 1rem;
 }

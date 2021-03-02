@@ -3,7 +3,6 @@ import Styles from "./form.module.css";
 
 const Form = ({ handleFormSubmit, defaultValue }: any) => {
   const [content, setContent] = useState(defaultValue);
-  const [expanded, setExpanded] = useState(false);
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
@@ -21,12 +20,7 @@ const Form = ({ handleFormSubmit, defaultValue }: any) => {
   };
 
   return (
-    <form
-      data-testid="form"
-      data-expanded={expanded}
-      onSubmit={handleSubmit}
-      className={Styles.Form}
-    >
+    <form data-testid="form" onSubmit={handleSubmit} className={Styles.Form}>
       <textarea
         data-testid="form-input"
         className={Styles.Input}
@@ -38,13 +32,6 @@ const Form = ({ handleFormSubmit, defaultValue }: any) => {
       <div className={Styles.Controls}>
         <button type="submit" className={Styles.Submit}>
           Add task
-        </button>
-        <button
-          type="button"
-          onClick={(_) => setExpanded(!expanded)}
-          className={Styles.Toggle}
-        >
-          {expanded ? "Collapse" : "Expand"} input
         </button>
       </div>
     </form>
