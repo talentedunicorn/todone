@@ -40,7 +40,15 @@ const TOGGLE_TODO = async (id: any, completed: boolean) => {
 const DELETE_TODOS = (ids: any[]) =>
   Promise.all(ids.map((id) => db.removeItem(id)));
 
-export default { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS };
+const localStorage = {
+  GET_TODOS,
+  ADD_TODO,
+  EDIT_TODO,
+  TOGGLE_TODO,
+  DELETE_TODOS,
+};
+
+export default localStorage;
 
 export const exportData = async () => {
   const keys = await db.keys();
