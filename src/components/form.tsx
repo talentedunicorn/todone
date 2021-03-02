@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Styles from "./form.module.css";
 
-const Form = ({ handleFormSubmit }: any) => {
-  const [content, setContent] = useState("");
+const Form = ({ handleFormSubmit, defaultValue }: any) => {
+  const [content, setContent] = useState(defaultValue);
   const [expanded, setExpanded] = useState(false);
   const handleSubmit = (e: any) => {
     e.preventDefault();

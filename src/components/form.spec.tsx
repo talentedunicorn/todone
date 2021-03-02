@@ -46,4 +46,12 @@ describe("<Form />", () => {
     fireEvent.click(getByText(/Collapse input/));
     expect(getByTestId("form").getAttribute("data-expanded")).toBe("false");
   });
+
+  it("should be able to load default data", () => {
+    const defaultValue = "Test default value";
+    const { getByTestId } = render(
+      <Form handleFormSubmit={jest.fn()} defaultValue={defaultValue} />
+    );
+    expect(getByTestId("form-input")).toHaveTextContent(defaultValue);
+  });
 });
