@@ -13,6 +13,7 @@ import { todolist } from "../test-utils/mocks";
 const mocks = {
   todolist,
   toggleTodo: jest.fn(),
+  selectTodo: jest.fn(),
   editTodo: jest.fn(),
   deleteTodo: jest.fn(),
 };
@@ -68,33 +69,13 @@ describe("<List/>", () => {
     });
   });
 
-  it("should edit todo", async () => {
+  it("should start edit todo", async () => {
     const { getAllByText, queryByRole } = customRender(
       <List title="Editing" items={todolist} />
     );
     expect(queryByRole("textbox")).not.toBeInTheDocument();
     fireEvent.click(getAllByText("Edit")[0]);
-    expect(queryByRole("textbox")).toBeInTheDocument();
-    fireEvent.change(queryByRole("textbox"), {
-      target: { value: "Edited content" },
-    });
-    fireEvent.click(getAllByText("Save")[0]);
-    await waitFor(() => {
-      expect(mocks.editTodo).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  it("should cancel edit", async () => {
-    const { getAllByText, queryByRole } = customRender(
-      <List title="Cancel edit" items={todolist} />
-    );
-    expect(queryByRole("textbox")).not.toBeInTheDocument();
-    fireEvent.click(getAllByText("Edit")[0]);
-    expect(queryByRole("textbox")).toBeInTheDocument();
-    fireEvent.click(getAllByText("Cancel")[0]);
-    await waitFor(() => {
-      expect(queryByRole("textbox")).not.toBeInTheDocument();
-    });
+    expect(mocks.selectTodo).toHaveBeenCalledTimes(1);
   });
 
   it("should delete todo", async () => {

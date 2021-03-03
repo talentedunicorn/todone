@@ -7,7 +7,7 @@ import {
   cleanup,
 } from "@testing-library/react";
 import App from "./App";
-import { TodoContext, TodoProvider } from "./context/todoContext";
+import { TodoContext } from "./context/todoContext";
 import { todolist } from "./test-utils/mocks";
 import { AuthContext } from "./context/authContext";
 import { NotificationProvider } from "./context/notificationContext";
@@ -15,12 +15,23 @@ import { NotificationProvider } from "./context/notificationContext";
 jest.mock("./services/localStorage");
 const mockedService = require("./services/localStorage");
 
+let contextMock;
+
+beforeEach(() => {
+  contextMock = {
+    todolist,
+    onAddTodo: jest.fn(),
+    getTodos: jest.fn(),
+    selectTodo: jest.fn(),
+  };
+});
+
 afterEach(() => cleanup());
 
 describe("<App/>", () => {
   it("should render without crashing", () => {
     const { getAllByTestId } = render(
-      <TodoContext.Provider value={{ todolist: null }}>
+      <TodoContext.Provider value={contextMock}>
         <App />
       </TodoContext.Provider>
     );
@@ -28,11 +39,8 @@ describe("<App/>", () => {
   });
 
   it("should add todo", async () => {
-    const onAddTodo = jest.fn();
     const { getByTestId } = render(
-      <TodoContext.Provider
-        value={{ todolist, onAddTodo, getTodos: jest.fn() }}
-      >
+      <TodoContext.Provider value={contextMock}>
         <App />
       </TodoContext.Provider>
     );
@@ -40,20 +48,23 @@ describe("<App/>", () => {
       target: { value: "Test todo" },
     });
     fireEvent.submit(getByTestId("form"));
-    expect(onAddTodo).toHaveBeenCalledTimes(1);
+    expect(contextMock.onAddTodo).toHaveBeenCalledTimes(1);
   });
 
   it("should log user out on error", async () => {
     const logout = jest.fn();
     const getTodos = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    contextMock.todolist = null;
+    contextMock.getTodos = getTodos;
     render(
       <AuthContext.Provider value={{ logout }}>
-        <TodoContext.Provider value={{ getTodos }}>
+        <TodoContext.Provider value={contextMock}>
           <App />
         </TodoContext.Provider>
       </AuthContext.Provider>
     );
     await waitFor(() => {
+      expect(getTodos).toHaveBeenCalledTimes(1);
       expect(logout).toHaveBeenCalledTimes(1);
     });
   });
@@ -62,11 +73,13 @@ describe("<App/>", () => {
     process.env.REACT_APP_OFFLINE_MODE = "true";
     mockedService.exportData = jest.fn();
     const { getByText } = render(
-      <TodoContext.Provider value={{ todolist }}>
+      <TodoContext.Provider value={contextMock}>
         <App />
       </TodoContext.Provider>
     );
-    fireEvent.click(getByText(/Save to file/));
+    const saveButton = getByText(/Save to file/);
+    expect(saveButton).not.toHaveAttribute("disabled");
+    fireEvent.click(saveButton);
     await waitFor(() => {
       expect(mockedService.exportData).toHaveBeenCalledTimes(1);
     });
@@ -80,16 +93,12 @@ describe("<App/>", () => {
     });
     const { getByText, getByTestId } = render(
       <NotificationProvider>
-        <TodoProvider>
+        <TodoContext.Provider value={contextMock}>
           <App />
-        </TodoProvider>
+        </TodoContext.Provider>
       </NotificationProvider>
     );
     const input = getByTestId("uploadInput");
-
-    // Object.defineProperty(input, 'files', {
-    //   value: [file]
-    // })
 
     await waitFor(() => {
       fireEvent.change(input, { target: { files: [file] } });

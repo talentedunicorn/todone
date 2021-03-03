@@ -15,7 +15,6 @@
 .Controls {
   display: flex;
   align-items: center;
-  background: var(--white);
 }
 
 .Input {
@@ -27,9 +26,23 @@
   --input-height: 50vh;
 }
 
-.Submit {
+.Submit,
+.Reset {
   composes: Button from "../shared.css";
-  flex: 1;
   white-space: nowrap;
   padding: 1rem;
+}
+
+.Submit {
+  flex: 1;
+}
+
+.Reset {
+  --button-bg: var(--black);
+}
+
+@media screen and (min-width: 70rem) {
+  .Controls {
+    order: -1;
+  }
 }

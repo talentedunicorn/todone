@@ -18,7 +18,14 @@ const App = () => {
   const [hasUpdate, setHasUpdate] = useState(false);
   const [waitingWorker, setWaitingWorker] = useState<any>();
   const inputRef = useRef<any>(null);
-  const { todolist, onAddTodo, getTodos } = useContext(TodoContext);
+  const {
+    todolist,
+    selected,
+    selectTodo,
+    onAddTodo,
+    getTodos,
+    editTodo,
+  } = useContext(TodoContext);
   const { logout } = useContext(AuthContext);
   const { notify } = useContext(NotificationContext);
   const OFFLINE_MODE = process.env.REACT_APP_OFFLINE_MODE;
@@ -55,6 +62,11 @@ const App = () => {
     });
 
     FR.readAsText(files[0]);
+  };
+
+  const handleFormSubmit = (data: any) => {
+    selected ? editTodo(selected.id, data.content) : onAddTodo(data);
+    selectTodo(null);
   };
 
   const upload = async (data: any) => {
@@ -163,7 +175,11 @@ const App = () => {
         <Loading className={Styles.Loading} />
       ) : (
         <>
-          <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo)} />
+          <Form
+            handleFormSubmit={handleFormSubmit}
+            defaultValue={selected && selected.content}
+            onReset={() => selectTodo(null)}
+          />
           <div className={Styles.LayoutContent}>
             <List title="To be done" items={incompleteTodos} />
             {completedTodos.length > 0 && (
