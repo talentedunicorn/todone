@@ -10,13 +10,9 @@ import { TodoContext } from "./context/todoContext";
 import { AuthContext } from "./context/authContext";
 import { NotificationContext } from "./context/notificationContext";
 import { exportData, importData } from "./services/localStorage";
-import * as serviceWorker from "./serviceWorker";
 
 const App = () => {
-  const IS_PRODUCTION = process.env.NODE_ENV === "production";
   const [loading, setLoading] = useState(true);
-  const [hasUpdate, setHasUpdate] = useState(false);
-  const [waitingWorker, setWaitingWorker] = useState<any>();
   const inputRef = useRef<any>(null);
   const {
     todolist,
@@ -80,33 +76,6 @@ const App = () => {
 
     inputRef.current.value = "";
   };
-
-  useEffect(() => {
-    // Listen to service worker onUpdate
-    IS_PRODUCTION &&
-      serviceWorker.register({
-        onUpdate: (registration: any) => {
-          setWaitingWorker(registration.waiting);
-          setHasUpdate(true);
-        },
-      });
-  }, [IS_PRODUCTION]);
-
-  useEffect(() => {
-    const updateServiceWorker = () => {
-      waitingWorker.postMessage({ type: "SKIP_WAITING" });
-      setHasUpdate(false);
-      window.location.reload();
-    };
-
-    if (hasUpdate && IS_PRODUCTION) {
-      notify("A new version is available", null, {
-        text: "Reload",
-        callback: updateServiceWorker,
-      });
-      setHasUpdate(false);
-    }
-  }, [hasUpdate, notify, waitingWorker, IS_PRODUCTION]);
 
   useEffect(() => {
     async function initialLoad() {
