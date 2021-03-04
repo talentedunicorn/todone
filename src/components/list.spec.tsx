@@ -13,6 +13,7 @@ import { todolist } from "../test-utils/mocks";
 const mocks = {
   todolist,
   toggleTodo: jest.fn(),
+  selectTodo: jest.fn(),
   editTodo: jest.fn(),
   deleteTodo: jest.fn(),
 };
@@ -33,6 +34,13 @@ describe("<List/>", () => {
     expect(getByTestId("List")).toBeInTheDocument();
   });
 
+  it("should render items sorted by updated descending", () => {
+    const { getAllByRole, debug } = render(
+      <List title="Todos" items={todolist} />
+    );
+    expect(getAllByRole("listitem")[0]).toHaveTextContent("Updated last");
+  });
+
   it("should toggle expanded states", () => {
     const { getByTestId, getByRole } = render(
       <List title="Toggle expanded" items={todolist} />
@@ -40,14 +48,6 @@ describe("<List/>", () => {
     expect(getByTestId("List").getAttribute("data-expanded")).toBe("true");
     fireEvent.click(getByRole("heading"));
     expect(getByTestId("List").getAttribute("data-expanded")).toBe("false");
-  });
-
-  it("should not trigger select on clicking links", () => {
-    const { getByRole, queryByRole } = customRender(
-      <List title="List with link" items={todolist} />
-    );
-    fireEvent.click(getByRole("link"));
-    expect(queryByRole("form")).toBe(null);
   });
 
   it("should toggle todo", async () => {
@@ -61,33 +61,13 @@ describe("<List/>", () => {
     });
   });
 
-  it("should edit todo", async () => {
+  it("should start edit todo", async () => {
     const { getAllByText, queryByRole } = customRender(
       <List title="Editing" items={todolist} />
     );
     expect(queryByRole("textbox")).not.toBeInTheDocument();
     fireEvent.click(getAllByText("Edit")[0]);
-    expect(queryByRole("textbox")).toBeInTheDocument();
-    fireEvent.change(queryByRole("textbox"), {
-      target: { value: "Edited content" },
-    });
-    fireEvent.click(getAllByText("Save")[0]);
-    await waitFor(() => {
-      expect(mocks.editTodo).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  it("should cancel edit", async () => {
-    const { getAllByText, queryByRole } = customRender(
-      <List title="Cancel edit" items={todolist} />
-    );
-    expect(queryByRole("textbox")).not.toBeInTheDocument();
-    fireEvent.click(getAllByText("Edit")[0]);
-    expect(queryByRole("textbox")).toBeInTheDocument();
-    fireEvent.click(getAllByText("Cancel")[0]);
-    await waitFor(() => {
-      expect(queryByRole("textbox")).not.toBeInTheDocument();
-    });
+    expect(mocks.selectTodo).toHaveBeenCalledTimes(1);
   });
 
   it("should delete todo", async () => {

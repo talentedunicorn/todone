@@ -36,14 +36,11 @@ describe("<Form />", () => {
     expect(mockHandleSubmit).not.toHaveBeenCalled();
   });
 
-  it("should toggle expanded state", () => {
-    const { getByTestId, getByText } = render(
-      <Form handleFormSubmit={jest.fn()} />
+  it("should be able to load default data", () => {
+    const defaultValue = "Test default value";
+    const { getByTestId } = render(
+      <Form handleFormSubmit={jest.fn()} defaultValue={defaultValue} />
     );
-    expect(getByTestId("form").getAttribute("data-expanded")).toBe("false");
-    fireEvent.click(getByText(/Expand input/));
-    expect(getByTestId("form").getAttribute("data-expanded")).toBe("true");
-    fireEvent.click(getByText(/Collapse input/));
-    expect(getByTestId("form").getAttribute("data-expanded")).toBe("false");
+    expect(getByTestId("form-input")).toHaveTextContent(defaultValue);
   });
 });

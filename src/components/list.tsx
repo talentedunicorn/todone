@@ -6,22 +6,13 @@ import { TodoContext } from "../context/todoContext";
 import { Todo } from "../models/todo";
 
 const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
-  const { toggleTodo, deleteTodo, editTodo } = useContext(TodoContext);
-  const [selectedTodo, setSelected] = useState<null | any>(null);
+  const { toggleTodo, deleteTodo, selected, selectTodo } = useContext(
+    TodoContext
+  );
   const [expanded, setExpanded] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-
-  const handleEdit = (e: any) =>
-    setSelected({ ...selectedTodo, content: e.target.value });
 
   const handleActions = async (type: string, item: any) => {
     switch (type) {
-      case "edit":
-        setSelected(item);
-        setSubmitting(true);
-        await editTodo(item.id, item.content);
-        setSubmitting(false);
-        break;
       case "toggle":
         await toggleTodo(item.id);
         break;
@@ -31,12 +22,6 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
         }
         break;
     }
-    setSelected(null);
-  };
-
-  const handleSave = (e: any) => {
-    e.preventDefault();
-    handleActions("edit", selectedTodo);
   };
 
   return (
@@ -58,57 +43,35 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
             )
             .map((item) => (
               <li className={Styles.ListItem} key={item.id}>
-                {selectedTodo && selectedTodo.id === item.id ? (
-                  <form onSubmit={handleSave} className={Styles.ListForm}>
-                    <textarea
-                      rows={1}
-                      className={Styles.ListInput}
-                      value={selectedTodo.content}
-                      onChange={handleEdit}
-                      data-expanded={true}
-                    />
-                    <section className={Styles.ListControls}>
-                      <button className={Styles.ListSave} disabled={submitting}>
-                        Save
-                      </button>
-                      <button
-                        className={Styles.ListCancel}
-                        onClick={(_) => setSelected(null)}
-                      >
-                        Cancel
-                      </button>
-                    </section>
-                  </form>
-                ) : (
-                  <>
-                    <div
-                      className={Styles.ListContent}
-                      data-completed={item.completed ? true : undefined}
-                    >
-                      <ReactMarkdown plugins={[gfm]} children={item.content} />
-                    </div>
-                    <section className={Styles.ListControls}>
-                      <input
-                        className={Styles.ListCheckbox}
-                        type="checkbox"
-                        defaultChecked={item.completed}
-                        onClick={() => handleActions("toggle", item)}
-                      />
-                      <button
-                        onClick={() => setSelected(item)}
-                        className={Styles.ListEdit}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleActions("delete", item)}
-                        className={Styles.ListDelete}
-                      >
-                        Delete
-                      </button>
-                    </section>
-                  </>
-                )}
+                <div
+                  className={Styles.ListContent}
+                  data-completed={item.completed ? true : undefined}
+                >
+                  <ReactMarkdown plugins={[gfm]} children={item.content} />
+                </div>
+                <section className={Styles.ListControls}>
+                  <input
+                    disabled={selected === item}
+                    className={Styles.ListCheckbox}
+                    type="checkbox"
+                    defaultChecked={item.completed}
+                    onClick={() => handleActions("toggle", item)}
+                  />
+                  <button
+                    disabled={selected === item}
+                    onClick={() => selectTodo(item)}
+                    className={Styles.ListEdit}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    disabled={selected === item}
+                    onClick={() => handleActions("delete", item)}
+                    className={Styles.ListDelete}
+                  >
+                    Delete
+                  </button>
+                </section>
               </li>
             ))}
       </ol>

@@ -42,12 +42,14 @@ const EDIT_TODO = (id: Number, content: string, token: string) =>
     .put(`/todos/${id}`, { content }, { ...setToken(token) })
     .then((res) => res.data);
 
-export default {
+const boba = {
   GET_TODOS,
   ADD_TODO,
   TOGGLE_TODO,
   EDIT_TODO,
   DELETE_TODOS,
 };
+
+export default boba;
 
 export { LOGIN };

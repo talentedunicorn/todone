@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Styles from "./form.module.css";
 
-const Form = ({ handleFormSubmit }: any) => {
+const Form = ({ handleFormSubmit, defaultValue, onReset }: any) => {
   const [content, setContent] = useState("");
-  const [expanded, setExpanded] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
@@ -17,34 +18,43 @@ const Form = ({ handleFormSubmit }: any) => {
       completed: false,
     });
 
-    setContent("");
+    reset();
   };
 
+  const reset = () => {
+    setContent("");
+    setEditing(false);
+    onReset && onReset();
+  };
+
+  useEffect(() => {
+    const inputEl = inputRef.current;
+    if (defaultValue) {
+      setContent(defaultValue);
+      inputEl && inputEl.focus();
+      setEditing(true);
+    }
+  }, [defaultValue, inputRef]);
+
   return (
-    <form
-      data-testid="form"
-      data-expanded={expanded}
-      onSubmit={handleSubmit}
-      className={Styles.Form}
-    >
+    <form data-testid="form" onSubmit={handleSubmit} className={Styles.Form}>
       <textarea
         data-testid="form-input"
         className={Styles.Input}
         rows={1}
         value={content}
+        ref={inputRef}
         placeholder="Start typing..."
         onChange={(e) => setContent(e.target.value)}
       />
       <div className={Styles.Controls}>
+        {content && (
+          <button className={Styles.Reset} onClick={reset}>
+            Cancel
+          </button>
+        )}
         <button type="submit" className={Styles.Submit}>
-          Add task
-        </button>
-        <button
-          type="button"
-          onClick={(_) => setExpanded(!expanded)}
-          className={Styles.Toggle}
-        >
-          {expanded ? "Collapse" : "Expand"} input
+          {editing ? "Update" : "Add"}&nbsp;task
         </button>
       </div>
     </form>

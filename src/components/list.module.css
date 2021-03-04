@@ -16,6 +16,7 @@
   margin: 0;
   overflow: hidden;
   max-height: calc(var(--list-height) * 2);
+  border-top: var(--border);
   transition: var(--transition);
 }
 
@@ -51,7 +52,6 @@
   font-size: 1rem;
   letter-spacing: 2px;
   border-left: 5px solid var(--header-color);
-  border-bottom: var(--border);
   transition: var(--transition);
 }
 
@@ -69,6 +69,7 @@
   max-width: calc(100vw - 2rem);
   margin: 1rem;
   flex: 1;
+  overflow: auto;
 }
 
 .ListContent[data-completed] {
@@ -91,28 +92,16 @@
   --input-height: 12rem;
 }
 
-.ListSave,
 .ListEdit,
-.ListDelete,
-.ListCancel {
+.ListDelete {
   --icon-size: 0.8rem;
   composes: Button-icon from "../shared.css";
-}
-
-.ListSave {
-  --icon: var(--icon-check);
-  --button-bg: var(--green);
 }
 
 .ListEdit {
   --icon: var(--icon-edit);
   --button-bg: var(--yellow);
   margin: 0 2rem 0 auto;
-}
-
-.ListCancel {
-  --button-bg: var(--red);
-  --icon: var(--icon-x);
 }
 
 .ListDelete {
@@ -132,13 +121,14 @@
   order: 1;
 }
 
+.ListCheckbox:checked,
 .ListCheckbox:hover {
   --background: var(--brand-color);
 }
 
-.ListCheckbox:checked {
-  --background: var(--gray);
-  --color: var(--background);
+.ListCheckbox:disabled {
+  --color: var(--gray);
+  --background: var(--color);
 }
 
 .ListCheckbox:after {

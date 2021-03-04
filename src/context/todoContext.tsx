@@ -7,6 +7,8 @@ import { NotificationContext } from "./notificationContext";
 
 type contextProps = {
   todolist: Array<Todo> | null;
+  selected: Todo | null;
+  selectTodo: any;
   getTodos: any;
   onAddTodo: any;
   toggleTodo: any;
@@ -17,6 +19,7 @@ type contextProps = {
 const TodoContext = React.createContext<Partial<contextProps>>({});
 const TodoProvider = (props: any) => {
   const [todolist, setTodolist] = useState<Array<Todo> | null>(null);
+  const [selected, selectTodo] = useState<Todo | null>(null);
   const { notify } = useContext(NotificationContext);
   const { token } = useContext(AuthContext);
 
@@ -69,6 +72,8 @@ const TodoProvider = (props: any) => {
   };
 
   const implementation: contextProps = {
+    selected,
+    selectTodo,
     getTodos,
     todolist,
     toggleTodo,

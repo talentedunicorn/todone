@@ -10,15 +10,18 @@ import { TodoContext } from "./context/todoContext";
 import { AuthContext } from "./context/authContext";
 import { NotificationContext } from "./context/notificationContext";
 import { exportData, importData } from "./services/localStorage";
-import * as serviceWorker from "./serviceWorker";
 
 const App = () => {
-  const IS_PRODUCTION = process.env.NODE_ENV === "production";
   const [loading, setLoading] = useState(true);
-  const [hasUpdate, setHasUpdate] = useState(false);
-  const [waitingWorker, setWaitingWorker] = useState<any>();
   const inputRef = useRef<any>(null);
-  const { todolist, onAddTodo, getTodos } = useContext(TodoContext);
+  const {
+    todolist,
+    selected,
+    selectTodo,
+    onAddTodo,
+    getTodos,
+    editTodo,
+  } = useContext(TodoContext);
   const { logout } = useContext(AuthContext);
   const { notify } = useContext(NotificationContext);
   const OFFLINE_MODE = process.env.REACT_APP_OFFLINE_MODE;
@@ -57,6 +60,11 @@ const App = () => {
     FR.readAsText(files[0]);
   };
 
+  const handleFormSubmit = (data: any) => {
+    selected ? editTodo(selected.id, data.content) : onAddTodo(data);
+    selectTodo(null);
+  };
+
   const upload = async (data: any) => {
     try {
       await importData(data);
@@ -68,33 +76,6 @@ const App = () => {
 
     inputRef.current.value = "";
   };
-
-  useEffect(() => {
-    // Listen to service worker onUpdate
-    IS_PRODUCTION &&
-      serviceWorker.register({
-        onUpdate: (registration: any) => {
-          setWaitingWorker(registration.waiting);
-          setHasUpdate(true);
-        },
-      });
-  }, []);
-
-  useEffect(() => {
-    const updateServiceWorker = () => {
-      waitingWorker.postMessage({ type: "SKIP_WAITING" });
-      setHasUpdate(false);
-      window.location.reload();
-    };
-
-    if (hasUpdate && IS_PRODUCTION) {
-      notify("A new version is available", null, {
-        text: "Reload",
-        callback: updateServiceWorker,
-      });
-      setHasUpdate(false);
-    }
-  }, [hasUpdate, notify, waitingWorker]);
 
   useEffect(() => {
     async function initialLoad() {
@@ -163,7 +144,11 @@ const App = () => {
         <Loading className={Styles.Loading} />
       ) : (
         <>
-          <Form handleFormSubmit={(todo: Todo) => onAddTodo(todo)} />
+          <Form
+            handleFormSubmit={handleFormSubmit}
+            defaultValue={selected && selected.content}
+            onReset={() => selectTodo(null)}
+          />
           <div className={Styles.LayoutContent}>
             <List title="To be done" items={incompleteTodos} />
             {completedTodos.length > 0 && (

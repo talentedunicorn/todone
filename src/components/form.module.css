@@ -4,7 +4,6 @@
 }
 
 .Form {
-  --toggle-icon: var(--icon-expand);
   --input-height: 1rem;
   display: flex;
   flex-flow: column;
@@ -13,15 +12,9 @@
   border-bottom: var(--border);
 }
 
-.Form[data-expanded="true"] {
-  --input-height: 50vh;
-  --toggle-icon: var(--icon-collapse);
-}
-
 .Controls {
   display: flex;
   align-items: center;
-  background: var(--white);
 }
 
 .Input {
@@ -29,17 +22,27 @@
   transition: min-height 0.3s var(--ease);
 }
 
-.Submit {
+.Input:focus {
+  --input-height: 50vh;
+}
+
+.Submit,
+.Reset {
   composes: Button from "../shared.css";
-  flex: 1;
   white-space: nowrap;
   padding: 1rem;
 }
 
-.Toggle {
-  composes: Button-icon from "../shared.css";
-  --icon: var(--toggle-icon);
-  --icon-size: 0.8rem;
+.Submit {
+  flex: 1;
+}
+
+.Reset {
   --button-bg: var(--black);
-  margin: 0 1rem;
+}
+
+@media screen and (min-width: 70rem) {
+  .Controls {
+    order: -1;
+  }
 }
