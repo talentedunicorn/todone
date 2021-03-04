@@ -50,14 +50,6 @@ describe("<List/>", () => {
     expect(getByTestId("List").getAttribute("data-expanded")).toBe("false");
   });
 
-  it("should not trigger select on clicking links", () => {
-    const { getByRole, queryByRole } = customRender(
-      <List title="List with link" items={todolist} />
-    );
-    fireEvent.click(getByRole("link"));
-    expect(queryByRole("form")).toBe(null);
-  });
-
   it("should toggle todo", async () => {
     const { getAllByRole } = customRender(
       <List title="Toggle items" items={todolist} />
