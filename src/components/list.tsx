@@ -5,11 +5,19 @@ import Styles from "./list.module.css";
 import { TodoContext } from "../context/todoContext";
 import { Todo } from "../models/todo";
 
-const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
+const List = ({
+  title,
+  items,
+  isExpanded = true,
+}: {
+  title: string;
+  items: Array<Todo>;
+  isExpanded?: boolean;
+}) => {
   const { toggleTodo, deleteTodo, selected, selectTodo } = useContext(
     TodoContext
   );
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(isExpanded);
 
   const handleActions = async (type: string, item: any) => {
     switch (type) {
