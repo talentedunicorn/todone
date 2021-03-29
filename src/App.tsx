@@ -152,7 +152,7 @@ const App = () => {
           <div className={Styles.LayoutContent}>
             <List title="To be done" items={incompleteTodos} />
             {completedTodos.length > 0 && (
-              <List title="Done" items={completedTodos} />
+              <List title="Done" items={completedTodos} isExpanded={false} />
             )}
           </div>
         </>
