@@ -31,7 +31,7 @@ const Login = () => {
             type="text"
             data-testid="usernameInput"
             value={username}
-            onChange={e => setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
             className={Styles.Input}
             placeholder="Username"
           />
@@ -43,7 +43,7 @@ const Login = () => {
             type="password"
             data-testid="passwordInput"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             className={Styles.Input}
             placeholder="Password"
           />

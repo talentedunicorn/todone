@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 import React, { useState, useContext } from "react";
 import { Todo } from "../models/todo";
 import bobaService from "../services/boba";

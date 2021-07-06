@@ -14,14 +14,8 @@ import { exportData, importData } from "./services/localStorage";
 const App = () => {
   const [loading, setLoading] = useState(true);
   const inputRef = useRef<any>(null);
-  const {
-    todolist,
-    selected,
-    selectTodo,
-    onAddTodo,
-    getTodos,
-    editTodo,
-  } = useContext(TodoContext);
+  const { todolist, selected, selectTodo, onAddTodo, getTodos, editTodo } =
+    useContext(TodoContext);
   const { logout } = useContext(AuthContext);
   const { notify } = useContext(NotificationContext);
   const OFFLINE_MODE = process.env.REACT_APP_OFFLINE_MODE;
