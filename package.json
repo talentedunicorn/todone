@@ -3,21 +3,21 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@types/file-saver": "^2.0.2",
-    "@types/jest": "^26.0.23",
-    "@types/node": "^15.12.3",
-    "@types/react": "^17.0.11",
-    "@types/react-dom": "^17.0.8",
+    "@types/file-saver": "^2.0.3",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.6.1",
+    "@types/react": "^17.0.17",
+    "@types/react-dom": "^17.0.9",
     "axios": "^0.21.1",
     "file-saver": "^2.0.5",
     "localforage": "^1.9.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-ga": "^3.3.0",
-    "react-markdown": "^6.0.2",
+    "react-markdown": "^6.0.3",
     "react-scripts": "4.0.3",
     "remark-gfm": "^1.0.0",
-    "typescript": "^4.3.4"
+    "typescript": "^4.3.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -26,7 +26,8 @@
     "test:coverage": "npm run test -- --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "postinstall": "husky install",
-    "pretty-format": "pretty-quick --staged"
+    "pretty-format": "pretty-quick --staged",
+    "lint": "eslint src/**/*.{ts,tsx}"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -44,12 +45,21 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.15.0",
     "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
-    "codecov": "^3.8.2",
-    "husky": "^6.0.0",
-    "prettier": "^2.3.1",
-    "pretty-quick": "^3.1.1"
+    "@testing-library/react": "^12.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
+    "codecov": "^3.8.3",
+    "eslint": "^7.32.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.24.0",
+    "husky": "^7.0.1",
+    "prettier": "^2.3.2",
+    "pretty-quick": "^3.1.1",
+    "ts-jest": "^27.0.4"
   },
   "jest": {
     "coverageReporters": [
@@ -63,6 +73,9 @@
       "!src/test-utils/**",
       "!src/react-app-env.d.ts",
       "!src/models/**.ts"
-    ]
+    ],
+    "transform": {
+      "^.+\\.ts?$": "ts-jest"
+    }
   }
 }

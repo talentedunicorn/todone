@@ -14,9 +14,8 @@ const List = ({
   items: Array<Todo>;
   isExpanded?: boolean;
 }) => {
-  const { toggleTodo, deleteTodo, selected, selectTodo } = useContext(
-    TodoContext
-  );
+  const { toggleTodo, deleteTodo, selected, selectTodo } =
+    useContext(TodoContext);
   const [expanded, setExpanded] = useState(isExpanded);
 
   const handleActions = async (type: string, item: any) => {
@@ -55,7 +54,7 @@ const List = ({
                   className={Styles.ListContent}
                   data-completed={item.completed ? true : undefined}
                 >
-                  <ReactMarkdown plugins={[gfm]} children={item.content} />
+                  <ReactMarkdown plugins={[gfm]}>{item.content}</ReactMarkdown>
                 </div>
                 <section className={Styles.ListControls}>
                   <input

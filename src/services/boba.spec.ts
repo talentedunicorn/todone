@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 import axios from "axios";
 import boba, { LOGIN } from "./boba";
 
@@ -12,7 +13,7 @@ describe("Boba service", () => {
   it("LOGIN", async () => {
     const data = { username: "test", password: "testpassword" };
     mockAxios.post.mockResolvedValue({ data: "success" });
-    const login = await LOGIN(data);
+    await LOGIN(data);
     expect(mockAxios.post).toHaveBeenCalledTimes(1);
     expect(mockAxios.post).toHaveBeenLastCalledWith("/auth/local", {
       identifier: data.username,

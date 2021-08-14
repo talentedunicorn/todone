@@ -25,14 +25,14 @@ const ADD_TODO = (content: string) => {
 };
 
 const EDIT_TODO = async (id: any, content: string) => {
-  let todo: any = await db.getItem(id);
+  const todo: any = await db.getItem(id);
   todo.updated_at = `${Date.now()}`;
   todo.content = content;
   return db.setItem(id, { ...todo });
 };
 
 const TOGGLE_TODO = async (id: any, completed: boolean) => {
-  let todo: any = await db.getItem(id);
+  const todo: any = await db.getItem(id);
   todo.completed = completed;
   return db.setItem(id, { ...todo });
 };

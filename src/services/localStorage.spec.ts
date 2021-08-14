@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 import localforage from "localforage";
 import FileSaver from "file-saver";
 import localStorage, { exportData, importData } from "./localStorage";

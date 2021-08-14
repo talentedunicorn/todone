@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  render,
-  fireEvent,
-  cleanup,
-  waitFor,
-  wait,
-} from "@testing-library/react";
+import { render, fireEvent, cleanup, waitFor } from "@testing-library/react";
 import List from "./list";
 import { TodoContext } from "../context/todoContext";
 import { todolist } from "../test-utils/mocks";
@@ -35,9 +29,7 @@ describe("<List/>", () => {
   });
 
   it("should render items sorted by updated descending", () => {
-    const { getAllByRole, debug } = render(
-      <List title="Todos" items={todolist} />
-    );
+    const { getAllByRole } = render(<List title="Todos" items={todolist} />);
     expect(getAllByRole("listitem")[0]).toHaveTextContent("Updated last");
   });
 
