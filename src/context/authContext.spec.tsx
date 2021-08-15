@@ -1,9 +1,9 @@
 import React from "react";
 import { AuthContext, AuthProvider } from "./authContext";
 import { render, fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { LOGIN } from "../services/boba";
 
 jest.mock("../services/boba");
-const mockedBoba = require("../services/boba");
 
 describe("AuthContext", () => {
   afterEach(() => {
@@ -23,7 +23,7 @@ describe("AuthContext", () => {
   });
 
   it("should be able to login", async () => {
-    mockedBoba.LOGIN.mockResolvedValue("token");
+    LOGIN.mockResolvedValue("token");
     const { getByText } = render(
       <AuthProvider>
         <AuthContext.Consumer>
@@ -34,7 +34,7 @@ describe("AuthContext", () => {
     expect(getByText("Login")).toBeInTheDocument();
     fireEvent.click(getByText("Login"));
     await waitFor(() => {
-      expect(mockedBoba.LOGIN).toHaveBeenCalledTimes(1);
+      expect(LOGIN).toHaveBeenCalledTimes(1);
     });
   });
 

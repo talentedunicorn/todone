@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import gfm from "remark-gfm";
+import Markdown from "markdown-to-jsx";
 import Styles from "./list.module.css";
 import { TodoContext } from "../context/todoContext";
 import { Todo } from "../models/todo";
@@ -54,7 +53,7 @@ const List = ({
                   className={Styles.ListContent}
                   data-completed={item.completed ? true : undefined}
                 >
-                  <ReactMarkdown plugins={[gfm]}>{item.content}</ReactMarkdown>
+                  <Markdown>{item.content}</Markdown>
                 </div>
                 <section className={Styles.ListControls}>
                   <input
