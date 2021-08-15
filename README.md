@@ -13,9 +13,7 @@
 # Features
 
 - [x] Offline support using [localForage](https://github.com/localForage/localForage)
-- [x] Markdown support with [react-markdown](https://github.com/rexxars/react-markdown)
-  - Plugins used:
-    - [remark-gfm](https://github.com/remarkjs/remark-gfm)
+- [x] Markdown support with [markdown-to-jsx](https://github.com/probablyup/markdown-to-jsx)
 - [x] Export data with [FileSaver.js](https://www.npmjs.com/package/file-saver)
 - [x] Import data - currently supports `.json` format
 
