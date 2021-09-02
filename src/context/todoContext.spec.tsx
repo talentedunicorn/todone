@@ -159,7 +159,11 @@ describe("TodoContext", () => {
               <>
                 {todolist && <p>{todolist[0].content}</p>}
                 <button onClick={getTodos}>Get todos</button>
-                <button onClick={() => editTodo(1, "test")}>Edit todo</button>
+                <button
+                  onClick={() => editTodo(todolist && todolist[0].id, "test")}
+                >
+                  Edit todo
+                </button>
               </>
             )}
           </TodoContext.Consumer>

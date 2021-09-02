@@ -3,6 +3,8 @@ import FileSaver from "file-saver";
 
 const DB_NAME = process.env.REACT_APP_DB_NAME || "todone_db";
 
+const timestamp = () => Math.round(+new Date() / 1000);
+
 // Configure database
 const db = localforage.createInstance({
   name: DB_NAME,
@@ -16,17 +18,17 @@ const GET_TODOS = async () => {
 
 const ADD_TODO = (content: string) => {
   const todo = {
-    id: `${Date.now()}`,
+    id: `${timestamp()}`,
     content,
     completed: false,
-    updated_at: `${Date.now()}`,
+    updated_at: `${timestamp()}`,
   };
   return db.setItem(todo.id, todo);
 };
 
 const EDIT_TODO = async (id: any, content: string) => {
   const todo: any = await db.getItem(id);
-  todo.updated_at = `${Date.now()}`;
+  todo.updated_at = `${timestamp()}`;
   todo.content = content;
   return db.setItem(id, { ...todo });
 };
