@@ -77,7 +77,7 @@ const App = () => {
         if (!todolist) {
           await getTodos();
         }
-      } catch (error) {
+      } catch (error: any) {
         if (error.response?.status && error.response?.status === 401) {
           logout();
         }
