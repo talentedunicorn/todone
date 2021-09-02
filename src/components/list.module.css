@@ -72,6 +72,15 @@
   overflow: auto;
 }
 
+.ListContent::before {
+  content: attr(data-updated);
+  position: absolute;
+  right: 0.5em;
+  top: 0.5em;
+  font-size: 0.8em;
+  color: var(--gray);
+}
+
 .ListContent[data-completed] {
   color: var(--gray);
   filter: grayscale(100%);
