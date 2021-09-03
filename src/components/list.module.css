@@ -37,11 +37,19 @@
   display: flex;
   flex-wrap: wrap;
   position: relative;
-  border-top: var(--border);
 }
 
-.ListItem:first-child {
-  border-top: none;
+.ListItem::before {
+  content: attr(data-updated);
+  position: absolute;
+  right: 0.5em;
+  top: 0.5em;
+  font-size: 0.8em;
+  color: var(--gray);
+}
+
+.ListItem:not(first-child) {
+  border-top: var(--border);
 }
 
 .ListTitle {
@@ -70,15 +78,6 @@
   margin: 1rem;
   flex: 1;
   overflow: auto;
-}
-
-.ListContent::before {
-  content: attr(data-updated);
-  position: absolute;
-  right: 0.5em;
-  top: 0.5em;
-  font-size: 0.8em;
-  color: var(--gray);
 }
 
 .ListContent[data-completed] {

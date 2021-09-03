@@ -67,12 +67,15 @@ const List = ({
       <ol className={Styles.List} data-empty-message="All done...">
         {sortedList &&
           sortedList.map((item) => (
-            <li className={Styles.ListItem} key={item.id}>
+            <li
+              className={Styles.ListItem}
+              key={item.id}
+              data-updated={formatTimestamp(item.updated_at)}
+              title={`Updated at ${formatTimestamp(item.updated_at)}`}
+            >
               <div
                 className={Styles.ListContent}
                 data-completed={item.completed ? true : undefined}
-                data-updated={formatTimestamp(item.updated_at)}
-                title={`Updated at ${formatTimestamp(item.updated_at)}`}
               >
                 <Markdown>{item.content}</Markdown>
               </div>
