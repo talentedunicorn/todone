@@ -55,7 +55,7 @@ const Login = () => {
             type="submit"
             disabled={submitting || !isValidForm()}
           >
-            Log in
+            {submitting ? "Submitting" : "Log in"}
           </button>
         </div>
       </form>
