@@ -122,7 +122,7 @@ const App = () => {
               title="Save to file"
               className={Styles.Export}
               disabled={!todolist || todolist.length < 1}
-              onClick={(_) => exportData()}
+              onClick={() => exportData()}
             >
               Save to file
             </button>

@@ -5,11 +5,20 @@ import { TodoContext } from "./context/todoContext";
 import { todolist } from "./test-utils/mocks";
 import { AuthContext } from "./context/authContext";
 import { NotificationProvider } from "./context/notificationContext";
-import mockedService from "./services/localStorage";
+import MockedService from "./services/localStorage";
 
 jest.mock("./services/localStorage");
+const mockedService = MockedService as jest.Mocked<
+  typeof MockedService & {
+    importData: () => Promise<void>;
+    exportData: () => Promise<void>;
+  }
+>;
+let contextMock: any;
 
-let contextMock;
+beforeAll(() => {
+  process.env.REACT_APP_OFFLINE_MODE = "true";
+});
 
 beforeEach(() => {
   contextMock = {
@@ -64,8 +73,7 @@ describe("<App/>", () => {
   });
 
   xit("should export data", async () => {
-    process.env.REACT_APP_OFFLINE_MODE = "true";
-    mockedService.exportData = jest.fn();
+    mockedService.exportData = jest.fn().mockResolvedValue(true);
     const { getByText } = render(
       <TodoContext.Provider value={contextMock}>
         <App />
@@ -80,8 +88,7 @@ describe("<App/>", () => {
   });
 
   xit("should import data", async () => {
-    process.env.REACT_APP_OFFLINE_MODE = "true";
-    mockedService.importData = jest.fn();
+    mockedService.importData = jest.fn().mockResolvedValue(true);
     const file = new Blob([JSON.stringify(todolist)], {
       type: "application/json",
     });
