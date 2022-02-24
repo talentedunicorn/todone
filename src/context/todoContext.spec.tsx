@@ -9,6 +9,10 @@ import { todolist } from "../test-utils/mocks";
 jest.mock("../services/localStorage");
 const mockedService = localStorage as jest.Mocked<typeof localStorage>;
 
+beforeAll(() => {
+  process.env.REACT_APP_OFFLINE_MODE = "true";
+});
+
 afterEach(() => {
   cleanup();
   jest.resetAllMocks();

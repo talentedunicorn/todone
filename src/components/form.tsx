@@ -1,9 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
 import Styles from "./form.module.css";
 
-const Form = ({ handleFormSubmit, defaultValue, onReset }: any) => {
+const Form = ({
+  handleFormSubmit,
+  defaultValue,
+  onReset,
+}: {
+  handleFormSubmit: (data: {
+    content: string;
+    completed: boolean;
+  }) => Promise<any>;
+  defaultValue?: string;
+  onReset: () => void;
+}) => {
   const [content, setContent] = useState("");
   const [editing, setEditing] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -13,12 +25,14 @@ const Form = ({ handleFormSubmit, defaultValue, onReset }: any) => {
       return false;
     }
 
+    setSubmitting(true);
     handleFormSubmit({
       content,
       completed: false,
+    }).finally(() => {
+      setSubmitting(false);
+      reset();
     });
-
-    reset();
   };
 
   const reset = () => {
@@ -36,6 +50,17 @@ const Form = ({ handleFormSubmit, defaultValue, onReset }: any) => {
     }
   }, [defaultValue, inputRef]);
 
+  const buttonText = (status: "editing" | "submitting" | "initial") => {
+    switch (status) {
+      case "editing":
+        return "Update task";
+      case "submitting":
+        return "Submitting";
+      default:
+        return "Add task";
+    }
+  };
+
   return (
     <form data-testid="form" onSubmit={handleSubmit} className={Styles.Form}>
       <textarea
@@ -48,13 +73,15 @@ const Form = ({ handleFormSubmit, defaultValue, onReset }: any) => {
         onChange={(e) => setContent(e.target.value)}
       />
       <div className={Styles.Controls}>
-        {content && (
+        {!submitting && content && (
           <button className={Styles.Reset} onClick={reset}>
             Cancel
           </button>
         )}
-        <button type="submit" className={Styles.Submit}>
-          {editing ? "Update" : "Add"}&nbsp;task
+        <button type="submit" className={Styles.Submit} disabled={submitting}>
+          {editing && buttonText("editing")}
+          {submitting && buttonText("submitting")}
+          {!editing && !submitting && buttonText("initial")}
         </button>
       </div>
     </form>
