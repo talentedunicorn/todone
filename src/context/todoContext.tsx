@@ -17,16 +17,15 @@ type contextProps = {
   editTodo: any;
 };
 
-const TodoContext = React.createContext<Partial<contextProps>>({});
+const TodoContext = React.createContext<contextProps>({} as contextProps);
 const TodoProvider = (props: any) => {
   const [todolist, setTodolist] = useState<Array<Todo> | null>(null);
   const [selected, selectTodo] = useState<Todo | null>(null);
   const { notify } = useContext(NotificationContext);
   const { token } = useContext(AuthContext);
 
-  const { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS } = !token
-    ? localService
-    : bobaService;
+  const { GET_TODOS, ADD_TODO, EDIT_TODO, TOGGLE_TODO, DELETE_TODOS } =
+    process.env.REACT_APP_OFFLINE_MODE === "true" ? localService : bobaService;
 
   const toggleTodo = (id: number) => {
     const todo = (todolist && todolist.find((todo) => todo.id === id)) || null;

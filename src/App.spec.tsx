@@ -51,7 +51,9 @@ describe("<App/>", () => {
       target: { value: "Test todo" },
     });
     fireEvent.submit(getByTestId("form"));
-    expect(contextMock.onAddTodo).toHaveBeenCalledTimes(1);
+    waitFor(() => {
+      expect(contextMock.onAddTodo).toHaveBeenCalledTimes(1);
+    });
   });
 
   it("should log user out on error", async () => {

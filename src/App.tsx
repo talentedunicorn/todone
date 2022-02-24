@@ -54,8 +54,10 @@ const App = () => {
     FR.readAsText(files[0]);
   };
 
-  const handleFormSubmit = (data: any) => {
-    selected ? editTodo(selected.id, data.content) : onAddTodo(data);
+  const handleFormSubmit = async (data: any) => {
+    selected
+      ? await editTodo(selected.id, data.content)
+      : await onAddTodo(data);
     selectTodo(null);
   };
 
@@ -140,7 +142,7 @@ const App = () => {
         <>
           <Form
             handleFormSubmit={handleFormSubmit}
-            defaultValue={selected && selected.content}
+            defaultValue={selected?.content}
             onReset={() => selectTodo(null)}
           />
           <div className={Styles.LayoutContent}>
