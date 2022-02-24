@@ -26,6 +26,7 @@ const Form = ({
     }
 
     setSubmitting(true);
+    setEditing(false);
     handleFormSubmit({
       content,
       completed: false,
@@ -37,8 +38,7 @@ const Form = ({
 
   const reset = () => {
     setContent("");
-    setEditing(false);
-    onReset && onReset();
+    onReset();
   };
 
   useEffect(() => {
