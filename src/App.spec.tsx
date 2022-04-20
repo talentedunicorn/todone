@@ -41,7 +41,7 @@ describe("<App/>", () => {
     expect(getAllByTestId("App").length).toBeInTheDocument;
   });
 
-  it("should add todo", async () => {
+  it("should handle form submit", async () => {
     const { getByTestId } = render(
       <TodoContext.Provider value={contextMock}>
         <App />
@@ -50,7 +50,9 @@ describe("<App/>", () => {
     fireEvent.change(getByTestId("form-input"), {
       target: { value: "Test todo" },
     });
-    fireEvent.submit(getByTestId("form"));
+    waitFor(() => {
+      fireEvent.submit(getByTestId("form"));
+    });
     waitFor(() => {
       expect(contextMock.onAddTodo).toHaveBeenCalledTimes(1);
     });

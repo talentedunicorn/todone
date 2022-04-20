@@ -23,7 +23,7 @@ describe("AuthContext", () => {
   });
 
   it("should be able to login", async () => {
-    LOGIN.mockResolvedValue("token");
+    (LOGIN as jest.Mock).mockResolvedValue("token");
     const { getByText } = render(
       <AuthProvider>
         <AuthContext.Consumer>
