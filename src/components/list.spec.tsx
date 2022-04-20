@@ -3,12 +3,16 @@ import { render, fireEvent, cleanup, waitFor } from "@testing-library/react";
 import List from "./list";
 import { TodoContext } from "../context/todoContext";
 import { todolist } from "../test-utils/mocks";
+import { Todo } from "../models/todo";
 
 const mocks = {
+  selected: {} as Todo,
   todolist,
+  getTodos: jest.fn(),
   toggleTodo: jest.fn(),
   selectTodo: jest.fn(),
   editTodo: jest.fn(),
+  onAddTodo: jest.fn(),
   deleteTodo: jest.fn(),
 };
 

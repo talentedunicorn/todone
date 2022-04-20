@@ -17,7 +17,7 @@ describe("Login page", () => {
         <Login />
       </AuthContext.Provider>
     );
-    const button = getByRole("button");
+    const button = getByRole("button") as HTMLInputElement;
     const usernameInput = getByTestId("usernameInput");
     const passwordInput = getByTestId("passwordInput");
 

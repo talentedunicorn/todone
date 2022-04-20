@@ -99,13 +99,13 @@ describe("TodoContext", () => {
     );
 
     fireEvent.click(getByText(/Get todos/));
-    await waitFor(() => {
+    await waitFor(async () => {
       expect(mockedService.GET_TODOS).toHaveBeenCalledTimes(1);
-    });
-    fireEvent.click(getByText(/Toggle/));
-    await waitFor(() => {
-      expect(mockedService.TOGGLE_TODO).toHaveBeenCalledTimes(1);
-      expect(getAllByRole("listitem")).toHaveLength(mockTodolist.length - 1);
+      fireEvent.click(getByText(/Toggle/));
+      await waitFor(() => {
+        expect(mockedService.TOGGLE_TODO).toHaveBeenCalledTimes(1);
+        expect(getAllByRole("listitem")).toHaveLength(mockTodolist.length - 1);
+      });
     });
   });
 
