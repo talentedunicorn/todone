@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import ReactGA from "react-ga";
 import "./index.css";
 import App from "./App";
@@ -15,7 +15,9 @@ if (process.env.REACT_APP_GOOGLE_TRACKING_ID) {
 
 const IS_OFFLINE = process.env.REACT_APP_OFFLINE_MODE;
 
-ReactDOM.render(
+const container = document.getElementById("root");
+const root = createRoot(container!);
+root.render(
   <NotificationProvider>
     <AuthProvider>
       <AuthContext.Consumer>
@@ -30,6 +32,5 @@ ReactDOM.render(
         }
       </AuthContext.Consumer>
     </AuthProvider>
-  </NotificationProvider>,
-  document.getElementById("root")
+  </NotificationProvider>
 );
