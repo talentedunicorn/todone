@@ -4,12 +4,6 @@
   border-bottom: var(--border);
 }
 
-[data-expanded="false"] {
-  --header-color: var(--gray-light);
-  --empty-display: none;
-  --list-height: 0px !important;
-}
-
 .List {
   list-style: none;
   padding: 0;

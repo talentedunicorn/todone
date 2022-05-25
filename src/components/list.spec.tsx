@@ -37,15 +37,6 @@ describe("<List/>", () => {
     expect(getAllByRole("listitem")[0]).toHaveTextContent("Updated last");
   });
 
-  it("should toggle expanded states", () => {
-    const { getByTestId, getByRole } = render(
-      <List title="Toggle expanded" items={todolist} />
-    );
-    expect(getByTestId("List").getAttribute("data-expanded")).toBe("true");
-    fireEvent.click(getByRole("heading"));
-    expect(getByTestId("List").getAttribute("data-expanded")).toBe("false");
-  });
-
   it("should toggle todo", async () => {
     const { getAllByRole } = customRender(
       <List title="Toggle items" items={todolist} />
