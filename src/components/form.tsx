@@ -38,6 +38,7 @@ const Form = ({
 
   const reset = () => {
     setContent("");
+    setEditing(false);
     onReset();
   };
 
@@ -79,9 +80,9 @@ const Form = ({
           </button>
         )}
         <button type="submit" className={Styles.Submit} disabled={submitting}>
-          {editing && buttonText("editing")}
-          {submitting && buttonText("submitting")}
-          {!editing && !submitting && buttonText("initial")}
+          {buttonText(
+            (editing && "editing") || (submitting && "submitting") || "initial"
+          )}
         </button>
       </div>
     </form>
