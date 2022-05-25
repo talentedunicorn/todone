@@ -29,15 +29,12 @@
 
 .ListItem {
   display: flex;
-  flex-wrap: wrap;
-  position: relative;
+  flex-flow: column;
 }
 
 .ListItem::before {
   content: attr(data-updated);
-  position: absolute;
-  right: 0.5em;
-  top: 0.5em;
+  margin: 0.5rem 1rem;
   font-size: 0.8em;
   color: var(--gray);
 }
@@ -61,10 +58,21 @@
 
 .ListContent {
   line-height: 1.5;
-  max-width: calc(100vw - 2rem);
-  margin: 1rem;
+  margin: 0 1rem 1rem;
   flex: 1;
   overflow: auto;
+}
+
+.ListContent :is(h1, h2, h3, h4) {
+  margin-top: 0;
+}
+
+.ListContent pre {
+  max-width: 90vw; /* To prevent page overflow */
+}
+
+.ListContent a {
+  word-break: break-all;
 }
 
 .ListContent[data-completed] {
@@ -145,10 +153,4 @@
   justify-content: space-between;
   padding: 1rem;
   border-top: var(--border);
-}
-
-@media screen and (min-width: 70rem) {
-  .Wrapper {
-    border-right: var(--border);
-  }
 }

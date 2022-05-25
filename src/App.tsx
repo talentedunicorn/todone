@@ -138,31 +138,35 @@ const App = () => {
             Logout
           </button>
         )}
+        <nav className={Styles.Nav}>
+          <button
+            className={Styles.NavButton}
+            onClick={() => setMode("completed")}
+            disabled={mode === "completed"}
+          >
+            Completed
+          </button>
+          <button
+            className={Styles.NavButton}
+            onClick={() => setMode("incomplete")}
+            disabled={mode === "incomplete"}
+          >
+            Incomplete
+          </button>
+        </nav>
       </header>
       {loading ? (
         <Loading className={Styles.Loading} />
       ) : (
         <>
-          <Form
-            handleFormSubmit={handleFormSubmit}
-            defaultValue={selected?.content}
-            onReset={() => selectTodo(null)}
-          />
+          <div className={Styles.LayoutForm}>
+            <Form
+              handleFormSubmit={handleFormSubmit}
+              defaultValue={selected?.content}
+              onReset={() => selectTodo(null)}
+            />
+          </div>
           <div className={Styles.LayoutContent}>
-            <button
-              className={Styles.Button}
-              onClick={() => setMode("completed")}
-              disabled={mode === "completed"}
-            >
-              Completed
-            </button>
-            <button
-              className={Styles.Button}
-              onClick={() => setMode("incomplete")}
-              disabled={mode === "incomplete"}
-            >
-              Incomplete
-            </button>
             {mode === "incomplete" && (
               <List title="To be done" items={incompleteTodos} />
             )}

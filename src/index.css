@@ -60,6 +60,10 @@ pre {
   overflow: auto;
 }
 
+code::selection {
+  background-color: var(--brand-color);
+}
+
 pre {
   --background: var(--black);
   --color: inherit;

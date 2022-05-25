@@ -36,8 +36,3 @@
   resize: vertical;
   min-height: var(--input-height);
 }
-
-.Input:focus {
-  --input-background: var(--black);
-  --input-color: var(--white);
-}

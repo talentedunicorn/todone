@@ -5,22 +5,26 @@ import Form from "./form";
 afterEach(() => cleanup());
 
 describe("<Form />", () => {
-  it("should load without crashing", () => {
+  it("should load without crashing", async () => {
     const { getByTestId } = render(
       <Form
         handleFormSubmit={jest.fn().mockResolvedValue(true)}
         onReset={jest.fn()}
       />
     );
-    expect(getByTestId("form")).toBeTruthy();
+    fireEvent.click(getByTestId("Toggle"));
+    await waitFor(() => {
+      expect(getByTestId("form")).toBeTruthy();
+    });
   });
 
-  it("should be able to submit and clear input", async () => {
+  it("should be able to submit", async () => {
     const mockHandleSubmit = jest.fn().mockResolvedValue(true);
     const testTodo = "Testing...";
     const { getByTestId } = render(
       <Form handleFormSubmit={mockHandleSubmit} onReset={jest.fn()} />
     );
+    fireEvent.click(getByTestId("Toggle"));
     const input = getByTestId("form-input");
     fireEvent.change(input, { target: { value: testTodo } });
     fireEvent.submit(getByTestId("form"));
@@ -29,7 +33,6 @@ describe("<Form />", () => {
         content: testTodo,
         completed: false,
       });
-      expect(input.textContent).toBe("");
     });
   });
 
@@ -38,6 +41,7 @@ describe("<Form />", () => {
     const { getByTestId } = render(
       <Form handleFormSubmit={mockHandleSubmit} onReset={jest.fn()} />
     );
+    fireEvent.click(getByTestId("Toggle"));
     fireEvent.change(getByTestId("form-input"), { target: { value: "A" } });
     fireEvent.submit(getByTestId("form"));
     expect(mockHandleSubmit).not.toHaveBeenCalled();

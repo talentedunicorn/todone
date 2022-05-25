@@ -55,8 +55,7 @@ const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
             <li
               className={Styles.ListItem}
               key={item.id}
-              data-updated={formatTimestamp(item.updated_at)}
-              title={`Updated at ${formatTimestamp(item.updated_at)}`}
+              data-updated={`Updated at ${formatTimestamp(item.updated_at)}`}
             >
               <div
                 className={Styles.ListContent}

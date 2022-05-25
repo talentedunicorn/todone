@@ -13,9 +13,10 @@ const Form = ({
   defaultValue?: string;
   onReset: () => void;
 }) => {
-  const [content, setContent] = useState("");
-  const [editing, setEditing] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const [content, setContent] = useState<string>("");
+  const [editing, setEditing] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const [hidden, setHidden] = useState<boolean>(true);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -39,6 +40,7 @@ const Form = ({
   const reset = () => {
     setContent("");
     setEditing(false);
+    setHidden(true);
     onReset();
   };
 
@@ -48,6 +50,7 @@ const Form = ({
       setContent(defaultValue);
       inputEl && inputEl.focus();
       setEditing(true);
+      setHidden(false);
     }
   }, [defaultValue, inputRef]);
 
@@ -63,29 +66,49 @@ const Form = ({
   };
 
   return (
-    <form data-testid="form" onSubmit={handleSubmit} className={Styles.Form}>
-      <textarea
-        data-testid="form-input"
-        className={Styles.Input}
-        rows={1}
-        value={content}
-        ref={inputRef}
-        placeholder="Start typing..."
-        onChange={(e) => setContent(e.target.value)}
-      />
-      <div className={Styles.Controls}>
-        {!submitting && content && (
-          <button className={Styles.Reset} onClick={reset}>
-            Cancel
-          </button>
-        )}
-        <button type="submit" className={Styles.Submit} disabled={submitting}>
-          {buttonText(
-            (editing && "editing") || (submitting && "submitting") || "initial"
-          )}
+    <div className={Styles.Wrapper}>
+      {hidden ? (
+        <button
+          className={Styles.Toggle}
+          data-testid="Toggle"
+          onClick={() => setHidden(false)}
+        >
+          Add task
         </button>
-      </div>
-    </form>
+      ) : (
+        <form
+          data-testid="form"
+          onSubmit={handleSubmit}
+          className={Styles.Form}
+        >
+          <textarea
+            data-testid="form-input"
+            className={Styles.Input}
+            rows={1}
+            value={content}
+            ref={inputRef}
+            placeholder="Start typing..."
+            onChange={(e) => setContent(e.target.value)}
+          />
+          <div className={Styles.Controls}>
+            <button className={Styles.Reset} onClick={reset}>
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className={Styles.Submit}
+              disabled={submitting}
+            >
+              {buttonText(
+                (editing && "editing") ||
+                  (submitting && "submitting") ||
+                  "initial"
+              )}
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
   );
 };
 
