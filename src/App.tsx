@@ -13,6 +13,7 @@ import { exportData, importData } from "./services/localStorage";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
+  const [mode, setMode] = useState<"completed" | "incomplete">("incomplete");
   const inputRef = useRef<any>(null);
   const { todolist, selected, selectTodo, onAddTodo, getTodos, editTodo } =
     useContext(TodoContext);
@@ -93,7 +94,9 @@ const App = () => {
   return (
     <main data-testid="App" className={Styles.Layout}>
       <header className={Styles.Header}>
-        <h1 className={Styles.Logo}>{process.env.REACT_APP_WEBSITE_NAME}</h1>
+        <h1 className={Styles.Logo}>
+          {process.env.REACT_APP_WEBSITE_NAME || "ToDone"}
+        </h1>
         <a
           className={Styles.Hint}
           title="This app uses Markdown. Click to learn how to use it"
@@ -135,20 +138,40 @@ const App = () => {
             Logout
           </button>
         )}
+        <nav className={Styles.Nav}>
+          <button
+            className={Styles.NavButton}
+            onClick={() => setMode("completed")}
+            disabled={mode === "completed"}
+          >
+            Completed
+          </button>
+          <button
+            className={Styles.NavButton}
+            onClick={() => setMode("incomplete")}
+            disabled={mode === "incomplete"}
+          >
+            Incomplete
+          </button>
+        </nav>
       </header>
       {loading ? (
         <Loading className={Styles.Loading} />
       ) : (
         <>
-          <Form
-            handleFormSubmit={handleFormSubmit}
-            defaultValue={selected?.content}
-            onReset={() => selectTodo(null)}
-          />
+          <div className={Styles.LayoutForm}>
+            <Form
+              handleFormSubmit={handleFormSubmit}
+              defaultValue={selected?.content}
+              onReset={() => selectTodo(null)}
+            />
+          </div>
           <div className={Styles.LayoutContent}>
-            <List title="To be done" items={incompleteTodos} />
-            {completedTodos.length > 0 && (
-              <List title="Done" items={completedTodos} isExpanded={false} />
+            {mode === "incomplete" && (
+              <List title="To be done" items={incompleteTodos} />
+            )}
+            {mode === "completed" && (
+              <List title="Done" items={completedTodos} />
             )}
           </div>
         </>

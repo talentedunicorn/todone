@@ -47,6 +47,7 @@ describe("<App/>", () => {
         <App />
       </TodoContext.Provider>
     );
+    fireEvent.click(getByTestId("Toggle"));
     fireEvent.change(getByTestId("form-input"), {
       target: { value: "Test todo" },
     });

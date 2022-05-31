@@ -1,21 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import Markdown from "markdown-to-jsx";
 import Styles from "./list.module.css";
 import { TodoContext } from "../context/todoContext";
 import { Todo } from "../models/todo";
 
-const List = ({
-  title,
-  items,
-  isExpanded = true,
-}: {
-  title: string;
-  items: Array<Todo>;
-  isExpanded?: boolean;
-}) => {
+const List = ({ title, items }: { title: string; items: Array<Todo> }) => {
   const { toggleTodo, deleteTodo, selected, selectTodo } =
     useContext(TodoContext);
-  const [expanded, setExpanded] = useState(isExpanded);
 
   const handleActions = async (type: string, item: any) => {
     switch (type) {
@@ -56,22 +47,15 @@ const List = ({
   });
 
   return (
-    <section
-      data-testid="List"
-      className={Styles.Wrapper}
-      data-expanded={expanded}
-    >
-      <h3 className={Styles.ListTitle} onClick={(_) => setExpanded(!expanded)}>
-        {title}
-      </h3>
+    <section data-testid="List" className={Styles.Wrapper}>
+      <h3 className={Styles.ListTitle}>{title}</h3>
       <ol className={Styles.List} data-empty-message="All done...">
         {sortedList &&
           sortedList.map((item) => (
             <li
               className={Styles.ListItem}
               key={item.id}
-              data-updated={formatTimestamp(item.updated_at)}
-              title={`Updated at ${formatTimestamp(item.updated_at)}`}
+              data-updated={`Updated at ${formatTimestamp(item.updated_at)}`}
             >
               <div
                 className={Styles.ListContent}
