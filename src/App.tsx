@@ -185,6 +185,14 @@ const App = () => {
           by <a href="https://talentedunicorn.com">TalentedUnicorn</a>{" "}
           <sup>&copy;</sup>&nbsp;{new Date().getFullYear()}.
         </p>
+
+        <a
+          title="View on Github"
+          className={Styles.Github}
+          href="https://github.com/talentedunicorn/todone"
+        >
+          View on Github
+        </a>
       </footer>
     </main>
   );
