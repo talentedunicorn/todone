@@ -17,9 +17,15 @@
   grid-area: content;
 }
 
+.Header,
+.Nav,
+.OfflineControls,
+.Footer {
+  display: flex;
+}
+
 .Header {
   grid-area: header;
-  display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
@@ -32,14 +38,21 @@
 
 .Nav {
   flex: 100%;
-  display: flex;
 }
 
 .Footer {
+  align-items: center;
+  justify-content: space-between;
   grid-area: footer;
   padding: 1rem;
   background: var(--gray-light);
   color: var(--gray);
+}
+
+.Github {
+  --icon: var(--icon-github);
+
+  composes: Button-icon from "./shared.css";
 }
 
 .Logo,
@@ -74,7 +87,6 @@
 
 .OfflineControls {
   margin-left: auto;
-  display: flex;
 }
 
 .ImportForm {
