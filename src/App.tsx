@@ -144,14 +144,14 @@ const App = () => {
             onClick={() => setMode("completed")}
             disabled={mode === "completed"}
           >
-            Completed
+            Done
           </button>
           <button
             className={Styles.NavButton}
             onClick={() => setMode("incomplete")}
             disabled={mode === "incomplete"}
           >
-            Incomplete
+            To Do
           </button>
         </nav>
       </header>
@@ -168,7 +168,7 @@ const App = () => {
           </div>
           <div className={Styles.LayoutContent}>
             {mode === "incomplete" && (
-              <List title="To be done" items={incompleteTodos} />
+              <List title="To Do" items={incompleteTodos} />
             )}
             {mode === "completed" && (
               <List title="Done" items={completedTodos} />
