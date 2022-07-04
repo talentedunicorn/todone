@@ -10,7 +10,6 @@
   margin: 0;
   overflow: hidden;
   max-height: calc(var(--list-height) * 2);
-  border-top: var(--border);
   transition: var(--transition);
 }
 
