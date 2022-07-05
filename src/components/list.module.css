@@ -1,7 +1,6 @@
 .Wrapper {
   --header-color: var(--brand-color);
   --transition: all 0.4s var(--ease);
-  border-bottom: var(--border);
 }
 
 .List {
@@ -29,6 +28,7 @@
 .ListItem {
   display: flex;
   flex-flow: column;
+  border-bottom: var(--border);
 }
 
 .ListItem::before {
@@ -36,10 +36,6 @@
   margin: 0.5rem 1rem;
   font-size: 0.8em;
   color: var(--gray);
-}
-
-.ListItem:not(first-child) {
-  border-top: var(--border);
 }
 
 .ListTitle {
