@@ -117,6 +117,7 @@ const Form = ({
               Cancel
             </button>
             <button
+              data-testid="submit"
               type="submit"
               className={Styles.Submit}
               disabled={submitting}

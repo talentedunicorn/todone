@@ -1,6 +1,7 @@
 import React from "react";
 import { render, cleanup, fireEvent, waitFor } from "@testing-library/react";
 import Form from "./form";
+import CodeMirror from "codemirror";
 
 // Workaround: https://github.com/jsdom/jsdom/issues/3002
 document.createRange = () => {
@@ -35,6 +36,7 @@ describe("<Form />", () => {
     });
   });
 
+  // Unable to properly test Codemirror setters
   xit("should be able to submit", async () => {
     const mockHandleSubmit = jest.fn().mockResolvedValue(true);
     const content = "Testing...";
@@ -45,9 +47,13 @@ describe("<Form />", () => {
         defaultValue={content}
       />
     );
-    // const input = getByTestId("form").querySelector('[role="presentation"]')!;
+    fireEvent.click(getByTestId("Toggle"));
+
+    const input = getByTestId("form-input") as HTMLTextAreaElement;
+    const editor = CodeMirror.fromTextArea(input);
+    editor.getDoc().setValue(content);
     // fireEvent.change(input, { target: { value: content } });
-    fireEvent.submit(getByTestId("form"));
+    fireEvent.click(getByTestId("submit"));
     await waitFor(() => {
       expect(mockHandleSubmit).toHaveBeenCalledWith({
         content: content,
