@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - master
-      - development
+      - hosted
   pull_request:
     branches:
       - master
-      - development
+      - hosted
 
 env:
   REACT_APP_DB_NAME: todone_github
@@ -19,9 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
-          node-version: "14.x"
+          node-version: "^16.0"
       - run: npm install
       - run: npm run test:coverage
       - uses: codecov/codecov-action@v1
