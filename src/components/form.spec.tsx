@@ -1,6 +1,24 @@
 import React from "react";
 import { render, cleanup, fireEvent, waitFor } from "@testing-library/react";
 import Form from "./form";
+import CodeMirror from "codemirror";
+
+// Workaround: https://github.com/jsdom/jsdom/issues/3002
+document.createRange = () => {
+  const range = new Range();
+
+  range.getBoundingClientRect = jest.fn();
+
+  range.getClientRects = () => {
+    return {
+      item: () => null,
+      length: 0,
+      [Symbol.iterator]: jest.fn(),
+    };
+  };
+
+  return range;
+};
 
 afterEach(() => cleanup());
 
@@ -20,29 +38,36 @@ describe("<Form />", () => {
 
   it("should be able to submit", async () => {
     const mockHandleSubmit = jest.fn().mockResolvedValue(true);
-    const testTodo = "Testing...";
+    const content = "Testing...";
     const { getByTestId } = render(
-      <Form handleFormSubmit={mockHandleSubmit} onReset={jest.fn()} />
+      <Form
+        handleFormSubmit={mockHandleSubmit}
+        onReset={jest.fn()}
+        defaultValue={content}
+      />
     );
-    fireEvent.click(getByTestId("Toggle"));
-    const input = getByTestId("form-input");
-    fireEvent.change(input, { target: { value: testTodo } });
-    fireEvent.submit(getByTestId("form"));
+
+    const input = getByTestId("form-input") as HTMLTextAreaElement;
+    const editor = CodeMirror.fromTextArea(input);
+    editor.getDoc().setValue(content);
+    fireEvent.click(getByTestId("submit"));
     await waitFor(() => {
       expect(mockHandleSubmit).toHaveBeenCalledWith({
-        content: testTodo,
+        content: content,
         completed: false,
       });
     });
   });
 
-  it("should not submit todo with less than 3 characters", () => {
+  it("should not submit empty data", () => {
     const mockHandleSubmit = jest.fn().mockResolvedValue(true);
     const { getByTestId } = render(
       <Form handleFormSubmit={mockHandleSubmit} onReset={jest.fn()} />
     );
     fireEvent.click(getByTestId("Toggle"));
-    fireEvent.change(getByTestId("form-input"), { target: { value: "A" } });
+    const input = getByTestId("form-input") as HTMLTextAreaElement;
+    const editor = CodeMirror.fromTextArea(input);
+    editor.getDoc().setValue("");
     fireEvent.submit(getByTestId("form"));
     expect(mockHandleSubmit).not.toHaveBeenCalled();
   });
@@ -56,6 +81,6 @@ describe("<Form />", () => {
         onReset={jest.fn()}
       />
     );
-    expect(getByTestId("form-input")).toHaveTextContent(defaultValue);
+    expect(getByTestId("form")).toHaveTextContent(defaultValue);
   });
 });
