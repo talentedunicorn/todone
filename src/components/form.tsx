@@ -25,7 +25,7 @@ const Form = ({
     e.preventDefault();
     const content = editor!.value();
 
-    if (content.trim.length < 1) return;
+    if (content.trim().length < 1) return;
 
     setSubmitting(true);
     setEditing(false);

@@ -36,8 +36,7 @@ describe("<Form />", () => {
     });
   });
 
-  // Unable to properly test Codemirror setters
-  xit("should be able to submit", async () => {
+  it("should be able to submit", async () => {
     const mockHandleSubmit = jest.fn().mockResolvedValue(true);
     const content = "Testing...";
     const { getByTestId } = render(
@@ -47,12 +46,10 @@ describe("<Form />", () => {
         defaultValue={content}
       />
     );
-    fireEvent.click(getByTestId("Toggle"));
 
     const input = getByTestId("form-input") as HTMLTextAreaElement;
     const editor = CodeMirror.fromTextArea(input);
     editor.getDoc().setValue(content);
-    // fireEvent.change(input, { target: { value: content } });
     fireEvent.click(getByTestId("submit"));
     await waitFor(() => {
       expect(mockHandleSubmit).toHaveBeenCalledWith({
@@ -68,7 +65,9 @@ describe("<Form />", () => {
       <Form handleFormSubmit={mockHandleSubmit} onReset={jest.fn()} />
     );
     fireEvent.click(getByTestId("Toggle"));
-    fireEvent.change(getByTestId("form-input"), { target: { value: "" } });
+    const input = getByTestId("form-input") as HTMLTextAreaElement;
+    const editor = CodeMirror.fromTextArea(input);
+    editor.getDoc().setValue("");
     fireEvent.submit(getByTestId("form"));
     expect(mockHandleSubmit).not.toHaveBeenCalled();
   });
