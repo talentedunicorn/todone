@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import EasyMDE from "easymde";
 import Styles from "./form.module.css";
+import "easymde/dist/easymde.min.css";
 
 const Form = ({
   handleFormSubmit,
@@ -13,18 +15,17 @@ const Form = ({
   defaultValue?: string;
   onReset: () => void;
 }) => {
-  const [content, setContent] = useState<string>("");
+  const [editor, setEditor] = useState<EasyMDE>();
   const [editing, setEditing] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [hidden, setHidden] = useState<boolean>(true);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
+    const content = editor!.value();
 
-    // Todo is atleast 3 characters long
-    if (content.trim().length < 3) {
-      return false;
-    }
+    if (content.trim().length < 1) return;
 
     setSubmitting(true);
     setEditing(false);
@@ -38,21 +39,44 @@ const Form = ({
   };
 
   const reset = () => {
-    setContent("");
     setEditing(false);
     setHidden(true);
     onReset();
+    editor!.value("");
   };
 
   useEffect(() => {
-    const inputEl = inputRef.current;
     if (defaultValue) {
-      setContent(defaultValue);
-      inputEl && inputEl.focus();
       setEditing(true);
       setHidden(false);
     }
-  }, [defaultValue, inputRef]);
+  }, [defaultValue]);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      setEditor(
+        new EasyMDE({
+          element: inputRef.current as HTMLElement,
+          placeholder: "Start typing...",
+          initialValue: defaultValue,
+          toolbar: [
+            "bold",
+            "italic",
+            "heading-bigger",
+            "heading-smaller",
+            "|",
+            "code",
+            "quote",
+            "link",
+            "|",
+            "image",
+            "unordered-list",
+            "ordered-list",
+          ],
+        })
+      );
+    }
+  }, [hidden]);
 
   const buttonText = (status: "editing" | "submitting" | "initial") => {
     switch (status) {
@@ -85,16 +109,15 @@ const Form = ({
             data-testid="form-input"
             className={Styles.Input}
             rows={1}
-            value={content}
             ref={inputRef}
             placeholder="Start typing..."
-            onChange={(e) => setContent(e.target.value)}
           />
           <div className={Styles.Controls}>
             <button className={Styles.Reset} onClick={reset}>
               Cancel
             </button>
             <button
+              data-testid="submit"
               type="submit"
               className={Styles.Submit}
               disabled={submitting}

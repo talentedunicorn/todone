@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - master
-      - development
+      - hosted
   pull_request:
     branches:
       - master
-      - development
+      - hosted
 
 env:
   REACT_APP_DB_NAME: todone_github

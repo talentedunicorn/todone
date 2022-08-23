@@ -9,6 +9,7 @@
     "@types/react": "^18.0.5",
     "@types/react-dom": "^18.0.1",
     "axios": "^0.26.1",
+    "easymde": "^2.16.1",
     "file-saver": "^2.0.5",
     "localforage": "^1.10.0",
     "markdown-to-jsx": "^7.1.7",
