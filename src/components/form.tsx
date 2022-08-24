@@ -56,6 +56,7 @@ const Form = ({
     if (inputRef.current) {
       setEditor(
         new EasyMDE({
+          maxHeight: "50vh",
           element: inputRef.current as HTMLElement,
           placeholder: "Start typing...",
           initialValue: defaultValue,
