@@ -10,7 +10,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
-		"storybook": "start-storybook -p 6006",
+		"storybook": "start-storybook -p 6006 --no-open",
 		"build-storybook": "build-storybook",
 		"test-storybook": "test-storybook"
 	},

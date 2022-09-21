@@ -1,0 +1,52 @@
+.button {
+	--button-color: var(--black);
+	--button-bg: var(--white);
+	--border-color: var(--black);
+
+	font-family: inherit;
+	font-weight: bold;
+	font-size: 1rem;
+	border: 0.2em solid var(--border-color);
+	border-radius: 0.7em;
+	cursor: pointer;
+	display: inline-block;
+	line-height: 1;
+	background-color: var(--button-bg);
+	color: var(--button-color);
+	padding: 0.5em;
+}
+
+.button:hover:not(:disabled):not(.link) {
+	background-color: var(--button-color);
+	color: var(--button-bg);
+}
+
+.button:disabled {
+	--button-color: var(--gray);
+	--border-color: var(--gray);
+	--button-bg: var(--gray-light);
+}
+
+.primary {
+	--button-color: var(--primary);
+	--border-color: var(--primary);
+}
+
+.link {
+	--button-color: var(--primary);
+	border: none;
+}
+
+.link:hover:not(:disabled) {
+	--button-bg: var(--gray-light);
+	--button-color: var(--black);
+}
+
+.small {
+	padding: 0.2em 0.5em;
+	border-radius: 0.5em;
+}
+
+.large {
+	font-size: 1.2rem;
+}
