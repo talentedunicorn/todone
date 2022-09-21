@@ -5,7 +5,7 @@ export default {
 	component: Page
 };
 
-const Template = (args) => ({
+const Template = (args: any) => ({
 	Component: Page,
 	props: args
 });

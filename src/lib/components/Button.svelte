@@ -1,17 +1,14 @@
 <script>
-	import './button.css';
 	import { createEventDispatcher } from 'svelte';
+	import './button.css';
 
-	export let variant = 'primary';
+	export let variant = '';
 	export let size = '';
-	export let label = '';
 	export let disabled = false;
+	export let selected = false;
 
 	const dispatch = createEventDispatcher();
 
-	/**
-	 * Optional click handler
-	 */
 	function onClick(event) {
 		dispatch('click', event.detail);
 	}
@@ -19,9 +16,11 @@
 
 <button
 	type="button"
-	class={['button', `${size}`, `${variant}`].join(' ')}
+	class={['button', `${size}`, `${variant}`, `${selected ? 'selected' : ''}`]
+		.filter((c) => c.trim().length > 0)
+		.join(' ')}
 	{disabled}
 	on:click={onClick}
 >
-	{label}
+	<slot>Button text</slot>
 </button>

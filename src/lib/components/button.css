@@ -10,6 +10,7 @@
 	border-radius: 0.7em;
 	cursor: pointer;
 	display: inline-block;
+	text-decoration: none;
 	line-height: 1;
 	background-color: var(--button-bg);
 	color: var(--button-color);
@@ -34,11 +35,13 @@
 
 .link {
 	--button-color: var(--primary);
-	border: none;
+	--border-color: var(--white);
 }
 
+.link.selected:not(:disabled),
 .link:hover:not(:disabled) {
 	--button-bg: var(--gray-light);
+	--border-color: var(--gray-light);
 	--button-color: var(--black);
 }
 
