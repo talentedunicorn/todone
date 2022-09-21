@@ -10,4 +10,4 @@ const Template = (args) => ({
 	props: args
 });
 
-export const Default = Template.bind({});
+export const Empty = Template.bind({});

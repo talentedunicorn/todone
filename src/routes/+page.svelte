@@ -1,2 +1,16 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script>
+	import Logo from '../lib/components/Logo.svelte';
+</script>
+
+<h1 title="ToDone"><Logo /></h1>
+<p>Coming soon...</p>
+
+<style>
+	h1 {
+		display: inline-block;
+		border: var(--border);
+		padding: 0.2em;
+		border-radius: 0.2em;
+		margin: 0;
+	}
+</style>
