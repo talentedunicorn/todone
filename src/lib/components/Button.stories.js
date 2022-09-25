@@ -22,14 +22,14 @@ const Template = (args) => ({
 	}
 });
 
-export const Primary = Template.bind({});
-Primary.args = {
-	variant: 'primary'
-};
-
 export const Default = Template.bind({});
 Default.args = {
 	variant: 'default'
+};
+
+export const Primary = Template.bind({});
+Primary.args = {
+	variant: 'primary'
 };
 
 export const Link = Template.bind({});

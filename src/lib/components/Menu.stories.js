@@ -4,7 +4,12 @@ export default {
 	title: 'Components/Menu',
 	component: Menu,
 	argTypes: {
-		title: { control: 'text' }
+		title: { control: 'text' }, 
+		menuItems: {
+			control: {
+				type: null
+			}
+		}
 	},
 	parameters: {
 		layout: 'fullscreen',

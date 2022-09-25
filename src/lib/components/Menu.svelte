@@ -4,7 +4,7 @@
 
 	export let title = '';
 	let opened = true;
-	/**
+	export /**
 	 * @type {{label: string, selected?: boolean }[]}
 	 */
 	let menuItems = [];
@@ -42,16 +42,18 @@
 	nav,
 	nav > div {
 		display: flex;
-		flex-flow: column;
 		gap: 1rem;
 	}
-
+	
 	nav {
+		flex-flow: column;
 		background-color: var(--nav-bg, var(--gray-light));
 		padding: 1rem;
 		align-items: start;
+		transition: all var(--ease) 0.7s;
+		border-bottom-right-radius: 1rem;
 	}
-
+	
 	.closed {
 		--nav-bg: none;
 		width: max-content;

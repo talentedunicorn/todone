@@ -28,15 +28,12 @@
 	}
 
 	header {
-		background: var(--white);
 		display: flex;
 		align-items: start;
 		position: sticky;
 		top: 0;
-		border-bottom: 1px solid var(--gray-light);
-		/* max-height: 100vh; */
 	}
-
+	
 	.menu {
 		flex: 1;
 		max-height: 100vh;
@@ -50,5 +47,15 @@
 		padding: 0.2em;
 		border-radius: 0.2em;
 		margin: 1rem;
+	}
+
+	main {
+		padding: 2rem;
+		max-width: 80rem;
+		width: 100%;
+		margin: 0 auto 4rem;
+		display: flex;
+		flex-flow: column;
+		gap: 2rem;
 	}
 </style>
