@@ -1,6 +1,9 @@
 <script>
 	import { fade, fly } from 'svelte/transition';
+	import { createEventDispatcher } from 'svelte';
 	import Button from './Button.svelte';
+
+	const dispatch = createEventDispatcher();
 
 	export let title = '';
 	let opened = true;
@@ -32,7 +35,7 @@
 				<header>{title}</header>
 			{/if}
 			{#each menuItems as menuitem (menuitem.label)}
-				<Button variant="link" size="large" selected={menuitem.selected}>{menuitem.label}</Button>
+				<Button variant="link" size="large" selected={menuitem.selected} on:click={() => dispatch('goTo', menuitem.label)}>{menuitem.label}</Button>
 			{/each}
 		</div>
 	{/if}
@@ -42,14 +45,14 @@
 	nav,
 	nav > div {
 		display: flex;
-		gap: 1rem;
+		gap: 2rem;
 	}
 	
 	nav {
-		flex-flow: column;
 		background-color: var(--nav-bg, var(--gray-light));
 		padding: 1rem;
 		align-items: start;
+		flex-flow: column;
 		transition: all var(--ease) 0.7s;
 		border-bottom-right-radius: 1rem;
 	}
@@ -62,5 +65,11 @@
 	header {
 		font-size: 2rem;
 		color: var(--gray);
+	}
+
+	@media screen and (min-width: 50rem) {
+		nav > div {
+			flex-flow: column;
+		}
 	}
 </style>

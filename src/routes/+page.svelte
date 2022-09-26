@@ -1,61 +1,82 @@
 <script>
+	import { fly } from 'svelte/transition';
 	import Logo from '../lib/components/Logo.svelte';
 	import Menu from '../lib/components/Menu.svelte';
 
-	let menuItems = [
-		{ label: 'ToDo', selected: true },
-		{ label: 'Done', selected: false }
-	];
+	let currentTab = 'To Do'
+	$: menuItems = [
+		{ label: 'To Do' },
+		{ label: 'Done' },
+	].map((item) => ({...item, selected: item.label === currentTab }));
 </script>
 
-<div class="wrapper">
-	<header>
-		<div class="menu">
-			<Menu {menuItems} />
-		</div>
-		<h1 title="ToDone"><Logo /></h1>
-	</header>
+<div class="Wrapper">
+	<div class="Menu">
+		<Menu title="Lists" {menuItems} on:goTo={(event) => { currentTab = event.detail }} />
+	</div>
+	<h1 class="Logo" title="ToDone"><Logo /></h1>
 	<main>
+		{#key currentTab}
+			<h2 class="Title" in:fly={{ y: -20, duration: 500 }}>{currentTab}</h2>
+		{/key}
 		<p>Coming soon...</p>
 	</main>
 </div>
 
 <style>
-	.wrapper {
-		height: 100vh;
+	.Wrapper {
+		min-height: 100vh;
 		display: grid;
+		row-gap: 2rem;
+		grid-template-areas: "menu logo" "content content";
 		grid-template-rows: min-content auto;
-	}
-
-	header {
-		display: flex;
+		grid-template-columns: auto min-content;
 		align-items: start;
+	}
+	
+	.Menu,
+	.Logo {
 		position: sticky;
 		top: 0;
 	}
 	
-	.menu {
+	.Menu {
+		grid-area: menu;
 		flex: 1;
 		max-height: 100vh;
-		overflow-y: auto;
-		overscroll-behavior: contain;
 	}
-
-	h1 {
+	
+	.Logo {
+		grid-area: logo;
 		display: inline-block;
 		border: var(--border);
 		padding: 0.2em;
 		border-radius: 0.2em;
 		margin: 1rem;
+		top: 1rem;
 	}
-
+	
 	main {
-		padding: 2rem;
+		padding: 0 2rem;
 		max-width: 80rem;
 		width: 100%;
 		margin: 0 auto 4rem;
 		display: flex;
 		flex-flow: column;
 		gap: 2rem;
+	}
+	
+	.Title {
+		font-size: clamp(2rem, 5vw, 5rem);
+		font-weight: 100;
+		margin: 0;
+		color: var(--gray);
+	}
+
+	@media screen and (min-width: 50rem) {
+		.Wrapper {
+			grid-template-areas: "menu content logo";
+			grid-template-columns: max-content auto min-content;
+		}
 	}
 </style>
