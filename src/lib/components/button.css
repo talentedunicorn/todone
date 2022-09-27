@@ -27,6 +27,7 @@
 	--button-color: var(--gray);
 	--border-color: var(--gray);
 	--button-bg: var(--gray-light);
+	pointer-events: none;
 }
 
 .primary {

@@ -4,7 +4,8 @@ export default {
 	title: 'Components/Menu',
 	component: Menu,
 	argTypes: {
-		title: { control: 'text' }, 
+		goTo: { action: 'goTo' },
+		title: { control: 'text' },
 		menuItems: {
 			control: {
 				type: null
@@ -19,7 +20,10 @@ export default {
 
 const Template = (args) => ({
 	Component: Menu,
-	props: args
+	props: args,
+	on: {
+		goTo: args.goTo
+	}
 });
 
 export const Tasks = Template.bind({});

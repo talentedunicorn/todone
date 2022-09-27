@@ -1,65 +1,95 @@
 <script>
-  import SvelteMarkdown from 'svelte-markdown';
-  import Button from "./Button.svelte";
-  export let title = ''
-  export let body = ''
-  export /**
-	 * @type {Date?}
-	 */
-  let updated = null
+	import { createEventDispatcher } from 'svelte';
+	import SvelteMarkdown from 'svelte-markdown';
+	import Button from './Button.svelte';
 
-  function formatTimestamp(value){
-    if (!value) return ''
-    return Intl.DateTimeFormat("en-US", {
-      dateStyle: "medium",
-      timeStyle: "medium",
-    }).format(value);
-  };
+	const dispatch = createEventDispatcher();
+
+	export let title = '';
+	export let body = '';
+	export let completed = false;
+	export /**
+	 * @type {number}
+	 */
+	let updated;
+
+	$: completeText = completed ? 'Mark Incomplete' : 'Mark Completed';
+	function formatTimestamp(/** @type {number} */ value) {
+		if (!value) return '';
+		// Check for values without milliseconds 
+		if (value.toString().length < 13) {
+			value = value * 1000
+		}
+		return Intl.DateTimeFormat('en-US', {
+			dateStyle: 'medium',
+			timeStyle: 'medium'
+		}).format(new Date(value));
+	}
 </script>
 
 <section>
-  <h3 data-updated={formatTimestamp(updated)}>{title}</h3>
-  <div>
-    <SvelteMarkdown source={body} />
-  </div>
-  <div class="actions">
-    <Button size="small">Delete</Button>
-    <Button size="small">Edit</Button>
-    <Button size="small" variant="primary">Mark complete</Button>
-  </div>
+	<header data-updated={formatTimestamp(updated)}>
+		<h3>{title}</h3>
+	</header>
+	<div class="Content">
+		<SvelteMarkdown source={body} />
+	</div>
+	<div class="Actions">
+		<Button size="small" on:click={() => dispatch('delete')}>Delete</Button>
+		<Button size="small" on:click={() => dispatch('edit')}>Edit</Button>
+		<Button size="small" variant="primary" on:click={() => dispatch('complete')}
+			>{completeText}</Button
+		>
+	</div>
 </section>
 
 <style>
-  section,
-  h3 {
-    display: flex;
-    flex-flow: column;
-  }
+	section,
+	header {
+		display: flex;
+	}
 
-  section {
-    padding: 1rem;
-    border: 1px solid var(--gray-light);
-    border-radius: 0.5em;
-    gap: 1rem;
-    background: var(--white);
-  }
-  
-  h3 {
-    font-size: 2rem;
-    margin: 0;
-  }
+	section {
+		flex-wrap: wrap;
+		padding: 1rem;
+		border: 1px solid var(--gray-light);
+		border-radius: 0.5em;
+		gap: 1rem;
+		background: var(--white);
+	}
 
-  h3::before {
-    content: attr(data-updated);
-    font-size: 0.9rem;
-    font-weight: normal;
-    color: var(--gray);
-    align-self: end;
-  }
+	header {
+		flex-flow: column;
+		font-size: 1.5rem;
+		gap: 1rem;
+	}
 
-  .actions {
-    display: flex;
-    justify-content: end;
-    gap: 1rem;
-  }
+	h3 {
+		margin: 0;
+	}
+
+	header::before {
+		content: attr(data-updated);
+		font-size: 0.9rem;
+		font-weight: normal;
+		color: var(--gray);
+	}
+
+	header,
+	.Actions,
+	.Content {
+		flex: 100%;
+	}
+
+	.Actions {
+		display: flex;
+		justify-content: end;
+		gap: 1rem;
+	}
+
+	@media screen and (min-width: 50rem) {
+		header {
+			justify-content: space-between;
+		}
+	}
 </style>

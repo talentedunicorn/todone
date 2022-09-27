@@ -35,7 +35,12 @@
 				<header>{title}</header>
 			{/if}
 			{#each menuItems as menuitem (menuitem.label)}
-				<Button variant="link" size="large" selected={menuitem.selected} on:click={() => dispatch('goTo', menuitem.label)}>{menuitem.label}</Button>
+				<Button
+					variant="link"
+					size="large"
+					selected={menuitem.selected}
+					on:click={() => dispatch('goTo', menuitem.label)}>{menuitem.label}</Button
+				>
 			{/each}
 		</div>
 	{/if}
@@ -47,7 +52,7 @@
 		display: flex;
 		gap: 2rem;
 	}
-	
+
 	nav {
 		background-color: var(--nav-bg, var(--gray-light));
 		padding: 1rem;
@@ -56,7 +61,7 @@
 		transition: all var(--ease) 0.7s;
 		border-bottom-right-radius: 1rem;
 	}
-	
+
 	.closed {
 		--nav-bg: none;
 		width: max-content;
