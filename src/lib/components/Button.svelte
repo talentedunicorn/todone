@@ -4,6 +4,7 @@
 
 	export let variant = '';
 	export let size = '';
+	export let type = 'button';
 	export let disabled = false;
 	export let selected = false;
 
@@ -15,7 +16,7 @@
 </script>
 
 <button
-	type="button"
+	{type}
 	class={['button', `${size}`, `${variant}`, `${selected ? 'selected' : ''}`]
 		.filter((c) => c.trim().length > 0)
 		.join(' ')}

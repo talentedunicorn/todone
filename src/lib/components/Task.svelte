@@ -23,9 +23,9 @@
     <SvelteMarkdown source={body} />
   </div>
   <div class="actions">
-    <Button>Delete</Button>
-    <Button>Edit</Button>
-    <Button variant="primary">Mark complete</Button>
+    <Button size="small">Delete</Button>
+    <Button size="small">Edit</Button>
+    <Button size="small" variant="primary">Mark complete</Button>
   </div>
 </section>
 
@@ -41,6 +41,7 @@
     border: 1px solid var(--gray-light);
     border-radius: 0.5em;
     gap: 1rem;
+    background: var(--white);
   }
   
   h3 {

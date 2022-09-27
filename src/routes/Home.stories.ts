@@ -1,7 +1,7 @@
 import Page from './+page.svelte';
 
 export default {
-	title: 'Pages/Home',
+	title: 'Pages',
 	component: Page
 };
 
@@ -10,4 +10,4 @@ const Template = (args: any) => ({
 	props: args
 });
 
-export const Empty = Template.bind({});
+export const Home = Template.bind({});
