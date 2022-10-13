@@ -8,27 +8,12 @@
 	export let title = '';
 	export let body = '';
 	export let completed = false;
-	export /**
-	 * @type {number}
-	 */
-	let updated;
 
 	$: completeText = completed ? 'Mark Incomplete' : 'Mark Completed';
-	function formatTimestamp(/** @type {number} */ value) {
-		if (!value) return '';
-		// Check for values without milliseconds 
-		if (value.toString().length < 13) {
-			value = value * 1000
-		}
-		return Intl.DateTimeFormat('en-US', {
-			dateStyle: 'medium',
-			timeStyle: 'medium'
-		}).format(new Date(value));
-	}
 </script>
 
 <section>
-	<header data-updated={formatTimestamp(updated)}>
+	<header data-updated>
 		<h3>{title}</h3>
 	</header>
 	<div class="Content">

@@ -1,6 +1,11 @@
 # ToDone
 
-A small ToDo list app with markdown support
+An offline-first ToDo list app with markdown support
+
+### Features
+
+- Offline-first
+- Markdown support
 
 ## Developing
 

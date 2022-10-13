@@ -5,19 +5,19 @@
 	import Logo from '../lib/components/Logo.svelte';
 	import Menu from '../lib/components/Menu.svelte';
 	import Task from '../lib/components/Task.svelte';
-	import { db, add, edit, remove, toggleComplete } from '../rxdb-store';
+	import { db, add, update, remove } from '../pouchdb-store';
 
 	let currentTab = 'To Do';
-	/** @type {import('rxdb').RxDatabase}*/
-	let db$;
-	/** @type {any[]}*/
-	let completedTodos = [];
-	/** @type {any[]}*/
-	let incompleteTodos = [];
+	/** @type {import('$lib/types').Todo[]} */
+	let data = [];
+	/** @type {import('$lib/types').Todo[]}*/
+	$: completedTodos = data.filter((t) => t.completed === true);
+	/** @type {import('$lib/types').Todo[]}*/
+	$: incompleteTodos = data.filter((t) => t.completed === false);
 	/**
-	 * @type {{ id: string, title: string, value: string }}
+	 * @type {import('$lib/types').Todo | null}
 	 */
-	let editing = { id: '', title: '', value: '' };
+	let task = null;
 	$: menuItems = [{ label: 'To Do' }, { label: 'Done' }].map((item) => ({
 		...item,
 		selected: item.label === currentTab
@@ -25,54 +25,45 @@
 
 	$: renderedTodos = currentTab === 'To Do' ? incompleteTodos : completedTodos;
 
-	onMount(() => {
-		// Load data on mount
-		const getTodos = async () => {
-			db$ = await db();
-			db$.todos
-				.find({
-					selector: {
-						completed: {
-							$eq: true
-						}
-					}
-				})
-				.$.subscribe({
-					next: (data) => {
-						completedTodos = data;
-					}
-				});
-			db$.todos
-				.find({
-					selector: {
-						completed: {
-							$eq: false
-						}
-					}
-				})
-				.$.subscribe({
-					next: (data) => {
-						incompleteTodos = data;
-					}
-				});
-		};
+	const loadTodos = async () => {
+		const todos = (await db.allDocs({ include_docs: true, descending: true })).rows.map(
+			(t) => t.doc
+		);
+		data = [...todos];
+	};
 
-		getTodos();
+	onMount(() => {
+		loadTodos();
+		db.changes({
+			since: 'now',
+			live: true
+		}).on('change', loadTodos);
 	});
 
 	function clearEdit() {
-		editing = { id: '', title: '', value: '' };
+		task = null;
 	}
 
 	async function handleUpdate(
-		/** @type import('svelte').ComponentEvents<Form>['update']> */ { detail }
+		/** @type {import('svelte').ComponentEvents<Form>['update']} */ { detail }
 	) {
-		edit(detail);
-		clearEdit();
+		update(detail).then(() => {
+			clearEdit();
+		});
 	}
 
-	function handleEdit(task) {
-		editing = task;
+	async function handleCreate(
+		/** @type {import('svelte').ComponentEvents<Form>['submit']} */ { detail }
+	) {
+		await add(detail);
+	}
+
+	function handleEdit(/** @type {import('$lib/types').Todo} */ value) {
+		task = value;
+	}
+
+	function handleToggleComplete(/** @type {import('$lib/types').Todo} */ value) {
+		update({ ...value, completed: !value?.completed });
 	}
 </script>
 
@@ -90,35 +81,30 @@
 		{#key currentTab}
 			<h2 class="Title" in:fly={{ y: -10 }}>{currentTab}</h2>
 		{/key}
-		{#if currentTab === 'To Do' || editing.id !== ''}
+		{#if currentTab === 'To Do' || task}
 			<div in:fly={{ y: 20 }}>
 				<Form
-					data={editing}
-					on:submit={(e) => add(e.detail)}
+					defaultValue={task}
+					on:submit={handleCreate}
 					on:update={handleUpdate}
 					on:clear={clearEdit}
 				/>
 			</div>
 		{/if}
-		{#await renderedTodos}
-			<p class="Message">💨 Loading...</p>
-		{:then results}
-			{#if results.length > 0}
-				{#each results as { id, title, value, updated, completed }}
-					<Task
-						{title}
-						body={value}
-						{updated}
-						{completed}
-						on:edit={() => handleEdit({ id, title, value })}
-						on:delete={() => remove(id)}
-						on:complete={() => toggleComplete(id)}
-					/>
-				{/each}
-			{:else}
-				<p class="Message">Nothing found... 👀</p>
-			{/if}
-		{/await}
+		{#if renderedTodos.length > 0}
+			{#each renderedTodos as { _id, _rev, title, value, completed }}
+				<Task
+					{title}
+					body={value}
+					{completed}
+					on:edit={() => handleEdit({ _id, _rev, title, value, completed })}
+					on:delete={() => remove(_id, _rev)}
+					on:complete={() => handleToggleComplete({ _id, _rev, title, value, completed })}
+				/>
+			{/each}
+		{:else}
+			<p class="Message">Nothing found... 👀</p>
+		{/if}
 	</main>
 </div>
 

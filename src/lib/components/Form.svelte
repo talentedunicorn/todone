@@ -4,18 +4,21 @@
 
 	const dispatch = createEventDispatcher();
 
-	export let data = {
-		id: '',
+	/** @type {import('$lib/types').Todo |null} */
+	export let defaultValue = null;
+
+	$: data = defaultValue || {
 		title: '',
 		value: ''
 	};
 
-	$: isEdit = data.id.trim().length > 0;
+	$: isEdit = defaultValue !== null;
 
 	$: invalid = data.title.trim().length < 1 || data.value.trim().length < 1;
 	$: buttonText = isEdit ? 'Update' : 'Submit';
 	function clear() {
-		data = { id: '', title: '', value: '' };
+		defaultValue = null;
+		data = { title: '', value: '' };
 		dispatch('clear');
 	}
 

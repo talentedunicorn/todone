@@ -27,6 +27,7 @@
 		"@storybook/testing-library": "^0.0.13",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
+		"@types/pouchdb": "^6.4.0",
 		"@typescript-eslint/eslint-plugin": "^5.27.0",
 		"@typescript-eslint/parser": "^5.27.0",
 		"babel-loader": "^8.2.5",
@@ -47,8 +48,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"rxdb": "^13.4.0",
-		"rxjs": "^7.5.7",
+		"pouchdb": "^7.3.0",
 		"svelte-markdown": "^0.2.3"
 	}
 }
