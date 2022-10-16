@@ -5,7 +5,7 @@
 	import Logo from '../lib/components/Logo.svelte';
 	import Menu from '../lib/components/Menu.svelte';
 	import Task from '../lib/components/Task.svelte';
-	import { db, add, update, remove } from '../pouchdb-store';
+	import { getTodos, add, update, remove, onChangeHandler } from '../pouchdb-store';
 
 	let currentTab = 'To Do';
 	/** @type {import('$lib/types').Todo[]} */
@@ -26,18 +26,13 @@
 	$: renderedTodos = currentTab === 'To Do' ? incompleteTodos : completedTodos;
 
 	const loadTodos = async () => {
-		const todos = (await db.allDocs({ include_docs: true, descending: true })).rows.map(
-			(t) => t.doc
-		);
+		const todos = await getTodos();
 		data = [...todos];
 	};
 
 	onMount(() => {
 		loadTodos();
-		db.changes({
-			since: 'now',
-			live: true
-		}).on('change', loadTodos);
+		onChangeHandler(loadTodos);
 	});
 
 	function clearEdit() {

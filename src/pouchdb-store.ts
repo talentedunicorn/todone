@@ -21,4 +21,18 @@ const remove = async (id: string, rev: string) => {
 	await db.remove(id, rev);
 };
 
-export { db, add, update, remove };
+const getTodos = async () => {
+	const todos = (await db.allDocs({ include_docs: true, descending: true })).rows.map(
+		(t) => t.doc
+	) as Todo[];
+	return todos;
+};
+
+const onChangeHandler = (callback: () => void) => {
+	db.changes({
+		since: 'now',
+		live: true
+	}).on('change', callback);
+};
+
+export { getTodos, add, update, remove, onChangeHandler };
