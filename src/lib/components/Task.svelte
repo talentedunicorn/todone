@@ -53,13 +53,6 @@
 		margin: 0;
 	}
 
-	header::before {
-		content: attr(data-updated);
-		font-size: 0.9rem;
-		font-weight: normal;
-		color: var(--gray);
-	}
-
 	header,
 	.Actions,
 	.Content {

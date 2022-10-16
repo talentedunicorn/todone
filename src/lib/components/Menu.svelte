@@ -50,6 +50,7 @@
 	nav,
 	nav > div {
 		display: flex;
+		flex-flow: column;
 		gap: 2rem;
 	}
 
@@ -57,7 +58,6 @@
 		background-color: var(--nav-bg, var(--gray-light));
 		padding: 1rem;
 		align-items: start;
-		flex-flow: column;
 		transition: all var(--ease) 0.7s;
 		border-bottom-right-radius: 1rem;
 	}
@@ -70,11 +70,5 @@
 	header {
 		font-size: 2rem;
 		color: var(--gray);
-	}
-
-	@media screen and (min-width: 50rem) {
-		nav > div {
-			flex-flow: column;
-		}
 	}
 </style>

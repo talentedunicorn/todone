@@ -73,6 +73,7 @@
 			{menuItems}
 			on:goTo={(event) => {
 				currentTab = event.detail;
+				clearEdit();
 			}}
 		/>
 	</div>
@@ -113,18 +114,17 @@
 		min-height: 100vh;
 		display: grid;
 		row-gap: 2rem;
-		grid-template-areas: 'menu logo' 'content content';
+		grid-template-areas: 'menu . logo' 'content content content';
 		grid-template-rows: min-content auto;
-		grid-template-columns: auto min-content;
+		grid-template-columns: min-content;
 		align-items: start;
 	}
 
 	.Menu {
 		grid-area: menu;
+		max-height: 100vh;
 		position: sticky;
 		top: 0;
-		flex: 1;
-		max-height: 100vh;
 	}
 
 	.Logo {
@@ -140,6 +140,7 @@
 	}
 
 	main {
+		grid-area: content;
 		padding: 0 2rem;
 		max-width: 80rem;
 		width: 100%;
@@ -147,7 +148,6 @@
 		display: flex;
 		flex-flow: column;
 		gap: 2rem;
-		grid-column: span 2;
 	}
 
 	.Title {

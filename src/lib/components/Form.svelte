@@ -6,6 +6,10 @@
 
 	/** @type {import('$lib/types').Todo |null} */
 	export let defaultValue = null;
+	/**
+	 * @type {HTMLInputElement}
+	 */
+	let titleInput;
 
 	$: data = defaultValue || {
 		title: '',
@@ -14,8 +18,14 @@
 
 	$: isEdit = defaultValue !== null;
 
+	$: if (isEdit && titleInput) {
+		window.scrollTo({ top: titleInput.scrollHeight });
+		titleInput.focus();
+	}
+
 	$: invalid = data.title.trim().length < 1 || data.value.trim().length < 1;
 	$: buttonText = isEdit ? 'Update' : 'Submit';
+
 	function clear() {
 		defaultValue = null;
 		data = { title: '', value: '' };
@@ -30,7 +40,13 @@
 
 <form on:submit|preventDefault={submit}>
 	<label class="visually-hidden" for="title">Title</label>
-	<input type="text" id="title" placeholder="Title" bind:value={data.title} />
+	<input
+		type="text"
+		id="title"
+		placeholder="Title"
+		bind:value={data.title}
+		bind:this={titleInput}
+	/>
 	<label class="visually-hidden" for="content">Content</label>
 	<textarea id="content" rows="5" placeholder="Start typing something..." bind:value={data.value} />
 	<div class="Actions">
