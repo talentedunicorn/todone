@@ -5,7 +5,8 @@
 	import Logo from '../lib/components/Logo.svelte';
 	import Menu from '../lib/components/Menu.svelte';
 	import Task from '../lib/components/Task.svelte';
-	import { getTodos, add, update, remove, onChangeHandler } from '../pouchdb-store';
+	import { getTodos, add, update, remove, onChangeHandler } from '../lib/database';
+	import { status } from '../stores';
 
 	let currentTab = 'To Do';
 	/** @type {import('$lib/types').Todo[]} */
@@ -62,7 +63,7 @@
 	}
 </script>
 
-<div class="Wrapper">
+<div class="Wrapper" data-syncing={$status}>
 	<div class="Menu">
 		<Menu
 			{menuItems}
@@ -132,6 +133,7 @@
 		border-radius: 0.2em;
 		margin: 1rem;
 		top: 1rem;
+		position: relative;
 	}
 
 	main {
@@ -154,6 +156,25 @@
 
 	.Message {
 		font-size: 1.5rem;
+	}
+
+	[data-syncing] {
+		--indicator-color: var(--primary);
+	}
+
+	[data-syncing]:not([data-syncing='NOT_SYNCED']) .Logo::after {
+		content: '';
+		width: 0.5em;
+		height: 0.5em;
+		border-radius: 100%;
+		background: var(--indicator-color);
+		position: absolute;
+		top: -0.2em;
+		left: -0.2em;
+	}
+
+	[data-syncing='ERROR'] {
+		--indicator-color: var(--red);
 	}
 
 	@media screen and (min-width: 50rem) {

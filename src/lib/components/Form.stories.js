@@ -21,8 +21,7 @@ Empty.args = {};
 
 export const WithData = Template.bind({});
 WithData.args = {
-	data: {
-		id: new Date().toISOString(),
+	defaultValue: {
 		title: 'Things to do',
 		value: '- Write todos in **markdown** \n- Because why not'
 	}
