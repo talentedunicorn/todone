@@ -31,8 +31,23 @@ const getTodos = async () => {
 
 const onChangeHandler = (callback: () => void) => {
 	if (PUBLIC_SYNCED === 'true') {
+		// Push replication
 		db.replicate
 			.to(PUBLIC_REMOTE_DB, {
+				live: true,
+				retry: true
+			})
+			.on('active', () => {
+				status.set(SyncStatus.ACTIVE);
+			})
+			.on('error', (err) => {
+				console.log(err);
+				status.set(SyncStatus.ERROR);
+			});
+		
+		// Pull replication
+		db.replicate
+			.from(PUBLIC_REMOTE_DB, {
 				live: true,
 				retry: true
 			})
