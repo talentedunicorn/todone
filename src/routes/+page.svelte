@@ -5,8 +5,11 @@
 	import Logo from '../lib/components/Logo.svelte';
 	import Menu from '../lib/components/Menu.svelte';
 	import Task from '../lib/components/Task.svelte';
+	import Button from '$lib/components/Button.svelte';
 	import { getTodos, add, update, remove, onChangeHandler } from '../lib/database';
-	import { status } from '../stores';
+	import { status, isLoggedin, user } from '../stores';
+	import { checkAuth, login, logout } from '$lib/auth';
+	import { PUBLIC_SYNCED } from '$env/static/public';
 
 	let currentTab = 'To Do';
 	/** @type {import('$lib/types').Todo[]} */
@@ -31,8 +34,12 @@
 		data = [...todos];
 	};
 
-	onMount(() => {
-		loadTodos();
+	onMount(async () => {
+		if (PUBLIC_SYNCED === 'true') {
+			await checkAuth();
+			if (!$isLoggedin) return;
+		}
+		await loadTodos();
 		onChangeHandler(loadTodos);
 	});
 
@@ -63,47 +70,60 @@
 	}
 </script>
 
-<div class="Wrapper" data-syncing={$status}>
-	<div class="Menu">
-		<Menu
-			{menuItems}
-			on:goTo={(event) => {
-				currentTab = event.detail;
-				clearEdit();
-			}}
-		/>
+{#if PUBLIC_SYNCED === 'true' && !$isLoggedin}
+	<section class="Login">
+		<h1 class="Logo" title="ToDone"><Logo /></h1>
+		<Button on:click={login}>Login to continue</Button>
+	</section>
+{:else}
+	<div class="Wrapper" data-syncing={$status}>
+		<div class="Menu">
+			<Menu
+				{menuItems}
+				on:goTo={(event) => {
+					currentTab = event.detail;
+					clearEdit();
+				}}
+			/>
+		</div>
+		<h1 class="Logo" title="ToDone"><Logo /></h1>
+		<main>
+			{#if $isLoggedin}
+				<div class="Profile">
+					{$user.name}
+					<Button on:click={logout}>Log out</Button>
+				</div>
+			{/if}
+			{#key currentTab}
+				<h2 class="Title" in:fly={{ y: -10 }}>{currentTab}</h2>
+			{/key}
+			{#if currentTab === 'To Do' || task}
+				<div in:fly={{ y: 20 }}>
+					<Form
+						defaultValue={task}
+						on:submit={handleCreate}
+						on:update={handleUpdate}
+						on:clear={clearEdit}
+					/>
+				</div>
+			{/if}
+			{#if renderedTodos.length > 0}
+				{#each renderedTodos as { _id, _rev, title, value, completed }}
+					<Task
+						{title}
+						body={value}
+						{completed}
+						on:edit={() => handleEdit({ _id, _rev, title, value, completed })}
+						on:delete={() => remove(_id, _rev)}
+						on:complete={() => handleToggleComplete({ _id, _rev, title, value, completed })}
+					/>
+				{/each}
+			{:else}
+				<p class="Message">Nothing found... 👀</p>
+			{/if}
+		</main>
 	</div>
-	<h1 class="Logo" title="ToDone"><Logo /></h1>
-	<main>
-		{#key currentTab}
-			<h2 class="Title" in:fly={{ y: -10 }}>{currentTab}</h2>
-		{/key}
-		{#if currentTab === 'To Do' || task}
-			<div in:fly={{ y: 20 }}>
-				<Form
-					defaultValue={task}
-					on:submit={handleCreate}
-					on:update={handleUpdate}
-					on:clear={clearEdit}
-				/>
-			</div>
-		{/if}
-		{#if renderedTodos.length > 0}
-			{#each renderedTodos as { _id, _rev, title, value, completed }}
-				<Task
-					{title}
-					body={value}
-					{completed}
-					on:edit={() => handleEdit({ _id, _rev, title, value, completed })}
-					on:delete={() => remove(_id, _rev)}
-					on:complete={() => handleToggleComplete({ _id, _rev, title, value, completed })}
-				/>
-			{/each}
-		{:else}
-			<p class="Message">Nothing found... 👀</p>
-		{/if}
-	</main>
-</div>
+{/if}
 
 <style>
 	.Wrapper {
@@ -156,6 +176,24 @@
 
 	.Message {
 		font-size: 1.5rem;
+	}
+
+	.Login,
+	.Profile {
+		display: flex;
+		gap: 1rem;
+	}
+
+	.Login {
+		padding: 2rem;
+		flex-flow: column;
+		align-items: start;
+	}
+
+	.Profile {
+		margin: 2rem 0;
+		justify-content: end;
+		align-items: center;
 	}
 
 	[data-syncing] {

@@ -7,3 +7,8 @@ export enum SyncStatus {
 }
 
 export const status: Writable<SyncStatus> = writable(SyncStatus.NOT_SYNCED);
+
+export const isLoggedin = writable(false);
+
+export const user: Writable<{ name?: string }> = writable({});
+export const token = writable('');

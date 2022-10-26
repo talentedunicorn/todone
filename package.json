@@ -48,6 +48,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@auth0/auth0-spa-js": "^1.22.5",
 		"pouchdb": "^7.3.0",
 		"svelte-markdown": "^0.2.3"
 	}
