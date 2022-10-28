@@ -10,11 +10,10 @@ const refreshRate = 10 * 60 * 60 * 1000;
 let auth0: Auth0Client;
 
 const initAuth0Client = async () => {
-	// onMount(async () => {
-
 	auth0 = await createAuth0Client({
 		client_id: PUBLIC_AUTH0_CLIENT,
-		domain: PUBLIC_AUTH0_DOMAIN
+		domain: PUBLIC_AUTH0_DOMAIN,
+		cacheLocation: 'localstorage'
 	});
 };
 

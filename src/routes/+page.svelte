@@ -151,7 +151,7 @@
 		background: var(--white);
 		padding: 0.2em;
 		border-radius: 0.2em;
-		margin: 1rem;
+		margin: 0 1rem;
 		top: 1rem;
 		position: relative;
 	}
@@ -191,7 +191,7 @@
 	}
 
 	.Profile {
-		margin: 2rem 0;
+		margin: 1rem 0 0;
 		justify-content: end;
 		align-items: center;
 	}

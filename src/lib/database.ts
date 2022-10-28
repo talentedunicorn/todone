@@ -44,7 +44,7 @@ const onChangeHandler = (callback: () => void) => {
 				console.log(err);
 				status.set(SyncStatus.ERROR);
 			});
-		
+
 		// Pull replication
 		db.replicate
 			.from(PUBLIC_REMOTE_DB, {
