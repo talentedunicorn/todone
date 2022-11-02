@@ -5,6 +5,9 @@ export enum SyncStatus {
 	ACTIVE = 'ACTIVE',
 	ERROR = 'ERROR'
 }
+export const tabs = [{ label: 'To Do' }, { label: 'Done' }];
+
+export const currentTab: Writable<string> = writable(tabs[0].label);
 
 export const status: Writable<SyncStatus> = writable(SyncStatus.NOT_SYNCED);
 

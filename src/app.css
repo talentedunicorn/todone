@@ -43,6 +43,10 @@ body {
 	color: var(--black);
 }
 
+img {
+	max-width: 100%;
+}
+
 .visually-hidden {
 	position: absolute;
 	margin: -1px;

@@ -65,6 +65,10 @@
 		gap: 1rem;
 	}
 
+	.Content {
+		word-break: break-word;
+	}
+
 	@media screen and (min-width: 50rem) {
 		header {
 			justify-content: space-between;

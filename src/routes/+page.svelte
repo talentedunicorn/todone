@@ -1,17 +1,13 @@
 <script>
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
-	import Form from '../lib/components/Form.svelte';
-	import Logo from '../lib/components/Logo.svelte';
-	import Menu from '../lib/components/Menu.svelte';
-	import Task from '../lib/components/Task.svelte';
+	import Form from '$lib/components/Form.svelte';
+	import Task from '$lib/components/Task.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import { getTodos, add, update, remove, onChangeHandler } from '../lib/database';
-	import { status, isLoggedin, user } from '../stores';
-	import { checkAuth, login, logout } from '$lib/auth';
-	import { PUBLIC_SYNCED } from '$env/static/public';
+	import { getTodos, add, update, remove, onChangeHandler } from '$lib/database';
+	import { isLoggedin, user, currentTab } from '../stores';
+	import { logout } from '$lib/auth';
 
-	let currentTab = 'To Do';
 	/** @type {import('$lib/types').Todo[]} */
 	let data = [];
 	/** @type {import('$lib/types').Todo[]}*/
@@ -22,12 +18,8 @@
 	 * @type {import('$lib/types').Todo | null}
 	 */
 	let task = null;
-	$: menuItems = [{ label: 'To Do' }, { label: 'Done' }].map((item) => ({
-		...item,
-		selected: item.label === currentTab
-	}));
 
-	$: renderedTodos = currentTab === 'To Do' ? incompleteTodos : completedTodos;
+	$: renderedTodos = $currentTab === 'To Do' ? incompleteTodos : completedTodos;
 
 	const loadTodos = async () => {
 		const todos = await getTodos();
@@ -35,10 +27,6 @@
 	};
 
 	onMount(async () => {
-		if (PUBLIC_SYNCED === 'true') {
-			await checkAuth();
-			if (!$isLoggedin) return;
-		}
 		await loadTodos();
 		onChangeHandler(loadTodos);
 	});
@@ -70,94 +58,44 @@
 	}
 </script>
 
-{#if PUBLIC_SYNCED === 'true' && !$isLoggedin}
-	<section class="Login">
-		<h1 class="Logo" title="ToDone"><Logo /></h1>
-		<Button on:click={login}>Login to continue</Button>
-	</section>
-{:else}
-	<div class="Wrapper" data-syncing={$status}>
-		<div class="Menu">
-			<Menu
-				{menuItems}
-				on:goTo={(event) => {
-					currentTab = event.detail;
-					clearEdit();
-				}}
+<main>
+	{#if $isLoggedin}
+		<div class="Profile">
+			{$user.name}
+			<Button on:click={logout}>Log out</Button>
+		</div>
+	{/if}
+	{#key $currentTab}
+		<h2 class="Title" in:fly={{ y: -10 }}>{$currentTab}</h2>
+	{/key}
+	{#if $currentTab === 'To Do' || task}
+		<div in:fly={{ y: 20 }}>
+			<Form
+				defaultValue={task}
+				on:submit={handleCreate}
+				on:update={handleUpdate}
+				on:clear={clearEdit}
 			/>
 		</div>
-		<h1 class="Logo" title="ToDone"><Logo /></h1>
-		<main>
-			{#if $isLoggedin}
-				<div class="Profile">
-					{$user.name}
-					<Button on:click={logout}>Log out</Button>
-				</div>
-			{/if}
-			{#key currentTab}
-				<h2 class="Title" in:fly={{ y: -10 }}>{currentTab}</h2>
-			{/key}
-			{#if currentTab === 'To Do' || task}
-				<div in:fly={{ y: 20 }}>
-					<Form
-						defaultValue={task}
-						on:submit={handleCreate}
-						on:update={handleUpdate}
-						on:clear={clearEdit}
-					/>
-				</div>
-			{/if}
-			{#if renderedTodos.length > 0}
-				{#each renderedTodos as { _id, _rev, title, value, completed }}
-					<Task
-						{title}
-						body={value}
-						{completed}
-						on:edit={() => handleEdit({ _id, _rev, title, value, completed })}
-						on:delete={() => remove(_id, _rev)}
-						on:complete={() => handleToggleComplete({ _id, _rev, title, value, completed })}
-					/>
-				{/each}
-			{:else}
-				<p class="Message">Nothing found... 👀</p>
-			{/if}
-		</main>
-	</div>
-{/if}
+	{/if}
+	{#if renderedTodos.length > 0}
+		{#each renderedTodos as { _id, _rev, title, value, completed }}
+			<Task
+				{title}
+				body={value}
+				{completed}
+				on:edit={() => handleEdit({ _id, _rev, title, value, completed })}
+				on:delete={() => remove(_id, _rev)}
+				on:complete={() => handleToggleComplete({ _id, _rev, title, value, completed })}
+			/>
+		{/each}
+	{:else}
+		<p class="Message">Nothing found... 👀</p>
+	{/if}
+</main>
 
 <style>
-	.Wrapper {
-		min-height: 100vh;
-		display: grid;
-		row-gap: 2rem;
-		grid-template-areas: 'menu . logo' 'content content content';
-		grid-template-rows: min-content auto;
-		grid-template-columns: min-content;
-		align-items: start;
-	}
-
-	.Menu {
-		grid-area: menu;
-		max-height: 100vh;
-		position: sticky;
-		top: 0;
-	}
-
-	.Logo {
-		grid-area: logo;
-		justify-self: end;
-		display: inline-block;
-		border: var(--border);
-		background: var(--white);
-		padding: 0.2em;
-		border-radius: 0.2em;
-		margin: 0 1rem;
-		top: 1rem;
-		position: relative;
-	}
-
 	main {
-		grid-area: content;
 		padding: 0 2rem;
 		max-width: 80rem;
 		width: 100%;
@@ -178,51 +116,11 @@
 		font-size: 1.5rem;
 	}
 
-	.Login,
 	.Profile {
 		display: flex;
 		gap: 1rem;
-	}
-
-	.Login {
-		padding: 2rem;
-		flex-flow: column;
-		align-items: start;
-	}
-
-	.Profile {
 		margin: 1rem 0 0;
 		justify-content: end;
 		align-items: center;
-	}
-
-	[data-syncing] {
-		--indicator-color: var(--primary);
-	}
-
-	[data-syncing]:not([data-syncing='NOT_SYNCED']) .Logo::after {
-		content: '';
-		width: 0.5em;
-		height: 0.5em;
-		border-radius: 100%;
-		background: var(--indicator-color);
-		position: absolute;
-		top: -0.2em;
-		left: -0.2em;
-	}
-
-	[data-syncing='ERROR'] {
-		--indicator-color: var(--red);
-	}
-
-	@media screen and (min-width: 50rem) {
-		.Wrapper {
-			grid-template-areas: 'menu content logo';
-			grid-template-columns: max-content auto min-content;
-		}
-
-		main {
-			grid-column: unset;
-		}
 	}
 </style>
