@@ -2,7 +2,7 @@
 	import '../app.css';
 	import Logo from '$lib/components/Logo.svelte';
 	import Menu from '$lib/components/Menu.svelte';
-	import { PUBLIC_SYNCED } from '$env/static/public';
+	import { PUBLIC_SYNCED, PUBLIC_GA_TAG } from '$env/static/public';
 	import { isLoggedin, tabs, currentTab, status } from '../stores';
 	import Button from '$lib/components/Button.svelte';
 	import { checkAuth, login } from '$lib/auth';
@@ -33,6 +33,17 @@
 
 <svelte:head>
 	<title>ToDone</title>
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id={PUBLIC_GA_TAG}"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() {
+			dataLayer.push(arguments);
+		}
+		gtag('js', new Date());
+
+		gtag('config', '{PUBLIC_GA_TAG}');
+	</script>
 </svelte:head>
 
 <main class="Wrapper" bind:this={wrapper}>
@@ -45,7 +56,7 @@
 		<div class="Menu">
 			<Menu {menuItems} on:goTo={handleMenu} />
 		</div>
-		<header class="Header" >
+		<header class="Header">
 			<h1 data-syncing={$status} class="Logo" title="ToDone"><Logo /></h1>
 		</header>
 		<section class="Content">
