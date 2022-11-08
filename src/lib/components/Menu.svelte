@@ -6,7 +6,7 @@
 	const dispatch = createEventDispatcher();
 
 	export let title = '';
-	let opened = true;
+	let opened = false;
 	export /**
 	 * @type {{label: string, selected?: boolean }[]}
 	 */
@@ -39,7 +39,10 @@
 					variant="link"
 					size="large"
 					selected={menuitem.selected}
-					on:click={() => dispatch('goTo', menuitem.label)}>{menuitem.label}</Button
+					on:click={() => {
+						dispatch('goTo', menuitem.label);
+						opened = false;
+					}}>{menuitem.label}</Button
 				>
 			{/each}
 		</div>
