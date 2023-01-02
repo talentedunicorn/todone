@@ -7,6 +7,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import { checkAuth, login } from '$lib/auth';
 	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
 
 	/**
 	 * @type {HTMLElement}
@@ -18,12 +19,28 @@
 		selected: item.label === $currentTab
 	}));
 
+	let showBackToTop = false;
+
 	const handleMenu = (/** @type {import('svelte').ComponentEvents<Menu>['goTo']} */ value) => {
 		currentTab.set(value.detail);
-		wrapper.scrollIntoView();
+		scrollToTop();
+	};
+
+	const scrollToTop = () => {
+		wrapper.scrollIntoView({
+			behavior: 'smooth'
+		});
+	};
+
+	const handleBackToTop = () => {
+		window.addEventListener('scroll', () => {
+			const scrolled = document.querySelector('html')?.scrollTop || 0;
+			showBackToTop = scrolled > window.innerHeight;
+		});
 	};
 
 	onMount(async () => {
+		handleBackToTop();
 		if (PUBLIC_SYNCED === 'true') {
 			await checkAuth();
 			if (!$isLoggedin) return;
@@ -63,6 +80,17 @@
 			<slot />
 		</section>
 	{/if}
+	{#if showBackToTop}
+		<footer class="Footer" transition:fly={{ y: 100, duration: 500 }}>
+			<Button on:click={scrollToTop}
+				><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width={25}>
+					<path
+						d="M5.707 12.707l5.293-5.293v11.586c0 0.552 0.448 1 1 1s1-0.448 1-1v-11.586l5.293 5.293c0.391 0.391 1.024 0.391 1.414 0s0.391-1.024 0-1.414l-7-7c-0.092-0.092-0.202-0.166-0.324-0.217s-0.253-0.076-0.383-0.076c-0.256 0-0.512 0.098-0.707 0.293l-7 7c-0.391 0.391-0.391 1.024 0 1.414s1.024 0.391 1.414 0z"
+					/>
+				</svg></Button
+			>
+		</footer>
+	{/if}
 </main>
 
 <style>
@@ -95,6 +123,15 @@
 		border-radius: 0.2em;
 		background: var(--white);
 		position: relative;
+	}
+
+	.Footer {
+		align-self: flex-end;
+		position: sticky;
+		bottom: 2rem;
+		padding: 0 1rem 0 0;
+		display: flex;
+		justify-content: flex-end;
 	}
 
 	[data-syncing] {
