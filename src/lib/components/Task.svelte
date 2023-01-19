@@ -6,18 +6,25 @@
 	const dispatch = createEventDispatcher();
 
 	export let title = '';
-	export let body = '';
+	export let value = '';
 	export let completed = false;
-
+	/** @type {Date|undefined}*/
+	export let updated;
 	$: completeText = completed ? 'Mark Incomplete' : 'Mark Completed';
+	$: formattedTimestamp =
+		updated &&
+		`Updated on ${Intl.DateTimeFormat('en-MY', {
+			dateStyle: 'medium',
+			timeStyle: 'short'
+		}).format(new Date(updated))}`;
 </script>
 
 <section>
-	<header data-updated>
+	<header data-updated={formattedTimestamp}>
 		<h3>{title}</h3>
 	</header>
 	<div class="Content">
-		<SvelteMarkdown source={body} />
+		<SvelteMarkdown source={value} />
 	</div>
 	<div class="Actions">
 		<Button size="small" on:click={() => dispatch('delete')}>Delete</Button>
@@ -44,9 +51,15 @@
 	}
 
 	header {
-		flex-flow: column;
+		flex-wrap: wrap;
 		font-size: 1.5rem;
 		gap: 1rem;
+	}
+
+	header::after {
+		content: attr(data-updated);
+		color: var(--gray);
+		font-size: 1rem;
 	}
 
 	h3 {

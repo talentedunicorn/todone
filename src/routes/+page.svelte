@@ -11,7 +11,16 @@
 	/** @type {import('$lib/types').Todo[]} */
 	let data = [];
 	/** @type {import('$lib/types').Todo[]}*/
-	$: filtered = data.filter((t) => t.title.toLowerCase().includes(query.toLowerCase()));
+	$: filtered = data
+		.filter((t) => t.title.toLowerCase().includes(query.toLowerCase()))
+		.map((t) => (t.updated ? t : { ...t, updated: new Date(t._id) })) // Set _id as updated for now until we migrate all tasks
+		// Sort by updated or ID
+		.sort((a, b) => {
+			if (a.updated && b.updated) {
+				return new Date(b.updated).getTime() - new Date(a.updated).getTime();
+			}
+			return 0;
+		});
 	/** @type {import('$lib/types').Todo[]}*/
 	$: completedTodos = filtered.filter((t) => t.completed === true);
 	/** @type {import('$lib/types').Todo[]}*/
@@ -136,13 +145,14 @@
 		<p class="Message">Loading data... 👩🏼‍🔧</p>
 	{:then _}
 		{#if renderedTodos.length > 0}
-			{#each renderedTodos as todo, i (i)}
-				{@const { _id, _rev, title, value, completed } = todo}
+			{#each renderedTodos as task, i (i)}
+				{@const { _id, _rev, title, value, completed, updated } = task}
 				<div transition:fly={{ duration: 500, y: 100 }}>
 					<Task
 						{title}
-						body={value}
+						{value}
 						{completed}
+						{updated}
 						on:edit={() => handleEdit({ _id, _rev, title, value, completed })}
 						on:delete={() => remove(_id, _rev)}
 						on:complete={() => handleToggleComplete({ _id, _rev, title, value, completed })}
