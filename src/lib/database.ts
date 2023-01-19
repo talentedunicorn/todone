@@ -10,12 +10,13 @@ const add = async ({ title, value }: { title: string; value: string }) => {
 		_id: new Date().toISOString(),
 		title,
 		value,
-		completed: false
+		completed: false,
+		updated: new Date()
 	});
 };
 
 const update = async (todo: Todo) => {
-	await db.put(todo);
+	await db.put({ ...todo, updated: new Date() });
 };
 
 const remove = async (id: string, rev: string) => {

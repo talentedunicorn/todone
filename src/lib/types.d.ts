@@ -4,4 +4,5 @@ export type Todo = {
 	title: string;
 	value: string;
 	completed: boolean;
+	updated?: Date;
 };
