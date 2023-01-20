@@ -5,7 +5,7 @@ export default {
 	component: Task,
 	argTypes: {
 		title: { control: 'text' },
-		body: { control: 'text' },
+		value: { control: 'text' },
 		completed: { control: 'boolean' },
 		edit: { action: 'edit' },
 		delete: { action: 'delete' },
@@ -21,6 +21,6 @@ const Template = (args) => ({
 export const Sample = Template.bind({});
 Sample.args = {
 	title: 'Sample task',
-	body: 'A **new** task with some _markdown_ text.',
-	updated: new Date()
+	value: 'A **new** task with some _markdown_ text.',
+	updated: new Date('2023-01-01 00:00:000')
 };
