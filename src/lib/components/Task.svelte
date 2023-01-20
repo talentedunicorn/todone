@@ -13,9 +13,9 @@
 	$: completeText = completed ? 'Mark Incomplete' : 'Mark Completed';
 	$: formattedTimestamp =
 		updated &&
-		`Updated on ${Intl.DateTimeFormat('en-MY', {
+		`Updated ― ${Intl.DateTimeFormat('en-MY', {
 			dateStyle: 'medium',
-			timeStyle: 'short'
+			timeStyle: 'short',
 		}).format(new Date(updated))}`;
 </script>
 
@@ -52,6 +52,7 @@
 
 	header {
 		flex-wrap: wrap;
+		justify-content: space-between;
 		font-size: 1.5rem;
 		gap: 1rem;
 	}
@@ -59,7 +60,8 @@
 	header::after {
 		content: attr(data-updated);
 		color: var(--gray);
-		font-size: 1rem;
+		font-size: 0.8rem;
+		font-weight: bold;
 	}
 
 	h3 {
