@@ -25,10 +25,11 @@
 	$: completedTodos = filtered.filter((t) => t.completed === true);
 	/** @type {import('$lib/types').Todo[]}*/
 	$: incompleteTodos = filtered.filter((t) => t.completed === false);
-	/**
-	 * @type {import('$lib/types').Todo | null}
-	 */
+	/** @type {import('$lib/types').Todo | null} */
 	let task = null;
+
+	/** @type {HTMLInputElement} */
+	let searchInput;
 
 	let query = '';
 	let showSearch = false;
@@ -84,15 +85,16 @@
 	{/key}
 	<form class="Search">
 		<label for="search" class="visually-hidden">Search by title</label>
+		<input
+		type="search"
+		name="query"
+		id="search"
+		class:visually-hidden={!showSearch}
+		bind:value={query}
+		bind:this={searchInput}
+		placeholder="Type to search"
+		/>
 		{#if showSearch}
-			<input
-				type="search"
-				name="query"
-				id="search"
-				in:fly={{ x: 10 }}
-				bind:value={query}
-				placeholder="Type to search"
-			/>
 			<Button
 				on:click={() => {
 					showSearch = false;
@@ -115,7 +117,10 @@
 				</svg>
 			</Button>
 		{:else}
-			<Button on:click={() => (showSearch = true)} size="small" variant="link">
+			<Button on:click={() => {
+				showSearch = true;
+				searchInput.focus();
+			}} size="small" variant="link">
 				<svg
 					width="24"
 					height="24"
