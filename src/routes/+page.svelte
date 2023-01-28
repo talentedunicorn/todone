@@ -33,6 +33,7 @@
 
 	let query = '';
 	let showSearch = false;
+	let deleting = false;
 
 	$: renderedTodos = $currentTab === 'To Do' ? incompleteTodos : completedTodos;
 
@@ -71,6 +72,13 @@
 	function handleToggleComplete(/** @type {import('$lib/types').Todo} */ value) {
 		update({ ...value, completed: !value?.completed });
 	}
+
+	async function clearCompleted() {
+		deleting = true;
+		Promise.all(completedTodos.map((t) => remove(t._id, t._rev))).then(() => {
+			deleting = false;
+		});
+	}
 </script>
 
 <main>
@@ -80,19 +88,17 @@
 			<Button on:click={logout}>Log out</Button>
 		</div>
 	{/if}
-	{#key $currentTab}
-		<h2 class="Title" in:fly={{ y: -10 }}>{$currentTab}</h2>
-	{/key}
+	<h2 class="Title">{$currentTab}</h2>
 	<form class="Search">
 		<label for="search" class="visually-hidden">Search by title</label>
 		<input
-		type="search"
-		name="query"
-		id="search"
-		class:visually-hidden={!showSearch}
-		bind:value={query}
-		bind:this={searchInput}
-		placeholder="Type to search"
+			type="search"
+			name="query"
+			id="search"
+			class:visually-hidden={!showSearch}
+			bind:value={query}
+			bind:this={searchInput}
+			placeholder="Type to search"
 		/>
 		{#if showSearch}
 			<Button
@@ -117,10 +123,14 @@
 				</svg>
 			</Button>
 		{:else}
-			<Button on:click={() => {
-				showSearch = true;
-				searchInput.focus();
-			}} size="small" variant="link">
+			<Button
+				on:click={() => {
+					showSearch = true;
+					searchInput.focus();
+				}}
+				size="small"
+				variant="link"
+			>
 				<svg
 					width="24"
 					height="24"
@@ -150,6 +160,11 @@
 		<p class="Message">Loading data... 👩🏼‍🔧</p>
 	{:then _}
 		{#if renderedTodos.length > 0}
+			{#if $currentTab === 'Done'}
+				<div>
+					<Button on:click={clearCompleted} disabled={deleting}>Clear completed</Button>
+				</div>
+			{/if}
 			{#each renderedTodos as task, i (i)}
 				{@const { _id, _rev, title, value, completed, updated } = task}
 				<div transition:fly={{ duration: 500, y: 100 }}>

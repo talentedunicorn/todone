@@ -50,7 +50,7 @@
 
 <svelte:head>
 	<title>ToDone &#8212; Get it done!</title>
-	<meta name="description" content="An offline-first ToDo list">
+	<meta name="description" content="An offline-first ToDo list" />
 	<!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id={PUBLIC_GA_TAG}"></script>
 	<script>
