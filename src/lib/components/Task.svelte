@@ -15,7 +15,7 @@
 		updated &&
 		`Updated ― ${Intl.DateTimeFormat('en-MY', {
 			dateStyle: 'medium',
-			timeStyle: 'short',
+			timeStyle: 'short'
 		}).format(new Date(updated))}`;
 </script>
 
