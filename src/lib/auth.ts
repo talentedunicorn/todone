@@ -1,4 +1,4 @@
-import createAuth0Client, { type Auth0Client } from '@auth0/auth0-spa-js';
+import { type Auth0Client, createAuth0Client } from '@auth0/auth0-spa-js';
 import { PUBLIC_AUTH0_CLIENT, PUBLIC_AUTH0_DOMAIN, PUBLIC_SYNCED } from '$env/static/public';
 import { user, isLoggedin, token } from '../stores';
 
@@ -11,7 +11,7 @@ let auth0: Auth0Client;
 
 const initAuth0Client = async () => {
 	auth0 = await createAuth0Client({
-		client_id: PUBLIC_AUTH0_CLIENT,
+		clientId: PUBLIC_AUTH0_CLIENT,
 		domain: PUBLIC_AUTH0_DOMAIN,
 		cacheLocation: 'localstorage'
 	});
@@ -55,14 +55,14 @@ export const checkAuth = async () => {
 };
 
 export const login = async () => {
-	await auth0.loginWithRedirect({
-		redirect_uri: window.location.origin
-	});
+	await auth0.loginWithRedirect();
 };
 
 export const logout = async () => {
 	await auth0.logout({
-		returnTo: window.location.origin
+		async openUrl(url) {
+			window.location.replace(url);
+		}
 	});
 };
 
