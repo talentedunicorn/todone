@@ -13,7 +13,10 @@ const initAuth0Client = async () => {
 	auth0 = await createAuth0Client({
 		clientId: PUBLIC_AUTH0_CLIENT,
 		domain: PUBLIC_AUTH0_DOMAIN,
-		cacheLocation: 'localstorage'
+		cacheLocation: 'localstorage',
+		authorizationParams: {
+			redirect_uri: window.location.origin,
+		}
 	});
 };
 
