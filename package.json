@@ -21,7 +21,7 @@
     "@storybook/addon-essentials": "^7.0.0-rc.3",
     "@storybook/addon-interactions": "^7.0.0-rc.3",
     "@storybook/addon-links": "^7.0.0-rc.3",
-    "@storybook/addon-mdx-gfm": "^7.0.0-rc.3",
+    "@storybook/addon-svelte-csf": "^2.0.11",
     "@storybook/svelte": "^7.0.0-rc.3",
     "@storybook/sveltekit": "^7.0.0-rc.3",
     "@storybook/test-runner": "^0.10.0-next.10",
