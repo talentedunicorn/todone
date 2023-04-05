@@ -15,7 +15,7 @@ const initAuth0Client = async () => {
 		domain: PUBLIC_AUTH0_DOMAIN,
 		cacheLocation: 'localstorage',
 		authorizationParams: {
-			redirect_uri: window.location.origin,
+			redirect_uri: window.location.origin
 		}
 	});
 };
