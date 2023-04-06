@@ -1,0 +1,26 @@
+import Task from './Task.svelte';
+
+export default {
+	title: 'Components/Task',
+	component: Task,
+	argTypes: {
+		title: { control: 'text' },
+		value: { control: 'text' },
+		completed: { control: 'boolean' },
+		edit: { action: 'edit' },
+		delete: { action: 'delete' },
+		complete: { action: 'complete' }
+	}
+};
+
+const Template = (args) => ({
+	Component: Task,
+	props: args
+});
+
+export const Sample = Template.bind({});
+Sample.args = {
+	title: 'Sample task',
+	value: 'A **new** task with some _markdown_ text.',
+	updated: new Date('2023-01-01 00:00:000')
+};

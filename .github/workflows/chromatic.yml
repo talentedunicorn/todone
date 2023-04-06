@@ -1,5 +1,5 @@
 name: 'Chromatic'
-on: [push, pull_request]
+on: push
 jobs:
   chromatic-deployment:
     runs-on: ubuntu-latest
