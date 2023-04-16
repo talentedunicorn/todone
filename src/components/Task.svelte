@@ -1,15 +1,19 @@
-<script>
+<script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import SvelteMarkdown from 'svelte-markdown';
 	import Button from './Button.svelte';
+	import { marked } from 'marked';
+
+	// Configure marked
+	marked.use({
+		gfm: true
+	});
 
 	const dispatch = createEventDispatcher();
 
 	export let title = '';
 	export let value = '';
 	export let completed = false;
-	/** @type {Date|undefined}*/
-	export let updated;
+	export let updated: Date;
 	$: completeText = completed ? 'Mark Incomplete' : 'Mark Completed';
 	$: formattedTimestamp =
 		updated &&
@@ -24,7 +28,7 @@
 		<h3>{title}</h3>
 	</header>
 	<div class="Content">
-		<SvelteMarkdown source={value} />
+		{@html marked(value)}
 	</div>
 	<div class="Actions">
 		<Button size="small" on:click={() => dispatch('delete')}>Delete</Button>

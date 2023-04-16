@@ -1,18 +1,19 @@
-<script>
-	import '../app.css';
-	import Logo from '$lib/components/Logo.svelte';
-	import Menu from '$lib/components/Menu.svelte';
-	import { PUBLIC_SYNCED, PUBLIC_GA_TAG } from '$env/static/public';
-	import { isLoggedin, tabs, currentTab, status } from '../stores';
-	import Button from '$lib/components/Button.svelte';
-	import { checkAuth, login } from '$lib/auth';
-	import { onMount } from 'svelte';
+<script lang="ts">
+	import './app.css';
+	import Logo from './components/Logo.svelte';
+	import Menu from './components/Menu.svelte';
+	import { isLoggedin, tabs, currentTab, status, user } from './stores';
+	import Button from './components/Button.svelte';
+	import { checkAuth, initAuth0Client, login, logout } from './auth';
+	import { onMount, type ComponentEvents } from 'svelte';
 	import { fly } from 'svelte/transition';
+	import List from './List.svelte';
+	import type { Auth0Client } from '@auth0/auth0-spa-js';
+	import ReloadPrompt from './components/ReloadPrompt.svelte';
+	import { pwaInfo } from 'virtual:pwa-info';
 
-	/**
-	 * @type {HTMLElement}
-	 */
-	let wrapper;
+	let auth0: Auth0Client;
+	let wrapper: HTMLElement;
 
 	$: menuItems = tabs.map((item) => ({
 		...item,
@@ -21,8 +22,8 @@
 
 	let showBackToTop = false;
 
-	const handleMenu = (/** @type {import('svelte').ComponentEvents<Menu>['goTo']} */ value) => {
-		currentTab.set(value.detail);
+	const handleMenu = (event: ComponentEvents<Menu>['goTo']) => {
+		currentTab.set(event.detail);
 		scrollToTop();
 	};
 
@@ -41,33 +42,42 @@
 
 	onMount(async () => {
 		handleBackToTop();
-		if (PUBLIC_SYNCED === 'true') {
-			await checkAuth();
+		if (import.meta.env.VITE_SYNCED === 'true') {
+			if (!auth0) {
+				auth0 = await initAuth0Client();
+			}
+			await checkAuth(auth0);
 			if (!$isLoggedin) return;
 		}
 	});
+
+	let ga_tag = import.meta.env.VITE_GA_TAG;
 </script>
 
 <svelte:head>
 	<title>ToDone &#8212; Get it done!</title>
 	<meta name="description" content="An offline-first ToDo list" />
-	<script async src="https://www.googletagmanager.com/gtag/js?id={PUBLIC_GA_TAG}"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag() {
-			dataLayer.push(arguments);
-		}
-		gtag('js', new Date());
+	{#if import.meta.env.PROD}
+		{pwaInfo.webManifest.linkTag}
+	{/if}
+	{#if ga_tag}
+		<script async src="https://www.googletagmanager.com/gtag/js?id={ga_tag}">
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag('js', new Date());
 
-		gtag('config', '{PUBLIC_GA_TAG}');
-	</script>
+			gtag('config', ga_tag);
+		</script>
+	{/if}
 </svelte:head>
 
 <main class="Wrapper" bind:this={wrapper}>
-	{#if PUBLIC_SYNCED === 'true' && !$isLoggedin}
+	{#if import.meta.env.VITE_SYNCED === 'true' && !$isLoggedin}
 		<div class="Login">
 			<Logo />
-			<Button on:click={login}>Log in</Button>
+			<Button on:click={() => login(auth0)}>Log in</Button>
 		</div>
 	{:else}
 		<div class="Menu">
@@ -77,7 +87,13 @@
 			<h1 data-syncing={$status} class="Logo" title="ToDone"><Logo /></h1>
 		</header>
 		<section class="Content">
-			<slot />
+			{#if $isLoggedin}
+				<div class="Profile">
+					{$user.name}
+					<Button on:click={() => logout(auth0)}>Log out</Button>
+				</div>
+			{/if}
+			<List />
 		</section>
 	{/if}
 	{#if showBackToTop}
@@ -94,11 +110,16 @@
 	{/if}
 </main>
 
+{#if 'serviceWorker' in navigator && import.meta.env.PROD}
+	<ReloadPrompt />
+{/if}
+
 <style>
 	.Wrapper,
 	.Login {
 		flex-flow: column;
 		display: flex;
+		min-height: 100vh;
 	}
 
 	.Login {
@@ -133,6 +154,14 @@
 		padding: 0 1rem 0 0;
 		display: flex;
 		justify-content: flex-end;
+	}
+
+	.Profile {
+		display: flex;
+		gap: 1rem;
+		margin: 2rem;
+		justify-content: end;
+		align-items: center;
 	}
 
 	[data-syncing] {

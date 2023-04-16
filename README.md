@@ -1,8 +1,8 @@
-![Logo](static/logo.svg)
+![Logo](public/logo.svg)
 
 # ToDone
 
-> An offline-first ToDo list pwa build on [Sveltekit](https://kit.svelte.dev)
+> An offline-first ToDo list pwa build on [Svelte](https://svelte.dev)
 
 ## Features
 
@@ -14,16 +14,16 @@
 ## Building
 
 ```bash
-npm run build
+pnpm run build
 ```
 
-You can preview the production build with `npm run preview`.
+You can preview the production build with `pnpm run preview`.
 
 ### Environment variables
 
-- `PUBLIC_SYNCED` to be set `true` or `false`
-- `PUBLIC_GA_TAG` for Google Analytics tag
-- `PUBLIC_DB_NAME` the pouchdb database name
-- `PUBLIC_REMOTE_DB` pouchdb or couchdb database url. Required `PUBLIC_SYNCED` to be `true`
-- `PUBLIC_AUTH0_CLIENT` [Auth0](https://auth0.com/) client id
-- `PUBLIC_AUTH0_DOMAIN` [Auth0](https://auth0.com/) domain
+- `VITE_SYNCED` to be set `true` or `false`
+- `VITE_GA_TAG` for Google Analytics tag
+- `VITE_DB_NAME` the pouchdb database name
+- `VITE_REMOTE_DB` pouchdb or couchdb database url. Required `VITE_SYNCED` to be `true`
+- `VITE_AUTH0_CLIENT` [Auth0](https://auth0.com/) client id
+- `VITE_AUTH0_DOMAIN` [Auth0](https://auth0.com/) domain
