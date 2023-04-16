@@ -1,15 +1,12 @@
-<script>
+<script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import Button from './Button.svelte';
 
 	const dispatch = createEventDispatcher();
 
-	/** @type {import('$lib/types').Todo |null} */
 	export let defaultValue = null;
-	/**
-	 * @type {HTMLInputElement}
-	 */
-	let titleInput;
+
+	let titleInput: HTMLInputElement;
 
 	$: data = defaultValue || {
 		title: '',

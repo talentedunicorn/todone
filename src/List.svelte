@@ -1,16 +1,13 @@
-<script>
-	import { onMount } from 'svelte';
+<script lang="ts">
+	import { onMount, type ComponentEvents } from 'svelte';
 	import { fly } from 'svelte/transition';
-	import Form from '$lib/components/Form.svelte';
-	import Task from '$lib/components/Task.svelte';
-	import Button from '$lib/components/Button.svelte';
-	import { getTodos, add, update, remove, onChangeHandler } from '$lib/database';
-	import { isLoggedin, user, currentTab } from '../stores';
-	import { logout } from '$lib/auth';
+	import Form from './components/Form.svelte';
+	import Task from './components/Task.svelte';
+	import Button from './components/Button.svelte';
+	import { getTodos, add, update, remove, onChangeHandler, type Todo } from './database';
+	import { currentTab } from './stores';
 
-	/** @type {import('$lib/types').Todo[]} */
 	let data = [];
-	/** @type {import('$lib/types').Todo[]}*/
 	$: filtered = data
 		.filter((t) => t.title.toLowerCase().includes(query.toLowerCase()))
 		.map((t) => (t.updated ? t : { ...t, updated: new Date(t._id) })) // Set _id as updated for now until we migrate all tasks
@@ -21,15 +18,11 @@
 			}
 			return 0;
 		});
-	/** @type {import('$lib/types').Todo[]}*/
 	$: completedTodos = filtered.filter((t) => t.completed === true);
-	/** @type {import('$lib/types').Todo[]}*/
 	$: incompleteTodos = filtered.filter((t) => t.completed === false);
-	/** @type {import('$lib/types').Todo | null} */
 	let task = null;
 
-	/** @type {HTMLInputElement} */
-	let searchInput;
+	let searchInput: HTMLInputElement;
 
 	let query = '';
 	let showSearch = false;
@@ -51,25 +44,21 @@
 		task = null;
 	}
 
-	async function handleUpdate(
-		/** @type {import('svelte').ComponentEvents<Form>['update']} */ { detail }
-	) {
+	async function handleUpdate({ detail }: ComponentEvents<Form>['update']) {
 		update(detail).then(() => {
 			clearEdit();
 		});
 	}
 
-	async function handleCreate(
-		/** @type {import('svelte').ComponentEvents<Form>['submit']} */ { detail }
-	) {
+	async function handleCreate({ detail }: ComponentEvents<Form>['submit']) {
 		await add(detail);
 	}
 
-	function handleEdit(/** @type {import('$lib/types').Todo} */ value) {
+	function handleEdit(value: Todo) {
 		task = value;
 	}
 
-	function handleToggleComplete(/** @type {import('$lib/types').Todo} */ value) {
+	function handleToggleComplete(value: Todo) {
 		update({ ...value, completed: !value?.completed });
 	}
 
@@ -82,12 +71,6 @@
 </script>
 
 <main>
-	{#if $isLoggedin}
-		<div class="Profile">
-			{$user.name}
-			<Button on:click={logout}>Log out</Button>
-		</div>
-	{/if}
 	<h2 class="Title">{$currentTab}</h2>
 	<form class="Search">
 		<label for="search" class="visually-hidden">Search by title</label>
@@ -205,14 +188,6 @@
 
 	.Message {
 		font-size: 1.5rem;
-	}
-
-	.Profile {
-		display: flex;
-		gap: 1rem;
-		margin: 1rem 0 0;
-		justify-content: end;
-		align-items: center;
 	}
 
 	.Search {

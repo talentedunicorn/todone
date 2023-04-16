@@ -1,8 +1,45 @@
-import { sveltekit } from '@sveltejs/kit/vite';
-import type { UserConfig } from 'vite';
+import { defineConfig } from 'vite';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { VitePWA } from 'vite-plugin-pwa';
 
-const config: UserConfig = {
-	plugins: [sveltekit()]
-};
-
-export default config;
+// https://vitejs.dev/config/
+export default defineConfig(({ mode }) => ({
+	plugins: [
+		svelte(),
+		VitePWA({
+			workbox: {
+				globPatterns: ['**/*.{js,css,html,ttf}']
+			},
+			manifest: {
+				name: 'ToDone',
+				short_name: 'ToDone',
+				start_url: '/',
+				display: 'standalone',
+				theme_color: '#ffffff',
+				background_color: '#ffffff',
+				icons: [
+					{
+						src: 'logo.svg',
+						type: 'image/svg+xml',
+						sizes: 'any'
+					},
+					{
+						src: 'logo-512.png',
+						type: 'image/png',
+						sizes: '512x512'
+					},
+					{
+						src: 'logo-192.png',
+						type: 'image/png',
+						sizes: '192x192'
+					}
+				]
+			}
+		})
+	],
+	...(mode === 'development' && {
+		define: {
+			global: 'window' // https://stackoverflow.com/questions/75808603/vitesveltepouchdb-uncaught-typeerror-class-extends-value-object-object-is
+		}
+	})
+}));

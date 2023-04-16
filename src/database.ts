@@ -1,9 +1,9 @@
-import PouchDB from 'pouchdb';
-import type { Todo } from '$lib/types';
-import { PUBLIC_DB_NAME, PUBLIC_REMOTE_DB, PUBLIC_SYNCED } from '$env/static/public';
-import { status, SyncStatus } from '../stores';
+import PouchDB from 'pouchdb-browser';
+import { status, SyncStatus } from './stores';
 
-const db = new PouchDB(PUBLIC_DB_NAME);
+export type Todo = any;
+
+const db = new PouchDB(import.meta.env.VITE_DB_NAME);
 
 const add = async ({ title, value }: { title: string; value: string }) => {
 	await db.put({
@@ -31,18 +31,19 @@ const getTodos = async () => {
 };
 
 const onChangeHandler = (callback: () => void) => {
-	if (PUBLIC_SYNCED === 'true') {
+	if (import.meta.env.VITE_SYNCED === 'true') {
 		// Sync with remote
-		db.sync(PUBLIC_REMOTE_DB, {
+		db.sync(import.meta.env.VITE_REMOTE_DB, {
 			live: true,
 			retry: true
 		})
 			.on('active', () => {
 				status.set(SyncStatus.ACTIVE);
 			})
-			.on('error', (err) => {
-				console.log(err);
-				status.set(SyncStatus.ERROR);
+			.on('paused', () => {
+				if (!navigator.onLine) {
+					status.set(SyncStatus.ERROR);
+				}
 			});
 	}
 

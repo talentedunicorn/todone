@@ -1,6 +1,6 @@
 @font-face {
 	font-family: 'Dosis';
-	src: url('../src/lib/assets/fonts/Dosis-VariableFont_wght.ttf') format('truetype');
+	src: url('./assets/fonts/Dosis-VariableFont_wght.ttf') format('truetype');
 	font-weight: 300 669;
 	font-stretch: 75% 125%;
 	font-style: normal bold;

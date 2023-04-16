@@ -1,16 +1,16 @@
-<script>
+<script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import './button.css';
 
 	export let variant = '';
 	export let size = '';
-	export let type = 'button';
+	export let type: 'button' | 'submit' | 'reset' = 'button';
 	export let disabled = false;
 	export let selected = false;
 
 	const dispatch = createEventDispatcher();
 
-	function onClick(event) {
+	function onClick(event: { detail: any }) {
 		dispatch('click', event.detail);
 	}
 </script>
