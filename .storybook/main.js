@@ -12,10 +12,7 @@ export default {
 		'@storybook/addon-svelte-csf'
 	],
 	framework: {
-		name: '@storybook/svelte-vite',
-		options: {
-			preprocess: undefined
-		}
+		name: '@storybook/svelte-vite'
 	},
 	features: {
 		storyStoreV7: true,
