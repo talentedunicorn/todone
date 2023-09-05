@@ -31,9 +31,9 @@
 		</svg>
 	</Button>
 	{#if opened}
-		<div out:fly={{ x: -50, duration: 200 }} in:fade>
+		<div data-testId="menu" out:fly={{ x: -50, duration: 200 }} in:fade>
 			{#if title}
-				<header>{title}</header>
+				<header data-testId="header">{title}</header>
 			{/if}
 			{#each menuItems as menuitem (menuitem.label)}
 				<Button

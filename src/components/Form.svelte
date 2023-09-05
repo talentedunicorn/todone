@@ -3,8 +3,9 @@
 	import Button from './Button.svelte';
 
 	const dispatch = createEventDispatcher();
+	type Content = { title: string; value: string };
 
-	export let defaultValue = null;
+	export let defaultValue: Content | null = null;
 
 	let titleInput: HTMLInputElement;
 
@@ -35,6 +36,22 @@
 	}
 </script>
 
+<!--
+@component 
+### Form.svelte
+
+Form component with a title and content inputs
+
+#### Example
+```svelte
+<Form
+	defaultValue={Content}
+	on:submit={}
+	on:update={}
+	on:clear={}
+/>
+```
+-->
 <form on:submit|preventDefault={submit}>
 	<label class="visually-hidden" for="title">Title</label>
 	<input

@@ -20,7 +20,7 @@ export const initAuth0Client = async () => {
 };
 
 export const checkAuth = async (auth0: Auth0Client) => {
-	let intervalId: string | number | undefined | NodeJS.Timer;
+	let intervalId: ReturnType<typeof setInterval>;
 	const params = new URLSearchParams(window.location.search);
 	// if code then login success
 	if (params.has('code')) {
@@ -52,7 +52,7 @@ export const checkAuth = async (auth0: Auth0Client) => {
 
 	// clear token refresh interval on component unmount
 	return () => {
-		intervalId && clearInterval(intervalId as number);
+		intervalId && clearInterval(intervalId);
 	};
 };
 

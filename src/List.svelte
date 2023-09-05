@@ -7,7 +7,7 @@
 	import { getTodos, add, update, remove, onChangeHandler, type Todo } from './database';
 	import { currentTab } from './stores';
 
-	let data = [];
+	let data: Todo[] = [];
 	$: filtered = data
 		.filter((t) => t.title.toLowerCase().includes(query.toLowerCase()))
 		.map((t) => (t.updated ? t : { ...t, updated: new Date(t._id) })) // Set _id as updated for now until we migrate all tasks
@@ -20,7 +20,7 @@
 		});
 	$: completedTodos = filtered.filter((t) => t.completed === true);
 	$: incompleteTodos = filtered.filter((t) => t.completed === false);
-	let task = null;
+	let task: Todo | null = null;
 
 	let searchInput: HTMLInputElement;
 

@@ -1,29 +1,69 @@
 <script lang="ts">
 	import { Meta, Template, Story } from '@storybook/addon-svelte-csf';
+	import { within, userEvent, waitFor } from '@storybook/testing-library';
+	import { expect } from '@storybook/jest';
 	import Form from './Form.svelte';
-
-	const handleSubmit = () => {
-		console.log('Submitted form');
-	};
-	const clear = () => {
-		console.log('Clear form');
-	};
 </script>
 
 <Meta title="Form" component={Form} />
 
 <Template let:args>
-	<Form {...args} on:submit={handleSubmit} on:clear={clear} />
+	<Form {...args} on:submit={() => {}} on:clear={() => {}} />
 </Template>
 
-<Story name="Empty" />
+<Story
+	name="Empty"
+	play={async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+		const cancelButton = canvas.getByText('Cancel');
+		const submitButton = canvas.getByText('Submit');
+		const titleField = canvas.getByLabelText('Title', { selector: 'input' });
+		const contentField = canvas.getByLabelText('Content', { selector: 'textarea' });
+
+		await userEvent.type(titleField, 'Todo title', { delay: 100 });
+
+		expect(cancelButton).toBeDisabled();
+		expect(submitButton).toBeDisabled();
+
+		await userEvent.type(contentField, `Markdown content goes **here**`, { delay: 100 });
+
+		expect(cancelButton).toBeEnabled();
+		expect(submitButton).toBeEnabled();
+		userEvent.click(submitButton);
+
+		waitFor(() => {
+			expect(cancelButton).toBeDisabled();
+			expect(submitButton).toBeDisabled();
+			expect(titleField.textContent).toBe('');
+			expect(contentField.textContent).toBe('');
+		});
+	}}
+/>
 
 <Story
-	name="Filled"
+	name="With default content"
 	args={{
 		defaultValue: {
 			title: 'Things to do',
 			value: '- Write todos in **markdown** \n- Because why not'
 		}
+	}}
+	play={async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+		const cancelButton = canvas.getByText('Cancel');
+		const updateButton = canvas.getByText('Update');
+		const titleField = canvas.getByLabelText('Title', { selector: 'input' });
+		const contentField = canvas.getByLabelText('Content', { selector: 'textarea' });
+
+		expect(updateButton).toBeInTheDocument();
+		userEvent.click(updateButton);
+
+		waitFor(() => {
+			const submitButton = canvas.getByText('Submit');
+			expect(titleField.textContent).toBe('');
+			expect(contentField.textContent).toBe('');
+			expect(submitButton).toBeDisabled();
+			expect(cancelButton).toBeDisabled();
+		});
 	}}
 />
