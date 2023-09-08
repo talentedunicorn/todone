@@ -3,7 +3,7 @@ import { status, SyncStatus } from './stores';
 
 export type Todo = any;
 
-const db = new PouchDB(import.meta.env.VITE_DB_NAME);
+const db = new PouchDB(import.meta.env.VITE_DB_NAME || 'ToDone');
 
 const add = async ({ title, value }: { title: string; value: string }) => {
 	await db.put({
