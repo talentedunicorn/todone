@@ -88,6 +88,51 @@
 		word-break: break-word;
 	}
 
+	.Content :global(ul) {
+		margin: 0;
+		list-style: none;
+		padding-left: 1rem;
+	}
+
+	.Content :global(li) {
+		border-bottom: 1px dashed var(--gray);
+		padding: 0.5rem 0;
+	}
+
+	.Content :global(li:last-child) {
+		border-bottom: none;
+	}
+
+	.Content :global(code) {
+		background: var(--black);
+		color: var(--white);
+		border-radius: 0.2rem;
+		padding: 0.2rem 0.3rem;
+		display: inline-flex;
+	}
+
+	.Content :global(input[type='checkbox']) {
+		--checkbox-size: 1rem;
+		--chechbox-radius: 0.2rem;
+		appearance: none;
+		margin: 0 0.5rem 0 0;
+		display: inline-flex;
+		width: var(--checkbox-size);
+		height: var(--checkbox-size);
+	}
+
+	.Content :global(input[type='checkbox']::after) {
+		content: '';
+		background: var(--checkbox-bg, var(--gray-light));
+		border: 0.2em solid var(--black);
+		border-radius: var(--chechbox-radius);
+		width: 100%;
+	}
+
+	.Content :global(input[type='checkbox']:checked) {
+		--checkbox-bg: var(--primary);
+	}
+
 	@media screen and (min-width: 50rem) {
 		header {
 			justify-content: space-between;
