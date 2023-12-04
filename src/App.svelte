@@ -61,7 +61,8 @@
 		{pwaInfo?.webManifest.linkTag}
 	{/if}
 	{#if ga_tag}
-		<script async src="https://www.googletagmanager.com/gtag/js?id={ga_tag}">
+		<script async src="https://www.googletagmanager.com/gtag/js?id={ga_tag}"></script>
+		<script>
 			window.dataLayer = window.dataLayer || [];
 			function gtag() {
 				dataLayer.push(arguments);
