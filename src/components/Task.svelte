@@ -1,11 +1,19 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import Button from './Button.svelte';
-	import { marked } from 'marked';
+	import { marked, type RendererObject } from 'marked';
+
+	const renderer: RendererObject = {
+		table(header, body) {
+			const r = new marked.Renderer();
+			return `<div class="TableWrapper">${r.table(header, body)}</div>`;
+		}
+	};
 
 	// Configure marked
 	marked.use({
-		gfm: true
+		gfm: true,
+		renderer
 	});
 
 	const dispatch = createEventDispatcher();
@@ -86,6 +94,8 @@
 
 	.Content {
 		word-break: break-word;
+		display: grid;
+		grid-auto-flow: row;
 	}
 
 	.Content :global(ul) {
@@ -131,6 +141,39 @@
 
 	.Content :global(input[type='checkbox']:checked) {
 		--checkbox-bg: var(--primary);
+	}
+
+	.Content :global(.TableWrapper) {
+		overflow-x: auto;
+	}
+
+	.Content :global(table) {
+		--border: 1px dashed var(--gray);
+		border-collapse: collapse;
+		border-bottom: var(--border);
+	}
+
+	.Content :global(table tr) {
+		border-top: var(--border);
+	}
+
+	.Content :global(table th),
+	.Content :global(table td) {
+		padding: 1rem;
+	}
+
+	.Content :global(table th:not(:last-child)),
+	.Content :global(table td:not(:last-child)) {
+		border-right: var(--border);
+	}
+
+	.Content :global(table th) {
+		font-size: 1.3rem;
+		white-space: nowrap;
+	}
+
+	.Content :global(blockquote) {
+		font-size: clamp(2rem, 3rem, 4vmin);
 	}
 
 	@media screen and (min-width: 50rem) {
