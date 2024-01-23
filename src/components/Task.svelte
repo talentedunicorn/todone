@@ -48,25 +48,20 @@
 </section>
 
 <style>
-	section,
-	header {
-		display: flex;
-	}
-
 	section {
-		flex-wrap: wrap;
 		padding: 1rem;
 		border: 1px solid var(--gray-light);
 		border-radius: 0.5em;
-		gap: 1rem;
 		background: var(--white);
 	}
 
 	header {
+		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-between;
 		font-size: 1.5rem;
 		gap: 1rem;
+		margin-bottom: 1rem;
 	}
 
 	header::after {
@@ -80,22 +75,16 @@
 		margin: 0;
 	}
 
-	header,
-	.Actions,
-	.Content {
-		flex: 100%;
-	}
-
 	.Actions {
 		display: flex;
+		flex-wrap: wrap;
 		justify-content: end;
 		gap: 1rem;
+		margin-top: 1rem;
 	}
 
 	.Content {
 		word-break: break-word;
-		display: grid;
-		grid-auto-flow: row;
 	}
 
 	.Content :global(ul) {
@@ -145,30 +134,34 @@
 
 	.Content :global(.TableWrapper) {
 		overflow-x: auto;
+		border: var(--border);
+		border-radius: 1rem;
 	}
 
 	.Content :global(table) {
-		--border: 1px dashed var(--gray);
 		border-collapse: collapse;
+		width: 100%;
+	}
+
+	.Content :global(table thead tr) {
 		border-bottom: var(--border);
 	}
 
-	.Content :global(table tr) {
-		border-top: var(--border);
+	.Content :global(table tr:nth-child(even)) {
+		background: var(--gray-light);
 	}
 
 	.Content :global(table th),
 	.Content :global(table td) {
-		padding: 1rem;
+		padding: 0.5rem;
 	}
 
-	.Content :global(table th:not(:last-child)),
-	.Content :global(table td:not(:last-child)) {
+	.Content :global(table th:not(:last-child)) {
 		border-right: var(--border);
 	}
 
 	.Content :global(table th) {
-		font-size: 1.3rem;
+		font-size: 1.2rem;
 		white-space: nowrap;
 	}
 
