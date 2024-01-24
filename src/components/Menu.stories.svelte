@@ -10,7 +10,6 @@
 	import { Story, Template } from '@storybook/addon-svelte-csf';
 	import { userEvent, waitFor, within } from '@storybook/testing-library';
 	import { expect } from '@storybook/jest';
-</script>
 
 <Template let:args>
 	<Menu
