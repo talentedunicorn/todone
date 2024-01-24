@@ -12,7 +12,6 @@
 	import { jest, expect } from '@storybook/jest';
 
 	const alertSpy = jest.spyOn(window, 'alert');
-</script>
 
 <Template let:args>
 	<Task
