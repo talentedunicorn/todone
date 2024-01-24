@@ -1,11 +1,14 @@
-<script lang="ts">
-	import { Meta, Template, Story } from '@storybook/addon-svelte-csf';
+<script lang="ts" context="module">
+	import { Template, Story } from '@storybook/addon-svelte-csf';
 	import { within, userEvent, waitFor } from '@storybook/testing-library';
 	import { expect } from '@storybook/jest';
 	import Form from './Form.svelte';
-</script>
 
-<Meta title="Form" component={Form} />
+	export const meta = {
+		title: 'Form',
+		component: Form
+	};
+</script>
 
 <Template let:args>
 	<Form {...args} on:submit={() => {}} on:clear={() => {}} />

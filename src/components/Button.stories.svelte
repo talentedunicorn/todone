@@ -1,9 +1,12 @@
-<script lang="ts">
-	import { Meta, Story, Template } from '@storybook/addon-svelte-csf';
+<script lang="ts" context="module">
+	import { Story, Template } from '@storybook/addon-svelte-csf';
 	import Button from './Button.svelte';
-</script>
 
-<Meta title="Button" component={Button} />
+	export const meta = {
+		title: 'Button',
+		component: Button
+	};
+</script>
 
 <Template let:args><Button {...args}>Click me</Button></Template>
 

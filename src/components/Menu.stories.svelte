@@ -1,11 +1,14 @@
-<script lang="ts">
-	import { Meta, Story, Template } from '@storybook/addon-svelte-csf';
+<script lang="ts" context="module">
+	import { Story, Template } from '@storybook/addon-svelte-csf';
 	import Menu from './Menu.svelte';
 	import { userEvent, waitFor, within } from '@storybook/testing-library';
 	import { expect } from '@storybook/jest';
-</script>
 
-<Meta title="Menu" component={Menu} />
+	export const meta = {
+		title: 'Menu',
+		component: Menu
+	};
+</script>
 
 <Template let:args>
 	<Menu
