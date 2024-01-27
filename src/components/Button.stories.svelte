@@ -2,7 +2,13 @@
 	import Button from './Button.svelte';
 	export const meta = {
 		title: 'Button',
-		component: Button
+		component: Button,
+		argTypes: {
+			variant: { control: 'select', options: ['', 'primary', 'link'], default: '' },
+			size: { control: 'radio', options: ['', 'large', 'small'], default: '' },
+			type: { control: 'select', options: ['submit', 'button', 'reset'], default: 'button' },
+			selected: { control: 'boolean', default: false }
+		}
 	};
 </script>
 

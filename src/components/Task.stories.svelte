@@ -2,7 +2,13 @@
 	import Task from './Task.svelte';
 	export const meta = {
 		title: 'Task',
-		component: Task
+		component: Task,
+		argTypes: {
+			title: { control: 'text' },
+			value: { control: 'text' },
+			updated: { control: 'date' },
+			completed: { control: 'boolean' }
+		}
 	};
 
 	const taskContent =
