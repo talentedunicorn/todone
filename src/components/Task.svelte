@@ -22,6 +22,7 @@
 	export let value = '';
 	export let completed = false;
 	export let updated: Date;
+	let expanded = false;
 	$: completeText = completed ? 'Mark Incomplete' : 'Mark Completed';
 	$: formattedTimestamp =
 		updated &&
@@ -35,14 +36,38 @@
 	<header data-updated={formattedTimestamp}>
 		<h3>{title}</h3>
 	</header>
-	<div class="Content">
+	<div data-testid="content" class="Content" class:expanded>
 		{@html marked(value)}
 	</div>
 	<div class="Actions">
-		<Button size="small" on:click={() => dispatch('delete')}>Delete</Button>
-		<Button size="small" on:click={() => dispatch('edit')}>Edit</Button>
-		<Button size="small" variant="primary" on:click={() => dispatch('complete')}
-			>{completeText}</Button
+		<Button
+			data-testid="toggleExpand"
+			data-toggle
+			size="small"
+			variant="link"
+			on:click={() => {
+				expanded = !expanded;
+			}}
+		>
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" fill="currentColor">
+				{#if expanded}
+					<path
+						d="M18.707 14.293l-6-6c-0.391-0.391-1.024-0.391-1.414 0l-6 6c-0.391 0.391-0.391 1.024 0 1.414s1.024 0.391 1.414 0l5.293-5.293 5.293 5.293c0.391 0.391 1.024 0.391 1.414 0s0.391-1.024 0-1.414z"
+					/>
+				{:else}
+					<path
+						d="M5.293 9.707l6 6c0.391 0.391 1.024 0.391 1.414 0l6-6c0.391-0.391 0.391-1.024 0-1.414s-1.024-0.391-1.414 0l-5.293 5.293-5.293-5.293c-0.391-0.391-1.024-0.391-1.414 0s-0.391 1.024 0 1.414z"
+					/>
+				{/if}
+			</svg>
+		</Button>
+		<Button data-testid="delete" size="small" on:click={() => dispatch('delete')}>Delete</Button>
+		<Button data-testid="edit" size="small" on:click={() => dispatch('edit')}>Edit</Button>
+		<Button
+			data-testid="complete"
+			size="small"
+			variant="primary"
+			on:click={() => dispatch('complete')}>{completeText}</Button
 		>
 	</div>
 </section>
@@ -53,6 +78,8 @@
 		border: 1px solid var(--gray-light);
 		border-radius: 0.5em;
 		background: var(--white);
+		display: grid;
+		gap: 1rem;
 	}
 
 	header {
@@ -61,7 +88,6 @@
 		justify-content: space-between;
 		font-size: 1.5rem;
 		gap: 1rem;
-		margin-bottom: 1rem;
 	}
 
 	header::after {
@@ -80,11 +106,34 @@
 		flex-wrap: wrap;
 		justify-content: end;
 		gap: 1rem;
-		margin-top: 1rem;
+	}
+
+	.Actions :global([data-toggle]) {
+		margin-right: auto;
+		padding: 0;
 	}
 
 	.Content {
 		word-break: break-word;
+		max-height: var(--content-height, 3rem);
+		overflow: clip;
+		position: relative;
+		transition: max-height 0.2s ease-in;
+	}
+
+	.Content::after {
+		position: absolute;
+		content: '';
+		inset: 0;
+		visibility: var(--content-gradient-visibility, visible);
+		opacity: var(--content-gradient-opacity, 1);
+		background: linear-gradient(to bottom, transparent 20%, var(--white));
+	}
+
+	.expanded {
+		--content-height: 100%;
+		--content-gradient-visibility: hidden;
+		--content-gradient-opacity: 0;
 	}
 
 	.Content :global(ul) {

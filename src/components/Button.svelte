@@ -1,11 +1,18 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 	import './button.css';
+
+	interface $$Props extends Partial<HTMLButtonAttributes> {
+		variant?: 'link' | 'primary';
+		size?: string;
+		type?: 'button' | 'submit' | 'reset';
+		selected?: boolean;
+	}
 
 	export let variant = '';
 	export let size = '';
 	export let type: 'button' | 'submit' | 'reset' = 'button';
-	export let disabled = false;
 	export let selected = false;
 
 	const dispatch = createEventDispatcher();
@@ -20,8 +27,8 @@
 	class={['button', `${size}`, `${variant}`, `${selected ? 'selected' : ''}`]
 		.filter((c) => c.trim().length > 0)
 		.join(' ')}
-	{disabled}
 	on:click={onClick}
+	{...$$restProps}
 >
 	<slot>Button text</slot>
 </button>
