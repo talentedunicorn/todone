@@ -64,8 +64,10 @@ Form component with a title and content inputs
 	<label class="visually-hidden" for="content">Content</label>
 	<textarea id="content" rows="5" placeholder="Start typing something..." bind:value={data.value} />
 	<div class="Actions">
-		<Button on:click={clear} disabled={invalid}>Cancel</Button>
-		<Button type="submit" variant="primary" disabled={invalid}>{buttonText}</Button>
+		<Button data-testid="cancel" on:click={clear} disabled={invalid}>Cancel</Button>
+		<Button data-testid="submit" type="submit" variant="primary" disabled={invalid}
+			>{buttonText}</Button
+		>
 	</div>
 </form>
 
