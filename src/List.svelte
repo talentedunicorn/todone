@@ -151,6 +151,7 @@
 				{@const { _id, _rev, title, value, completed, updated } = task}
 				<div transition:fly={{ duration: 500, y: 100 }}>
 					<Task
+						id={`task-${i}`}
 						{title}
 						{value}
 						{completed}
