@@ -41,11 +41,19 @@
 
 	const scrollToID = (ev: MouseEvent) => {
 		ev.preventDefault();
+		const offset = document.querySelector('.Menu')?.getBoundingClientRect().height ?? 0; // Set offset so menu doesn't cover the task
 		const el = ev.currentTarget as HTMLLinkElement;
 		const id = el.getAttribute('href')?.slice(0);
-		const scrollTo = document.querySelector(id!);
+		const target = document.querySelector(id!);
+		const bodyPosition = document.body.getBoundingClientRect().top;
+		const targetPosition = target?.getBoundingClientRect().top ?? 0;
 
-		scrollTo?.scrollIntoView({ behavior: 'smooth' });
+		const top = targetPosition - bodyPosition - offset;
+
+		// Wait for CSS expanded class to be applied
+		setTimeout(() => {
+			window.scrollTo({ top, behavior: 'smooth' });
+		}, 300);
 	};
 
 	const scrollIntoView = (el: HTMLAnchorElement) => {
