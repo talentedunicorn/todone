@@ -23,12 +23,18 @@
 </script>
 
 <button
+	{...$$restProps}
 	{type}
-	class={['button', `${size}`, `${variant}`, `${selected ? 'selected' : ''}`]
+	class={[
+		'button',
+		`${size}`,
+		`${variant}`,
+		`${selected ? 'selected' : ''}`,
+		`${$$restProps.class ? $$restProps.class.split(' ') : ''}`
+	]
 		.filter((c) => c.trim().length > 0)
 		.join(' ')}
 	on:click={onClick}
-	{...$$restProps}
 >
 	<slot>Button text</slot>
 </button>

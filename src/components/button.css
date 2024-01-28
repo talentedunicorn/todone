@@ -10,6 +10,7 @@
 	border-radius: 0.7em;
 	cursor: pointer;
 	display: inline-flex;
+	align-items: center;
 	text-decoration: none;
 	line-height: 1;
 	background-color: var(--button-bg);

@@ -27,6 +27,7 @@
 	let query = '';
 	let showSearch = false;
 	let deleting = false;
+	let expanded = false;
 
 	$: renderedTodos = $currentTab === 'To Do' ? incompleteTodos : completedTodos;
 
@@ -148,6 +149,24 @@
 					<Button on:click={clearCompleted} disabled={deleting}>Clear completed</Button>
 				</div>
 			{/if}
+			<div>
+				<Button
+					variant="link"
+					size="small"
+					class="ToggleExpand"
+					on:click={() => {
+						expanded = true;
+					}}>Expand all</Button
+				>
+				<Button
+					variant="link"
+					size="small"
+					class="ToggleExpand"
+					on:click={() => {
+						expanded = false;
+					}}>Collapse all</Button
+				>
+			</div>
 			{#each renderedTodos as task, i (i)}
 				{@const { _id, _rev, title, value, completed, updated } = task}
 				<div transition:fly={{ duration: 500, y: 100 }}>
@@ -157,6 +176,7 @@
 						{value}
 						{completed}
 						{updated}
+						{expanded}
 						on:edit={() => handleEdit({ _id, _rev, title, value, completed })}
 						on:delete={() => remove(_id, _rev)}
 						on:complete={() => handleToggleComplete({ _id, _rev, title, value, completed })}
@@ -211,5 +231,9 @@
 		padding: 0.5em;
 		font-size: 1rem;
 		font-family: inherit;
+	}
+
+	main :global(.ToggleExpand) {
+		margin-left: auto;
 	}
 </style>
