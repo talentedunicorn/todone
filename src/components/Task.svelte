@@ -2,7 +2,14 @@
 	import { createEventDispatcher } from 'svelte';
 	import Button from './Button.svelte';
 	import { marked, type RendererObject } from 'marked';
+	import type { HTMLBaseAttributes } from 'svelte/elements';
 
+	interface $$Props extends HTMLBaseAttributes {
+		title: string;
+		value: string;
+		completed: boolean;
+		updated: Date;
+	}
 	const renderer: RendererObject = {
 		table(header, body) {
 			const r = new marked.Renderer();
@@ -30,9 +37,26 @@
 			dateStyle: 'medium',
 			timeStyle: 'short'
 		}).format(new Date(updated))}`;
+
+	const scrollToID = (ev: MouseEvent) => {
+		ev.preventDefault();
+		const el = ev.currentTarget as HTMLLinkElement;
+		const id = el.getAttribute('href')?.slice(0);
+		const scrollTo = document.querySelector(id!);
+
+		scrollTo?.scrollIntoView({ behavior: 'smooth' });
+	};
+
+	const scrollIntoView = (el: HTMLAnchorElement) => {
+		el.addEventListener('click', scrollToID);
+
+		return {
+			destroy: () => el.removeEventListener('click', scrollToID)
+		};
+	};
 </script>
 
-<section>
+<section {...$$restProps}>
 	<header data-updated={formattedTimestamp}>
 		<h3>{title}</h3>
 	</header>
@@ -49,17 +73,19 @@
 				expanded = !expanded;
 			}}
 		>
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" fill="currentColor">
-				{#if expanded}
-					<path
-						d="M18.707 14.293l-6-6c-0.391-0.391-1.024-0.391-1.414 0l-6 6c-0.391 0.391-0.391 1.024 0 1.414s1.024 0.391 1.414 0l5.293-5.293 5.293 5.293c0.391 0.391 1.024 0.391 1.414 0s0.391-1.024 0-1.414z"
-					/>
-				{:else}
-					<path
-						d="M5.293 9.707l6 6c0.391 0.391 1.024 0.391 1.414 0l6-6c0.391-0.391 0.391-1.024 0-1.414s-1.024-0.391-1.414 0l-5.293 5.293-5.293-5.293c-0.391-0.391-1.024-0.391-1.414 0s-0.391 1.024 0 1.414z"
-					/>
-				{/if}
-			</svg>
+			<a href={`#${$$restProps.id}`} use:scrollIntoView>
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" fill="currentColor">
+					{#if expanded}
+						<path
+							d="M18.707 14.293l-6-6c-0.391-0.391-1.024-0.391-1.414 0l-6 6c-0.391 0.391-0.391 1.024 0 1.414s1.024 0.391 1.414 0l5.293-5.293 5.293 5.293c0.391 0.391 1.024 0.391 1.414 0s0.391-1.024 0-1.414z"
+						/>
+					{:else}
+						<path
+							d="M5.293 9.707l6 6c0.391 0.391 1.024 0.391 1.414 0l6-6c0.391-0.391 0.391-1.024 0-1.414s-1.024-0.391-1.414 0l-5.293 5.293-5.293-5.293c-0.391-0.391-1.024-0.391-1.414 0s-0.391 1.024 0 1.414z"
+						/>
+					{/if}
+				</svg>
+			</a>
 		</Button>
 		<Button data-testid="delete" size="small" on:click={() => dispatch('delete')}>Delete</Button>
 		<Button data-testid="edit" size="small" on:click={() => dispatch('edit')}>Edit</Button>
@@ -109,6 +135,10 @@
 	.Actions :global([data-toggle]) {
 		margin-right: auto;
 		padding: 0;
+	}
+
+	.Actions :global([data-toggle] a) {
+		color: inherit;
 	}
 
 	.Content {
