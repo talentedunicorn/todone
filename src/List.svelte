@@ -192,6 +192,7 @@
 	.Search {
 		align-self: flex-end;
 		position: sticky;
+		z-index: 1;
 		top: 1rem;
 		display: inline-flex;
 		gap: 1rem;
