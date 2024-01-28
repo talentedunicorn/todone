@@ -78,8 +78,6 @@
 		border: 1px solid var(--gray-light);
 		border-radius: 0.5em;
 		background: var(--white);
-		display: grid;
-		gap: 1rem;
 	}
 
 	header {
@@ -119,6 +117,7 @@
 		overflow: clip;
 		position: relative;
 		transition: max-height 0.2s ease-in;
+		margin: 1rem 0;
 	}
 
 	.Content::after {
