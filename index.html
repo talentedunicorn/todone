@@ -4,7 +4,18 @@
 		<meta charset="UTF-8" />
 		<link rel="icon" type="image/svg+xml" href="/logo.svg" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>ToDone - Get it done!</title>
+		<title>ToDone &#8212; Get it done!</title>
+		<meta name="description" content="An offline-first ToDo list" />
+		<script async src="https://www.googletagmanager.com/gtag/js?id=%VITE_GA_TAG%"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag('js', new Date());
+
+			gtag('config', '%VITE_GA_TAG%');
+		</script>
 	</head>
 	<body>
 		<div id="app"></div>
