@@ -42,8 +42,8 @@
 
 .link.selected:not(:disabled),
 .link:hover:not(:disabled) {
-	--button-bg: var(--gray-light);
-	--border-color: var(--gray-light);
+	--button-bg: transparent;
+	--border-color: var(--button-bg);
 	--button-color: var(--black);
 }
 

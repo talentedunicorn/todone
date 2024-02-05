@@ -9,7 +9,7 @@
 
 	let data: Todo[] = [];
 	$: filtered = data
-		.filter((t) => t.title.toLowerCase().includes(query.toLowerCase()))
+		.filter((t) => t.title?.toLowerCase().includes(query.toLowerCase()))
 		// Sort by updated or ID
 		.sort((a, b) => {
 			if (a.updated && b.updated) {
@@ -155,9 +155,9 @@
 						{value}
 						{completed}
 						{updated}
-						on:edit={() => handleEdit({ _id, _rev, title, value, completed })}
+						on:edit={() => handleEdit(task)}
 						on:delete={() => remove(_id, _rev)}
-						on:complete={() => handleToggleComplete({ _id, _rev, title, value, completed })}
+						on:complete={() => handleToggleComplete(task)}
 					/>
 				</div>
 			{/each}

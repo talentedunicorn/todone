@@ -1,7 +1,14 @@
 import PouchDB from 'pouchdb-browser';
 import { status, SyncStatus } from './stores';
 
-export type Todo = any;
+export type Todo = {
+	_id: string;
+	_rev: string;
+	title: string;
+	value: string;
+	completed: boolean;
+	updated: Date;
+};
 
 const db = new PouchDB(import.meta.env.VITE_DB_NAME || 'ToDone');
 
@@ -24,10 +31,12 @@ const remove = async (id: string, rev: string) => {
 };
 
 const getTodos = async () => {
-	const todos = (await db.allDocs({ include_docs: true, descending: true })).rows.map(
-		(t) => t.doc
-	) as Todo[];
-	return todos;
+	const todos = (await db.allDocs({ include_docs: true, descending: true })).rows.map((t) => t.doc);
+	return todos as PouchDB.Core.ExistingDocument<PouchDB.Core.AllDocsMeta & Todo>[];
+};
+
+const bulkInsert = async (todos: Todo[]) => {
+	await db.bulkDocs<Todo>(todos);
 };
 
 const onChangeHandler = (callback: () => void) => {
@@ -53,4 +62,4 @@ const onChangeHandler = (callback: () => void) => {
 	}).on('change', callback);
 };
 
-export { getTodos, add, update, remove, onChangeHandler };
+export { getTodos, bulkInsert, add, update, remove, onChangeHandler };
