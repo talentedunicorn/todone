@@ -46,6 +46,7 @@
 					}}>{menuitem.label}</Button
 				>
 			{/each}
+			<slot />
 		</div>
 	{/if}
 </nav>
@@ -62,7 +63,7 @@
 		background-color: var(--nav-bg, var(--gray-light));
 		padding: 1rem;
 		align-items: start;
-		transition: all var(--ease) 0.7s;
+		transition: background-color var(--ease) 0.5;
 		border-bottom-right-radius: 1rem;
 	}
 
@@ -74,5 +75,13 @@
 	header {
 		font-size: 2rem;
 		color: var(--gray);
+	}
+
+	@media screen and (min-width: 60rem) {
+		nav,
+		nav > div {
+			flex-flow: row;
+			align-items: center;
+		}
 	}
 </style>

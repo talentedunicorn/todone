@@ -10,6 +10,7 @@
 - Markdown support
 - Synced with Couchdb or Pouchdb (Self hosted)
 - [Auth0](https://auth0.com/) authentication for synced mode
+- Export/Import of data
 
 ## Building
 

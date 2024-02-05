@@ -57,6 +57,7 @@
 		"events": "^3.3.0",
 		"marked": "^12.0.0",
 		"pouchdb-browser": "^8.0.1",
-		"vite-plugin-pwa": "^0.18.0"
+		"vite-plugin-pwa": "^0.18.0",
+		"zod": "^3.22.4"
 	}
 }
