@@ -10,7 +10,6 @@
 	let data: Todo[] = [];
 	$: filtered = data
 		.filter((t) => t.title.toLowerCase().includes(query.toLowerCase()))
-		.map((t) => (t.updated ? t : { ...t, updated: new Date(t._id) })) // Set _id as updated for now until we migrate all tasks
 		// Sort by updated or ID
 		.sort((a, b) => {
 			if (a.updated && b.updated) {
