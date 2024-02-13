@@ -9,8 +9,8 @@ dependencies:
     specifier: ^3.3.0
     version: 3.3.0
   marked:
-    specifier: ^11.0.0
-    version: 11.0.0
+    specifier: ^12.0.0
+    version: 12.0.0
   pouchdb-browser:
     specifier: ^8.0.1
     version: 8.0.1
@@ -8118,8 +8118,8 @@ packages:
       react: 18.2.0
     dev: true
 
-  /marked@11.0.0:
-    resolution: {integrity: sha512-2GsW34uXaFEGTQ/+3rCnNC6vUYTAgFuDLGl70v/aWinA5mIJtTrrFAmfbLOfVvgPyxXuDVL9He/7reCK+6j3Sw==}
+  /marked@12.0.0:
+    resolution: {integrity: sha512-Vkwtq9rLqXryZnWaQc86+FHLC6tr/fycMfYAhiOIXkrNmeGAyhSxjqu0Rs1i0bBqw5u0S7+lV9fdH2ZSVaoa0w==}
     engines: {node: '>= 18'}
     hasBin: true
     dev: false
