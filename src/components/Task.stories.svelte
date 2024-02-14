@@ -1,13 +1,18 @@
-<script lang="ts">
-	import { Meta, Story, Template } from '@storybook/addon-svelte-csf';
+<script context="module">
 	import Task from './Task.svelte';
+	export const meta = {
+		title: 'Task',
+		component: Task
+	};
+</script>
+
+<script lang="ts">
+	import { Story, Template } from '@storybook/addon-svelte-csf';
 	import { userEvent, waitFor, within } from '@storybook/testing-library';
 	import { jest, expect } from '@storybook/jest';
 
 	const alertSpy = jest.spyOn(window, 'alert');
 </script>
-
-<Meta title="Task" component={Task} />
 
 <Template let:args>
 	<Task
