@@ -11,7 +11,7 @@
 		"format": "prettier -w .",
 		"pre-commit": "pretty-quick --staged && npm run lint",
 		"lint": "npm run check",
-		"prepare": "husky install",
+		"prepare": "husky",
 		"storybook": "storybook dev -p 6006 --no-open",
 		"build-storybook": "storybook build",
 		"test-storybook": "test-storybook --index-json",
