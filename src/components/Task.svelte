@@ -23,12 +23,10 @@
 	export let completed = false;
 	export let updated: Date;
 	$: completeText = completed ? 'Mark Incomplete' : 'Mark Completed';
-	$: formattedTimestamp =
-		updated &&
-		`Updated ― ${Intl.DateTimeFormat('en-MY', {
-			dateStyle: 'medium',
-			timeStyle: 'short'
-		}).format(new Date(updated))}`;
+	$: formattedTimestamp = `Updated ― ${Intl.DateTimeFormat('en-MY', {
+		dateStyle: 'medium',
+		timeStyle: 'short'
+	}).format(new Date(updated))}`;
 </script>
 
 <section>

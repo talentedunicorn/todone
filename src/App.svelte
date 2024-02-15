@@ -11,6 +11,8 @@
 	import type { Auth0Client } from '@auth0/auth0-spa-js';
 	import ReloadPrompt from './components/ReloadPrompt.svelte';
 	import { pwaInfo } from 'virtual:pwa-info';
+	import ExportImport from './components/ExportImport.svelte';
+	import Toast from './components/Toast.svelte';
 
 	let auth0: Auth0Client;
 	let wrapper: HTMLElement;
@@ -50,27 +52,11 @@
 			if (!$isLoggedin) return;
 		}
 	});
-
-	let ga_tag = import.meta.env.VITE_GA_TAG;
 </script>
 
 <svelte:head>
-	<title>ToDone &#8212; Get it done!</title>
-	<meta name="description" content="An offline-first ToDo list" />
 	{#if import.meta.env.PROD}
 		{pwaInfo?.webManifest.linkTag}
-	{/if}
-	{#if ga_tag}
-		<script async src="https://www.googletagmanager.com/gtag/js?id={ga_tag}"></script>
-		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag() {
-				dataLayer.push(arguments);
-			}
-			gtag('js', new Date());
-
-			gtag('config', ga_tag);
-		</script>
 	{/if}
 </svelte:head>
 
@@ -82,7 +68,9 @@
 		</div>
 	{:else}
 		<div class="Menu">
-			<Menu {menuItems} on:goTo={handleMenu} />
+			<Menu {menuItems} on:goTo={handleMenu}>
+				<ExportImport />
+			</Menu>
 		</div>
 		<header class="Header">
 			<h1 data-syncing={$status} class="Logo" title="ToDone"><Logo /></h1>
@@ -109,6 +97,7 @@
 			>
 		</footer>
 	{/if}
+	<Toast />
 </main>
 
 {#if 'serviceWorker' in navigator && import.meta.env.PROD}
