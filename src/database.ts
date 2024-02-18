@@ -31,8 +31,11 @@ const remove = async (id: string, rev: string) => {
 };
 
 const getTodos = async () => {
-	const todos = (await db.allDocs({ include_docs: true, descending: true })).rows.map((t) => t.doc);
-	return todos as PouchDB.Core.ExistingDocument<PouchDB.Core.AllDocsMeta & Todo>[];
+	const todos = (await db.allDocs({ include_docs: true, descending: true })).rows.map((t) => {
+		const doc = t.doc as Todo;
+		return { ...doc, updated: doc?.updated ?? doc?._id };
+	});
+	return todos;
 };
 
 const bulkInsert = async (todos: Todo[]) => {
