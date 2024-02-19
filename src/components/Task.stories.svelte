@@ -35,7 +35,8 @@ Includes lists \n \
 	import { userEvent, waitFor, within } from '@storybook/testing-library';
 	import { jest, expect } from '@storybook/jest';
 
-	const alertSpy = jest.spyOn(window, 'alert');
+	const consoleSpy = jest.spyOn(window, 'alert');
+</script>
 
 <Template let:args>
 	<Task
