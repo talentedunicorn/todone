@@ -75,7 +75,7 @@ devDependencies:
     version: 9.1.3(@babel/core@7.24.0)(webpack@5.90.3)
   chromatic:
     specifier: ^11.0.0
-    version: 11.0.3
+    version: 11.0.4
   husky:
     specifier: ^9.0.0
     version: 9.0.11
@@ -5338,8 +5338,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /chromatic@11.0.3:
-    resolution: {integrity: sha512-zdOFWPoNAgzlfMlhCExcpsW/lMkwWccF2m9W3V7pddTWQMStXzs6FMjAxj+C3J+NBeBlcCyr9Jm6i/P3DMjZ7A==}
+  /chromatic@11.0.4:
+    resolution: {integrity: sha512-v0ChtRee4FTX+YwoHHMG86rqMsJs5Y/aNsII+hHMacol3lXDhAwJkxw48B81LoTU+HumTPjqLaasdxMxrs4Z2w==}
     hasBin: true
     peerDependencies:
       '@chromatic-com/cypress': ^0.5.2 || ^1.0.0
