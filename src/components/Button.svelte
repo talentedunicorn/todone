@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 	import './button.css';
 
@@ -14,12 +13,6 @@
 	export let size = '';
 	export let type: 'button' | 'submit' | 'reset' = 'button';
 	export let selected = false;
-
-	const dispatch = createEventDispatcher();
-
-	function onClick(event: { detail: any }) {
-		dispatch('click', event.detail);
-	}
 </script>
 
 <button
@@ -34,7 +27,7 @@
 	]
 		.filter((c) => c.trim().length > 0)
 		.join(' ')}
-	on:click={onClick}
+	on:click
 >
 	<slot>Button text</slot>
 </button>

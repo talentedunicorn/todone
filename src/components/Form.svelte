@@ -24,16 +24,16 @@
 	$: invalid = data.title.trim().length < 1 || data.value.trim().length < 1;
 	$: buttonText = isEdit ? 'Update' : 'Submit';
 
-	function clear() {
+	const clear = () => {
 		defaultValue = null;
 		data = { title: '', value: '' };
 		dispatch('clear');
-	}
+	};
 
-	function submit() {
+	const submit = () => {
 		isEdit ? dispatch('update', data) : dispatch('submit', data);
 		clear();
-	}
+	};
 </script>
 
 <!--
