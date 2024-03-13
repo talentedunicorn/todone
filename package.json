@@ -30,7 +30,7 @@
 		"@storybook/jest": "^0.2.3",
 		"@storybook/svelte": "^7.6.10",
 		"@storybook/svelte-vite": "^7.6.10",
-		"@storybook/test-runner": "^0.16.0",
+		"@storybook/test-runner": "^0.17.0",
 		"@storybook/testing-library": "^0.2.2",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@tsconfig/svelte": "^5.0.2",
