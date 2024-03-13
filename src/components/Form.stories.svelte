@@ -21,8 +21,8 @@
 	name="Empty"
 	play={async ({ canvasElement }) => {
 		const canvas = within(canvasElement);
-		const cancelButton = canvas.getByText('Cancel');
-		const submitButton = canvas.getByText('Submit');
+		const cancelButton = canvas.getByTestId('cancel');
+		const submitButton = canvas.getByTestId('submit');
 		const titleField = canvas.getByLabelText('Title', { selector: 'input' });
 		const contentField = canvas.getByLabelText('Content', { selector: 'textarea' });
 
@@ -56,8 +56,8 @@
 	}}
 	play={async ({ canvasElement }) => {
 		const canvas = within(canvasElement);
-		const cancelButton = canvas.getByText('Cancel');
-		const updateButton = canvas.getByText('Update');
+		const cancelButton = canvas.getByTestId('cancel');
+		const updateButton = canvas.getByTestId('submit');
 		const titleField = canvas.getByLabelText('Title', { selector: 'input' });
 		const contentField = canvas.getByLabelText('Content', { selector: 'textarea' });
 
@@ -65,7 +65,7 @@
 		userEvent.click(updateButton);
 
 		waitFor(() => {
-			const submitButton = canvas.getByText('Submit');
+			const submitButton = canvas.getByTestId('submit');
 			expect(titleField.textContent).toBe('');
 			expect(contentField.textContent).toBe('');
 			expect(submitButton).toBeDisabled();

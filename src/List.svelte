@@ -7,16 +7,18 @@
 	import { getTodos, add, update, remove, onChangeHandler, type Todo } from './database';
 	import { currentTab } from './stores';
 
-	let data: Todo[] = [];
+	type TodoWithExpanded = Todo & { expanded: boolean };
+	let data: TodoWithExpanded[] = [];
 	$: filtered = data
 		.filter((t) => t.title?.toLowerCase().includes(query.toLowerCase()))
-		// Sort by updated or ID
+		// Sort by updated
 		.sort((a, b) => {
 			if (a.updated && b.updated) {
 				return new Date(b.updated).getTime() - new Date(a.updated).getTime();
 			}
 			return 0;
-		});
+		})
+		.map((task) => ({ ...task, expanded: false }));
 	$: completedTodos = filtered.filter((t) => t.completed === true);
 	$: incompleteTodos = filtered.filter((t) => t.completed === false);
 	let task: Todo | null = null;
@@ -31,7 +33,7 @@
 
 	const loadTodos = async () => {
 		const todos = await getTodos();
-		data = [...todos];
+		data = [...todos].map((task) => ({ ...task, expanded: false }));
 	};
 
 	onMount(async () => {
@@ -39,34 +41,54 @@
 		onChangeHandler(loadTodos);
 	});
 
-	function clearEdit() {
+	const clearEdit = () => {
 		task = null;
-	}
+	};
 
-	async function handleUpdate({ detail }: ComponentEvents<Form>['update']) {
+	const handleUpdate = async ({ detail }: ComponentEvents<Form>['update']) => {
 		update(detail).then(() => {
 			clearEdit();
 		});
-	}
+	};
 
-	async function handleCreate({ detail }: ComponentEvents<Form>['submit']) {
+	const handleCreate = async ({ detail }: ComponentEvents<Form>['submit']) => {
 		await add(detail);
-	}
+	};
 
-	function handleEdit(value: Todo) {
+	const handleEdit = (value: Todo) => {
 		task = value;
-	}
+	};
 
-	function handleToggleComplete(value: Todo) {
+	const handleToggleComplete = (value: Todo) => {
 		update({ ...value, completed: !value?.completed });
-	}
+	};
 
-	async function clearCompleted() {
+	const clearCompleted = async () => {
 		deleting = true;
-		Promise.all(completedTodos.map((t) => remove(t._id, t._rev))).then(() => {
+		await Promise.all(completedTodos.map((t) => remove(t._id, t._rev))).then(() => {
 			deleting = false;
 		});
-	}
+	};
+
+	const handleToggleExpand = (id: string, e: ComponentEvents<Task>['toggleExpand']) => {
+		const expanded = e.detail;
+		const taskIndex = renderedTodos.findIndex((t) => t._id === id);
+		if (taskIndex > -1) {
+			renderedTodos[taskIndex] = { ...renderedTodos[taskIndex], expanded };
+		}
+	};
+
+	const expandAll = () => {
+		renderedTodos = renderedTodos.map((t) => {
+			return t.expanded === false ? { ...t, expanded: true } : t;
+		});
+	};
+
+	const collapseAll = () => {
+		renderedTodos = renderedTodos.map((t) => {
+			return t.expanded === true ? { ...t, expanded: false } : t;
+		});
+	};
 </script>
 
 <main>
@@ -147,17 +169,28 @@
 					<Button on:click={clearCompleted} disabled={deleting}>Clear completed</Button>
 				</div>
 			{/if}
+			<div>
+				<Button variant="link" size="small" class="ToggleExpand" on:click={expandAll}
+					>Expand all</Button
+				>
+				<Button variant="link" size="small" class="ToggleExpand" on:click={collapseAll}
+					>Collapse all</Button
+				>
+			</div>
 			{#each renderedTodos as task, i (i)}
-				{@const { _id, _rev, title, value, completed, updated } = task}
+				{@const { _id, _rev, title, value, completed, updated, expanded } = task}
 				<div transition:fly={{ duration: 500, y: 100 }}>
 					<Task
+						id={`task-${i}`}
 						{title}
 						{value}
 						{completed}
 						{updated}
+						{expanded}
 						on:edit={() => handleEdit(task)}
 						on:delete={() => remove(_id, _rev)}
 						on:complete={() => handleToggleComplete(task)}
+						on:toggleExpand={(e) => handleToggleExpand(_id, e)}
 					/>
 				</div>
 			{/each}
@@ -192,6 +225,7 @@
 	.Search {
 		align-self: flex-end;
 		position: sticky;
+		z-index: 1;
 		top: 1rem;
 		display: inline-flex;
 		gap: 1rem;
@@ -208,5 +242,9 @@
 		padding: 0.5em;
 		font-size: 1rem;
 		font-family: inherit;
+	}
+
+	main :global(.ToggleExpand) {
+		margin-left: auto;
 	}
 </style>

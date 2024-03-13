@@ -24,16 +24,16 @@
 	$: invalid = data.title.trim().length < 1 || data.value.trim().length < 1;
 	$: buttonText = isEdit ? 'Update' : 'Submit';
 
-	function clear() {
+	const clear = () => {
 		defaultValue = null;
 		data = { title: '', value: '' };
 		dispatch('clear');
-	}
+	};
 
-	function submit() {
+	const submit = () => {
 		isEdit ? dispatch('update', data) : dispatch('submit', data);
 		clear();
-	}
+	};
 </script>
 
 <!--
@@ -64,8 +64,10 @@ Form component with a title and content inputs
 	<label class="visually-hidden" for="content">Content</label>
 	<textarea id="content" rows="5" placeholder="Start typing something..." bind:value={data.value} />
 	<div class="Actions">
-		<Button on:click={clear} disabled={invalid}>Cancel</Button>
-		<Button type="submit" variant="primary" disabled={invalid}>{buttonText}</Button>
+		<Button data-testid="cancel" on:click={clear} disabled={invalid}>Cancel</Button>
+		<Button data-testid="submit" type="submit" variant="primary" disabled={invalid}
+			>{buttonText}</Button
+		>
 	</div>
 </form>
 

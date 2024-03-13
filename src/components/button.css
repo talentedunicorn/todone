@@ -9,7 +9,9 @@
 	border: 0.2em solid var(--border-color);
 	border-radius: 0.7em;
 	cursor: pointer;
-	display: inline-block;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	text-decoration: none;
 	line-height: 1;
 	background-color: var(--button-bg);
@@ -54,4 +56,10 @@
 
 .large {
 	font-size: 1.2rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.button {
+		transition: all 0.3s var(--ease);
+	}
 }
