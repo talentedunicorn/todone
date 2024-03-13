@@ -11,6 +11,7 @@
 	cursor: pointer;
 	display: inline-flex;
 	align-items: center;
+	justify-content: center;
 	text-decoration: none;
 	line-height: 1;
 	background-color: var(--button-bg);
