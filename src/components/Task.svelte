@@ -2,9 +2,9 @@
 	import { createEventDispatcher } from 'svelte';
 	import Button from './Button.svelte';
 	import { marked, type RendererObject } from 'marked';
-	import type { HTMLBaseAttributes } from 'svelte/elements';
+	import type { HTMLAttributes } from 'svelte/elements';
 
-	interface $$Props extends HTMLBaseAttributes {
+	interface $$Props extends HTMLAttributes<HTMLBaseElement> {
 		title: string;
 		value: string;
 		completed: boolean;
