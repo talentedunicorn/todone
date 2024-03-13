@@ -60,5 +60,5 @@
 		"vite-plugin-pwa": "^0.19.0",
 		"zod": "^3.22.4"
 	},
-	"packageManager": "pnpm@8.14.0+sha256.9cebf61abd83f68177b29484da72da9751390eaad46dfc3072d266bfbb1ba7bf"
+	"packageManager": "pnpm@8.15.4"
 }
