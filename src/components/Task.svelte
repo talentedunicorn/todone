@@ -61,6 +61,10 @@
 			destroy: () => el.removeEventListener('click', scrollToID)
 		};
 	};
+
+	const toggleExpand = () => {
+		dispatch('toggleExpand', !expanded);
+	};
 </script>
 
 <section {...$$restProps}>
@@ -72,9 +76,7 @@
 				data-toggle
 				size="small"
 				variant="link"
-				on:click={() => {
-					expanded = !expanded;
-				}}
+				on:click={toggleExpand}
 			>
 				<a href={`#${$$restProps.id}`} use:scrollIntoView>
 					<svg
