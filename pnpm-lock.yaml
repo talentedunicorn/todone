@@ -45,7 +45,7 @@ devDependencies:
     version: 8.0.0(react@18.2.0)
   '@storybook/addon-svelte-csf':
     specifier: ^4.1.0
-    version: 4.1.2(@storybook/svelte@8.0.0)(@sveltejs/vite-plugin-svelte@3.0.2)(svelte-loader@3.1.9)(svelte@4.2.12)(vite@5.1.6)
+    version: 4.1.2(@storybook/svelte@8.0.0)(@sveltejs/vite-plugin-svelte@3.0.2)(svelte-loader@3.2.0)(svelte@4.2.12)(vite@5.1.6)
   '@storybook/jest':
     specifier: ^0.2.3
     version: 0.2.3(jest@29.7.0)
@@ -108,7 +108,7 @@ devDependencies:
     version: 3.6.6(@babel/core@7.24.0)(svelte@4.2.12)
   svelte-loader:
     specifier: ^3.1.9
-    version: 3.1.9(svelte@4.2.12)
+    version: 3.2.0(svelte@4.2.12)
   tslib:
     specifier: ^2.6.2
     version: 2.6.2
@@ -2290,7 +2290,7 @@ packages:
       ts-dedent: 2.2.0
     dev: true
 
-  /@storybook/addon-svelte-csf@4.1.2(@storybook/svelte@8.0.0)(@sveltejs/vite-plugin-svelte@3.0.2)(svelte-loader@3.1.9)(svelte@4.2.12)(vite@5.1.6):
+  /@storybook/addon-svelte-csf@4.1.2(@storybook/svelte@8.0.0)(@sveltejs/vite-plugin-svelte@3.0.2)(svelte-loader@3.2.0)(svelte@4.2.12)(vite@5.1.6):
     resolution: {integrity: sha512-4aNlI8tdzkNyUK4fxRgAGTtgYLT97KBAqaiJLu5YtXI4YFarDcmUgLnPet0oj4QxQAfbcId+vGWhSIMG6q6lNg==}
     peerDependencies:
       '@storybook/svelte': ^7.0.0 || ^8.0.0 || ^8.0.0-beta.0
@@ -2313,7 +2313,7 @@ packages:
       fs-extra: 11.2.0
       magic-string: 0.30.8
       svelte: 4.2.12
-      svelte-loader: 3.1.9(svelte@4.2.12)
+      svelte-loader: 3.2.0(svelte@4.2.12)
       vite: 5.1.6
     transitivePeerDependencies:
       - babel-plugin-macros
@@ -9157,10 +9157,10 @@ packages:
       svelte: 4.2.12
     dev: true
 
-  /svelte-loader@3.1.9(svelte@4.2.12):
-    resolution: {integrity: sha512-RITPqze3TppOhaZF8SEFTDTwFHov17k3UkOjpxyL/No/YVrvckKmXWOEj7QEpsZZZSNQPb28tMZbHEI2xLhJMQ==}
+  /svelte-loader@3.2.0(svelte@4.2.12):
+    resolution: {integrity: sha512-pxsNMC/1JHdQ63M0Zw5cS8dN299nvMiU2ze8yWPLlov/xBNXElEEM22so2q/vJDUyP0ZCrCVMV1d/tlWwxMRLA==}
     peerDependencies:
-      svelte: ^3.0.0 || ^4.0.0-next.0
+      svelte: ^3.0.0 || ^4.0.0-next.0 || ^5.0.0-next.1
     dependencies:
       loader-utils: 2.0.4
       svelte: 4.2.12
