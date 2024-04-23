@@ -27,3 +27,5 @@ dist-ssr
 storybook-static
 coverage
 .nyc_output
+
+.nx/cache
