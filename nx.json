@@ -1,0 +1,42 @@
+{
+	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"targetDefaults": {
+		"build": {
+			"outputs": ["{projectRoot}/dist"],
+			"cache": true
+		},
+		"test-storybook:coverage": {
+			"outputs": ["{projectRoot}/coverage"],
+			"cache": true
+		},
+		"check": {
+			"cache": true
+		},
+		"format": {
+			"cache": true
+		},
+		"lint": {
+			"cache": true
+		},
+		"test-storybook": {
+			"cache": true
+		},
+		"build-storybook": {
+			"outputs": ["{projectRoot}/storybook-static"],
+			"cache": true
+		}
+	},
+	"defaultBase": "master",
+	"plugins": [
+		{
+			"plugin": "@nx/vite/plugin",
+			"options": {
+				"buildTargetName": "vite:build",
+				"testTargetName": "test",
+				"serveTargetName": "serve",
+				"previewTargetName": "vite:preview",
+				"serveStaticTargetName": "serve-static"
+			}
+		}
+	]
+}
