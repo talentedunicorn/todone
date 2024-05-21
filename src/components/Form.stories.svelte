@@ -9,8 +9,7 @@
 
 <script lang="ts">
 	import { Template, Story } from '@storybook/addon-svelte-csf';
-	import { within, userEvent, waitFor } from '@storybook/testing-library';
-	import { expect } from '@storybook/jest';
+	import { within, userEvent, waitFor, expect } from '@storybook/test';
 </script>
 
 <Template let:args>
