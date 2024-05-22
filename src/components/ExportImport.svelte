@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from './Button.svelte';
-	import { getTodos, bulkInsert, type Todo } from '../database';
+	import { exportTodos, importTodos, type Todo } from '../db';
 	import { toastMessage } from '../stores';
 	import { z } from 'zod';
 
@@ -13,13 +13,14 @@
 	const exportData = async () => {
 		processing = true;
 		try {
-			const data = (await getTodos()).map((t: Todo) => ({
-				_id: t?._id,
+			const data = (await exportTodos()).map((t: Todo) => ({
+				id: t?.id,
 				title: t?.title,
 				value: t?.value,
 				completed: t?.completed,
 				updated: t?.updated
 			}));
+
 			if (data.length < 1) throw Error('No tasks found in the database.');
 
 			const blob = new Blob([JSON.stringify(data)], { type: 'text/json' });
@@ -48,7 +49,7 @@
 		const data = JSON.parse(await file.text());
 		const schema = z.array(
 			z.object({
-				_id: z.string(),
+				id: z.string(),
 				title: z.string(),
 				value: z.string(),
 				completed: z.boolean(),
@@ -59,7 +60,7 @@
 		const result = schema.safeParse(data);
 		if (result.success) {
 			try {
-				await bulkInsert(data);
+				await importTodos(data);
 				toastMessage.set('Imported data successfully');
 			} catch (e) {
 				toastMessage.set('Failed to import data');

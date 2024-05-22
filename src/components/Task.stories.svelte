@@ -32,10 +32,9 @@ Includes lists \n \
 
 <script lang="ts">
 	import { Story, Template } from '@storybook/addon-svelte-csf';
-	import { userEvent, waitFor, within } from '@storybook/testing-library';
-	import { jest, expect } from '@storybook/jest';
+	import { userEvent, waitFor, within, expect, spyOn } from '@storybook/test';
 
-	const consoleSpy = jest.spyOn(window, 'alert');
+	const consoleSpy = spyOn(window, 'alert');
 </script>
 
 <Template let:args>

@@ -8,15 +8,10 @@ const config: StorybookConfig = {
 		'@storybook/addon-essentials',
 		'@storybook/addon-interactions',
 		'@storybook/addon-svelte-csf',
-		'@storybook/addon-coverage'
+		'@storybook/addon-coverage',
+		'@chromatic-com/storybook'
 	],
-	features: {
-		storyStoreV7: true,
-		buildStoriesJson: true
-	},
-	docs: {
-		autodocs: true
-	}
+	docs: {}
 };
 
 export default config;

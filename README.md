@@ -25,6 +25,8 @@ You can preview the production build with `pnpm run preview`.
 - `VITE_SYNCED` to be set `true` or `false`
 - `VITE_GA_TAG` for Google Analytics tag
 - `VITE_DB_NAME` the pouchdb database name
-- `VITE_REMOTE_DB` pouchdb or couchdb database url. Required `VITE_SYNCED` to be `true`
+- `VITE_REMOTE_DB` remote pouchdb/couchdb database url. Required `VITE_SYNCED` to be `true`
+- `VITE_REMOTE_DB_USERNAME` remote pouchdb/couchdb database username. Required `VITE_SYNCED` to be `true`
+- `VITE_REMOTE_DB_PASSWORD` remote pouchdb/couchdb database password. Required `VITE_SYNCED` to be `true`
 - `VITE_AUTH0_CLIENT` [Auth0](https://auth0.com/) client id
 - `VITE_AUTH0_DOMAIN` [Auth0](https://auth0.com/) domain
