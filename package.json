@@ -59,7 +59,7 @@
 	},
 	"dependencies": {
 		"events": "^3.3.0",
-		"marked": "^12.0.2",
+		"marked": "^13.0.0",
 		"rxdb": "^15.25.0",
 		"rxjs": "^7.8.1",
 		"vite-plugin-pwa": "^0.20.0",
