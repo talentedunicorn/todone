@@ -48,8 +48,13 @@
 			if (!auth0) {
 				auth0 = await initAuth0Client();
 			}
-			await checkAuth(auth0);
-			if (!$isLoggedin) return;
+			try {
+				await checkAuth(auth0);
+				if (!$isLoggedin) return;
+			} catch (e) {
+				// Log out on failure
+				logout(auth0);
+			}
 		}
 	});
 </script>
