@@ -25,6 +25,7 @@
 		"@nx/storybook": "19.3.2",
 		"@nx/vite": "19.3.2",
 		"@nx/web": "19.3.2",
+		"@sentry/svelte": "^8.17.0",
 		"@storybook/addon-actions": "^8.1.11",
 		"@storybook/addon-coverage": "^1.0.4",
 		"@storybook/addon-essentials": "^8.1.11",
@@ -58,6 +59,7 @@
 		"workbox-window": "^7.1.0"
 	},
 	"dependencies": {
+		"@sentry/vite-plugin": "^2.21.0",
 		"events": "^3.3.0",
 		"marked": "^12.0.2",
 		"rxdb": "^15.25.0",
