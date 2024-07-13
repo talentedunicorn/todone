@@ -12,16 +12,17 @@
 		expanded?: boolean;
 	}
 	const renderer: RendererObject = {
-		table(header, body) {
+		table(token) {
 			const r = new marked.Renderer();
-			return `<div class="TableWrapper">${r.table(header, body)}</div>`;
+			return `<div class="TableWrapper">${r.table(token)}</div>`;
 		}
 	};
 
 	// Configure marked
 	marked.use({
 		gfm: true,
-		renderer
+		renderer,
+		useNewRenderer: true
 	});
 
 	const dispatch = createEventDispatcher();
