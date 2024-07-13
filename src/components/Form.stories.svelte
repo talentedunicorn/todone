@@ -22,15 +22,22 @@
 		const canvas = within(canvasElement);
 		const cancelButton = canvas.getByTestId('cancel');
 		const submitButton = canvas.getByTestId('submit');
-		const titleField = canvas.getByLabelText('Title', { selector: 'input' });
-		const contentField = canvas.getByLabelText('Content', { selector: 'textarea' });
+		const titleField = canvas.getByTestId('title');
 
+		// Give marked time to load - otherwise storybook can't find 'content'
+		await (async () => {
+			return new Promise((resolve) => setTimeout(resolve, 1));
+		})();
+		const contentField = canvas.getByTestId('content');
+
+		console.log(`[Content]`, contentField);
 		await userEvent.type(titleField, 'Todo title', { delay: 100 });
 
 		expect(cancelButton).toBeDisabled();
 		expect(submitButton).toBeDisabled();
 
-		await userEvent.type(contentField, `Markdown content goes **here**`, { delay: 100 });
+		userEvent.click(contentField);
+		await userEvent.keyboard(`Markdown content goes **here**`, { delay: 100 });
 
 		expect(cancelButton).toBeEnabled();
 		expect(submitButton).toBeEnabled();
@@ -57,8 +64,13 @@
 		const canvas = within(canvasElement);
 		const cancelButton = canvas.getByTestId('cancel');
 		const updateButton = canvas.getByTestId('submit');
-		const titleField = canvas.getByLabelText('Title', { selector: 'input' });
-		const contentField = canvas.getByLabelText('Content', { selector: 'textarea' });
+		const titleField = canvas.getByTestId('title');
+
+		// Give marked time to load - otherwise storybook can't find 'content'
+		await (async () => {
+			return new Promise((resolve) => setTimeout(resolve, 1));
+		})();
+		const contentField = canvas.getByTestId('content');
 
 		expect(updateButton).toBeInTheDocument();
 		userEvent.click(updateButton);

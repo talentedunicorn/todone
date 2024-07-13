@@ -47,3 +47,79 @@ img {
 	clip: rect(0 0 0 0);
 	overflow: hidden;
 }
+
+ul {
+	margin: 0;
+	list-style: none;
+	padding-left: 1rem;
+}
+
+li {
+	border-bottom: 1px dashed var(--gray);
+	padding: 0.5rem 0;
+}
+
+li:last-child {
+	border-bottom: none;
+}
+
+code {
+	background: var(--black);
+	color: var(--white);
+	border-radius: 0.2rem;
+	padding: 0.2rem 0.3rem;
+	display: inline-flex;
+}
+
+input[type='checkbox'] {
+	--checkbox-size: 1rem;
+	--chechbox-radius: 0.2rem;
+	appearance: none;
+	margin: 0 0.5rem 0 0;
+	display: inline-flex;
+	width: var(--checkbox-size);
+	height: var(--checkbox-size);
+}
+
+input[type='checkbox']::after {
+	content: '';
+	background: var(--checkbox-bg, var(--gray-light));
+	border: 0.2em solid var(--black);
+	border-radius: var(--chechbox-radius);
+	width: 100%;
+}
+
+input[type='checkbox']:checked {
+	--checkbox-bg: var(--primary);
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+table thead tr {
+	border-bottom: var(--border);
+}
+
+table tr:nth-child(even) {
+	background: var(--gray-light);
+}
+
+table th,
+table td {
+	padding: 0.5rem;
+}
+
+table th:not(:last-child) {
+	border-right: var(--border);
+}
+
+.Content table th {
+	font-size: 1.2rem;
+	white-space: nowrap;
+}
+
+blockquote {
+	font-size: clamp(2rem, 3rem, 4vmin);
+}
