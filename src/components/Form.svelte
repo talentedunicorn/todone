@@ -1,10 +1,5 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { gfm } from '@milkdown/preset-gfm';
-	import { replaceAll } from '@milkdown/utils';
-	import { commonmark } from '@milkdown/preset-commonmark';
-	import { defaultValueCtx, Editor, editorViewOptionsCtx, rootCtx } from '@milkdown/core';
-	import { listener, listenerCtx } from '@milkdown/plugin-listener';
 	import Button from './Button.svelte';
 
 	const dispatch = createEventDispatcher();
@@ -13,30 +8,6 @@
 	export let defaultValue: Content | null = null;
 
 	let titleInput: HTMLInputElement;
-	let editorRef: Editor;
-
-	const editor = (dom: HTMLDivElement) => {
-		const MakeEditor = Editor.make()
-			.config((ctx) => {
-				ctx.set(rootCtx, dom);
-				ctx.set(defaultValueCtx, defaultValue?.value ?? '');
-				ctx.get(listenerCtx).markdownUpdated((_, markdown) => {
-					data.value = markdown;
-				});
-				// Set testid
-				ctx.update(editorViewOptionsCtx, (prev) => ({
-					...prev,
-					attributes: { 'data-testid': 'content' }
-				}));
-			})
-			.use(commonmark)
-			.use(gfm)
-			.use(listener)
-			.create();
-		MakeEditor.then((editor) => {
-			editorRef = editor;
-		});
-	};
 
 	$: data = defaultValue || {
 		title: '',
@@ -53,17 +24,9 @@
 	$: invalid = data.title.trim().length < 1 || data.value.trim().length < 1;
 	$: buttonText = isEdit ? 'Update' : 'Submit';
 
-	$: (() => {
-		// Handle changes to default value
-		if (defaultValue?.value) {
-			editorRef?.action(replaceAll(defaultValue.value));
-		}
-	})();
-
 	const clear = () => {
 		defaultValue = null;
 		data = { title: '', value: '' };
-		editorRef?.action(replaceAll(''));
 		dispatch('clear');
 	};
 
@@ -100,7 +63,7 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<div class="Content" use:editor />
+	<textarea data-testid="content" bind:value={data.value}></textarea>
 	<div class="Actions">
 		<Button data-testid="cancel" on:click={clear} disabled={invalid}>Cancel</Button>
 		<Button data-testid="submit" type="submit" variant="primary" disabled={invalid}
@@ -135,17 +98,13 @@ Form component with a title and content inputs
 	}
 
 	input,
-	.Content :global([contenteditable]) {
+	textarea {
 		background: var(--white);
 		border-radius: 0.3em;
 		padding: 0.5em;
 	}
 
-	.Content :global([contenteditable]) {
-		display: grid;
-	}
-
-	.Content :global([contenteditable] > *) {
-		margin-top: 0;
+	textarea {
+		resize: vertical;
 	}
 </style>
