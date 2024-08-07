@@ -48,19 +48,29 @@ img {
 	overflow: hidden;
 }
 
-ul {
+ul,
+ol {
 	margin: 0;
-	list-style: none;
 	padding-left: 1rem;
+
+	li {
+		border-bottom: 1px dashed var(--gray);
+		padding: 0.5rem 0;
+
+		&:last-child {
+			border-bottom: none;
+		}
+	}
 }
 
-li {
-	border-bottom: 1px dashed var(--gray);
-	padding: 0.5rem 0;
+ul {
+	list-style: none;
 }
 
-li:last-child {
-	border-bottom: none;
+ol {
+	li {
+		padding-left: 1rem;
+	}
 }
 
 code {
@@ -79,6 +89,13 @@ input[type='checkbox'] {
 	display: inline-flex;
 	width: var(--checkbox-size);
 	height: var(--checkbox-size);
+}
+
+input {
+	font-family: inherit;
+	padding: 0.2em;
+	border-radius: 0.3em;
+	border: 0.2em solid;
 }
 
 input[type='checkbox']::after {

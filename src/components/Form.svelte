@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
+
 	import Button from './Button.svelte';
+	import Tiptap from './Tiptap.svelte';
 
 	const dispatch = createEventDispatcher();
 	type Content = { title: string; value: string };
@@ -8,6 +10,8 @@
 	export let defaultValue: Content | null = null;
 
 	let titleInput: HTMLInputElement;
+	let showMarkdown = true;
+	let editor: Tiptap;
 
 	$: data = defaultValue || {
 		title: '',
@@ -27,6 +31,7 @@
 	const clear = () => {
 		defaultValue = null;
 		data = { title: '', value: '' };
+		editor.clear();
 		dispatch('clear');
 	};
 
@@ -63,13 +68,27 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<textarea data-testid="content" bind:value={data.value}></textarea>
-	<div class="Actions">
+	{#if showMarkdown}
+		<div class="ContentWrapper">
+			<nav>
+				<Button on:click={() => (showMarkdown = false)}>Visual mode</Button>
+			</nav>
+			<textarea rows={10} data-testid="content" bind:value={data.value}></textarea>
+		</div>
+	{:else}
+		<Tiptap
+			bind:this={editor}
+			editorValue={data.value}
+			on:change={(e) => (data.value = e.detail)}
+			on:showMarkdown={() => (showMarkdown = true)}
+		/>
+	{/if}
+	<footer class="Actions">
 		<Button data-testid="cancel" on:click={clear} disabled={invalid}>Cancel</Button>
 		<Button data-testid="submit" type="submit" variant="primary" disabled={invalid}
 			>{buttonText}</Button
 		>
-	</div>
+	</footer>
 </form>
 
 <style>
@@ -93,18 +112,31 @@ Form component with a title and content inputs
 	input {
 		font-size: 1.5rem;
 		font-weight: bold;
-		font-family: inherit;
 		border: none;
 	}
 
 	input,
-	textarea {
+	textarea,
+	:global(.tiptap) {
 		background: var(--white);
 		border-radius: 0.3em;
 		padding: 0.5em;
 	}
 
 	textarea {
+		border: none;
+		field-sizing: content;
 		resize: vertical;
+		font-family: inherit;
+		font-size: inherit;
+	}
+
+	.ContentWrapper {
+		display: grid;
+		gap: 1rem;
+	}
+
+	nav {
+		display: flex;
 	}
 </style>
