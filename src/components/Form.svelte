@@ -1,11 +1,8 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { gfm } from '@milkdown/preset-gfm';
-	import { replaceAll } from '@milkdown/utils';
-	import { commonmark } from '@milkdown/preset-commonmark';
-	import { defaultValueCtx, Editor, editorViewOptionsCtx, rootCtx } from '@milkdown/core';
-	import { listener, listenerCtx } from '@milkdown/plugin-listener';
+
 	import Button from './Button.svelte';
+	import Tiptap from './Tiptap.svelte';
 
 	const dispatch = createEventDispatcher();
 	type Content = { title: string; value: string };
@@ -13,30 +10,8 @@
 	export let defaultValue: Content | null = null;
 
 	let titleInput: HTMLInputElement;
-	let editorRef: Editor;
-
-	const editor = (dom: HTMLDivElement) => {
-		const MakeEditor = Editor.make()
-			.config((ctx) => {
-				ctx.set(rootCtx, dom);
-				ctx.set(defaultValueCtx, defaultValue?.value ?? '');
-				ctx.get(listenerCtx).markdownUpdated((_, markdown) => {
-					data.value = markdown;
-				});
-				// Set testid
-				ctx.update(editorViewOptionsCtx, (prev) => ({
-					...prev,
-					attributes: { 'data-testid': 'content' }
-				}));
-			})
-			.use(commonmark)
-			.use(gfm)
-			.use(listener)
-			.create();
-		MakeEditor.then((editor) => {
-			editorRef = editor;
-		});
-	};
+	let showMarkdown = true;
+	let editor: Tiptap;
 
 	$: data = defaultValue || {
 		title: '',
@@ -53,17 +28,10 @@
 	$: invalid = data.title.trim().length < 1 || data.value.trim().length < 1;
 	$: buttonText = isEdit ? 'Update' : 'Submit';
 
-	$: (() => {
-		// Handle changes to default value
-		if (defaultValue?.value) {
-			editorRef?.action(replaceAll(defaultValue.value));
-		}
-	})();
-
 	const clear = () => {
 		defaultValue = null;
 		data = { title: '', value: '' };
-		editorRef?.action(replaceAll(''));
+		editor.clear();
 		dispatch('clear');
 	};
 
@@ -100,13 +68,27 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<div class="Content" use:editor />
-	<div class="Actions">
+	{#if showMarkdown}
+		<div class="ContentWrapper">
+			<nav>
+				<Button on:click={() => (showMarkdown = false)}>Visual mode</Button>
+			</nav>
+			<textarea rows={10} data-testid="content" bind:value={data.value}></textarea>
+		</div>
+	{:else}
+		<Tiptap
+			bind:this={editor}
+			editorValue={data.value}
+			on:change={(e) => (data.value = e.detail)}
+			on:showMarkdown={() => (showMarkdown = true)}
+		/>
+	{/if}
+	<footer class="Actions">
 		<Button data-testid="cancel" on:click={clear} disabled={invalid}>Cancel</Button>
 		<Button data-testid="submit" type="submit" variant="primary" disabled={invalid}
 			>{buttonText}</Button
 		>
-	</div>
+	</footer>
 </form>
 
 <style>
@@ -130,22 +112,31 @@ Form component with a title and content inputs
 	input {
 		font-size: 1.5rem;
 		font-weight: bold;
-		font-family: inherit;
 		border: none;
 	}
 
 	input,
-	.Content :global([contenteditable]) {
+	textarea,
+	:global(.tiptap) {
 		background: var(--white);
 		border-radius: 0.3em;
 		padding: 0.5em;
 	}
 
-	.Content :global([contenteditable]) {
-		display: grid;
+	textarea {
+		border: none;
+		field-sizing: content;
+		resize: vertical;
+		font-family: inherit;
+		font-size: inherit;
 	}
 
-	.Content :global([contenteditable] > *) {
-		margin-top: 0;
+	.ContentWrapper {
+		display: grid;
+		gap: 1rem;
+	}
+
+	nav {
+		display: flex;
 	}
 </style>
