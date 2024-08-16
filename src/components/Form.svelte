@@ -127,7 +127,7 @@ Form component with a title and content inputs
 
 	:global(.carta-font-code),
 	:global(.carta-font-code *) {
-		font-size: 1.1rem;
+		font-size: 1rem;
 		line-height: 1.5rem;
 	}
 
@@ -138,8 +138,4 @@ Form component with a title and content inputs
 	:global(.carta-icons-menu) {
 		background: var(--gray-light);
 	}
-
-	/* textarea {
-		resize: vertical;
-	} */
 </style>

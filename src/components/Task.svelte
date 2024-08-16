@@ -1,8 +1,16 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import Button from './Button.svelte';
-	import { marked, type RendererObject } from 'marked';
 	import type { HTMLAttributes } from 'svelte/elements';
+	import { code } from '@cartamd/plugin-code';
+	import { emoji } from '@cartamd/plugin-emoji';
+	import { slash } from '@cartamd/plugin-slash';
+	import { Carta } from 'carta-md';
+
+	const carta = new Carta({
+		sanitizer: false,
+		extensions: [emoji(), slash(), code()]
+	});
 
 	interface $$Props extends HTMLAttributes<HTMLBaseElement> {
 		title: string;
@@ -11,18 +19,6 @@
 		updated: Date;
 		expanded?: boolean;
 	}
-	const renderer: RendererObject = {
-		table(header, body) {
-			const r = new marked.Renderer();
-			return `<div class="TableWrapper">${r.table(header, body)}</div>`;
-		}
-	};
-
-	// Configure marked
-	marked.use({
-		gfm: true,
-		renderer
-	});
 
 	const dispatch = createEventDispatcher();
 
@@ -100,7 +96,9 @@
 		</div>
 	</header>
 	<div data-testid="content" class="Content" class:expanded>
-		{@html marked(value)}
+		{#await carta.render(value) then html}
+			{@html html}
+		{/await}
 	</div>
 	<div class="Actions">
 		<Button data-testid="delete" size="small" on:click={() => dispatch('delete')}>Delete</Button>
@@ -172,6 +170,12 @@
 		margin: 1rem 0;
 	}
 
+	.Content:has(> table) {
+		overflow-x: auto;
+		border: var(--border);
+		border-radius: 1rem;
+	}
+
 	.Content::after {
 		position: absolute;
 		content: '';
@@ -185,21 +189,6 @@
 		--content-height: 100%;
 		--content-gradient-visibility: hidden;
 		--content-gradient-opacity: 0;
-	}
-
-	:global(.TableWrapper) {
-		overflow-x: auto;
-		border: var(--border);
-		border-radius: 1rem;
-	}
-
-	:global(.carta-renderer code),
-	.Content :global(code) {
-		background: var(--black);
-		color: var(--white);
-		border-radius: 0.2rem;
-		padding: 0.2rem 0.3rem;
-		display: inline-flex;
 	}
 
 	@media screen and (min-width: 50rem) {
