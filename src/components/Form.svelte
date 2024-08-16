@@ -1,11 +1,17 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { gfm } from '@milkdown/preset-gfm';
-	import { replaceAll } from '@milkdown/utils';
-	import { commonmark } from '@milkdown/preset-commonmark';
-	import { defaultValueCtx, Editor, editorViewOptionsCtx, rootCtx } from '@milkdown/core';
-	import { listener, listenerCtx } from '@milkdown/plugin-listener';
 	import Button from './Button.svelte';
+	import { Carta, MarkdownEditor } from 'carta-md';
+	import { emoji } from '@cartamd/plugin-emoji';
+	import { slash } from '@cartamd/plugin-slash';
+	import { code } from '@cartamd/plugin-code';
+	import 'carta-md/default.css';
+	import '@cartamd/plugin-slash/default.css';
+
+	const carta = new Carta({
+		sanitizer: false,
+		extensions: [emoji(), slash(), code()]
+	});
 
 	const dispatch = createEventDispatcher();
 	type Content = { title: string; value: string };
@@ -13,30 +19,6 @@
 	export let defaultValue: Content | null = null;
 
 	let titleInput: HTMLInputElement;
-	let editorRef: Editor;
-
-	const editor = (dom: HTMLDivElement) => {
-		const MakeEditor = Editor.make()
-			.config((ctx) => {
-				ctx.set(rootCtx, dom);
-				ctx.set(defaultValueCtx, defaultValue?.value ?? '');
-				ctx.get(listenerCtx).markdownUpdated((_, markdown) => {
-					data.value = markdown;
-				});
-				// Set testid
-				ctx.update(editorViewOptionsCtx, (prev) => ({
-					...prev,
-					attributes: { 'data-testid': 'content' }
-				}));
-			})
-			.use(commonmark)
-			.use(gfm)
-			.use(listener)
-			.create();
-		MakeEditor.then((editor) => {
-			editorRef = editor;
-		});
-	};
 
 	$: data = defaultValue || {
 		title: '',
@@ -53,17 +35,9 @@
 	$: invalid = data.title.trim().length < 1 || data.value.trim().length < 1;
 	$: buttonText = isEdit ? 'Update' : 'Submit';
 
-	$: (() => {
-		// Handle changes to default value
-		if (defaultValue?.value) {
-			editorRef?.action(replaceAll(defaultValue.value));
-		}
-	})();
-
 	const clear = () => {
 		defaultValue = null;
 		data = { title: '', value: '' };
-		editorRef?.action(replaceAll(''));
 		dispatch('clear');
 	};
 
@@ -100,7 +74,12 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<div class="Content" use:editor />
+	<MarkdownEditor
+		bind:value={data.value}
+		mode="tabs"
+		textarea={{ 'data-testid': 'content' }}
+		{carta}
+	/>
 	<div class="Actions">
 		<Button data-testid="cancel" on:click={clear} disabled={invalid}>Cancel</Button>
 		<Button data-testid="submit" type="submit" variant="primary" disabled={invalid}
@@ -132,20 +111,31 @@ Form component with a title and content inputs
 		font-weight: bold;
 		font-family: inherit;
 		border: none;
-	}
-
-	input,
-	.Content :global([contenteditable]) {
-		background: var(--white);
-		border-radius: 0.3em;
 		padding: 0.5em;
 	}
 
-	.Content :global([contenteditable]) {
-		display: grid;
+	input,
+	:global(.carta-wrapper) {
+		background: var(--white);
+		border-radius: 0.3em;
 	}
 
-	.Content :global([contenteditable] > *) {
+	:global(.carta-theme__default .carta-input, .carta-theme__default .carta-renderer) {
+		height: auto;
+		overflow-y: auto;
+	}
+
+	:global(.carta-font-code),
+	:global(.carta-font-code *) {
+		font-size: 1rem;
+		line-height: 1.5rem;
+	}
+
+	:global(.carta-renderer > *:first-child) {
 		margin-top: 0;
+	}
+
+	:global(.carta-icons-menu) {
+		background: var(--gray-light);
 	}
 </style>
