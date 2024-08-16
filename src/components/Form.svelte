@@ -1,6 +1,17 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import Button from './Button.svelte';
+	import { Carta, MarkdownEditor } from 'carta-md';
+	import { emoji } from '@cartamd/plugin-emoji';
+	import { slash } from '@cartamd/plugin-slash';
+	import { code } from '@cartamd/plugin-code';
+	import 'carta-md/default.css';
+	import '@cartamd/plugin-slash/default.css';
+
+	const carta = new Carta({
+		sanitizer: false,
+		extensions: [emoji(), slash(), code()]
+	});
 
 	const dispatch = createEventDispatcher();
 	type Content = { title: string; value: string };
@@ -63,7 +74,12 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<textarea data-testid="content" bind:value={data.value}></textarea>
+	<MarkdownEditor
+		bind:value={data.value}
+		mode="tabs"
+		textarea={{ 'data-testid': 'content' }}
+		{carta}
+	/>
 	<div class="Actions">
 		<Button data-testid="cancel" on:click={clear} disabled={invalid}>Cancel</Button>
 		<Button data-testid="submit" type="submit" variant="primary" disabled={invalid}
@@ -94,17 +110,36 @@ Form component with a title and content inputs
 		font-size: 1.5rem;
 		font-weight: bold;
 		font-family: inherit;
-	}
-
-	input,
-	textarea {
 		border: none;
-		background: var(--white);
-		border-radius: 0.3em;
 		padding: 0.5em;
 	}
 
-	textarea {
-		resize: vertical;
+	input,
+	:global(.carta-wrapper) {
+		background: var(--white);
+		border-radius: 0.3em;
 	}
+
+	:global(.carta-theme__default .carta-input, .carta-theme__default .carta-renderer) {
+		height: auto;
+		overflow-y: auto;
+	}
+
+	:global(.carta-font-code),
+	:global(.carta-font-code *) {
+		font-size: 1.1rem;
+		line-height: 1.5rem;
+	}
+
+	:global(.carta-renderer > *:first-child) {
+		margin-top: 0;
+	}
+
+	:global(.carta-icons-menu) {
+		background: var(--gray-light);
+	}
+
+	/* textarea {
+		resize: vertical;
+	} */
 </style>

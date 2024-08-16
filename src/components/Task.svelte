@@ -193,6 +193,15 @@
 		border-radius: 1rem;
 	}
 
+	:global(.carta-renderer code),
+	.Content :global(code) {
+		background: var(--black);
+		color: var(--white);
+		border-radius: 0.2rem;
+		padding: 0.2rem 0.3rem;
+		display: inline-flex;
+	}
+
 	@media screen and (min-width: 50rem) {
 		header {
 			justify-content: space-between;
