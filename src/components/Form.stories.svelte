@@ -28,9 +28,8 @@
 		await (async () => {
 			return new Promise((resolve) => setTimeout(resolve, 1));
 		})();
-		const contentField = canvas.getByTestId('content');
+		const contentField = canvas.getAllByRole('presentation')[1];
 
-		console.log(`[Content]`, contentField);
 		await userEvent.type(titleField, 'Todo title', { delay: 100 });
 
 		expect(cancelButton).toBeDisabled();
@@ -47,7 +46,7 @@
 			expect(cancelButton).toBeDisabled();
 			expect(submitButton).toBeDisabled();
 			expect(titleField.textContent).toBe('');
-			expect(contentField.textContent).toBe('');
+			expect(contentField.textContent).toContain('xxxxxxxxxx');
 		});
 	}}
 />

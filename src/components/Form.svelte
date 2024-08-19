@@ -1,10 +1,14 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import Button from './Button.svelte';
+	import EasyMDE from 'easymde';
+	import 'easymde/dist/easymde.min.css';
 
 	const dispatch = createEventDispatcher();
 	type Content = { title: string; value: string };
 
+	let easymde: EasyMDE;
+	let editor: HTMLTextAreaElement;
 	export let defaultValue: Content | null = null;
 
 	let titleInput: HTMLInputElement;
@@ -19,6 +23,7 @@
 	$: if (isEdit && titleInput) {
 		window.scrollTo({ top: titleInput.scrollHeight });
 		titleInput.focus();
+		easymde.value(defaultValue?.value ?? '');
 	}
 
 	$: invalid = data.title.trim().length < 1 || data.value.trim().length < 1;
@@ -28,12 +33,26 @@
 		defaultValue = null;
 		data = { title: '', value: '' };
 		dispatch('clear');
+		easymde.value('');
 	};
 
 	const submit = () => {
 		isEdit ? dispatch('update', data) : dispatch('submit', data);
 		clear();
 	};
+
+	onMount(() => {
+		easymde = new EasyMDE({
+			element: editor,
+			minHeight: '5rem'
+		});
+
+		easymde.value(data.value);
+
+		easymde.codemirror.on('change', () => {
+			data.value = easymde.value();
+		});
+	});
 </script>
 
 <!--
@@ -63,7 +82,7 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<textarea data-testid="content" bind:value={data.value}></textarea>
+	<textarea data-testid="content" bind:this={editor}></textarea>
 	<div class="Actions">
 		<Button data-testid="cancel" on:click={clear} disabled={invalid}>Cancel</Button>
 		<Button data-testid="submit" type="submit" variant="primary" disabled={invalid}
@@ -94,17 +113,17 @@ Form component with a title and content inputs
 		font-size: 1.5rem;
 		font-weight: bold;
 		font-family: inherit;
-	}
-
-	input,
-	textarea {
 		border: none;
 		background: var(--white);
 		border-radius: 0.3em;
 		padding: 0.5em;
 	}
 
-	textarea {
-		resize: vertical;
+	:global(.editor-preview) {
+		padding: 1rem;
+	}
+
+	:global(.editor-preview > *:first-child) {
+		margin-top: 0;
 	}
 </style>
