@@ -19,7 +19,10 @@
 	let showSearch = false;
 	let deleting = false;
 
-	$: renderedTodos = $currentTab === 'To Do' ? incompleteTodos : completedTodos;
+	$: currentTodos = $currentTab === 'To Do' ? incompleteTodos : completedTodos;
+	$: renderedTodos = currentTodos.filter((t) =>
+		t.title.toLowerCase().includes(query.toLowerCase())
+	);
 
 	const loadTodos = async () => {
 		const todos = await getTodos();
