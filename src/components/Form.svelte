@@ -119,8 +119,12 @@ Form component with a title and content inputs
 		padding: 0.5em;
 	}
 
-	:global(.editor-preview) {
-		padding: 1rem;
+	form :global(.CodeMirror-lines) {
+		padding: 0.5rem;
+	}
+
+	form :global(.editor-preview-active) {
+		padding: 1rem 2rem;
 	}
 
 	:global(.editor-preview > *:first-child) {
