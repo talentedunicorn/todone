@@ -1,42 +1,17 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-	import { gfm } from '@milkdown/preset-gfm';
-	import { replaceAll } from '@milkdown/utils';
-	import { commonmark } from '@milkdown/preset-commonmark';
-	import { defaultValueCtx, Editor, editorViewOptionsCtx, rootCtx } from '@milkdown/core';
-	import { listener, listenerCtx } from '@milkdown/plugin-listener';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import Button from './Button.svelte';
+	import EasyMDE from 'easymde';
+	import 'easymde/dist/easymde.min.css';
 
 	const dispatch = createEventDispatcher();
 	type Content = { title: string; value: string };
 
+	let easymde: EasyMDE;
+	let editor: HTMLTextAreaElement;
 	export let defaultValue: Content | null = null;
 
 	let titleInput: HTMLInputElement;
-	let editorRef: Editor;
-
-	const editor = (dom: HTMLDivElement) => {
-		const MakeEditor = Editor.make()
-			.config((ctx) => {
-				ctx.set(rootCtx, dom);
-				ctx.set(defaultValueCtx, defaultValue?.value ?? '');
-				ctx.get(listenerCtx).markdownUpdated((_, markdown) => {
-					data.value = markdown;
-				});
-				// Set testid
-				ctx.update(editorViewOptionsCtx, (prev) => ({
-					...prev,
-					attributes: { 'data-testid': 'content' }
-				}));
-			})
-			.use(commonmark)
-			.use(gfm)
-			.use(listener)
-			.create();
-		MakeEditor.then((editor) => {
-			editorRef = editor;
-		});
-	};
 
 	$: data = defaultValue || {
 		title: '',
@@ -48,29 +23,36 @@
 	$: if (isEdit && titleInput) {
 		window.scrollTo({ top: titleInput.scrollHeight });
 		titleInput.focus();
+		easymde.value(defaultValue?.value ?? '');
 	}
 
 	$: invalid = data.title.trim().length < 1 || data.value.trim().length < 1;
 	$: buttonText = isEdit ? 'Update' : 'Submit';
 
-	$: (() => {
-		// Handle changes to default value
-		if (defaultValue?.value) {
-			editorRef?.action(replaceAll(defaultValue.value));
-		}
-	})();
-
 	const clear = () => {
 		defaultValue = null;
 		data = { title: '', value: '' };
-		editorRef?.action(replaceAll(''));
 		dispatch('clear');
+		easymde.value('');
 	};
 
 	const submit = () => {
 		isEdit ? dispatch('update', data) : dispatch('submit', data);
 		clear();
 	};
+
+	onMount(() => {
+		easymde = new EasyMDE({
+			element: editor,
+			minHeight: '5rem'
+		});
+
+		easymde.value(data.value);
+
+		easymde.codemirror.on('change', () => {
+			data.value = easymde.value();
+		});
+	});
 </script>
 
 <!--
@@ -100,7 +82,7 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<div class="Content" use:editor />
+	<textarea data-testid="content" bind:this={editor}></textarea>
 	<div class="Actions">
 		<Button data-testid="cancel" on:click={clear} disabled={invalid}>Cancel</Button>
 		<Button data-testid="submit" type="submit" variant="primary" disabled={invalid}
@@ -132,20 +114,20 @@ Form component with a title and content inputs
 		font-weight: bold;
 		font-family: inherit;
 		border: none;
-	}
-
-	input,
-	.Content :global([contenteditable]) {
 		background: var(--white);
 		border-radius: 0.3em;
 		padding: 0.5em;
 	}
 
-	.Content :global([contenteditable]) {
-		display: grid;
+	form :global(.CodeMirror-lines) {
+		padding: 0.5rem;
 	}
 
-	.Content :global([contenteditable] > *) {
+	form :global(.editor-preview-active) {
+		padding: 1rem 2rem;
+	}
+
+	:global(.editor-preview > *:first-child) {
 		margin-top: 0;
 	}
 </style>

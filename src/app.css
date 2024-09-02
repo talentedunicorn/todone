@@ -63,14 +63,6 @@ li:last-child {
 	border-bottom: none;
 }
 
-code {
-	background: var(--black);
-	color: var(--white);
-	border-radius: 0.2rem;
-	padding: 0.2rem 0.3rem;
-	display: inline-flex;
-}
-
 input[type='checkbox'] {
 	--checkbox-size: 1rem;
 	--chechbox-radius: 0.2rem;
