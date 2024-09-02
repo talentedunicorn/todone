@@ -21,7 +21,9 @@
 		titleInput.focus();
 	}
 
-	$: invalid = data.title.trim().length < 1 || data.value.trim().length < 1;
+	$: isEmpty = data.value.trim().length < 1;
+
+	$: invalid = data.title.trim().length < 1 || isEmpty;
 	$: buttonText = isEdit ? 'Update' : 'Submit';
 
 	const clear = () => {
@@ -63,7 +65,7 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<textarea data-testid="content" bind:value={data.value}></textarea>
+	<textarea data-testid="content" data-empty={isEmpty} bind:value={data.value}></textarea>
 	<div class="Actions">
 		<Button data-testid="cancel" on:click={clear} disabled={invalid}>Cancel</Button>
 		<Button data-testid="submit" type="submit" variant="primary" disabled={invalid}
@@ -90,12 +92,6 @@ Form component with a title and content inputs
 		justify-content: space-between;
 	}
 
-	input {
-		font-size: 1.5rem;
-		font-weight: bold;
-		font-family: inherit;
-	}
-
 	input,
 	textarea {
 		border: none;
@@ -104,7 +100,21 @@ Form component with a title and content inputs
 		padding: 0.5em;
 	}
 
+	input {
+		font-size: 1.5rem;
+		font-weight: bold;
+		font-family: inherit;
+		overflow-x: auto;
+	}
+
 	textarea {
+		font-size: 1rem;
+		line-height: 1.5rem;
+		font-family: monospace;
 		resize: vertical;
+	}
+
+	textarea[data-empty='false'] {
+		min-height: 50vh;
 	}
 </style>
