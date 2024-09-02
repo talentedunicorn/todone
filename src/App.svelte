@@ -44,7 +44,7 @@
 
 	onMount(async () => {
 		handleBackToTop();
-		if (import.meta.env.VITE_SYNCED === 'true') {
+		if (import.meta.env.VITE_SYNCED === 'true' && navigator.onLine) {
 			if (!auth0) {
 				auth0 = await initAuth0Client();
 			}
