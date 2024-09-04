@@ -106,7 +106,7 @@
 		<Button
 			data-testid="delete"
 			size="small"
-			on:click={() => confirm('Delete task') && dispatch('delete')}>Delete</Button
+			on:click={() => confirm(`Delete: ${title}?`) && dispatch('delete')}>Delete</Button
 		>
 		<Button data-testid="edit" size="small" on:click={() => dispatch('edit')}>Edit</Button>
 		<Button
