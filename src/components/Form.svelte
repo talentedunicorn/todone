@@ -78,10 +78,11 @@ Form component with a title and content inputs
 	form,
 	.Actions {
 		display: flex;
+		flex-wrap: wrap;
 	}
 
 	form {
-		flex-flow: column;
+		--textarea-width: 20rem;
 		gap: 1rem;
 		padding: 1rem;
 		border-radius: 0.5em;
@@ -89,6 +90,8 @@ Form component with a title and content inputs
 	}
 
 	.Actions {
+		gap: 1rem;
+		align-items: flex-end;
 		justify-content: space-between;
 	}
 
@@ -101,6 +104,7 @@ Form component with a title and content inputs
 	}
 
 	input {
+		flex: 100%;
 		font-size: 1.5rem;
 		font-weight: bold;
 		font-family: inherit;
@@ -108,6 +112,7 @@ Form component with a title and content inputs
 	}
 
 	textarea {
+		flex: var(--textarea-width);
 		font-size: 1rem;
 		line-height: 1.5rem;
 		font-family: monospace;
