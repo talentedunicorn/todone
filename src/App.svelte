@@ -136,8 +136,6 @@
 	.Logo {
 		margin: 1rem;
 		padding: 0.2em;
-		border: var(--border);
-		border-radius: 0.2em;
 		background: var(--white);
 		position: relative;
 	}

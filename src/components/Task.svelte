@@ -103,7 +103,11 @@
 		{@html marked(value)}
 	</div>
 	<div class="Actions">
-		<Button data-testid="delete" size="small" on:click={() => dispatch('delete')}>Delete</Button>
+		<Button
+			data-testid="delete"
+			size="small"
+			on:click={() => confirm(`Delete: ${title}?`) && dispatch('delete')}>Delete</Button
+		>
 		<Button data-testid="edit" size="small" on:click={() => dispatch('edit')}>Edit</Button>
 		<Button
 			data-testid="complete"

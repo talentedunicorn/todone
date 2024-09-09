@@ -24,13 +24,8 @@
 		const submitButton = canvas.getByTestId('submit');
 		const titleField = canvas.getByTestId('title');
 
-		// Give marked time to load - otherwise storybook can't find 'content'
-		await (async () => {
-			return new Promise((resolve) => setTimeout(resolve, 1));
-		})();
 		const contentField = canvas.getByTestId('content');
 
-		console.log(`[Content]`, contentField);
 		await userEvent.type(titleField, 'Todo title', { delay: 100 });
 
 		expect(cancelButton).toBeDisabled();
@@ -66,10 +61,6 @@
 		const updateButton = canvas.getByTestId('submit');
 		const titleField = canvas.getByTestId('title');
 
-		// Give marked time to load - otherwise storybook can't find 'content'
-		await (async () => {
-			return new Promise((resolve) => setTimeout(resolve, 1));
-		})();
 		const contentField = canvas.getByTestId('content');
 
 		expect(updateButton).toBeInTheDocument();

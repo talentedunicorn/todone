@@ -1,10 +1,5 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { gfm } from '@milkdown/preset-gfm';
-	import { replaceAll } from '@milkdown/utils';
-	import { commonmark } from '@milkdown/preset-commonmark';
-	import { defaultValueCtx, Editor, editorViewOptionsCtx, rootCtx } from '@milkdown/core';
-	import { listener, listenerCtx } from '@milkdown/plugin-listener';
 	import Button from './Button.svelte';
 
 	const dispatch = createEventDispatcher();
@@ -13,30 +8,6 @@
 	export let defaultValue: Content | null = null;
 
 	let titleInput: HTMLInputElement;
-	let editorRef: Editor;
-
-	const editor = (dom: HTMLDivElement) => {
-		const MakeEditor = Editor.make()
-			.config((ctx) => {
-				ctx.set(rootCtx, dom);
-				ctx.set(defaultValueCtx, defaultValue?.value ?? '');
-				ctx.get(listenerCtx).markdownUpdated((_, markdown) => {
-					data.value = markdown;
-				});
-				// Set testid
-				ctx.update(editorViewOptionsCtx, (prev) => ({
-					...prev,
-					attributes: { 'data-testid': 'content' }
-				}));
-			})
-			.use(commonmark)
-			.use(gfm)
-			.use(listener)
-			.create();
-		MakeEditor.then((editor) => {
-			editorRef = editor;
-		});
-	};
 
 	$: data = defaultValue || {
 		title: '',
@@ -50,20 +21,14 @@
 		titleInput.focus();
 	}
 
-	$: invalid = data.title.trim().length < 1 || data.value.trim().length < 1;
-	$: buttonText = isEdit ? 'Update' : 'Submit';
+	$: isEmpty = data.value.trim().length < 1;
 
-	$: (() => {
-		// Handle changes to default value
-		if (defaultValue?.value) {
-			editorRef?.action(replaceAll(defaultValue.value));
-		}
-	})();
+	$: invalid = data.title.trim().length < 1 || isEmpty;
+	$: buttonText = isEdit ? 'Update' : 'Submit';
 
 	const clear = () => {
 		defaultValue = null;
 		data = { title: '', value: '' };
-		editorRef?.action(replaceAll(''));
 		dispatch('clear');
 	};
 
@@ -100,7 +65,7 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<div class="Content" use:editor />
+	<textarea data-testid="content" data-empty={isEmpty} bind:value={data.value}></textarea>
 	<div class="Actions">
 		<Button data-testid="cancel" on:click={clear} disabled={invalid}>Cancel</Button>
 		<Button data-testid="submit" type="submit" variant="primary" disabled={invalid}
@@ -113,10 +78,11 @@ Form component with a title and content inputs
 	form,
 	.Actions {
 		display: flex;
+		flex-wrap: wrap;
 	}
 
 	form {
-		flex-flow: column;
+		--textarea-width: 20rem;
 		gap: 1rem;
 		padding: 1rem;
 		border-radius: 0.5em;
@@ -124,28 +90,36 @@ Form component with a title and content inputs
 	}
 
 	.Actions {
+		gap: 1rem;
+		align-items: flex-end;
 		justify-content: space-between;
 	}
 
-	input {
-		font-size: 1.5rem;
-		font-weight: bold;
-		font-family: inherit;
-		border: none;
-	}
-
 	input,
-	.Content :global([contenteditable]) {
+	textarea {
+		border: none;
 		background: var(--white);
 		border-radius: 0.3em;
 		padding: 0.5em;
 	}
 
-	.Content :global([contenteditable]) {
-		display: grid;
+	input {
+		flex: 100%;
+		font-size: 1.5rem;
+		font-weight: bold;
+		font-family: inherit;
+		overflow-x: auto;
 	}
 
-	.Content :global([contenteditable] > *) {
-		margin-top: 0;
+	textarea {
+		flex: var(--textarea-width);
+		font-size: 1rem;
+		line-height: 1.5rem;
+		font-family: monospace;
+		resize: vertical;
+	}
+
+	textarea[data-empty='false'] {
+		min-height: 50vh;
 	}
 </style>
