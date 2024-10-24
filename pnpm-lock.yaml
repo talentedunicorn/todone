@@ -37,8 +37,8 @@ importers:
         specifier: ^7.25.9
         version: 7.25.9
       '@chromatic-com/storybook':
-        specifier: ^1.9.0
-        version: 1.9.0(react@18.3.1)
+        specifier: ^3.0.0
+        version: 3.1.0(react@18.3.1)(storybook@8.2.9(@babel/preset-env@7.25.9(@babel/core@7.25.9)))
       '@nx/storybook':
         specifier: 20.0.5
         version: 20.0.5(@babel/traverse@7.25.9)(@swc/core@1.7.39(@swc/helpers@0.5.13))(@types/node@22.7.9)(@zkochan/js-yaml@0.0.7)(eslint@8.4.1)(nx@20.0.5(@swc/core@1.7.39(@swc/helpers@0.5.13)))(typescript@5.6.3)
@@ -807,9 +807,11 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@chromatic-com/storybook@1.9.0':
-    resolution: {integrity: sha512-vYQ+TcfktEE3GHnLZXHCzXF/sN9dw+KivH8a5cmPyd9YtQs7fZtHrEgsIjWpYycXiweKMo1Lm1RZsjxk8DH3rA==}
+  '@chromatic-com/storybook@3.1.0':
+    resolution: {integrity: sha512-AM8jDwoBNNwJKgmoWkHIOhu4ObsxvDtOzZC9tPCVEW6P+pFwg5xjSZAQglIE2c8/SsEPSduNdxBt31ES3iDwoA==}
     engines: {node: '>=16.0.0', yarn: '>=1.22.18'}
+    peerDependencies:
+      storybook: ^8.3.0
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -1819,6 +1821,11 @@ packages:
       vite-plugin-glimmerx:
         optional: true
 
+  '@storybook/channels@8.3.6':
+    resolution: {integrity: sha512-6ahY0n1A19diR5cI63lhDEpMaDsq7LFtMOgWab2NwCsdXoEAl6anvDptyPWW60umN3HrDzSKFdpRx4imOEjlWw==}
+    peerDependencies:
+      storybook: ^8.3.6
+
   '@storybook/codemod@8.2.9':
     resolution: {integrity: sha512-3yRx1lFMm1FXWVv+CKDiYM4gOQPEfpcZAQrjfcumxSDUrB091pnU1PeI92Prj3vCdi4+0oPNuN4yDGNUYTMP/A==}
 
@@ -1905,6 +1912,11 @@ packages:
     peerDependencies:
       storybook: ^8.3.6
       svelte: ^4.0.0 || ^5.0.0-next.65
+
+  '@storybook/telemetry@8.3.6':
+    resolution: {integrity: sha512-fhpbZok7mPeujjFxAKo2vuqhfjhv5BO/mHH7Z8QtgsYqeR7px56arDRgV6CngBZWgFvrQ2wBS0HPV4nB6YWvJQ==}
+    peerDependencies:
+      storybook: ^8.3.6
 
   '@storybook/test-runner@0.19.1':
     resolution: {integrity: sha512-Nc4djXw3Lv3AAXg6TJ7yVTeuMryjMsTDd8GCbE/PStU602rpe8syEqElz78GPoJqB1VYWQ3T9pcu93MKyHT+xQ==}
@@ -7162,12 +7174,16 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@chromatic-com/storybook@1.9.0(react@18.3.1)':
+  '@chromatic-com/storybook@3.1.0(react@18.3.1)(storybook@8.2.9(@babel/preset-env@7.25.9(@babel/core@7.25.9)))':
     dependencies:
+      '@storybook/channels': 8.3.6(storybook@8.2.9(@babel/preset-env@7.25.9(@babel/core@7.25.9)))
+      '@storybook/telemetry': 8.3.6(storybook@8.2.9(@babel/preset-env@7.25.9(@babel/core@7.25.9)))
+      '@storybook/types': 8.3.6(storybook@8.2.9(@babel/preset-env@7.25.9(@babel/core@7.25.9)))
       chromatic: 11.15.0
       filesize: 10.1.6
       jsonfile: 6.1.0
       react-confetti: 6.1.0(react@18.3.1)
+      storybook: 8.2.9(@babel/preset-env@7.25.9(@babel/core@7.25.9))
       strip-ansi: 7.1.0
     transitivePeerDependencies:
       - '@chromatic-com/cypress'
@@ -8572,6 +8588,10 @@ snapshots:
       - supports-color
       - webpack-sources
 
+  '@storybook/channels@8.3.6(storybook@8.2.9(@babel/preset-env@7.25.9(@babel/core@7.25.9)))':
+    dependencies:
+      storybook: 8.2.9(@babel/preset-env@7.25.9(@babel/core@7.25.9))
+
   '@storybook/codemod@8.2.9':
     dependencies:
       '@babel/core': 7.25.9
@@ -8717,6 +8737,10 @@ snapshots:
       type-fest: 2.19.0
     transitivePeerDependencies:
       - supports-color
+
+  '@storybook/telemetry@8.3.6(storybook@8.2.9(@babel/preset-env@7.25.9(@babel/core@7.25.9)))':
+    dependencies:
+      storybook: 8.2.9(@babel/preset-env@7.25.9(@babel/core@7.25.9))
 
   '@storybook/test-runner@0.19.1(@swc/helpers@0.5.13)(@types/node@22.7.9)(storybook@8.2.9(@babel/preset-env@7.25.9(@babel/core@7.25.9)))(ts-node@10.9.2(@swc/core@1.7.39(@swc/helpers@0.5.13))(@types/node@22.7.9)(typescript@5.6.3))':
     dependencies:
