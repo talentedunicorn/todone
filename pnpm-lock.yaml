@@ -79,8 +79,8 @@ importers:
         specifier: ^8.4.6
         version: 8.4.6(storybook@8.2.9(@babel/preset-env@7.26.0(@babel/core@7.26.0)))
       '@storybook/test-runner':
-        specifier: ^0.19.1
-        version: 0.19.1(@swc/helpers@0.5.15)(@types/node@22.10.1)(storybook@8.2.9(@babel/preset-env@7.26.0(@babel/core@7.26.0)))(ts-node@10.9.2(@swc/core@1.9.3(@swc/helpers@0.5.15))(@types/node@22.10.1)(typescript@5.7.2))
+        specifier: ^0.20.0
+        version: 0.20.0(@swc/helpers@0.5.15)(@types/node@22.10.1)(storybook@8.2.9(@babel/preset-env@7.26.0(@babel/core@7.26.0)))(ts-node@10.9.2(@swc/core@1.9.3(@swc/helpers@0.5.15))(@types/node@22.10.1)(typescript@5.7.2))
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.1.2
         version: 3.1.2(svelte@4.2.19)(vite@5.4.11(@types/node@22.10.1)(terser@5.36.0))
@@ -1837,11 +1837,6 @@ packages:
     peerDependencies:
       storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
 
-  '@storybook/core-common@8.4.6':
-    resolution: {integrity: sha512-XIst96ikly+k4/NRXbGlt1hKFyCNsgFvQAWgUnDAg9ukIm7Oq4vz2gGUounhxi/U0CXOIpe7qnZoTse8An2GRQ==}
-    peerDependencies:
-      storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
-
   '@storybook/core@8.2.9':
     resolution: {integrity: sha512-wSER8FpA6Il/jPyDfKm3yohxDtuhisNPTonMVzd3ulNWR4zERLddyO3HrHJJwdqYHLNk4SBFzwMGpQZVws1y0w==}
 
@@ -1854,11 +1849,6 @@ packages:
     resolution: {integrity: sha512-JDIT0czC4yMgKGNf39KTZr3zm5MusAZdn6LBrTfvWb7CrTCR4iVHa4lp2yb7EJk41vHsBec0QUYDDuiFH/vV0g==}
     peerDependencies:
       storybook: ^8.4.6
-
-  '@storybook/csf-tools@8.4.6':
-    resolution: {integrity: sha512-hNcPQJ0BqXGYDvVF4hwMgO0ExZCNhqM+ogQuMlp2NJCCNDyJYRclQltfCo0+KnwcW6Hmb3xraDmAnxijWJUYeA==}
-    peerDependencies:
-      storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
 
   '@storybook/csf@0.1.11':
     resolution: {integrity: sha512-dHYFQH3mA+EtnCkHXzicbLgsvzYjcDJ1JWsogbItZogkPHgSJM/Wr71uMkcvw8v9mmCyP4NpXJuu6bPoVsOnzg==}
@@ -1919,10 +1909,12 @@ packages:
       storybook: ^8.4.6
       svelte: ^4.0.0 || ^5.0.0
 
-  '@storybook/test-runner@0.19.1':
-    resolution: {integrity: sha512-Nc4djXw3Lv3AAXg6TJ7yVTeuMryjMsTDd8GCbE/PStU602rpe8syEqElz78GPoJqB1VYWQ3T9pcu93MKyHT+xQ==}
+  '@storybook/test-runner@0.20.0':
+    resolution: {integrity: sha512-0cSNW61/XYg8jtcRlk8qc5fJa8qKSq7tvSpvikwS7zcXkKgfu6fbGX56ErxnvidmyCyXjMe/j0UHzLACzc2nTg==}
     engines: {node: ^16.10.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
+    peerDependencies:
+      storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
 
   '@storybook/test@8.2.9':
     resolution: {integrity: sha512-O5JZ5S8UVVR7V0ru5AiF/uRO+srAVwji0Iik7ihy8gw3V91WQNMmJh2KkdhG0R1enYeBsYZlipOm+AW7f/MmOA==}
@@ -8639,10 +8631,6 @@ snapshots:
     dependencies:
       storybook: 8.2.9(@babel/preset-env@7.26.0(@babel/core@7.26.0))
 
-  '@storybook/core-common@8.4.6(storybook@8.2.9(@babel/preset-env@7.26.0(@babel/core@7.26.0)))':
-    dependencies:
-      storybook: 8.2.9(@babel/preset-env@7.26.0(@babel/core@7.26.0))
-
   '@storybook/core@8.2.9':
     dependencies:
       '@storybook/csf': 0.1.11
@@ -8670,10 +8658,6 @@ snapshots:
     dependencies:
       storybook: 8.2.9(@babel/preset-env@7.26.0(@babel/core@7.26.0))
       unplugin: 1.16.0
-
-  '@storybook/csf-tools@8.4.6(storybook@8.2.9(@babel/preset-env@7.26.0(@babel/core@7.26.0)))':
-    dependencies:
-      storybook: 8.2.9(@babel/preset-env@7.26.0(@babel/core@7.26.0))
 
   '@storybook/csf@0.1.11':
     dependencies:
@@ -8758,17 +8742,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@storybook/test-runner@0.19.1(@swc/helpers@0.5.15)(@types/node@22.10.1)(storybook@8.2.9(@babel/preset-env@7.26.0(@babel/core@7.26.0)))(ts-node@10.9.2(@swc/core@1.9.3(@swc/helpers@0.5.15))(@types/node@22.10.1)(typescript@5.7.2))':
+  '@storybook/test-runner@0.20.0(@swc/helpers@0.5.15)(@types/node@22.10.1)(storybook@8.2.9(@babel/preset-env@7.26.0(@babel/core@7.26.0)))(ts-node@10.9.2(@swc/core@1.9.3(@swc/helpers@0.5.15))(@types/node@22.10.1)(typescript@5.7.2))':
     dependencies:
       '@babel/core': 7.26.0
       '@babel/generator': 7.26.2
       '@babel/template': 7.25.9
       '@babel/types': 7.26.0
       '@jest/types': 29.6.3
-      '@storybook/core-common': 8.4.6(storybook@8.2.9(@babel/preset-env@7.26.0(@babel/core@7.26.0)))
       '@storybook/csf': 0.1.12
-      '@storybook/csf-tools': 8.4.6(storybook@8.2.9(@babel/preset-env@7.26.0(@babel/core@7.26.0)))
-      '@storybook/preview-api': 8.4.6(storybook@8.2.9(@babel/preset-env@7.26.0(@babel/core@7.26.0)))
       '@swc/core': 1.9.3(@swc/helpers@0.5.15)
       '@swc/jest': 0.2.37(@swc/core@1.9.3(@swc/helpers@0.5.15))
       expect-playwright: 0.8.0
@@ -8782,13 +8763,13 @@ snapshots:
       jest-watch-typeahead: 2.2.2(jest@29.7.0(@types/node@22.10.1)(ts-node@10.9.2(@swc/core@1.9.3(@swc/helpers@0.5.15))(@types/node@22.10.1)(typescript@5.7.2)))
       nyc: 15.1.0
       playwright: 1.49.0
+      storybook: 8.2.9(@babel/preset-env@7.26.0(@babel/core@7.26.0))
     transitivePeerDependencies:
       - '@swc/helpers'
       - '@types/node'
       - babel-plugin-macros
       - debug
       - node-notifier
-      - storybook
       - supports-color
       - ts-node
 
@@ -9059,7 +9040,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.6':
     dependencies:
-      '@types/node': 18.19.67
+      '@types/node': 22.10.1
       '@types/qs': 6.9.17
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
