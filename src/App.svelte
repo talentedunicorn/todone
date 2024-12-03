@@ -49,8 +49,7 @@
 				auth0 = await initAuth0Client();
 			}
 			try {
-				await checkAuth(auth0);
-				if (!$isLoggedin) return;
+				await auth0.checkSession();
 			} catch (e) {
 				// Log out on failure
 				logout(auth0);
