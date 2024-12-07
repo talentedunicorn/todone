@@ -1,22 +1,23 @@
-<script>
+<script lang="ts">
 	import { fade, fly } from 'svelte/transition';
-	import { createEventDispatcher } from 'svelte';
+	import { type Snippet } from 'svelte';
 	import Button from './Button.svelte';
 
-	const dispatch = createEventDispatcher();
+	let opened = $state(false);
+	interface Props {
+		title?: string;
+		menuItems?: any;
+		children?: Snippet;
+		goTo: (path: string) => void;
+	}
 
-	export let title = '';
-	let opened = false;
-	export /**
-	 * @type {{label: string, selected?: boolean }[]}
-	 */
-	let menuItems = [];
+	let { title = '', menuItems = [], children, goTo }: Props = $props();
 </script>
 
 <nav class={opened ? '' : 'closed'}>
 	<Button
 		variant="primary"
-		on:click={() => {
+		onclick={() => {
 			opened = !opened;
 		}}
 	>
@@ -40,13 +41,13 @@
 					variant="link"
 					size="large"
 					selected={menuitem.selected}
-					on:click={() => {
-						dispatch('goTo', menuitem.label);
+					onclick={() => {
+						goTo(menuitem.label);
 						opened = false;
 					}}>{menuitem.label}</Button
 				>
 			{/each}
-			<slot />
+			{@render children?.()}
 		</div>
 	{/if}
 </nav>

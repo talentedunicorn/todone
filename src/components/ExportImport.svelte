@@ -6,9 +6,9 @@
 
 	let importField: HTMLInputElement;
 	let importForm: HTMLFormElement;
-	let files: FileList;
+	let files = $state<FileList>();
 
-	let processing = false;
+	let processing = $state(false);
 
 	const exportData = async () => {
 		processing = true;
@@ -45,8 +45,8 @@
 	};
 
 	const importData = async () => {
-		const file = files[0];
-		const data = JSON.parse(await file.text());
+		const file = files?.[0];
+		const data = JSON.parse((await file?.text()) ?? '');
 		const schema = z.array(
 			z.object({
 				id: z.string(),
@@ -71,9 +71,11 @@
 		}
 	};
 
-	$: if (files?.length > 0) {
-		importData();
-	}
+	$effect(() => {
+		if (files?.length ?? 0 > 0) {
+			importData();
+		}
+	});
 </script>
 
 <form method="post" bind:this={importForm}>
@@ -86,8 +88,8 @@
 		bind:this={importField}
 		bind:files
 	/>
-	<Button type="button" size="large" on:click={() => importField.click()} disabled={processing}
+	<Button type="button" size="large" onclick={() => importField.click()} disabled={processing}
 		>Import</Button
 	>
 </form>
-<Button size="large" on:click={exportData} disabled={processing}>Export</Button>
+<Button size="large" onclick={exportData} disabled={processing}>Export</Button>

@@ -1,4 +1,4 @@
-<script context="module">
+<script module>
 	import Task from './Task.svelte';
 	export const meta = {
 		title: 'Task',
@@ -37,13 +37,15 @@ Includes lists \n \
 	const consoleSpy = spyOn(window, 'alert');
 </script>
 
-<Template let:args>
-	<Task
-		{...args}
-		on:complete={() => console.info('Marked complete')}
-		on:edit={() => console.info('Editing')}
-		on:delete={() => console.info('Deleting')}
-	/>
+<Template>
+	{#snippet children({ args })}
+		<Task
+			{...args}
+			onComplete={() => console.info('Marked complete')}
+			onEdit={() => console.info('Editing')}
+			onDelete={() => console.info('Deleting')}
+		/>
+	{/snippet}
 </Template>
 
 <Story

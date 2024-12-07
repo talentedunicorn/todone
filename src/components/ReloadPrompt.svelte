@@ -12,7 +12,7 @@
 		toastActions.set(null);
 	};
 
-	$: {
+	$effect(() => {
 		if ($offlineReady) {
 			toastMessage.set('App ready to work offline.');
 		}
@@ -29,5 +29,5 @@
 				}
 			]);
 		}
-	}
+	});
 </script>

@@ -1,41 +1,58 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import Button from './Button.svelte';
+	import { preventDefault } from '../lib/helpers';
+	import type { Todo } from '../db';
 
-	const dispatch = createEventDispatcher();
 	type Content = { title: string; value: string };
 
-	export let defaultValue: Content | null = null;
+	interface Props {
+		defaultValue?: Todo | null;
+		onClear: () => void;
+		onUpdate: (data: Todo) => void;
+		onSubmit: (data: Todo) => void;
+	}
+
+	let { defaultValue, onClear, onSubmit, onUpdate }: Props = $props();
 
 	let titleInput: HTMLInputElement;
 
-	$: data = defaultValue || {
-		title: '',
-		value: ''
-	};
+	let data = $state<Todo | Content>(
+		defaultValue || {
+			title: '',
+			value: ''
+		}
+	);
 
-	$: isEdit = defaultValue !== null;
+	let isEdit = $derived(defaultValue !== null);
 
-	$: if (isEdit && titleInput) {
-		window.scrollTo({ top: titleInput.scrollHeight });
-		titleInput.focus();
-	}
+	$effect(() => {
+		if (isEdit && titleInput) {
+			window.scrollTo({ top: titleInput.scrollHeight });
+			titleInput.focus();
+		}
+	});
 
-	$: isEmpty = data.value.trim().length < 1;
+	let isEmpty = $derived(data.value.trim().length < 1);
 
-	$: invalid = data.title.trim().length < 1 || isEmpty;
-	$: buttonText = isEdit ? 'Update' : 'Submit';
+	let invalid = $derived(data.title.trim().length < 1 || isEmpty);
+	let buttonText = $derived(isEdit ? 'Update' : 'Submit');
 
 	const clear = () => {
 		defaultValue = null;
 		data = { title: '', value: '' };
-		dispatch('clear');
+		onClear();
 	};
 
 	const submit = () => {
-		isEdit ? dispatch('update', data) : dispatch('submit', data);
+		isEdit ? onUpdate(data as Todo) : onSubmit(data as Todo);
 		clear();
 	};
+
+	$effect(() => {
+		if (defaultValue) {
+			data = defaultValue;
+		}
+	});
 </script>
 
 <!--
@@ -48,13 +65,13 @@ Form component with a title and content inputs
 ```svelte
 <Form
 	defaultValue={Content}
-	on:submit={}
-	on:update={}
-	on:clear={}
+	onSubmit={}
+	onUpdate={}
+	onClear={}
 />
 ```
 -->
-<form on:submit|preventDefault={submit}>
+<form onsubmit={preventDefault(submit)}>
 	<label class="visually-hidden" for="title">Title</label>
 	<input
 		type="text"
@@ -67,7 +84,7 @@ Form component with a title and content inputs
 	<label class="visually-hidden" for="content">Content</label>
 	<textarea data-testid="content" data-empty={isEmpty} bind:value={data.value}></textarea>
 	<div class="Actions">
-		<Button data-testid="cancel" on:click={clear} disabled={invalid}>Cancel</Button>
+		<Button data-testid="cancel" onclick={clear} disabled={invalid}>Cancel</Button>
 		<Button data-testid="submit" type="submit" variant="primary" disabled={invalid}
 			>{buttonText}</Button
 		>

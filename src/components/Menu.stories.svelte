@@ -1,4 +1,4 @@
-<script context="module">
+<script module>
 	import Menu from './Menu.svelte';
 	export const meta = {
 		title: 'Menu',
@@ -11,12 +11,14 @@
 	import { userEvent, waitFor, within, expect } from '@storybook/test';
 </script>
 
-<Template let:args>
-	<Menu
-		{...args}
-		menuItems={[{ label: 'ToDo', selected: true }, { label: 'Done' }]}
-		on:goTo={() => {}}
-	/>
+<Template>
+	{#snippet children({ args })}
+		<Menu
+			{...args}
+			menuItems={[{ label: 'ToDo', selected: true }, { label: 'Done' }]}
+			goTo={() => {}}
+		/>
+	{/snippet}
 </Template>
 
 <Story

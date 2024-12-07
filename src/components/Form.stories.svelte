@@ -1,4 +1,4 @@
-<script context="module">
+<script module>
 	import Form from './Form.svelte';
 
 	export const meta = {
@@ -12,8 +12,10 @@
 	import { within, userEvent, waitFor, expect } from '@storybook/test';
 </script>
 
-<Template let:args>
-	<Form {...args} on:submit={() => {}} on:clear={() => {}} />
+<Template>
+	{#snippet children({ args })}
+		<Form {...args} on:submit={() => {}} on:clear={() => {}} />
+	{/snippet}
 </Template>
 
 <Story

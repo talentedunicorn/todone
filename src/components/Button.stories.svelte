@@ -1,4 +1,4 @@
-<script context="module">
+<script module>
 	import Button from './Button.svelte';
 	export const meta = {
 		title: 'Button',
@@ -16,7 +16,11 @@
 	import { Story, Template } from '@storybook/addon-svelte-csf';
 </script>
 
-<Template let:args><Button {...args}>Click me</Button></Template>
+<Template
+	>{#snippet children({ args })}
+		<Button {...args}>Click me</Button>
+	{/snippet}
+</Template>
 
 <Story name="Default" args={{}} />
 

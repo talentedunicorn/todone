@@ -1,4 +1,4 @@
-<script context="module">
+<script module>
 	import Logo from './Logo.svelte';
 
 	export const meta = {
@@ -11,8 +11,10 @@
 	import { Story, Template } from '@storybook/addon-svelte-csf';
 </script>
 
-<Template let:args>
-	<Logo {...args} />
+<Template>
+	{#snippet children({ args })}
+		<Logo {...args} />
+	{/snippet}
 </Template>
 
 <Story name="Default Logo" />
