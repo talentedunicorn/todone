@@ -1,20 +1,23 @@
 <script lang="ts">
 	import Button from './Button.svelte';
-	import { marked, type RendererObject } from 'marked';
+	import { marked, Parser, Renderer, type Tokens } from 'marked';
 	import type { HTMLAttributes } from 'svelte/elements';
 
-	const renderer: RendererObject = {
-		table(header, body) {
-			const r = new marked.Renderer();
-			return `<div class="TableWrapper">${r.table(header, body)}</div>`;
+	marked.use({
+		gfm: true
+	});
+	const originalRenderer = new Renderer();
+	originalRenderer.parser = new Parser();
+
+	const tableExtension = {
+		renderer: {
+			table(token: Tokens.Table) {
+				return `<div class="TableWrapper">${originalRenderer.table(token)}</div> `;
+			}
 		}
 	};
 
-	// Configure marked
-	marked.use({
-		gfm: true,
-		renderer
-	});
+	marked.use(tableExtension);
 
 	interface Props extends Partial<HTMLAttributes<HTMLElement>> {
 		title: string;
