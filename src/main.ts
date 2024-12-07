@@ -2,6 +2,7 @@ import './app.css';
 import App from './App.svelte';
 
 import * as Sentry from '@sentry/svelte';
+import { mount } from 'svelte';
 
 if (import.meta.env.MODE === 'production') {
 	Sentry.init({
@@ -17,7 +18,7 @@ if (import.meta.env.MODE === 'production') {
 	});
 }
 
-const app = new App({
+const app = mount(App, {
 	target: document.getElementById('app') as HTMLElement
 });
 

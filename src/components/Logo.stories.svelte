@@ -1,18 +1,11 @@
-<script context="module">
+<script module>
+	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import Logo from './Logo.svelte';
 
-	export const meta = {
+	const { Story } = defineMeta({
 		title: 'Logo',
 		component: Logo
-	};
+	});
 </script>
-
-<script lang="ts">
-	import { Story, Template } from '@storybook/addon-svelte-csf';
-</script>
-
-<Template let:args>
-	<Logo {...args} />
-</Template>
 
 <Story name="Default Logo" />

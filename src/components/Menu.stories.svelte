@@ -1,25 +1,23 @@
-<script context="module">
+<script module>
 	import Menu from './Menu.svelte';
-	export const meta = {
+	import { defineMeta } from '@storybook/addon-svelte-csf';
+	import { userEvent, waitFor, within, expect } from '@storybook/test';
+	const { Story } = defineMeta({
 		title: 'Menu',
 		component: Menu
-	};
+	});
 </script>
 
-<script lang="ts">
-	import { Story, Template } from '@storybook/addon-svelte-csf';
-	import { userEvent, waitFor, within, expect } from '@storybook/test';
-</script>
-
-<Template let:args>
+{#snippet children(args)}
 	<Menu
 		{...args}
 		menuItems={[{ label: 'ToDo', selected: true }, { label: 'Done' }]}
-		on:goTo={() => {}}
+		goTo={() => {}}
 	/>
-</Template>
+{/snippet}
 
 <Story
+	{children}
 	name="Default"
 	play={({ canvasElement }) => {
 		const canvas = within(canvasElement);
@@ -41,6 +39,7 @@
 />
 
 <Story
+	{children}
 	name="With title"
 	args={{ title: 'Tasks' }}
 	play={({ canvasElement }) => {

@@ -5,7 +5,7 @@
 	import { isLoggedin, tabs, currentTab, status, user } from './stores';
 	import Button from './components/Button.svelte';
 	import { checkAuth, initAuth0Client, login, logout } from './auth';
-	import { onMount, type ComponentEvents } from 'svelte';
+	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import List from './List.svelte';
 	import type { Auth0Client } from '@auth0/auth0-spa-js';
@@ -17,15 +17,17 @@
 	let auth0: Auth0Client;
 	let wrapper: HTMLElement;
 
-	$: menuItems = tabs.map((item) => ({
-		...item,
-		selected: item.label === $currentTab
-	}));
+	let menuItems = $derived(
+		tabs.map((item) => ({
+			...item,
+			selected: item.label === $currentTab
+		}))
+	);
 
-	let showBackToTop = false;
+	let showBackToTop = $state(false);
 
-	const handleMenu = (event: ComponentEvents<Menu>['goTo']) => {
-		currentTab.set(event.detail);
+	const handleMenu = (path: string) => {
+		currentTab.set(path);
 		scrollToTop();
 	};
 
@@ -69,11 +71,11 @@
 	{#if import.meta.env.VITE_SYNCED === 'true' && !$isLoggedin}
 		<div class="Login">
 			<Logo />
-			<Button on:click={() => login(auth0)}>Log in</Button>
+			<Button onclick={() => login(auth0)}>Log in</Button>
 		</div>
 	{:else}
 		<div class="Menu">
-			<Menu {menuItems} on:goTo={handleMenu}>
+			<Menu {menuItems} goTo={handleMenu}>
 				<ExportImport />
 			</Menu>
 		</div>
@@ -84,7 +86,7 @@
 			{#if $isLoggedin}
 				<div class="Profile">
 					{$user.name}
-					<Button on:click={() => logout(auth0)}>Log out</Button>
+					<Button onclick={() => logout(auth0)}>Log out</Button>
 				</div>
 			{/if}
 			<List />
@@ -92,7 +94,7 @@
 	{/if}
 	{#if showBackToTop}
 		<footer class="Footer" transition:fly={{ y: 100, duration: 500 }}>
-			<Button on:click={scrollToTop}
+			<Button onclick={scrollToTop}
 				><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width={25}>
 					<title>Back to top</title>
 					<path

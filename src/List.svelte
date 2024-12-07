@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { type ComponentEvents } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import Form from './components/Form.svelte';
 	import Task from './components/Task.svelte';
@@ -8,20 +7,20 @@
 	import { getTodos, add, update, remove, type Todo, setCompleted } from './db';
 
 	type TodoWithExpanded = Todo & { expanded: boolean };
-	let data: TodoWithExpanded[] = [];
-	$: completedTodos = data.filter((t) => t.completed === true);
-	$: incompleteTodos = data.filter((t) => t.completed === false);
-	let task: Todo | null = null;
+	let data = $state<TodoWithExpanded[]>([]);
+	let completedTodos = $derived(data.filter((t) => t.completed === true));
+	let incompleteTodos = $derived(data.filter((t) => t.completed === false));
+	let task = $state<Todo | null>(null);
 
 	let searchInput: HTMLInputElement;
 
-	let query = '';
-	let showSearch = false;
-	let deleting = false;
+	let query = $state('');
+	let showSearch = $state(false);
+	let deleting = $state(false);
 
-	$: currentTodos = $currentTab === 'To Do' ? incompleteTodos : completedTodos;
-	$: renderedTodos = currentTodos.filter((t) =>
-		t.title.toLowerCase().includes(query.toLowerCase())
+	let currentTodos = $derived($currentTab === 'To Do' ? incompleteTodos : completedTodos);
+	let renderedTodos = $derived(
+		currentTodos.filter((t) => t.title.toLowerCase().includes(query.toLowerCase()))
 	);
 
 	const loadTodos = async () => {
@@ -35,18 +34,20 @@
 		task = null;
 	};
 
-	const handleUpdate = async ({ detail }: ComponentEvents<Form>['update']) => {
-		update(detail).then(() => {
+	const handleUpdate = async (data: any) => {
+		update(data).then(() => {
 			clearEdit();
 		});
 	};
 
-	const handleCreate = async ({ detail }: ComponentEvents<Form>['submit']) => {
-		await add(detail);
+	const handleCreate = async (data: any) => {
+		await add(data);
 	};
 
-	const handleEdit = (value: Todo) => {
-		task = value;
+	const handleEdit = (selected: Todo) => {
+		task = {
+			...selected
+		};
 	};
 
 	const handleToggleComplete = (task: Todo) => {
@@ -60,23 +61,22 @@
 		});
 	};
 
-	const handleToggleExpand = (id: string, e: ComponentEvents<Task>['toggleExpand']) => {
-		const expanded = e.detail;
-		const taskIndex = renderedTodos.findIndex((t) => t.id === id);
+	const handleToggleExpand = (id: string, expanded: boolean) => {
+		const taskIndex = data.findIndex((t) => t.id === id);
 		if (taskIndex > -1) {
-			renderedTodos[taskIndex] = { ...renderedTodos[taskIndex], expanded };
+			data[taskIndex] = { ...data[taskIndex], expanded };
 		}
 	};
 
 	const expandAll = () => {
-		renderedTodos = renderedTodos.map((t) => {
-			return t.expanded === false ? { ...t, expanded: true } : t;
+		data.forEach((t) => {
+			t.expanded = true;
 		});
 	};
 
 	const collapseAll = () => {
-		renderedTodos = renderedTodos.map((t) => {
-			return t.expanded === true ? { ...t, expanded: false } : t;
+		data.forEach((t) => {
+			t.expanded = false;
 		});
 	};
 </script>
@@ -96,7 +96,7 @@
 		/>
 		{#if showSearch}
 			<Button
-				on:click={() => {
+				onclick={() => {
 					showSearch = false;
 					query = '';
 				}}
@@ -118,7 +118,7 @@
 			</Button>
 		{:else}
 			<Button
-				on:click={() => {
+				onclick={() => {
 					showSearch = true;
 					searchInput.focus();
 				}}
@@ -144,9 +144,9 @@
 		<div in:fly={{ y: 20 }}>
 			<Form
 				defaultValue={task}
-				on:submit={handleCreate}
-				on:update={handleUpdate}
-				on:clear={clearEdit}
+				onSubmit={handleCreate}
+				onUpdate={handleUpdate}
+				onClear={clearEdit}
 			/>
 		</div>
 	{/if}
@@ -156,14 +156,14 @@
 		{#if renderedTodos.length > 0}
 			{#if $currentTab === 'Done'}
 				<div>
-					<Button on:click={clearCompleted} disabled={deleting}>Clear completed</Button>
+					<Button onclick={clearCompleted} disabled={deleting}>Clear completed</Button>
 				</div>
 			{/if}
 			<div>
-				<Button variant="link" size="small" class="ToggleExpand" on:click={expandAll}
+				<Button variant="link" size="small" class="ToggleExpand" onclick={expandAll}
 					>Expand all</Button
 				>
-				<Button variant="link" size="small" class="ToggleExpand" on:click={collapseAll}
+				<Button variant="link" size="small" class="ToggleExpand" onclick={collapseAll}
 					>Collapse all</Button
 				>
 			</div>
@@ -177,10 +177,10 @@
 						{completed}
 						updated={new Date(updated)}
 						{expanded}
-						on:edit={() => handleEdit(task)}
-						on:delete={() => remove(id)}
-						on:complete={() => handleToggleComplete(task)}
-						on:toggleExpand={(e) => handleToggleExpand(id, e)}
+						onEdit={() => handleEdit(task)}
+						onDelete={() => remove(id)}
+						onComplete={() => handleToggleComplete(task)}
+						onToggleExpand={(expanded) => handleToggleExpand(id, expanded)}
 					/>
 				</div>
 			{/each}

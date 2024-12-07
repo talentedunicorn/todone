@@ -11,11 +11,11 @@
 		toastActions.set(null);
 	};
 
-	$: {
+	$effect(() => {
 		if ($toastMessage !== null) {
 			dialog?.show();
 		}
-	}
+	});
 </script>
 
 <dialog bind:this={dialog}>
@@ -25,10 +25,10 @@
 			<footer class="toast-footer">
 				{#if $toastActions}
 					{#each $toastActions as action}
-						<Button size="small" on:click={action.callback}>{action.label}</Button>
+						<Button size="small" onclick={action.callback}>{action.label}</Button>
 					{/each}
 				{/if}
-				<Button size="small" on:click={close}>Close</Button>
+				<Button size="small" onclick={close}>Close</Button>
 			</footer>
 		</section>
 	{/if}

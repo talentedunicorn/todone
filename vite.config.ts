@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
 	build: {
 		sourcemap: true
 	},
@@ -46,9 +46,4 @@ export default defineConfig(({ mode }) => ({
 			project: 'todone'
 		})
 	],
-	...(mode === 'development' && {
-		define: {
-			global: 'window' // https://stackoverflow.com/questions/75808603/vitesveltepouchdb-uncaught-typeerror-class-extends-value-object-object-is
-		}
-	})
-}));
+});

@@ -1,16 +1,8 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import Button from './Button.svelte';
 	import { marked, type RendererObject } from 'marked';
 	import type { HTMLAttributes } from 'svelte/elements';
 
-	interface $$Props extends HTMLAttributes<HTMLBaseElement> {
-		title: string;
-		value: string;
-		completed: boolean;
-		updated: Date;
-		expanded?: boolean;
-	}
 	const renderer: RendererObject = {
 		table(header, body) {
 			const r = new marked.Renderer();
@@ -24,18 +16,38 @@
 		renderer
 	});
 
-	const dispatch = createEventDispatcher();
+	interface Props extends Partial<HTMLAttributes<HTMLElement>> {
+		title: string;
+		value: string;
+		completed: boolean;
+		updated: Date;
+		expanded?: boolean;
+		onToggleExpand: (expanded: boolean) => void;
+		onDelete: () => void;
+		onComplete: () => void;
+		onEdit: () => void;
+		[key: string]: any;
+	}
 
-	export let title = '';
-	export let value = '';
-	export let completed = false;
-	export let updated: Date;
-	export let expanded = false;
-	$: completeText = completed ? 'Mark Incomplete' : 'Mark Completed';
-	$: formattedTimestamp = `Updated ― ${Intl.DateTimeFormat('en-MY', {
-		dateStyle: 'medium',
-		timeStyle: 'short'
-	}).format(new Date(updated))}`;
+	let {
+		title = '',
+		value = '',
+		completed = false,
+		updated,
+		expanded = false,
+		onToggleExpand,
+		onDelete,
+		onComplete,
+		onEdit,
+		...rest
+	}: Props = $props();
+	let completeText = $derived(completed ? 'Mark Incomplete' : 'Mark Completed');
+	let formattedTimestamp = $derived(
+		`Updated ― ${Intl.DateTimeFormat('en-MY', {
+			dateStyle: 'medium',
+			timeStyle: 'short'
+		}).format(new Date(updated))}`
+	);
 
 	const scrollToID = (ev: MouseEvent) => {
 		ev.preventDefault();
@@ -61,13 +73,9 @@
 			destroy: () => el.removeEventListener('click', scrollToID)
 		};
 	};
-
-	const toggleExpand = () => {
-		dispatch('toggleExpand', !expanded);
-	};
 </script>
 
-<section {...$$restProps}>
+<section {...rest}>
 	<header data-updated={formattedTimestamp}>
 		<div class="Title">
 			<h3>{title}</h3>
@@ -76,9 +84,9 @@
 				data-toggle
 				size="small"
 				variant="link"
-				on:click={toggleExpand}
+				onclick={() => onToggleExpand(!expanded)}
 			>
-				<a href={`#${$$restProps.id}`} use:scrollIntoView>
+				<a href={`#${rest.id}`} use:scrollIntoView>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 24 24"
@@ -106,14 +114,11 @@
 		<Button
 			data-testid="delete"
 			size="small"
-			on:click={() => confirm(`Delete: ${title}?`) && dispatch('delete')}>Delete</Button
+			onclick={() => confirm(`Delete: ${title}?`) && onDelete()}>Delete</Button
 		>
-		<Button data-testid="edit" size="small" on:click={() => dispatch('edit')}>Edit</Button>
-		<Button
-			data-testid="complete"
-			size="small"
-			variant="primary"
-			on:click={() => dispatch('complete')}>{completeText}</Button
+		<Button data-testid="edit" size="small" onclick={onEdit}>Edit</Button>
+		<Button data-testid="complete" size="small" variant="primary" onclick={onComplete}
+			>{completeText}</Button
 		>
 	</div>
 </section>
