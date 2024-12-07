@@ -61,7 +61,7 @@
 	"dependencies": {
 		"@sentry/vite-plugin": "^2.22.7",
 		"events": "^3.3.0",
-		"marked": "^12.0.2",
+		"marked": "^15.0.0",
 		"rxdb": "^15.39.0",
 		"rxjs": "^7.8.1",
 		"vite-plugin-pwa": "^0.21.1",
