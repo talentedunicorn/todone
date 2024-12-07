@@ -1,24 +1,20 @@
 <script module>
 	import Form from './Form.svelte';
+	import { within, userEvent, waitFor, expect } from '@storybook/test';
+	import { defineMeta } from '@storybook/addon-svelte-csf';
 
-	export const meta = {
+	const { Story } = defineMeta({
 		title: 'Form',
 		component: Form
-	};
+	});
 </script>
 
-<script lang="ts">
-	import { Template, Story } from '@storybook/addon-svelte-csf';
-	import { within, userEvent, waitFor, expect } from '@storybook/test';
-</script>
-
-<Template>
-	{#snippet children({ args })}
-		<Form {...args} on:submit={() => {}} on:clear={() => {}} />
-	{/snippet}
-</Template>
+{#snippet template(args)}
+	<Form {...args} onSubmit={() => {}} onClear={() => {}} onUpdate={() => {}} />
+{/snippet}
 
 <Story
+	children={template}
 	name="Empty"
 	play={async ({ canvasElement }) => {
 		const canvas = within(canvasElement);
@@ -50,6 +46,7 @@
 />
 
 <Story
+	children={template}
 	name="With default content"
 	args={{
 		defaultValue: {

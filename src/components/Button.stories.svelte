@@ -1,6 +1,8 @@
-<script module>
+<script context="module">
 	import Button from './Button.svelte';
-	export const meta = {
+
+	import { defineMeta } from '@storybook/addon-svelte-csf';
+	const { Story } = defineMeta({
 		title: 'Button',
 		component: Button,
 		argTypes: {
@@ -9,27 +11,21 @@
 			type: { control: 'select', options: ['submit', 'button', 'reset'], default: 'button' },
 			selected: { control: 'boolean', default: false }
 		}
-	};
+	});
 </script>
 
-<script lang="ts">
-	import { Story, Template } from '@storybook/addon-svelte-csf';
-</script>
+{#snippet template(args)}
+	<Button {...args}>Click me</Button>
+{/snippet}
 
-<Template
-	>{#snippet children({ args })}
-		<Button {...args}>Click me</Button>
-	{/snippet}
-</Template>
+<Story name="Default" children={template} args={{}} />
 
-<Story name="Default" args={{}} />
+<Story name="Primary" children={template} args={{ variant: 'primary' }} />
 
-<Story name="Primary" args={{ variant: 'primary' }} />
+<Story name="Link" children={template} args={{ variant: 'link' }} />
 
-<Story name="Link" args={{ variant: 'link' }} />
+<Story name="Disabled" children={template} args={{ disabled: true }} />
 
-<Story name="Disabled" args={{ disabled: true }} />
+<Story name="Sizes - Small" children={template} args={{ size: 'small' }} />
 
-<Story name="Sizes - Small" args={{ size: 'small' }} />
-
-<Story name="Sizes - Large" args={{ size: 'large' }} />
+<Story name="Sizes - Large" children={template} args={{ size: 'large' }} />
