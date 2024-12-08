@@ -9,6 +9,7 @@
 
 :root {
 	color-scheme: light dark;
+
 	--primary: hsla(96, 76%, 46%, 1);
 	--white: light-dark(hsl(0, 0%, 99%), hsl(0, 0%, 5%));
 	--black: light-dark(hsl(0, 0%, 5%), hsl(0, 0%, 99%));
@@ -26,6 +27,13 @@
 *:before,
 *:after {
 	box-sizing: border-box;
+}
+
+[data-theme='dark'] {
+	color-scheme: dark;
+}
+[data-theme='light'] {
+	color-scheme: light;
 }
 
 body {
