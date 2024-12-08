@@ -9,13 +9,17 @@
 
 :root {
 	color-scheme: light dark;
-	--primary: hsla(96, 76%, 46%, 1);
-	--white: light-dark(hsl(0, 0%, 99%), hsl(0, 0%, 5%));
-	--black: light-dark(hsl(0, 0%, 5%), hsl(0, 0%, 99%));
-	--gray: hsl(210, 11%, 71%);
-	--gray-light: light-dark(hsl(210, 11%, 92%), hsl(210, 11%, 31%));
-	--red: hsl(0, 100%, 71%);
-	--yellow: hsl(44, 95%, 56%);
+	--color-white: #fcfcfc;
+	--color-black: #0d0d0d;
+	--color-gray-light: #e8ebed;
+	--color-gray-light-dark: #464f58;
+	--primary: #63ce1c;
+	--white: light-dark(var(--color-white), var(--color-black));
+	--black: light-dark(var(--color-black), var(--color-white));
+	--gray: #adb5bd;
+	--gray-light: light-dark(var(--color-gray-light), var(--color-gray-light-dark));
+	--red: #ff6b6b;
+	--yellow: #f9c124;
 	--font: 'Dosis', sans-serif;
 	--link-color: var(--primary);
 	--border: 1px solid var(--gray-light);
