@@ -12,14 +12,14 @@
 	};
 
 	$effect(() => {
-		if ($toastMessage !== null) {
+		if ($toastMessage) {
 			dialog?.show();
 		}
 	});
 </script>
 
 <dialog bind:this={dialog}>
-	{#if $toastMessage !== null}
+	{#if $toastMessage}
 		<section class="wrapper" in:fly={{ y: 20 }}>
 			{$toastMessage}
 			<footer class="toast-footer">
