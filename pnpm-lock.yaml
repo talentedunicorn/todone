@@ -71,7 +71,7 @@ importers:
         version: 8.4.7(react@18.3.1)(storybook@8.4.7(prettier@3.4.2))
       '@storybook/addon-svelte-csf':
         specifier: ^5.0.0-next
-        version: 5.0.0-next.13(@storybook/svelte@8.4.7(storybook@8.4.7(prettier@3.4.2))(svelte@5.8.1))(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.8.1)(vite@6.0.3(@types/node@22.10.1)(terser@5.37.0)(yaml@2.6.1)))(storybook@8.4.7(prettier@3.4.2))(svelte@5.8.1)(vite@6.0.3(@types/node@22.10.1)(terser@5.37.0)(yaml@2.6.1))
+        version: 5.0.0-next.14(@storybook/svelte@8.4.7(storybook@8.4.7(prettier@3.4.2))(svelte@5.8.1))(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.8.1)(vite@6.0.3(@types/node@22.10.1)(terser@5.37.0)(yaml@2.6.1)))(storybook@8.4.7(prettier@3.4.2))(svelte@5.8.1)(vite@6.0.3(@types/node@22.10.1)(terser@5.37.0)(yaml@2.6.1))
       '@storybook/svelte':
         specifier: ^8.4.7
         version: 8.4.7(storybook@8.4.7(prettier@3.4.2))(svelte@5.8.1)
@@ -1928,8 +1928,8 @@ packages:
     peerDependencies:
       storybook: ^8.4.7
 
-  '@storybook/addon-svelte-csf@5.0.0-next.13':
-    resolution: {integrity: sha512-okiimFWeaFp1BJmrvQp946clM4Pw4ALhIeaL49yBEmoCvFy2TwAjp6af9TMZjadCiI10lKiF+oczqQCZfKZHNA==}
+  '@storybook/addon-svelte-csf@5.0.0-next.14':
+    resolution: {integrity: sha512-BeSfEezKGCRSDAAhhl89TLcBdFhkHileXDqfVuDgQlfoivk/x0bc7gb2pc+Y3JJTtQrSCosXZImpTPPYAvRncQ==}
     peerDependencies:
       '@storybook/svelte': ^8.0.0
       '@sveltejs/vite-plugin-svelte': ^4.0.0 || ^5.0.0
@@ -4344,6 +4344,9 @@ packages:
 
   magic-string@0.30.14:
     resolution: {integrity: sha512-5c99P1WKTed11ZC0HMJOj6CDIue6F8ySu+bJL+85q1zBEIY8IklrJ1eiKC2NDRh3Ct3FcvmJPyQHb9erXMTJNw==}
+
+  magic-string@0.30.15:
+    resolution: {integrity: sha512-zXeaYRgZ6ldS1RJJUrMrYgNJ4fdwnyI6tVqoiIhyCyv5IVTK9BU8Ic2l253GGETQHxI4HNUwhJ3fjDhKqEoaAw==}
 
   magic-string@0.30.8:
     resolution: {integrity: sha512-ISQTe55T2ao7XtlAStud6qwYPZjE4GK1S/BeVPus4jrq6JuOnQ00YKQC581RWhR122W7msZV263KzVeLoqidyQ==}
@@ -8230,7 +8233,7 @@ snapshots:
       storybook: 8.4.7(prettier@3.4.2)
       ts-dedent: 2.2.0
 
-  '@storybook/addon-svelte-csf@5.0.0-next.13(@storybook/svelte@8.4.7(storybook@8.4.7(prettier@3.4.2))(svelte@5.8.1))(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.8.1)(vite@6.0.3(@types/node@22.10.1)(terser@5.37.0)(yaml@2.6.1)))(storybook@8.4.7(prettier@3.4.2))(svelte@5.8.1)(vite@6.0.3(@types/node@22.10.1)(terser@5.37.0)(yaml@2.6.1))':
+  '@storybook/addon-svelte-csf@5.0.0-next.14(@storybook/svelte@8.4.7(storybook@8.4.7(prettier@3.4.2))(svelte@5.8.1))(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.8.1)(vite@6.0.3(@types/node@22.10.1)(terser@5.37.0)(yaml@2.6.1)))(storybook@8.4.7(prettier@3.4.2))(svelte@5.8.1)(vite@6.0.3(@types/node@22.10.1)(terser@5.37.0)(yaml@2.6.1))':
     dependencies:
       '@storybook/csf': 0.1.12
       '@storybook/docs-tools': 8.4.7(storybook@8.4.7(prettier@3.4.2))
@@ -8241,7 +8244,7 @@ snapshots:
       dedent: 1.5.3
       es-toolkit: 1.29.0
       esrap: 1.2.3
-      magic-string: 0.30.14
+      magic-string: 0.30.15
       svelte: 5.8.1
       svelte-ast-print: 0.4.2(svelte@5.8.1)
       vite: 6.0.3(@types/node@22.10.1)(terser@5.37.0)(yaml@2.6.1)
@@ -11149,6 +11152,10 @@ snapshots:
       sourcemap-codec: 1.4.8
 
   magic-string@0.30.14:
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.5.0
+
+  magic-string@0.30.15:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.0
 
