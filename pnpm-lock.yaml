@@ -53,7 +53,7 @@ importers:
         version: 20.2.1(@babel/traverse@7.26.4)(@swc/core@1.10.0(@swc/helpers@0.5.15))(@types/node@22.10.1)(nx@20.2.1(@swc/core@1.10.0(@swc/helpers@0.5.15)))(typescript@5.7.2)
       '@sentry/svelte':
         specifier: ^8.42.0
-        version: 8.42.0(svelte@5.8.1)
+        version: 8.43.0(svelte@5.8.1)
       '@storybook/addon-actions':
         specifier: ^8.4.7
         version: 8.4.7(storybook@8.4.7(prettier@3.4.2))
@@ -1765,28 +1765,28 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@sentry-internal/browser-utils@8.42.0':
-    resolution: {integrity: sha512-xzgRI0wglKYsPrna574w1t38aftuvo44gjOKFvPNGPnYfiW9y4m+64kUz3JFbtanvOrKPcaITpdYiB4DeJXEbA==}
+  '@sentry-internal/browser-utils@8.43.0':
+    resolution: {integrity: sha512-5WhJZ3SA5sZVDBwOsChDd5JCzYcwBX7sEqBqEcm3pFru6TUihEnFIJmDIbreIyrQMwUhs3dTxnfnidgjr5z1Ag==}
     engines: {node: '>=14.18'}
 
-  '@sentry-internal/feedback@8.42.0':
-    resolution: {integrity: sha512-dkIw5Wdukwzngg5gNJ0QcK48LyJaMAnBspqTqZ3ItR01STi6Z+6+/Bt5XgmrvDgRD+FNBinflc5zMmfdFXXhvw==}
+  '@sentry-internal/feedback@8.43.0':
+    resolution: {integrity: sha512-rcGR2kzFu4vLXBQbI9eGJwjyToyjl36O2q/UKbiZBNJ5IFtDvKRLke6jIHq/YqiHPfFGpVtq5M/lYduDfA/eaQ==}
     engines: {node: '>=14.18'}
 
-  '@sentry-internal/replay-canvas@8.42.0':
-    resolution: {integrity: sha512-XrPErqVhPsPh/oFLVKvz7Wb+Fi2J1zCPLeZCxWqFuPWI2agRyLVu0KvqJyzSpSrRAEJC/XFzuSVILlYlXXSfgA==}
+  '@sentry-internal/replay-canvas@8.43.0':
+    resolution: {integrity: sha512-rL8G7E1GtozH8VNalRrBQNjYDJ5ChWS/vpQI5hUG11PZfvQFXEVatLvT3uO2l0xIlHm4idTsHOSLTe/usxnogQ==}
     engines: {node: '>=14.18'}
 
-  '@sentry-internal/replay@8.42.0':
-    resolution: {integrity: sha512-oNcJEBlDfXnRFYC5Mxj5fairyZHNqlnU4g8kPuztB9G5zlsyLgWfPxzcn1ixVQunth2/WZRklDi4o1ZfyHww7w==}
+  '@sentry-internal/replay@8.43.0':
+    resolution: {integrity: sha512-geV5/zejLfGGwWHjylzrb1w8NI3U37GMG9/53nmv13FmTXUDF5XF2lh41KXFVYwvp7Ha4bd1FRQ9IU9YtBWskw==}
     engines: {node: '>=14.18'}
 
   '@sentry/babel-plugin-component-annotate@2.22.7':
     resolution: {integrity: sha512-aa7XKgZMVl6l04NY+3X7BP7yvQ/s8scn8KzQfTLrGRarziTlMGrsCOBQtCNWXOPEbtxAIHpZ9dsrAn5EJSivOQ==}
     engines: {node: '>= 14'}
 
-  '@sentry/browser@8.42.0':
-    resolution: {integrity: sha512-lStrEk609KJHwXfDrOgoYVVoFFExixHywxSExk7ZDtwj2YPv6r6Y1gogvgr7dAZj7jWzadHkxZ33l9EOSJBfug==}
+  '@sentry/browser@8.43.0':
+    resolution: {integrity: sha512-LGvLLnfmR8+AEgFmd7Q7KHiOTiV0P1Lvio2ENDELhEqJOIiICauttibVmig+AW02qg4kMeywvleMsUYaZv2RVA==}
     engines: {node: '>=14.18'}
 
   '@sentry/bundler-plugin-core@2.22.7':
@@ -1839,12 +1839,12 @@ packages:
     engines: {node: '>= 10'}
     hasBin: true
 
-  '@sentry/core@8.42.0':
-    resolution: {integrity: sha512-ac6O3pgoIbU6rpwz6LlwW0wp3/GAHuSI0C5IsTgIY6baN8rOBnlAtG6KrHDDkGmUQ2srxkDJu9n1O6Td3cBCqw==}
+  '@sentry/core@8.43.0':
+    resolution: {integrity: sha512-ktyovtjkTMNud+kC/XfqHVCoQKreIKgx/hgeRvzPwuPyd1t1KzYmRL3DBkbcWVnyOPpVTHn+RsEI1eRcVYHtvw==}
     engines: {node: '>=14.18'}
 
-  '@sentry/svelte@8.42.0':
-    resolution: {integrity: sha512-rL+1iIoHbNE+uSr/Yzve/UQHw4QPm2dgPv/kcXPHlSa0HGzPsc1EkURAYnDW/N/d0GV+tLTq44LVVoyFCpzvhA==}
+  '@sentry/svelte@8.43.0':
+    resolution: {integrity: sha512-iU7motPEdIJfKyiJJ1elA3RnPm2TwT6pqvAefu7xUjcxMDYXrM+gBBbvEvlCJxST5HFmR+DlxoDWYVHp/idW1g==}
     engines: {node: '>=14.18'}
     peerDependencies:
       svelte: 3.x || 4.x || 5.x
@@ -4344,6 +4344,9 @@ packages:
 
   magic-string@0.30.14:
     resolution: {integrity: sha512-5c99P1WKTed11ZC0HMJOj6CDIue6F8ySu+bJL+85q1zBEIY8IklrJ1eiKC2NDRh3Ct3FcvmJPyQHb9erXMTJNw==}
+
+  magic-string@0.30.15:
+    resolution: {integrity: sha512-zXeaYRgZ6ldS1RJJUrMrYgNJ4fdwnyI6tVqoiIhyCyv5IVTK9BU8Ic2l253GGETQHxI4HNUwhJ3fjDhKqEoaAw==}
 
   magic-string@0.30.8:
     resolution: {integrity: sha512-ISQTe55T2ao7XtlAStud6qwYPZjE4GK1S/BeVPus4jrq6JuOnQ00YKQC581RWhR122W7msZV263KzVeLoqidyQ==}
@@ -8013,33 +8016,33 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.28.1':
     optional: true
 
-  '@sentry-internal/browser-utils@8.42.0':
+  '@sentry-internal/browser-utils@8.43.0':
     dependencies:
-      '@sentry/core': 8.42.0
+      '@sentry/core': 8.43.0
 
-  '@sentry-internal/feedback@8.42.0':
+  '@sentry-internal/feedback@8.43.0':
     dependencies:
-      '@sentry/core': 8.42.0
+      '@sentry/core': 8.43.0
 
-  '@sentry-internal/replay-canvas@8.42.0':
+  '@sentry-internal/replay-canvas@8.43.0':
     dependencies:
-      '@sentry-internal/replay': 8.42.0
-      '@sentry/core': 8.42.0
+      '@sentry-internal/replay': 8.43.0
+      '@sentry/core': 8.43.0
 
-  '@sentry-internal/replay@8.42.0':
+  '@sentry-internal/replay@8.43.0':
     dependencies:
-      '@sentry-internal/browser-utils': 8.42.0
-      '@sentry/core': 8.42.0
+      '@sentry-internal/browser-utils': 8.43.0
+      '@sentry/core': 8.43.0
 
   '@sentry/babel-plugin-component-annotate@2.22.7': {}
 
-  '@sentry/browser@8.42.0':
+  '@sentry/browser@8.43.0':
     dependencies:
-      '@sentry-internal/browser-utils': 8.42.0
-      '@sentry-internal/feedback': 8.42.0
-      '@sentry-internal/replay': 8.42.0
-      '@sentry-internal/replay-canvas': 8.42.0
-      '@sentry/core': 8.42.0
+      '@sentry-internal/browser-utils': 8.43.0
+      '@sentry-internal/feedback': 8.43.0
+      '@sentry-internal/replay': 8.43.0
+      '@sentry-internal/replay-canvas': 8.43.0
+      '@sentry/core': 8.43.0
 
   '@sentry/bundler-plugin-core@2.22.7':
     dependencies:
@@ -8095,13 +8098,13 @@ snapshots:
       - encoding
       - supports-color
 
-  '@sentry/core@8.42.0': {}
+  '@sentry/core@8.43.0': {}
 
-  '@sentry/svelte@8.42.0(svelte@5.8.1)':
+  '@sentry/svelte@8.43.0(svelte@5.8.1)':
     dependencies:
-      '@sentry/browser': 8.42.0
-      '@sentry/core': 8.42.0
-      magic-string: 0.30.14
+      '@sentry/browser': 8.43.0
+      '@sentry/core': 8.43.0
+      magic-string: 0.30.15
       svelte: 5.8.1
 
   '@sentry/vite-plugin@2.22.7':
@@ -11149,6 +11152,10 @@ snapshots:
       sourcemap-codec: 1.4.8
 
   magic-string@0.30.14:
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.5.0
+
+  magic-string@0.30.15:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.0
 
