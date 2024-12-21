@@ -198,7 +198,7 @@
 	}
 
 	:global(.ColorToggle) {
-		margin: auto 1rem 2rem auto;
+		margin: auto auto 2rem 1rem;
 		position: sticky;
 		bottom: 2rem;
 	}
