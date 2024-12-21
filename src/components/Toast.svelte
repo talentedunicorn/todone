@@ -1,34 +1,41 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
 	import Button from './Button.svelte';
-	import { toastActions, toastMessage } from '../stores';
+	import type { Snippet } from 'svelte';
 
+	interface Props {
+		message: string | null;
+		footer?: Snippet;
+		close: () => void;
+	}
+
+	let { message, footer, close }: Props = $props();
 	let dialog: HTMLDialogElement;
 
-	const close = () => {
+	const dialogClose = () => {
 		dialog.close();
-		toastMessage.set(null);
-		toastActions.set(null);
+		close();
 	};
 
 	$effect(() => {
-		if ($toastMessage) {
+		if (message) {
 			dialog?.show();
 		}
 	});
 </script>
 
 <dialog bind:this={dialog}>
-	{#if $toastMessage}
+	{#if message}
 		<section class="wrapper" in:fly={{ y: 20 }}>
-			{$toastMessage}
+			{message}
 			<footer class="toast-footer">
-				{#if $toastActions}
-					{#each $toastActions as action}
-						<Button size="small" onclick={action.callback}>{action.label}</Button>
-					{/each}
-				{/if}
-				<Button size="small" onclick={close}>Close</Button>
+				{#if footer}{@render footer()}{/if}
+				<!-- {#if $toastActions} -->
+				<!-- 	{#each $toastActions as action} -->
+				<!-- 		<Button size="small" onclick={action.callback}>{action.label}</Button> -->
+				<!-- 	{/each} -->
+				<!-- {/if} -->
+				<Button size="small" onclick={dialogClose}>Close</Button>
 			</footer>
 		</section>
 	{/if}
@@ -40,20 +47,20 @@
 		bottom: 0;
 		border: none;
 		background: none;
-	}
 
-	.wrapper,
-	footer {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-	}
+		.wrapper {
+			border-radius: 1rem;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			padding: 1rem;
+			background: var(--gray-light);
 
-	.wrapper {
-		border-radius: 1rem;
-		flex-wrap: wrap;
-		justify-content: space-between;
-		padding: 1rem;
-		background: var(--gray-light);
+			&,
+			& footer {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+			}
+		}
 	}
 </style>

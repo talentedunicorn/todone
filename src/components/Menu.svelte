@@ -53,19 +53,19 @@
 </nav>
 
 <style>
-	nav,
-	nav > div {
-		display: flex;
-		flex-flow: column;
-		gap: 2rem;
-	}
-
 	nav {
 		background-color: var(--nav-bg, var(--gray-light));
 		padding: 1rem;
 		align-items: start;
 		transition: background-color var(--ease) 0.5;
 		border-bottom-right-radius: 1rem;
+
+		&,
+		& > div {
+			display: flex;
+			flex-flow: column;
+			gap: 2rem;
+		}
 	}
 
 	.closed {
@@ -79,10 +79,12 @@
 	}
 
 	@media screen and (min-width: 60rem) {
-		nav,
-		nav > div {
-			flex-flow: row;
-			align-items: center;
+		nav {
+			&,
+			& > div {
+				flex-flow: row;
+				align-items: center;
+			}
 		}
 	}
 </style>

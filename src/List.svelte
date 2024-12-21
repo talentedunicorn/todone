@@ -3,7 +3,7 @@
 	import Form from './components/Form.svelte';
 	import Task from './components/Task.svelte';
 	import Button from './components/Button.svelte';
-	import { currentTab } from './stores';
+	import { currentTab, toastActions, toastMessage } from './stores';
 	import { getTodos, add, update, remove, type Todo, setCompleted } from './db';
 
 	type TodoWithExpanded = Todo & { expanded: boolean };
@@ -54,9 +54,22 @@
 		setCompleted(task.id, !task.completed);
 	};
 
+	const deleteCompleted = () => {
+		toastMessage.set('Delete all completed?');
+		toastActions.set([
+			{
+				label: 'Yes',
+				callback: () => {
+					clearCompleted();
+					toastActions.set(null);
+					toastMessage.set(null);
+				}
+			}
+		]);
+	};
 	const clearCompleted = async () => {
 		deleting = true;
-		await Promise.all(completedTodos.map((t) => remove(t.id))).then(() => {
+		await Promise.all(completedTodos.map((t) => remove(t.id))).finally(() => {
 			deleting = false;
 		});
 	};
@@ -156,7 +169,7 @@
 		{#if renderedTodos.length > 0}
 			{#if $currentTab === 'Done'}
 				<div>
-					<Button onclick={clearCompleted} disabled={deleting}>Clear completed</Button>
+					<Button onclick={deleteCompleted} disabled={deleting}>Clear completed</Button>
 				</div>
 			{/if}
 			<div>

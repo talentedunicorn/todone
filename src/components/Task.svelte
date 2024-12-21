@@ -2,6 +2,7 @@
 	import Button from './Button.svelte';
 	import { marked, Parser, Renderer, type Tokens } from 'marked';
 	import type { HTMLAttributes } from 'svelte/elements';
+	import { toastActions, toastMessage } from '../stores';
 
 	marked.use({
 		gfm: true
@@ -117,7 +118,19 @@
 		<Button
 			data-testid="delete"
 			size="small"
-			onclick={() => confirm(`Delete: ${title}?`) && onDelete()}>Delete</Button
+			onclick={() => {
+				toastActions.set([
+					{
+						label: 'Yes',
+						callback: () => {
+							onDelete();
+							toastMessage.set(null);
+							toastActions.set(null);
+						}
+					}
+				]);
+				toastMessage.set(`Delete "${title}"?`);
+			}}>Delete</Button
 		>
 		<Button data-testid="edit" size="small" onclick={onEdit}>Edit</Button>
 		<Button data-testid="complete" size="small" variant="primary" onclick={onComplete}

@@ -92,51 +92,50 @@ Form component with a title and content inputs
 </form>
 
 <style>
-	form,
-	.Actions {
-		display: flex;
-		flex-wrap: wrap;
-	}
-
 	form {
 		--textarea-width: 20rem;
 		gap: 1rem;
 		padding: 1rem;
 		border-radius: 0.5em;
 		background-color: var(--gray-light);
-	}
 
-	.Actions {
-		gap: 1rem;
-		align-items: flex-end;
-		justify-content: space-between;
-	}
+		&,
+		& .Actions {
+			display: flex;
+			flex-wrap: wrap;
+		}
 
-	input,
-	textarea {
-		border: none;
-		background: var(--white);
-		border-radius: 0.3em;
-		padding: 0.5em;
-	}
+		& .Actions {
+			gap: 1rem;
+			align-items: flex-end;
+			justify-content: space-between;
+		}
+		input,
+		textarea {
+			border: none;
+			background: var(--white);
+			border-radius: 0.3em;
+			padding: 0.5em;
+		}
 
-	input {
-		flex: 100%;
-		font-size: 1.5rem;
-		font-weight: bold;
-		font-family: inherit;
-		overflow-x: auto;
-	}
+		input {
+			flex: 100%;
+			font-size: 1.5rem;
+			font-weight: bold;
+			font-family: inherit;
+			overflow-x: auto;
+		}
 
-	textarea {
-		flex: var(--textarea-width);
-		font-size: 1rem;
-		line-height: 1.5rem;
-		font-family: monospace;
-		resize: vertical;
-	}
+		textarea {
+			flex: var(--textarea-width);
+			font-size: 1rem;
+			line-height: 1.5rem;
+			font-family: monospace;
+			resize: vertical;
+		}
 
-	textarea[data-empty='false'] {
-		min-height: 50vh;
+		textarea[data-empty='false'] {
+			min-height: 50vh;
+		}
 	}
 </style>
