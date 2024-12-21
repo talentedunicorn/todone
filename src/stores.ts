@@ -5,11 +5,12 @@ type Action = {
 	callback: () => void;
 };
 
-export enum SyncStatus {
-	NOT_SYNCED = 'NOT_SYNCED',
-	ACTIVE = 'ACTIVE',
-	ERROR = 'ERROR'
-}
+export const SyncStatus = {
+	NOT_SYNCED: 'NOT_SYNCED',
+	ACTIVE: 'ACTIVE',
+	ERROR: 'ERROR'
+} as const
+
 export const tabs = [{ label: 'To Do' }, { label: 'Done' }];
 
 export const currentTab = writable<string>(tabs[0].label);
