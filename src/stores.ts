@@ -20,7 +20,7 @@ export const status = writable<TypeFrom<typeof SyncStatus>>(SyncStatus.NOT_SYNCE
 
 export const isLoggedin = writable(false);
 
-export const user = writable<{ name?: string }>({});
+export const user = writable<{ name?: string; nickname?: string; picture?: string }>({});
 export const token = writable('');
 
 export const toastMessage = writable<string | null>(null);
