@@ -99,11 +99,21 @@
 					>
 						{#if expanded}
 							<path
-								d="M18.707 14.293l-6-6c-0.391-0.391-1.024-0.391-1.414 0l-6 6c-0.391 0.391-0.391 1.024 0 1.414s1.024 0.391 1.414 0l5.293-5.293 5.293 5.293c0.391 0.391 1.024 0.391 1.414 0s0.391-1.024 0-1.414z"
+								fill="none"
+								stroke="currentColor"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="m6 15l6-6l6 6"
 							/>
 						{:else}
 							<path
-								d="M9.707 18.707l6-6c0.391-0.391 0.391-1.024 0-1.414l-6-6c-0.391-0.391-1.024-0.391-1.414 0s-0.391 1.024 0 1.414l5.293 5.293-5.293 5.293c-0.391 0.391-0.391 1.024 0 1.414s1.024 0.391 1.414 0z"
+								fill="none"
+								stroke="currentColor"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="m9 6l6 6l-6 6"
 							/>
 						{/if}
 					</svg>
@@ -168,8 +178,16 @@
 
 	.Title {
 		display: inline-flex;
-		align-items: center;
+		align-items: flex-start;
 		gap: 0.5rem;
+
+		& :global([data-toggle]) {
+			order: -1;
+		}
+
+		& :global([data-toggle] a) {
+			color: inherit;
+		}
 	}
 
 	.Actions {
@@ -179,15 +197,6 @@
 		gap: 1rem;
 	}
 
-	header :global([data-toggle]) {
-		padding: 0;
-		order: -1;
-	}
-
-	header :global([data-toggle] a) {
-		color: inherit;
-	}
-
 	.Content {
 		word-break: break-word;
 		max-height: var(--content-height, 3rem);
@@ -195,21 +204,21 @@
 		position: relative;
 		transition: max-height 0.2s ease-in;
 		margin: 1rem 0;
-	}
 
-	.Content::after {
-		position: absolute;
-		content: '';
-		inset: 0;
-		visibility: var(--content-gradient-visibility, visible);
-		opacity: var(--content-gradient-opacity, 1);
-		background: linear-gradient(to bottom, transparent 20%, var(--white));
-	}
+		&::after {
+			position: absolute;
+			content: '';
+			inset: 0;
+			visibility: var(--content-gradient-visibility, visible);
+			opacity: var(--content-gradient-opacity, 1);
+			background: linear-gradient(to bottom, transparent 20%, var(--white));
+		}
 
-	.expanded {
-		--content-height: 100%;
-		--content-gradient-visibility: hidden;
-		--content-gradient-opacity: 0;
+		&.expanded {
+			--content-height: 100%;
+			--content-gradient-visibility: hidden;
+			--content-gradient-opacity: 0;
+		}
 	}
 
 	:global(.TableWrapper) {
