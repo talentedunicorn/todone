@@ -25,12 +25,12 @@ export const checkAuth = async (auth0: Auth0Client) => {
 	// if code then login success
 	if (params.has('code')) {
 		// Let the Auth0 SDK do it's stuff - save some state, etc.
-		await auth0?.handleRedirectCallback();
+		await auth0.handleRedirectCallback();
 		// Can be smart here and redirect to original path instead of root
 		window.history.replaceState({}, document.title, '/');
 	}
 
-	const _isAuthenticated = await auth0?.isAuthenticated();
+	const _isAuthenticated = await auth0.isAuthenticated();
 	isLoggedin.set(_isAuthenticated);
 
 	if (_isAuthenticated) {
@@ -39,13 +39,25 @@ export const checkAuth = async (auth0: Auth0Client) => {
 
 		// Get the access token. Make sure to supply audience property
 		// in Auth0 config, otherwise you will soon start throwing stuff!
-		const _token = await auth0.getTokenSilently();
-		token.set(_token);
+		const { id_token } = await auth0.getTokenSilently({
+			authorizationParams: {
+				redirect_uri: window.location.origin
+			},
+			detailedResponse: true
+		});
+
+		token.set(id_token);
 
 		// refresh token after specific period or things will stop
 		// working. Useful for long-lived apps like dashboards.
 		intervalId = setInterval(async () => {
-			token.set(await auth0.getTokenSilently());
+			const { id_token } = await auth0.getTokenSilently({
+				authorizationParams: {
+					redirect_uri: window.location.origin
+				},
+				detailedResponse: true
+			});
+			token.set(id_token);
 		}, refreshRate);
 	}
 	// });

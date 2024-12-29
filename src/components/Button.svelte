@@ -31,7 +31,7 @@
 		`${size}`,
 		`${variant}`,
 		`${selected ? 'selected' : ''}`,
-		`${rest.class ? rest.class.split(' ') : ''}`
+		`${rest.class ? (rest.class as string).split(' ') : ''}`
 	]
 		.filter((c) => c.trim().length > 0)
 		.join(' ')}
