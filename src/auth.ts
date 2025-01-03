@@ -14,7 +14,7 @@ export const initAuth0Client = async () => {
 		domain: import.meta.env.VITE_AUTH0_DOMAIN,
 		cacheLocation: 'localstorage',
 		authorizationParams: {
-			redirect_uri: window.location.origin
+			redirect_uri
 		}
 	});
 };
@@ -60,7 +60,6 @@ export const checkAuth = async (auth0: Auth0Client) => {
 			token.set(id_token);
 		}, refreshRate);
 	}
-	// });
 
 	// clear token refresh interval on component unmount
 	return () => {

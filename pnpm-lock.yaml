@@ -23,6 +23,9 @@ importers:
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
+      svelte-spa-router:
+        specifier: ^4.0.1
+        version: 4.0.1
       vite-plugin-pwa:
         specifier: ^0.21.1
         version: 0.21.1(vite@6.0.7(@types/node@22.10.5)(terser@5.37.0)(yaml@2.7.0))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.3.0)
@@ -4932,6 +4935,10 @@ packages:
     resolution: {integrity: sha512-dYqgNSZbDwkaJ2ceRd9ojCGjBq+mOm9LmtXnAnEGyHhN/5R7iDW2TRw3h+o/jCFxus3P2LfWIIiwowAjANm7IA==}
     engines: {node: '>= 0.4'}
 
+  regexparam@2.0.2:
+    resolution: {integrity: sha512-A1PeDEYMrkLrfyOwv2jwihXbo9qxdGD3atBYQA9JJgreAx8/7rC6IUkWOw2NQlOxLp2wL0ifQbh1HuidDfYA6w==}
+    engines: {node: '>=8'}
+
   regexpp@3.2.0:
     resolution: {integrity: sha512-pq2bWo9mVD43nbts2wGv17XLiNLya+GklZ8kaDLV2Z08gDCsGpnKn9BFMepvWuHCbyVvY7J5o5+BVvoQbmlJLg==}
     engines: {node: '>=8'}
@@ -5359,6 +5366,9 @@ packages:
         optional: true
       typescript:
         optional: true
+
+  svelte-spa-router@4.0.1:
+    resolution: {integrity: sha512-2JkmUQ2f9jRluijL58LtdQBIpynSbem2eBGp4zXdi7aDY1znbR6yjw0KsonD0aq2QLwf4Yx4tBJQjxIjgjXHKg==}
 
   svelte2tsx@0.7.34:
     resolution: {integrity: sha512-WTMhpNhFf8/h3SMtR5dkdSy2qfveomkhYei/QW9gSPccb0/b82tjHvLop6vT303ZkGswU/da1s6XvrLgthQPCw==}
@@ -11809,6 +11819,8 @@ snapshots:
       gopd: 1.2.0
       set-function-name: 2.0.2
 
+  regexparam@2.0.2: {}
+
   regexpp@3.2.0: {}
 
   regexpu-core@6.2.0:
@@ -12332,6 +12344,10 @@ snapshots:
       '@babel/core': 7.26.0
       postcss: 8.4.49
       typescript: 5.7.3
+
+  svelte-spa-router@4.0.1:
+    dependencies:
+      regexparam: 2.0.2
 
   svelte2tsx@0.7.34(svelte@5.17.3)(typescript@5.7.3):
     dependencies:

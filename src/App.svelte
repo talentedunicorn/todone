@@ -1,37 +1,30 @@
 <script lang="ts">
-	import './app.css';
-	import Logo from './components/Logo.svelte';
-	import Menu from './components/Menu.svelte';
-	import { isLoggedin, tabs, currentTab, status, user } from './stores';
-	import Button from './components/Button.svelte';
-	import { checkAuth, initAuth0Client, login, logout } from './auth';
-	import { onMount } from 'svelte';
-	import { fly } from 'svelte/transition';
-	import List from './List.svelte';
-	import type { Auth0Client } from '@auth0/auth0-spa-js';
-	import ReloadPrompt from './components/ReloadPrompt.svelte';
 	import { pwaInfo } from 'virtual:pwa-info';
-	import ExportImport from './components/ExportImport.svelte';
+	import Router, { link, push } from 'svelte-spa-router';
+	import { wrap } from 'svelte-spa-router/wrap';
+	import { fly } from 'svelte/transition';
+	import type { Auth0Client } from '@auth0/auth0-spa-js';
+
+	import './app.css';
+	import Button from './components/Button.svelte';
+	import ReloadPrompt from './components/ReloadPrompt.svelte';
 	import Toast from './components/Toast.svelte';
+	import Logo from './components/Logo.svelte';
 	import ToggleTheme from './components/ToggleTheme.svelte';
-	import { toastActions, toastMessage } from './stores';
+	import About from './routes/About.svelte';
+	import NotFound from './routes/NotFound.svelte';
+	import Login from './routes/Login.svelte';
+	import Home from './routes/Home.svelte';
+	import { checkAuth, initAuth0Client } from './auth';
+	import { toastActions, toastMessage, status, isLoggedin } from './stores';
+	import type { ComponentType } from 'svelte';
 
-	let auth0: Auth0Client;
+	let auth0 = $state<Auth0Client>();
 	let wrapper: HTMLElement;
-
-	let menuItems = $derived(
-		tabs.map((item) => ({
-			...item,
-			selected: item.label === $currentTab
-		}))
-	);
 
 	let showBackToTop = $state(false);
 
-	const handleMenu = (path: string) => {
-		currentTab.set(path);
-		scrollToTop();
-	};
+	const synced = import.meta.env.VITE_SYNCED === 'true';
 
 	const scrollToTop = () => {
 		wrapper.scrollIntoView({
@@ -46,21 +39,60 @@
 		});
 	};
 
-	onMount(async () => {
+	const initializeAuth = async () => {
+		auth0 = await initAuth0Client();
+		await checkAuth(auth0);
+
+		if ($isLoggedin) push(`/`);
+	};
+
+	$effect(() => {
 		handleBackToTop();
-		if (import.meta.env.VITE_SYNCED === 'true' && navigator.onLine) {
-			if (!auth0) {
-				auth0 = await initAuth0Client();
-			}
-			try {
-				await checkAuth(auth0);
-				if (!$isLoggedin) return;
-			} catch (e) {
-				// Log out on failure
-				logout(auth0);
-			}
-		}
+		if (synced && !auth0) initializeAuth();
 	});
+
+	const routes = {
+		'/about': About,
+		'/login': wrap({
+			component: Login as unknown as ComponentType,
+			props: {
+				auth0: () => auth0
+			},
+			conditions: [
+				() => {
+					if (!synced) {
+						push(`/`);
+						return false;
+					}
+					return true;
+				},
+				() => {
+					if ($isLoggedin) {
+						push(`/`);
+						return false;
+					}
+					return true;
+				}
+			]
+		}),
+		'/': wrap({
+			component: Home as unknown as ComponentType,
+			props: {
+				auth0: () => auth0
+			},
+			conditions: [
+				() => {
+					if (!synced) return true;
+					if (!$isLoggedin) {
+						push('/login');
+						return false;
+					}
+					return true;
+				}
+			]
+		}),
+		'*': NotFound
+	};
 </script>
 
 <svelte:head>
@@ -70,33 +102,12 @@
 </svelte:head>
 
 <main class="Wrapper" bind:this={wrapper}>
-	{#if import.meta.env.VITE_SYNCED === 'true' && !$isLoggedin}
-		<div class="Login">
-			<Logo />
-			<Button onclick={() => login(auth0)}>Log in</Button>
-			<ToggleTheme />
-		</div>
-	{:else}
-		<aside class="Menu">
-			<Menu {menuItems} goTo={handleMenu}>
-				<ExportImport />
-			</Menu>
-		</aside>
-		<header class="Header">
-			<h1 data-syncing={$status} class="Logo" title="ToDone"><Logo /></h1>
+	<header class="Header">
+		<h1 data-syncing={$status} class="Logo" title="ToDone"><a href="/" use:link><Logo /></a></h1>
 
-			<ToggleTheme />
-		</header>
-		<section class="Content">
-			{#if $isLoggedin}
-				<div class="Profile">
-					<img src={$user.picture} alt={$user.nickname} />
-					<Button onclick={() => logout(auth0)}>Log out</Button>
-				</div>
-			{/if}
-			<List />
-		</section>
-	{/if}
+		<ToggleTheme />
+	</header>
+	<Router {routes} />
 	{#if showBackToTop}
 		<footer class="Footer" transition:fly={{ y: 100, duration: 500 }}>
 			<Button onclick={scrollToTop}
@@ -137,35 +148,26 @@
 {/if}
 
 <style>
-	.Wrapper,
-	.Login {
+	.Wrapper {
 		flex-flow: column;
 		display: flex;
 		min-height: 100vh;
-	}
-
-	.Login {
-		padding: 2rem;
-		gap: 2rem;
-		align-items: flex-start;
-
-		:global(.ColorToggle) {
-			margin-left: auto;
+		.Footer {
+			align-self: flex-end;
+			position: sticky;
+			bottom: 2rem;
+			padding: 0 1rem 0 0;
+			display: flex;
+			justify-content: flex-end;
 		}
-	}
 
-	.Menu {
-		position: fixed;
-		top: 0;
-		z-index: 9;
-	}
-
-	.Header {
-		align-self: flex-end;
-		display: flex;
-		gap: 2rem;
-		flex-direction: row-reverse;
-		padding-top: 1rem;
+		.Header {
+			align-self: flex-end;
+			display: flex;
+			gap: 2rem;
+			flex-direction: row-reverse;
+			padding-top: 1rem;
+		}
 	}
 
 	.Logo {
@@ -173,46 +175,23 @@
 		padding: 0.2em;
 		background: var(--white);
 		position: relative;
-	}
-
-	.Footer {
-		align-self: flex-end;
-		position: sticky;
-		bottom: 2rem;
-		padding: 0 1rem 0 0;
-		display: flex;
-		justify-content: flex-end;
-	}
-
-	.Profile {
-		display: flex;
-		gap: 1rem;
-		margin: 2rem;
-		justify-content: end;
-		align-items: center;
-
-		img {
-			inline-size: 3rem;
-			border-radius: 100%;
+		&[data-syncing] {
+			--indicator-color: var(--primary);
 		}
-	}
 
-	[data-syncing] {
-		--indicator-color: var(--primary);
-	}
+		&[data-syncing]:not([data-syncing='NOT_SYNCED'])::after {
+			content: '';
+			width: 0.5em;
+			height: 0.5em;
+			border-radius: 100%;
+			background: var(--indicator-color);
+			position: absolute;
+			top: -0.2em;
+			left: -0.2em;
+		}
 
-	[data-syncing]:not([data-syncing='NOT_SYNCED'])::after {
-		content: '';
-		width: 0.5em;
-		height: 0.5em;
-		border-radius: 100%;
-		background: var(--indicator-color);
-		position: absolute;
-		top: -0.2em;
-		left: -0.2em;
-	}
-
-	[data-syncing='ERROR'] {
-		--indicator-color: var(--red);
+		&[data-syncing='ERROR'] {
+			--indicator-color: var(--red);
+		}
 	}
 </style>
