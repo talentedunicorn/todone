@@ -19,7 +19,8 @@ if (import.meta.env.MODE === 'production') {
 }
 
 const app = mount(App, {
-	target: document.getElementById('app') as HTMLElement
+	target: document.getElementById('app') as HTMLElement,
+	props: { url: '' }
 });
 
 export default app;

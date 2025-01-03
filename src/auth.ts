@@ -1,4 +1,5 @@
 import { type Auth0Client, createAuth0Client } from '@auth0/auth0-spa-js';
+import { navigate } from 'svelte-routing';
 import { user, isLoggedin, token } from './stores';
 
 // Default Auth0 expiration time is 10 hours or something like that.
@@ -6,7 +7,7 @@ import { user, isLoggedin, token } from './stores';
 // token's actual expiration time.
 const refreshRate = 10 * 60 * 60 * 1000;
 
-// let auth0: Auth0Client;
+const redirect_uri = window.location.origin;
 
 export const initAuth0Client = async () => {
 	return await createAuth0Client({
@@ -14,7 +15,7 @@ export const initAuth0Client = async () => {
 		domain: import.meta.env.VITE_AUTH0_DOMAIN,
 		cacheLocation: 'localstorage',
 		authorizationParams: {
-			redirect_uri: window.location.origin
+			redirect_uri
 		}
 	});
 };
@@ -41,7 +42,7 @@ export const checkAuth = async (auth0: Auth0Client) => {
 		// in Auth0 config, otherwise you will soon start throwing stuff!
 		const { id_token } = await auth0.getTokenSilently({
 			authorizationParams: {
-				redirect_uri: window.location.origin
+				redirect_uri
 			},
 			detailedResponse: true
 		});
@@ -53,7 +54,7 @@ export const checkAuth = async (auth0: Auth0Client) => {
 		intervalId = setInterval(async () => {
 			const { id_token } = await auth0.getTokenSilently({
 				authorizationParams: {
-					redirect_uri: window.location.origin
+					redirect_uri
 				},
 				detailedResponse: true
 			});
@@ -78,4 +79,5 @@ export const logout = async (auth0: Auth0Client) => {
 			window.location.replace(url);
 		}
 	});
+	navigate('/login');
 };

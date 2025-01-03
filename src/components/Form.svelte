@@ -82,7 +82,7 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<textarea data-testid="content" data-empty={isEmpty} bind:value={data.value}></textarea>
+	<textarea data-testid="content" bind:value={data.value}></textarea>
 	<div class="Actions">
 		<Button data-testid="cancel" onclick={clear} disabled={invalid}>Cancel</Button>
 		<Button data-testid="submit" type="submit" variant="primary" disabled={invalid}
@@ -93,7 +93,6 @@ Form component with a title and content inputs
 
 <style>
 	form {
-		--textarea-width: 20rem;
 		gap: 1rem;
 		padding: 1rem;
 		border-radius: 0.5em;
@@ -127,15 +126,12 @@ Form component with a title and content inputs
 		}
 
 		textarea {
-			flex: var(--textarea-width);
+			flex: 1;
+			field-sizing: content;
 			font-size: 1rem;
 			line-height: 1.5rem;
 			font-family: monospace;
 			resize: vertical;
-		}
-
-		textarea[data-empty='false'] {
-			min-height: 50vh;
 		}
 	}
 </style>
