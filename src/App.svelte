@@ -163,7 +163,9 @@
 	.Header {
 		align-self: flex-end;
 		display: flex;
+		gap: 2rem;
 		flex-direction: row-reverse;
+		padding-top: 1rem;
 	}
 
 	.Logo {
