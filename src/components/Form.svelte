@@ -132,10 +132,17 @@ Form component with a title and content inputs
 			line-height: 1.5rem;
 			font-family: monospace;
 			resize: vertical;
+
+			&[data-empty='false'] {
+				min-height: 50vh;
+			}
 		}
 
-		textarea[data-empty='false'] {
-			min-height: 50vh;
+		@supports (field-sizing: content) {
+			textarea {
+				field-sizing: content;
+				min-height: auto;
+			}
 		}
 	}
 </style>

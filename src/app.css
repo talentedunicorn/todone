@@ -47,6 +47,10 @@ img {
 	max-width: 100%;
 }
 
+a {
+	color: var(--primary);
+}
+
 .visually-hidden {
 	position: absolute;
 	margin: -1px;

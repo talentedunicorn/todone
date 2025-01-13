@@ -49,7 +49,8 @@ const todoSchema: RxJsonSchema<any> = {
 		completed: { type: 'boolean', default: false },
 		updated: { type: 'string', format: 'date-time' }
 	},
-	required: ['id', 'title', 'value', 'updated']
+	required: ['id', 'title', 'value', 'updated', 'completed'],
+	indexes: ['completed']
 };
 
 let db: RxDatabase;
@@ -93,6 +94,26 @@ const getDB = async () => {
 	} catch (e) {
 		console.error(`Error initializing database`, e);
 	}
+};
+
+export const getDocCount = async () => {
+	const db = await getDB();
+	const complete = db!.todos.count({
+		selector: {
+			completed: true
+		}
+	}).$;
+
+	const incomplete = db!.todos.count({
+		selector: {
+			completed: false
+		}
+	}).$;
+
+	return {
+		complete,
+		incomplete
+	};
 };
 
 export const getTodos = async () => {
