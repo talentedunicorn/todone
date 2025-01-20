@@ -4,31 +4,39 @@
 	import Task from './components/Task.svelte';
 	import Button from './components/Button.svelte';
 	import { currentTab, toastActions, toastMessage } from './stores';
-	import { getTodos, add, update, remove, type Todo, setCompleted } from './db';
+	import { add, update, remove, type Todo, setCompleted, clearCompleted } from './db';
 
-	type TodoWithExpanded = Todo & { expanded: boolean };
-	let data = $state<TodoWithExpanded[]>([]);
-	let completedTodos = $derived(data.filter((t) => t.completed === true));
-	let incompleteTodos = $derived(data.filter((t) => t.completed === false));
-	let task = $state<Todo | null>(null);
+	const {
+		todos = $bindable(),
+		previous,
+		next,
+		totalPages,
+		currentPage,
+		expandAll,
+		collapseAll,
+		toggleExpand,
+		refresh
+	} = $props<{
+		todos: Todo[];
+		previous: () => void;
+		next: () => void;
+		expandAll: () => void;
+		collapseAll: () => void;
+		toggleExpand: (id: string, expanded: boolean) => void;
+		refresh: () => Promise<void>;
+		totalPages: number;
+		currentPage: number;
+	}>();
 
 	let searchInput: HTMLInputElement;
 
+	let task = $state<Todo | null>(null);
 	let query = $state('');
 	let showSearch = $state(false);
 	let deleting = $state(false);
 
-	let currentTodos = $derived($currentTab === 'To Do' ? incompleteTodos : completedTodos);
-	let renderedTodos = $derived(
-		currentTodos.filter((t) => t.title.toLowerCase().includes(query.toLowerCase()))
-	);
-
-	const loadTodos = async () => {
-		const todos = await getTodos();
-		todos?.subscribe((tasks) => {
-			data = tasks.map((t) => ({ ...t.toJSON(), expanded: false }));
-		});
-	};
+	let isFirstPage = currentPage === 1;
+	let isLastPage = currentPage === totalPages;
 
 	const clearEdit = () => {
 		task = null;
@@ -52,6 +60,7 @@
 
 	const handleToggleComplete = (task: Todo) => {
 		setCompleted(task.id, !task.completed);
+		refresh();
 	};
 
 	const deleteCompleted = () => {
@@ -66,31 +75,6 @@
 				}
 			}
 		]);
-	};
-	const clearCompleted = async () => {
-		deleting = true;
-		await Promise.all(completedTodos.map((t) => remove(t.id))).finally(() => {
-			deleting = false;
-		});
-	};
-
-	const handleToggleExpand = (id: string, expanded: boolean) => {
-		const taskIndex = data.findIndex((t) => t.id === id);
-		if (taskIndex > -1) {
-			data[taskIndex] = { ...data[taskIndex], expanded };
-		}
-	};
-
-	const expandAll = () => {
-		data.forEach((t) => {
-			t.expanded = true;
-		});
-	};
-
-	const collapseAll = () => {
-		data.forEach((t) => {
-			t.expanded = false;
-		});
 	};
 </script>
 
@@ -171,44 +155,47 @@
 			/>
 		</div>
 	{/if}
-	{#await loadTodos()}
-		<p class="Message">Loading data... 👩🏼‍🔧</p>
-	{:then _}
-		{#if renderedTodos.length > 0}
-			{#if $currentTab === 'Done'}
-				<div>
-					<Button onclick={deleteCompleted} disabled={deleting}>Clear completed</Button>
-				</div>
-			{/if}
+	{#if todos.length > 0}
+		{#if $currentTab === 'Done'}
 			<div>
+				<Button onclick={deleteCompleted} disabled={deleting}>Clear completed</Button>
+			</div>
+		{/if}
+		<section class="ControlPane">
+			<nav>
 				<Button variant="link" size="small" class="ToggleExpand" onclick={expandAll}
 					>Expand all</Button
 				>
 				<Button variant="link" size="small" class="ToggleExpand" onclick={collapseAll}
 					>Collapse all</Button
 				>
+			</nav>
+			<p><span class="Large">{currentPage}</span> / {totalPages}</p>
+			<nav>
+				<Button onclick={previous} disabled={isFirstPage}>Previous</Button>
+				<Button onclick={next} disabled={isLastPage}>Next</Button>
+			</nav>
+		</section>
+		{#each todos as task, i (i)}
+			{@const { id, title, value, completed, updated, expanded } = task}
+			<div transition:fly={{ duration: 500, y: 100 }}>
+				<Task
+					id={`task-${i}`}
+					{title}
+					{value}
+					{completed}
+					updated={new Date(updated)}
+					{expanded}
+					onEdit={() => handleEdit(task)}
+					onDelete={() => remove(id)}
+					onComplete={() => handleToggleComplete(task)}
+					onToggleExpand={(expanded) => toggleExpand(id, expanded)}
+				/>
 			</div>
-			{#each renderedTodos as task, i (i)}
-				{@const { id, title, value, completed, updated, expanded } = task}
-				<div transition:fly={{ duration: 500, y: 100 }}>
-					<Task
-						id={`task-${i}`}
-						{title}
-						{value}
-						{completed}
-						updated={new Date(updated)}
-						{expanded}
-						onEdit={() => handleEdit(task)}
-						onDelete={() => remove(id)}
-						onComplete={() => handleToggleComplete(task)}
-						onToggleExpand={(expanded) => handleToggleExpand(id, expanded)}
-					/>
-				</div>
-			{/each}
-		{:else}
-			<p class="Message">Nothing found... 👀</p>
-		{/if}
-	{/await}
+		{/each}
+	{:else}
+		<p class="Large">Nothing found... 👀</p>
+	{/if}
 </main>
 
 <style>
@@ -229,7 +216,7 @@
 		color: var(--gray);
 	}
 
-	.Message {
+	.Large {
 		font-size: 1.5rem;
 	}
 
@@ -257,5 +244,13 @@
 
 	main :global(.ToggleExpand) {
 		margin-left: auto;
+	}
+
+	.ControlPane {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 2rem;
+		justify-content: space-between;
+		align-items: center;
 	}
 </style>
