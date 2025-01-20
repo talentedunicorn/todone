@@ -16,8 +16,16 @@
 	import ToggleTheme from './components/ToggleTheme.svelte';
 	import { toastActions, toastMessage } from './stores';
 
+	import { getTodos, getTotalCount, type Todo } from './db';
+
 	let auth0: Auth0Client;
 	let wrapper: HTMLElement;
+	let total = $state<number>(0);
+	let todos = $state<Todo[]>([]);
+	let page = $state<number>(0);
+	let showCompleted = $state<boolean>(false);
+	let limit = $state<number>(Number(import.meta.env.VITE_PAGE_LIMIT));
+	let totalPages = $derived(Math.ceil(total / limit));
 
 	let menuItems = $derived(
 		tabs.map((item) => ({
@@ -27,8 +35,13 @@
 	);
 
 	let showBackToTop = $state(false);
+	currentTab.subscribe((v) => {
+		showCompleted = v === 'Done';
+		// Reset page on tab change
+		page = 0;
+	});
 
-	const handleMenu = (path: string) => {
+	const handleMenu = async (path: string) => {
 		currentTab.set(path);
 		scrollToTop();
 	};
@@ -43,6 +56,54 @@
 		window.addEventListener('scroll', () => {
 			const scrolled = document.querySelector('html')?.scrollTop || 0;
 			showBackToTop = scrolled > window.innerHeight;
+		});
+	};
+
+	const loadTotal = async () => {
+		const totalCountSub = await getTotalCount(showCompleted);
+		totalCountSub.subscribe((t) => {
+			total = t;
+		});
+	};
+
+	const loadTodos = async () => {
+		(await getTodos(page, limit, showCompleted)).subscribe((data) => {
+			todos = data.map((t) => ({ ...t.toJSON() }));
+		});
+		await loadTotal();
+	};
+
+	const refresh = async () => {
+		page = 0;
+		await loadTodos();
+	};
+
+	const next = async () => {
+		page++;
+	};
+
+	const previous = async () => {
+		if (page > 0) {
+			page--;
+		}
+	};
+
+	const toggleExpand = (id: string, expanded: boolean) => {
+		const taskIndex = todos.findIndex((t: Todo) => t.id === id);
+		if (taskIndex > -1) {
+			todos[taskIndex] = { ...todos[taskIndex], expanded };
+		}
+	};
+
+	const expandAll = () => {
+		todos.forEach((t: Todo) => {
+			t.expanded = true;
+		});
+	};
+
+	const collapseAll = () => {
+		todos.forEach((t: Todo) => {
+			t.expanded = false;
 		});
 	};
 
@@ -94,7 +155,21 @@
 					<Button onclick={() => logout(auth0)}>Log out</Button>
 				</div>
 			{/if}
-			<List />
+			{#await loadTodos()}
+				<p class="Message">Loading data... 👩🏼‍🔧</p>
+			{:then}
+				<List
+					bind:todos
+					{previous}
+					{next}
+					{expandAll}
+					{collapseAll}
+					{toggleExpand}
+					{totalPages}
+					{refresh}
+					currentPage={page + 1}
+				/>
+			{/await}
 		</section>
 	{/if}
 	{#if showBackToTop}
@@ -193,6 +268,11 @@
 			inline-size: 3rem;
 			border-radius: 100%;
 		}
+	}
+
+	.Message {
+		font-size: 1.5rem;
+		padding: 2rem;
 	}
 
 	[data-syncing] {

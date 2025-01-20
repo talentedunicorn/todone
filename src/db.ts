@@ -5,6 +5,7 @@ import { replicateCouchDB } from 'rxdb/plugins/replication-couchdb';
 import { RxDBQueryBuilderPlugin } from 'rxdb/plugins/query-builder';
 import { SyncStatus, status, token } from './stores';
 import { createCollection, createDatabase } from './lib/rxdb';
+import { migrateDocumentData, RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
 
 export type Todo = {
 	id: string;
@@ -12,6 +13,7 @@ export type Todo = {
 	value: string;
 	completed: boolean;
 	updated: string;
+	expanded?: boolean;
 };
 
 if (import.meta.env.DEV) {
@@ -20,6 +22,7 @@ if (import.meta.env.DEV) {
 
 addRxPlugin(RxDBUpdatePlugin);
 addRxPlugin(RxDBQueryBuilderPlugin);
+addRxPlugin(RxDBMigrationSchemaPlugin);
 
 const dbName = import.meta.env.VITE_DB_NAME || 'Todone';
 
@@ -39,7 +42,7 @@ const fetchWithAuth = (url: RequestInfo | URL, options: any) => {
 
 // Schema
 const todoSchema: RxJsonSchema<any> = {
-	version: 0,
+	version: 1,
 	primaryKey: 'id',
 	type: 'object',
 	properties: {
@@ -49,10 +52,24 @@ const todoSchema: RxJsonSchema<any> = {
 		completed: { type: 'boolean', default: false },
 		updated: { type: 'string', format: 'date-time' }
 	},
-	required: ['id', 'title', 'value', 'updated']
+	required: ['id', 'title', 'value', 'updated', 'completed'],
+	indexes: ['completed']
 };
 
-let db: RxDatabase;
+const db: RxDatabase = await createDatabase(dbName);
+
+if (!db.todos) {
+	await db.addCollections({
+		todos: {
+			schema: todoSchema,
+			migrationStrategies: {
+				1: function (oldDoc) {
+					return oldDoc;
+				}
+			}
+		}
+	});
+}
 
 // Setup replication
 const setupReplication = (db: RxDatabase) => {
@@ -72,39 +89,37 @@ const setupReplication = (db: RxDatabase) => {
 	replicationState.error$.subscribe(() => status.set(SyncStatus.ERROR));
 };
 
-const getDB = async () => {
-	try {
-		// Create database instance
-		if (!db) {
-			db = await createDatabase(dbName).then(async (db) => {
-				// Setup collections
-				await createCollection(db, 'todos', todoSchema);
-				return db;
-			});
-		} else {
-			return db;
-		}
+if (import.meta.env.VITE_SYNCED === 'true') {
+	setupReplication(db);
+}
 
-		if (import.meta.env.VITE_SYNCED === 'true') {
-			setupReplication(db);
-		}
-
-		return db;
-	} catch (e) {
-		console.error(`Error initializing database`, e);
-	}
+export const getTodos = async (page: number = 0, limit: number = 5, completed: boolean = false) => {
+	return db.todos
+		.find({
+			selector: {
+				completed: {
+					$eq: completed
+				}
+			}
+		})
+		.sort({ updated: 'desc' })
+		.limit(limit)
+		.skip(limit * page).$;
 };
 
-export const getTodos = async () => {
-	const db = await getDB();
-	return db!.todos.find().sort({ updated: 'desc' }).$;
+export const getTotalCount = async (completed: boolean = false) => {
+	return db.todos.count({
+		selector: {
+			completed: {
+				$eq: completed
+			}
+		}
+	}).$;
 };
 
 export const add = async (data: { title: string; value: string }) => {
-	const db = await getDB();
-
 	const now = new Date().toISOString();
-	return db!.todos.insert({ ...data, updated: now, id: now });
+	return db.todos.insert({ ...data, updated: now, id: now });
 };
 
 export const update = async ({
@@ -118,10 +133,8 @@ export const update = async ({
 	value: string;
 	completed: boolean;
 }) => {
-	const db = await getDB();
-
 	const now = new Date().toISOString();
-	const todo = db!.todos.findOne({
+	const todo = db.todos.findOne({
 		selector: { id: { $eq: id } }
 	});
 
@@ -136,8 +149,7 @@ export const update = async ({
 };
 
 export const remove = async (id: string) => {
-	const db = await getDB();
-	await db!.todos
+	await db.todos
 		.findOne({
 			selector: {
 				id
@@ -146,27 +158,32 @@ export const remove = async (id: string) => {
 		.remove();
 };
 
+export const clearCompleted = async () => {
+	return db.todos
+		.find({
+			selector: {
+				completed: true
+			}
+		})
+		.remove();
+};
+
 export const setCompleted = async (id: string, completed: boolean) => {
-	const db = await getDB();
-	return await db!.todos
+	return await db.todos
 		.findOne({
 			selector: {
 				id
 			}
 		})
-		.update({
-			$set: {
-				completed
-			}
+		.patch({
+			completed
 		});
 };
 
 export const exportTodos = async () => {
-	const db = await getDB();
-	return db!.todos.find().sort({ updated: 'desc' }).exec();
+	return db.todos.find().sort({ updated: 'desc' }).exec();
 };
 
 export const importTodos = async (data: Todo[]) => {
-	const db = await getDB();
-	return db!.todos.bulkUpsert(data);
+	return db.todos.bulkUpsert(data);
 };

@@ -11,6 +11,7 @@ interface ImportMetaEnv {
 	readonly VITE_AUTH0_CLIENT: string;
 	readonly VITE_AUTH0_DOMAIN: string;
 	readonly VITE_SENTRY_DSN: string;
+	readonly VITE_PAGE_LIMIT: number;
 }
 
 interface ImportMeta {
