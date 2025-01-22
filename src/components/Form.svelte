@@ -94,6 +94,7 @@ Form component with a title and content inputs
 <style>
 	form {
 		--textarea-width: 20rem;
+		--textarea-height: 50vh;
 		gap: 1rem;
 		padding: 1rem;
 		border-radius: 0.5em;
@@ -134,14 +135,14 @@ Form component with a title and content inputs
 			resize: vertical;
 
 			&[data-empty='false'] {
-				min-height: 50vh;
+				min-height: var(--textarea-height);
 			}
 		}
 
 		@supports (field-sizing: content) {
 			textarea {
 				field-sizing: content;
-				min-height: auto;
+				--textarea-height: auto;
 			}
 		}
 	}
