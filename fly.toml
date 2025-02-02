@@ -1,0 +1,40 @@
+app = "todone-sync"
+primary_region = "hkg"
+
+[build]
+dockerfile = "./Dockerfile"
+
+[env]
+COUCHDB_USER = "admin"
+ERL_FLAGS = "-couch_ini /opt/couchdb/etc/default.ini /opt/couchdb/etc/default.d/ /opt/couchdb/etc/local.d /opt/couchdb/etc/local.ini /opt/couchdb/data/persistence.ini"
+
+[http_service]
+auto_start_machines = true
+auto_stop_machines = true
+force_https = true
+internal_port = 5_984
+min_machines_running = 0
+processes = [ "app" ]
+
+[[mounts]]
+destination = "/opt/couchdb/data"
+source = "couchdb_data"
+
+[[services]]
+[[services.ports]]
+force_https = true
+handlers = [ "http" ]
+port = 80
+
+[[services.ports]]
+handlers = [ "tls", "http" ]
+port = 443
+
+[[services.ports]]
+handlers = [ "tls", "http" ]
+port = 5_984
+
+[[vm]]
+cpu_kind = "shared"
+cpus = 1
+memory = "512mb"

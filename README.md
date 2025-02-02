@@ -28,3 +28,7 @@ You can preview the production build with `pnpm run preview`.
 - `VITE_REMOTE_DB` remote pouchdb/couchdb database url. Required `VITE_SYNCED` to be `true`
 - `VITE_AUTH0_CLIENT` [Auth0](https://auth0.com/) client id
 - `VITE_AUTH0_DOMAIN` [Auth0](https://auth0.com/) domain
+
+## Self-hosting with Fly.io
+
+In order to sync data across clients you will need a remote CouchDB server. You can quickly launch a hosted instance to [fly.io](https://fly.io) using a `[fly.toml](./fly.toml)` file and this `[DockerFile](./Dockerfile)`.
