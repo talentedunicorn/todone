@@ -162,7 +162,7 @@
 		{/if}
 	</form>
 	{#if $currentTab === 'To Do' || task}
-		<div in:fly={{ y: 20 }}>
+		<div in:fly={{ y: -20 }}>
 			<Form
 				defaultValue={task}
 				onSubmit={handleCreate}
@@ -235,9 +235,6 @@
 
 	.Search {
 		align-self: flex-end;
-		position: sticky;
-		z-index: 1;
-		top: 1rem;
 		display: inline-flex;
 		gap: 1rem;
 		padding: 0.5rem;
