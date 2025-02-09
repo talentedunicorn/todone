@@ -24,7 +24,7 @@ addRxPlugin(RxDBQueryBuilderPlugin);
 const dbName = import.meta.env.VITE_DB_NAME || 'Todone';
 
 // Custom fetch with Auth token
-const fetchWithAuth = (url: RequestInfo | URL, options: any) => {
+const fetchWithAuth = async (url: RequestInfo | URL, options: any) => {
 	let authToken;
 	const optionsWithAuth = Object.assign({}, options);
 	if (!optionsWithAuth.headers) {
@@ -34,7 +34,19 @@ const fetchWithAuth = (url: RequestInfo | URL, options: any) => {
 	token.subscribe((v) => (authToken = v));
 	optionsWithAuth.headers['Authorization'] = `Bearer ${authToken}`;
 
-	return fetch(url, optionsWithAuth);
+	// return fetch(url, optionsWithAuth)
+	const response = await fetch(url, optionsWithAuth);
+
+	if (!response.ok) {
+		const { error, reason }: { error: string; reason: string } = await response.json();
+
+		if (reason === 'exp not in future') {
+			throw new Error('Token expired');
+		}
+		throw new Error(error);
+	}
+
+	return response;
 };
 
 // Schema
@@ -70,7 +82,12 @@ const setupReplication = (db: RxDatabase) => {
 	});
 
 	replicationState.active$.subscribe(() => status.set(SyncStatus.ACTIVE));
-	replicationState.error$.subscribe(() => status.set(SyncStatus.ERROR));
+	replicationState.error$.subscribe((e) => {
+		if (e.parameters.error?.message === 'Token expired') {
+			token.set('expired'); // this will trigger logout
+		}
+		status.set(SyncStatus.ERROR);
+	});
 };
 
 const getDB = async () => {

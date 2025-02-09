@@ -162,7 +162,7 @@
 		{/if}
 	</form>
 	{#if $currentTab === 'To Do' || task}
-		<div in:fly={{ y: 20 }}>
+		<div in:fly={{ y: -20 }}>
 			<Form
 				defaultValue={task}
 				onSubmit={handleCreate}

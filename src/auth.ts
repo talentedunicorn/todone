@@ -30,6 +30,12 @@ export const checkAuth = async (auth0: Auth0Client) => {
 		window.history.replaceState({}, document.title, '/');
 	}
 
+	token.subscribe((v) => {
+		if (v === 'expired') {
+			logout(auth0);
+		}
+	});
+
 	const _isAuthenticated = await auth0.isAuthenticated();
 	isLoggedin.set(_isAuthenticated);
 

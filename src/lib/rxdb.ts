@@ -11,15 +11,21 @@ if (import.meta.env.DEV) {
 addRxPlugin(RxDBUpdatePlugin);
 addRxPlugin(RxDBQueryBuilderPlugin);
 
-export const createDatabase = (name: string) => createRxDatabase({
-  name,
-	storage: getRxStorageDexie()
-})
+export const createDatabase = (name: string) =>
+	createRxDatabase({
+		name,
+		storage: getRxStorageDexie(),
+		ignoreDuplicate: import.meta.env.DEV
+	});
 
-export const createCollection = async (db: RxDatabase, collectionName: string, schema: RxJsonSchema<unknown>) => {
-  await db.addCollections({
-    [collectionName]: {
-      schema,
-    }
-  })
-}
+export const createCollection = async (
+	db: RxDatabase,
+	collectionName: string,
+	schema: RxJsonSchema<unknown>
+) => {
+	await db.addCollections({
+		[collectionName]: {
+			schema
+		}
+	});
+};
