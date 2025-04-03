@@ -36,7 +36,7 @@
 		"@storybook/svelte": "^8.6.11",
 		"@storybook/svelte-vite": "^8.6.11",
 		"@storybook/test": "^8.6.11",
-		"@storybook/test-runner": "^0.21.3",
+		"@storybook/test-runner": "^0.22.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.3",
 		"@tsconfig/svelte": "^5.0.4",
 		"@types/pouchdb-browser": "^6.1.5",

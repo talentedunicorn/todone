@@ -85,8 +85,8 @@ importers:
         specifier: ^8.6.11
         version: 8.6.11(storybook@8.6.11(prettier@3.5.3))
       '@storybook/test-runner':
-        specifier: ^0.21.3
-        version: 0.21.3(@swc/helpers@0.5.15)(@types/node@22.13.15)(babel-plugin-macros@3.1.0)(storybook@8.6.11(prettier@3.5.3))(ts-node@10.9.2(@swc/core@1.11.15(@swc/helpers@0.5.15))(@types/node@22.13.15)(typescript@5.8.2))
+        specifier: ^0.22.0
+        version: 0.22.0(@swc/helpers@0.5.15)(@types/node@22.13.15)(babel-plugin-macros@3.1.0)(storybook@8.6.11(prettier@3.5.3))(ts-node@10.9.2(@swc/core@1.11.15(@swc/helpers@0.5.15))(@types/node@22.13.15)(typescript@5.8.2))
       '@sveltejs/vite-plugin-svelte':
         specifier: ^5.0.3
         version: 5.0.3(svelte@5.25.5)(vite@6.2.4(@types/node@22.13.15)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.1))
@@ -2046,12 +2046,12 @@ packages:
       storybook: ^8.6.11
       svelte: ^4.0.0 || ^5.0.0
 
-  '@storybook/test-runner@0.21.3':
-    resolution: {integrity: sha512-tsorR0IVYElcaTZrT/ZrH/8YDw7c+wrLDN0e3qj1WdbqU8l2IU4+a32HLXaakzdDpuTn+d8xCk4VZMlzMrmToA==}
+  '@storybook/test-runner@0.22.0':
+    resolution: {integrity: sha512-fKY6MTE/bcvMaulKXy+z0fPmRXJx1REkYMOMcGn8zn6uffyBigGgaVf/sZ+AZfibwvjzg/StWhJ9HvAM8pc14g==}
     engines: {node: ^16.10.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
-      storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
+      storybook: ^0.0.0-0 || ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0 || ^9.0.0-0
 
   '@storybook/test@8.6.11':
     resolution: {integrity: sha512-bk8JCRmVRHjnyt+/YnzCMEd4Y/K2L3uM+sCNuH4pYw6XT2UkR3Dj5mScGnfMvm98lHfpZDcD/AbY2vorOQsq+g==}
@@ -8344,7 +8344,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@storybook/test-runner@0.21.3(@swc/helpers@0.5.15)(@types/node@22.13.15)(babel-plugin-macros@3.1.0)(storybook@8.6.11(prettier@3.5.3))(ts-node@10.9.2(@swc/core@1.11.15(@swc/helpers@0.5.15))(@types/node@22.13.15)(typescript@5.8.2))':
+  '@storybook/test-runner@0.22.0(@swc/helpers@0.5.15)(@types/node@22.13.15)(babel-plugin-macros@3.1.0)(storybook@8.6.11(prettier@3.5.3))(ts-node@10.9.2(@swc/core@1.11.15(@swc/helpers@0.5.15))(@types/node@22.13.15)(typescript@5.8.2))':
     dependencies:
       '@babel/core': 7.26.10
       '@babel/generator': 7.27.0
