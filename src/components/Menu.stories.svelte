@@ -8,7 +8,7 @@
 	});
 </script>
 
-{#snippet children(args)}
+{#snippet template(args)}
 	<Menu
 		{...args}
 		menuItems={[{ label: 'ToDo', selected: true }, { label: 'Done' }]}
@@ -17,7 +17,7 @@
 {/snippet}
 
 <Story
-	{children}
+	{template}
 	name="Default"
 	play={({ canvasElement }) => {
 		const canvas = within(canvasElement);
@@ -39,7 +39,7 @@
 />
 
 <Story
-	{children}
+	{template}
 	name="With title"
 	args={{ title: 'Tasks' }}
 	play={({ canvasElement }) => {

@@ -18,14 +18,14 @@
 	<Button {...args}>Click me</Button>
 {/snippet}
 
-<Story name="Default" children={template} args={{}} />
+<Story name="Default" {template} args={{}} />
 
-<Story name="Primary" children={template} args={{ variant: 'primary' }} />
+<Story name="Primary" {template} args={{ variant: 'primary' }} />
 
-<Story name="Link" children={template} args={{ variant: 'link' }} />
+<Story name="Link" {template} args={{ variant: 'link' }} />
 
-<Story name="Disabled" children={template} args={{ disabled: true }} />
+<Story name="Disabled" {template} args={{ disabled: true }} />
 
-<Story name="Sizes - Small" children={template} args={{ size: 'small' }} />
+<Story name="Sizes - Small" {template} args={{ size: 'small' }} />
 
-<Story name="Sizes - Large" children={template} args={{ size: 'large' }} />
+<Story name="Sizes - Large" {template} args={{ size: 'large' }} />

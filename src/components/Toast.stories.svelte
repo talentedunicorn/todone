@@ -25,6 +25,6 @@
 	</Toast>
 {/snippet}
 
-<Story name="Default" children={template} />
+<Story name="Default" {template} />
 
-<Story name="With footer action" children={withFooter} />
+<Story name="With footer action" template={withFooter} />
