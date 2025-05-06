@@ -14,7 +14,7 @@
 {/snippet}
 
 <Story
-	children={template}
+	{template}
 	name="Empty"
 	play={async ({ canvasElement }) => {
 		const canvas = within(canvasElement);
@@ -46,7 +46,7 @@
 />
 
 <Story
-	children={template}
+	{template}
 	name="With default content"
 	args={{
 		defaultValue: {

@@ -33,7 +33,7 @@ Includes lists \n \
 | MDX supports components | Needs to be `.mdx` format |';
 </script>
 
-{#snippet children(args)}
+{#snippet template(args)}
 	<Task
 		{...args}
 		onComplete={() => (args.completed = true)}
@@ -44,7 +44,7 @@ Includes lists \n \
 {/snippet}
 
 <Story
-	{children}
+	{template}
 	name="Incomplete"
 	args={{
 		title: 'Test task',
@@ -87,7 +87,7 @@ Includes lists \n \
 />
 
 <Story
-	{children}
+	{template}
 	name="Complete"
 	args={{
 		title: 'Sample task',
