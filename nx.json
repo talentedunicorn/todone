@@ -38,6 +38,5 @@
 				"serveStaticTargetName": "serve-static"
 			}
 		}
-	],
-	"useLegacyCache": true
+	]
 }
