@@ -18,6 +18,7 @@
 	import { checkAuth, initAuth0Client } from './auth';
 	import { toastActions, toastMessage, status, isLoggedin } from './stores';
 	import type { ComponentType } from 'svelte';
+	import { setupReplication } from './db';
 
 	let auth0 = $state<Auth0Client>();
 	let wrapper: HTMLElement;
@@ -43,7 +44,10 @@
 		auth0 = await initAuth0Client();
 		await checkAuth(auth0);
 
-		if ($isLoggedin) push(`/`);
+		if ($isLoggedin) {
+			push(`/`);
+			setupReplication();
+		}
 	};
 
 	$effect(() => {

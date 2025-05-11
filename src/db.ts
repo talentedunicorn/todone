@@ -1,131 +1,115 @@
-import { addRxPlugin, type RxDatabase, type RxJsonSchema } from 'rxdb';
-import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
-import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
-import { replicateCouchDB } from 'rxdb/plugins/replication-couchdb';
-import { RxDBQueryBuilderPlugin } from 'rxdb/plugins/query-builder';
-import { SyncStatus, status, token } from './stores';
-import { createCollection, createDatabase } from './lib/rxdb';
-
-export type Todo = {
-	id: string;
-	title: string;
-	value: string;
-	completed: boolean;
-	updated: string;
-};
-
-if (import.meta.env.DEV) {
-	addRxPlugin(RxDBDevModePlugin);
-}
-
-addRxPlugin(RxDBUpdatePlugin);
-addRxPlugin(RxDBQueryBuilderPlugin);
+import { SyncStatus, status, token, isLoggedin } from './stores';
+import { createDatabase, pouchdbFetch, type Todo } from './lib/pouchdb';
 
 const dbName = import.meta.env.VITE_DB_NAME || 'Todone';
+const synced = import.meta.env.VITE_SYNCED === 'true';
+const remoteDBURL = import.meta.env.VITE_REMOTE_DB;
+
+let authenticated = false;
+isLoggedin.subscribe((v) => (authenticated = v));
 
 // Custom fetch with Auth token
-const fetchWithAuth = async (url: RequestInfo | URL, options: any) => {
-	let authToken;
-	const optionsWithAuth = Object.assign({}, options);
-	if (!optionsWithAuth.headers) {
-		optionsWithAuth.headers = {};
-	}
-
+const fetchWithAuth = async (url: string | Request, options: RequestInit = {}) => {
+	let authToken = '';
 	token.subscribe((v) => (authToken = v));
-	optionsWithAuth.headers['Authorization'] = `Bearer ${authToken}`;
 
-	// return fetch(url, optionsWithAuth)
-	const response = await fetch(url, optionsWithAuth);
+	const headers = {
+		...options.headers,
+		Authorization: `Bearer ${authToken}`,
+		'Content-Type': 'application/json'
+	};
 
+	const response = await pouchdbFetch(url, {
+		...options,
+		headers
+	});
 	if (!response.ok) {
-		const { error, reason }: { error: string; reason: string } = await response.json();
-
+		const { error, reason } = await response.json();
 		if (reason === 'exp not in future') {
 			throw new Error('Token expired');
 		}
 		throw new Error(error);
 	}
-
 	return response;
 };
 
-// Schema
-const todoSchema: RxJsonSchema<any> = {
-	version: 0,
-	primaryKey: 'id',
-	type: 'object',
-	properties: {
-		id: { type: 'string', maxLength: 100 },
-		title: { type: 'string' },
-		value: { type: 'string' },
-		completed: { type: 'boolean', default: false },
-		updated: { type: 'string', format: 'date-time' }
-	},
-	required: ['id', 'title', 'value', 'updated', 'completed'],
-	indexes: ['completed']
-};
+// const setupReplication = (db: RxDatabase) => {
+// 	const url = import.meta.env.VITE_REMOTE_DB;
 
-let db: RxDatabase;
+// 	const replicationState = replicateCouchDB({
+// 		replicationIdentifier: 'couchdb-replication',
+// 		collection: db.todos,
+// 		live: true,
+// 		url,
+// 		fetch: fetchWithAuth,
+// 		pull: {},
+// 		push: {}
+// 	});
+
+// 	replicationState.active$.subscribe(() => status.set(SyncStatus.ACTIVE));
+// 	replicationState.error$.subscribe((e) => {
+// 		if (e.parameters.error?.message === 'Token expired') {
+// 			token.set('expired'); // this will trigger logout
+// 		}
+// 		status.set(SyncStatus.ERROR);
+// 	});
+// };
+export const db: PouchDB.Database<Todo> = createDatabase(dbName);
 
 // Setup replication
-const setupReplication = (db: RxDatabase) => {
-	const url = import.meta.env.VITE_REMOTE_DB;
+export const setupReplication = () => {
+	if (synced && authenticated) {
+		const remoteDB = createDatabase(remoteDBURL, {
+			fetch: fetchWithAuth,
+			skip_setup: true
+		});
 
-	const replicationState = replicateCouchDB({
-		replicationIdentifier: 'couchdb-replication',
-		collection: db.todos,
-		live: true,
-		url,
-		fetch: fetchWithAuth,
-		pull: {},
-		push: {}
-	});
+		// Send initial payload to server
+		return db.replicate
+			.to(remoteDB, {
+				checkpoint: false
+			})
+			.on('complete', (info) => {
+				console.info(`[Replication]: Push completed`, info);
+				syncDB(remoteDB);
+			})
+			.on('error', (error: any) => {
+				// Handle token expiry
+				if (error.message === 'Token expired') {
+					token.set('expired'); // will trigger logout
+				}
 
-	replicationState.active$.subscribe(() => status.set(SyncStatus.ACTIVE));
-	replicationState.error$.subscribe((e) => {
-		if (e.parameters.error?.message === 'Token expired') {
-			token.set('expired'); // this will trigger logout
-		}
-		status.set(SyncStatus.ERROR);
-	});
+				console.error(`[Replication error]:`, error);
+				status.set(SyncStatus.ERROR);
+			});
+	}
+	return null;
 };
 
-const getDB = async () => {
-	try {
-		// Create database instance
-		if (!db) {
-			db = await createDatabase(dbName).then(async (db) => {
-				// Setup collections
-				await createCollection(db, 'todos', todoSchema);
-				return db;
-			});
-		} else {
-			return db;
-		}
-
-		if (import.meta.env.VITE_SYNCED === 'true') {
-			setupReplication(db);
-		}
-
-		return db;
-	} catch (e) {
-		console.error(`Error initializing database`, e);
-	}
+const syncDB = (remoteDb: PouchDB.Database<Todo>) => {
+	// Initialize sync
+	db.sync(remoteDb, { live: true, retry: true, checkpoint: false })
+		.on('error', () => status.set(SyncStatus.ERROR))
+		.on('active', () => status.set(SyncStatus.ACTIVE))
+		.on('change', (info) => console.info(`[Sync change]`, info));
 };
 
 export const getDocCount = async () => {
-	const db = await getDB();
-	const complete = db!.todos.count({
-		selector: {
-			completed: true
-		}
-	}).$;
+	const complete = (
+		await db.find({
+			selector: {
+				completed: true
+			}
+		})
+	).docs.length;
 
-	const incomplete = db!.todos.count({
-		selector: {
-			completed: false
-		}
-	}).$;
+	const incomplete = (
+		await db.find({
+			selector: {
+				completed: false
+			}
+		})
+	).docs.length;
 
 	return {
 		complete,
@@ -134,77 +118,88 @@ export const getDocCount = async () => {
 };
 
 export const getTodos = async () => {
-	const db = await getDB();
-	return db!.todos.find().sort({ updated: 'desc' }).$;
-};
-
-export const add = async (data: { title: string; value: string }) => {
-	const db = await getDB();
-
-	const now = new Date().toISOString();
-	return db!.todos.insert({ ...data, updated: now, id: now });
-};
-
-export const update = async ({
-	id,
-	title,
-	value,
-	completed
-}: {
-	id: string;
-	title: string;
-	value: string;
-	completed: boolean;
-}) => {
-	const db = await getDB();
-
-	const now = new Date().toISOString();
-	const todo = db!.todos.findOne({
-		selector: { id: { $eq: id } }
-	});
-
-	return todo?.update({
-		$set: {
-			title,
-			value,
-			completed,
-			updated: now
-		}
+	return db.allDocs({
+		include_docs: true,
+		descending: true
 	});
 };
 
-export const remove = async (id: string) => {
-	const db = await getDB();
-	await db!.todos
-		.findOne({
-			selector: {
-				id
-			}
-		})
-		.remove();
+export const add = async (data: Omit<Todo, '_id' | '_rev' | 'completed' | 'updated'>) => {
+	const now = new Date().toISOString();
+	return db.put({
+		_id: now,
+		title: data.title,
+		value: data.value,
+		completed: false,
+		updated: now
+	});
 };
 
-export const setCompleted = async (id: string, completed: boolean) => {
-	const db = await getDB();
-	return await db!.todos
-		.findOne({
+export const update = async ({ _id, _rev, title, value, completed }: Todo) => {
+	const now = new Date().toISOString();
+	return db.put({
+		_id,
+		_rev,
+		title,
+		value,
+		completed,
+		updated: now
+	});
+};
+
+export const remove = async (_id: string) => {
+	await db
+		.find({
 			selector: {
-				id
+				_id
 			}
 		})
-		.update({
-			$set: {
-				completed
-			}
+		.then(({ docs: [todo] }) => {
+			return db.put({
+				...todo,
+				_deleted: true
+			});
 		});
 };
 
-export const exportTodos = async () => {
-	const db = await getDB();
-	return db!.todos.find().sort({ updated: 'desc' }).exec();
+export const setCompleted = async (_id: string, completed: boolean) => {
+	const now = new Date().toISOString();
+	return await db
+		.find({
+			selector: {
+				_id
+			}
+		})
+		.then(({ docs: [todo] }) => {
+			const { _id, _rev } = todo;
+			return db.put({
+				...todo,
+				_id,
+				_rev,
+				completed,
+				updated: now
+			});
+		});
 };
 
-export const importTodos = async (data: Todo[]) => {
-	const db = await getDB();
-	return db!.todos.bulkUpsert(data);
+export const exportTodos = async (): Promise<Omit<Todo, '_rev'>[]> => {
+	return (
+		await db.allDocs({
+			include_docs: true,
+			descending: true
+		})
+	).rows.map(({ doc }) => {
+		const { _id, title, value, completed, updated } = doc!;
+		return {
+			_id,
+			title,
+			value,
+			completed,
+			updated
+		};
+	});
+};
+
+export const importTodos = async (docs: Omit<Todo, '_rev'>[]) => {
+	return db.bulkDocs(docs);
 };

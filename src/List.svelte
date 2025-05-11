@@ -4,12 +4,20 @@
 	import Task from './components/Task.svelte';
 	import Button from './components/Button.svelte';
 	import { currentTab, toastActions, toastMessage } from './stores';
-	import { getTodos, add, update, remove, type Todo, setCompleted } from './db';
+	import todoStore, { incompleteTodos, completedTodos } from './stores/todos';
+	import { type Todo } from './lib/pouchdb';
 
-	type TodoWithExpanded = Todo & { expanded: boolean };
-	let data = $state<TodoWithExpanded[]>([]);
-	let completedTodos = $derived(data.filter((t) => t.completed === true));
-	let incompleteTodos = $derived(data.filter((t) => t.completed === false));
+	const {
+		add,
+		remove,
+		update,
+		setCompleted,
+		loadData: loadTodos,
+		handleToggleExpand,
+		expandAll,
+		collapseAll
+	} = todoStore;
+
 	let task = $state<Todo | null>(null);
 
 	let searchInput: HTMLInputElement;
@@ -18,40 +26,37 @@
 	let showSearch = $state(false);
 	let deleting = $state(false);
 
-	let currentTodos = $derived($currentTab === 'To Do' ? incompleteTodos : completedTodos);
+	let currentTodos = $derived($currentTab === 'To Do' ? $incompleteTodos : $completedTodos);
 	let renderedTodos = $derived(
-		currentTodos.filter((t) => t.title.toLowerCase().includes(query.toLowerCase()))
+		currentTodos.todos.filter((t) => t.title.toLowerCase().includes(query.toLowerCase()))
 	);
-
-	const loadTodos = async () => {
-		const todos = await getTodos();
-		todos?.subscribe((tasks) => {
-			data = tasks.map((t) => ({ ...t.toJSON(), expanded: false }));
-		});
-	};
 
 	const clearEdit = () => {
 		task = null;
 	};
 
-	const handleUpdate = async (data: any) => {
+	const handleUpdate = async (data: Todo) => {
 		update(data).then(() => {
 			clearEdit();
 		});
 	};
 
-	const handleCreate = async (data: any) => {
+	const handleCreate = async (data: Pick<Todo, 'title' | 'value'>) => {
 		await add(data);
 	};
 
-	const handleEdit = (selected: Todo) => {
+	const handleEdit = (updated: Todo) => {
 		task = {
-			...selected
+			...updated
 		};
 	};
 
-	const handleToggleComplete = (task: Todo) => {
-		setCompleted(task.id, !task.completed);
+	const handleDelete = async (id: string) => {
+		await remove(id);
+	};
+
+	const handleToggleComplete = async (task: Todo) => {
+		await setCompleted(task._id!, !task.completed);
 	};
 
 	const deleteCompleted = () => {
@@ -69,27 +74,10 @@
 	};
 	const clearCompleted = async () => {
 		deleting = true;
-		await Promise.all(completedTodos.map((t) => remove(t.id))).finally(() => {
+		await Promise.all(
+			$completedTodos.todos.filter((t) => t._id).map((t) => remove(t._id!))
+		).finally(() => {
 			deleting = false;
-		});
-	};
-
-	const handleToggleExpand = (id: string, expanded: boolean) => {
-		const taskIndex = data.findIndex((t) => t.id === id);
-		if (taskIndex > -1) {
-			data[taskIndex] = { ...data[taskIndex], expanded };
-		}
-	};
-
-	const expandAll = () => {
-		data.forEach((t) => {
-			t.expanded = true;
-		});
-	};
-
-	const collapseAll = () => {
-		data.forEach((t) => {
-			t.expanded = false;
 		});
 	};
 </script>
@@ -189,7 +177,7 @@
 				>
 			</div>
 			{#each renderedTodos as task, i (i)}
-				{@const { id, title, value, completed, updated, expanded } = task}
+				{@const { _id, title, value, completed, updated, expanded } = task}
 				<div transition:fly={{ duration: 500, y: 100 }}>
 					<Task
 						id={`task-${i}`}
@@ -199,9 +187,9 @@
 						updated={new Date(updated)}
 						{expanded}
 						onEdit={() => handleEdit(task)}
-						onDelete={() => remove(id)}
+						onDelete={() => handleDelete(_id!)}
 						onComplete={() => handleToggleComplete(task)}
-						onToggleExpand={(expanded) => handleToggleExpand(id, expanded)}
+						onToggleExpand={(expanded) => handleToggleExpand(_id!, expanded)}
 					/>
 				</div>
 			{/each}
