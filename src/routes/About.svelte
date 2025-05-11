@@ -1,26 +1,9 @@
 <script lang="ts">
 	import { marked } from 'marked';
 	import ExportImport from '../components/ExportImport.svelte';
-	import { getDocCount } from '../db';
+	import { incompleteTodos, completedTodos } from '../stores/todos';
 
 	import content from '../../About.md?raw';
-
-	let complete = $state<number>(0);
-	let incomplete = $state<number>(0);
-
-	const fetchCount = async () => {
-		const { complete: completeSub, incomplete: incompleteSub } = await getDocCount();
-		completeSub.subscribe((v: number) => {
-			complete = v;
-		});
-		incompleteSub.subscribe((v: number) => {
-			incomplete = v;
-		});
-	};
-
-	$effect(() => {
-		fetchCount();
-	});
 </script>
 
 <svelte:head>
@@ -31,8 +14,8 @@
 	<div>{@html marked(content)}</div>
 	<details>
 		<summary>Data summary</summary>
-		<p>Done &#8212; {complete}</p>
-		<p>ToDo &#8212; {incomplete}</p>
+		<p>Done &#8212; {$completedTodos.todos.length}</p>
+		<p>ToDo &#8212; {$incompleteTodos.todos.length}</p>
 		<nav>
 			<ExportImport />
 		</nav>
