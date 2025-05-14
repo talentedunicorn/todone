@@ -20,7 +20,7 @@ type TodoStore = {
 };
 
 const createTodoStore = () => {
-	const { set, update, subscribe } = writable<TodoStore>({
+	const { update, subscribe } = writable<TodoStore>({
 		todos: [],
 		processing: false
 	});

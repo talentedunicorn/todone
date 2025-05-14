@@ -3,7 +3,7 @@
 	import Form from './components/Form.svelte';
 	import Task from './components/Task.svelte';
 	import Button from './components/Button.svelte';
-	import { currentTab, toastActions, toastMessage } from './stores';
+	import { toastActions, toastMessage } from './stores';
 	import todoStore, { incompleteTodos, completedTodos } from './stores/todos';
 	import { type Todo } from './lib/pouchdb';
 
@@ -25,11 +25,6 @@
 	let query = $state('');
 	let showSearch = $state(false);
 	let deleting = $state(false);
-
-	let currentTodos = $derived($currentTab === 'To Do' ? $incompleteTodos : $completedTodos);
-	let renderedTodos = $derived(
-		currentTodos.todos.filter((t) => t.title.toLowerCase().includes(query.toLowerCase()))
-	);
 
 	const clearEdit = () => {
 		task = null;
@@ -83,7 +78,7 @@
 </script>
 
 <main>
-	<h2 class="Title">{$currentTab}</h2>
+	<h2 class="Title">ToDone</h2>
 	<form class="Search">
 		<label for="search" class="visually-hidden">Search by title</label>
 		<input
@@ -149,50 +144,62 @@
 			</Button>
 		{/if}
 	</form>
-	{#if $currentTab === 'To Do' || task}
-		<div in:fly={{ y: -20 }}>
-			<Form
-				defaultValue={task}
-				onSubmit={handleCreate}
-				onUpdate={handleUpdate}
-				onClear={clearEdit}
-			/>
-		</div>
-	{/if}
+	<Form defaultValue={task} onSubmit={handleCreate} onUpdate={handleUpdate} onClear={clearEdit} />
 	{#await loadTodos()}
 		<p class="Message">Loading data... 👩🏼‍🔧</p>
 	{:then _}
-		{#if renderedTodos.length > 0}
-			{#if $currentTab === 'Done'}
-				<div>
-					<Button onclick={deleteCompleted} disabled={deleting}>Clear completed</Button>
-				</div>
-			{/if}
-			<div>
+		{#if $completedTodos.todos.length + $incompleteTodos.todos.length > 0}
+			<aside>
 				<Button variant="link" size="small" class="ToggleExpand" onclick={expandAll}
 					>Expand all</Button
 				>
 				<Button variant="link" size="small" class="ToggleExpand" onclick={collapseAll}
 					>Collapse all</Button
 				>
-			</div>
-			{#each renderedTodos as task, i (i)}
-				{@const { _id, title, value, completed, updated, expanded } = task}
-				<div transition:fly={{ duration: 500, y: 100 }}>
-					<Task
-						id={`task-${i}`}
-						{title}
-						{value}
-						{completed}
-						updated={new Date(updated)}
-						{expanded}
-						onEdit={() => handleEdit(task)}
-						onDelete={() => handleDelete(_id!)}
-						onComplete={() => handleToggleComplete(task)}
-						onToggleExpand={(expanded) => handleToggleExpand(_id!, expanded)}
-					/>
-				</div>
-			{/each}
+			</aside>
+			<section>
+				{#if $incompleteTodos.todos.length > 0}
+					{#each $incompleteTodos.todos as task, i (i)}
+						{@const { _id, title, value, completed, updated, expanded } = task}
+						<div in:fly={{ y: -100 }} out:fly={{ y: 100 }}>
+							<Task
+								id={`task-${i}`}
+								{title}
+								{value}
+								{completed}
+								updated={new Date(updated)}
+								{expanded}
+								onEdit={() => handleEdit(task)}
+								onDelete={() => handleDelete(_id!)}
+								onComplete={() => handleToggleComplete(task)}
+								onToggleExpand={(expanded) => handleToggleExpand(_id!, expanded)}
+							/>
+						</div>
+					{/each}
+				{/if}
+				{#if $completedTodos.todos.length > 0}
+					<div transition:fly={{ y: 100 }}>
+						<Button onclick={deleteCompleted} disabled={deleting}>Clear completed</Button>
+					</div>
+					{#each $completedTodos.todos as task, i (i)}
+						{@const { _id, title, value, completed, updated, expanded } = task}
+						<div in:fly={{ y: -100 }} out:fly={{ y: 100 }}>
+							<Task
+								id={`task-${i}`}
+								{title}
+								{value}
+								{completed}
+								updated={new Date(updated)}
+								{expanded}
+								onEdit={() => handleEdit(task)}
+								onDelete={() => handleDelete(_id!)}
+								onComplete={() => handleToggleComplete(task)}
+								onToggleExpand={(expanded) => handleToggleExpand(_id!, expanded)}
+							/>
+						</div>
+					{/each}
+				{/if}
+			</section>
 		{:else}
 			<p class="Message">Nothing found... 👀</p>
 		{/if}
@@ -205,16 +212,13 @@
 		max-width: 80rem;
 		width: 100%;
 		margin: 0 auto 4rem;
+	}
+
+	main,
+	section {
 		display: flex;
 		flex-flow: column;
 		gap: 2rem;
-	}
-
-	.Title {
-		font-size: clamp(2rem, 5vw, 5rem);
-		font-weight: 100;
-		margin: 1rem 0 0;
-		color: var(--gray);
 	}
 
 	.Message {

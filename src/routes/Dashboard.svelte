@@ -7,19 +7,22 @@
 </script>
 
 <svelte:head>
-	<title>About ToDone &#8212; Get it done!</title>
+	<title>Dashboard &#8212; Get it done!</title>
 </svelte:head>
 
 <section class="Wrapper">
-	<div>{@html marked(content)}</div>
-	<details>
-		<summary>Data summary</summary>
+	<div>
+		<h2 class="Title">Overview</h2>
 		<p>Done &#8212; {$completedTodos.todos.length}</p>
 		<p>ToDo &#8212; {$incompleteTodos.todos.length}</p>
 		<nav>
 			<ExportImport />
 		</nav>
-	</details>
+	</div>
+	<aside>
+		<h2>About</h2>
+		{@html marked(content)}
+	</aside>
 </section>
 
 <style>
