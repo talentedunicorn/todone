@@ -36,7 +36,7 @@ Includes lists \n \
 {#snippet template(args)}
 	<Task
 		{...args}
-		onComplete={() => (args.completed = true)}
+		onComplete={() => (args.completed = !args.completed)}
 		onEdit={() => console('Editing')}
 		onDelete={() => console.info('Deleting')}
 		onToggleExpand={() => (args.expanded = !args.expanded)}
@@ -49,7 +49,8 @@ Includes lists \n \
 	args={{
 		title: 'Test task',
 		value: taskContent,
-		updated: new Date('2023-01-01 00:00:000')
+		updated: new Date('2023-01-01 00:00:000'),
+		completed: false
 	}}
 	play={({ canvasElement }) => {
 		const canvas = within(canvasElement);
