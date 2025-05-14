@@ -136,3 +136,10 @@ table th:not(:last-child) {
 blockquote {
 	font-size: clamp(2rem, 3rem, 4vmin);
 }
+
+.Title {
+	font-size: clamp(2rem, 5vw, 5rem);
+	font-weight: 100;
+	margin: 1rem 0 0;
+	color: var(--gray);
+}

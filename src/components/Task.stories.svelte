@@ -51,7 +51,8 @@ Includes lists \n \
 	args={{
 		title: 'Test task',
 		value: taskContent,
-		updated: new Date('2023-01-01 00:00:000')
+		updated: new Date('2023-01-01 00:00:000'),
+		completed: false
 	}}
 	play={async ({ canvas, userEvent, args }) => {
 		const markCompletedButton = canvas.getByTestId('complete');

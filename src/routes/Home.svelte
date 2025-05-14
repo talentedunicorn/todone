@@ -4,23 +4,12 @@
 	import List from '../List.svelte';
 	import Button from '../components/Button.svelte';
 	import Menu from '../components/Menu.svelte';
-	import { isLoggedin, tabs, currentTab, user } from '../stores';
+	import { isLoggedin, user } from '../stores';
 	import { logout } from '../auth';
 	import { push } from 'svelte-spa-router';
 
 	const { auth0: auth0Client } = $props<{ auth0: () => Auth0Client | undefined }>();
 	let auth0 = auth0Client();
-
-	let menuItems = $derived(
-		tabs.map((item) => ({
-			...item,
-			selected: item.label === $currentTab
-		}))
-	);
-
-	const handleMenu = (path: string) => {
-		currentTab.set(path);
-	};
 </script>
 
 <svelte:head>
@@ -28,8 +17,8 @@
 </svelte:head>
 
 <aside class="Menu">
-	<Menu {menuItems} goTo={handleMenu}>
-		<Button size="large" variant="link" onclick={() => push('/about')}>About</Button>
+	<Menu>
+		<Button size="large" variant="link" onclick={() => push('/dashboard')}>Dashboard</Button>
 	</Menu>
 </aside>
 <section class="Content">

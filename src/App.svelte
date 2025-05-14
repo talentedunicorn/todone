@@ -11,7 +11,7 @@
 	import Toast from './components/Toast.svelte';
 	import Logo from './components/Logo.svelte';
 	import ToggleTheme from './components/ToggleTheme.svelte';
-	import About from './routes/About.svelte';
+	import Dashboard from './routes/Dashboard.svelte';
 	import NotFound from './routes/NotFound.svelte';
 	import Login from './routes/Login.svelte';
 	import Home from './routes/Home.svelte';
@@ -56,7 +56,7 @@
 	});
 
 	const routes = {
-		'/about': About,
+		'/dashboard': Dashboard,
 		'/login': wrap({
 			component: Login as unknown as ComponentType,
 			props: {
