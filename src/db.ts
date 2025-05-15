@@ -56,6 +56,13 @@ const fetchWithAuth = async (url: string | Request, options: RequestInit = {}) =
 // };
 export const db: PouchDB.Database<Todo> = createDatabase(dbName);
 
+// Create index
+db.createIndex({
+	index: {
+		fields: ['title', 'value']
+	}
+});
+
 // Setup replication
 export const setupReplication = () => {
 	if (synced && authenticated) {
@@ -117,10 +124,22 @@ export const getDocCount = async () => {
 	};
 };
 
-export const getTodos = async () => {
-	return db.allDocs({
-		include_docs: true,
-		descending: true
+export const getTodos = async (query: string) => {
+	return db.find({
+		selector: {
+			$or: [
+				{
+					title: {
+						$regex: new RegExp(query, 'i')
+					}
+				},
+				{
+					value: {
+						$regex: new RegExp(query, 'i')
+					}
+				}
+			]
+		}
 	});
 };
 

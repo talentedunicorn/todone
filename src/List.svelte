@@ -5,7 +5,8 @@
 	import Button from './components/Button.svelte';
 	import { toastActions, toastMessage } from './stores';
 	import todoStore, { incompleteTodos, completedTodos } from './stores/todos';
-	import { type Todo } from './lib/pouchdb';
+	import type { Todo } from './lib/pouchdb';
+	import { throttle } from './lib/helpers';
 
 	const {
 		add,
@@ -79,14 +80,16 @@
 
 <main>
 	<h2 class="Title">ToDone</h2>
-	<form class="Search">
+	<Form defaultValue={task} onSubmit={handleCreate} onUpdate={handleUpdate} onClear={clearEdit} />
+	<form class="Search" onsubmit={(e) => e.preventDefault()}>
 		<label for="search" class="visually-hidden">Search by title</label>
 		<input
 			type="search"
 			name="query"
 			id="search"
 			class:visually-hidden={!showSearch}
-			bind:value={query}
+			value={query}
+			oninput={throttle(({ target }: InputEvent) => (query = (target as HTMLInputElement).value))}
 			bind:this={searchInput}
 			placeholder="Type to search"
 		/>
@@ -144,8 +147,7 @@
 			</Button>
 		{/if}
 	</form>
-	<Form defaultValue={task} onSubmit={handleCreate} onUpdate={handleUpdate} onClear={clearEdit} />
-	{#await loadTodos()}
+	{#await loadTodos(query)}
 		<p class="Message">Loading data... 👩🏼‍🔧</p>
 	{:then _}
 		{#if $completedTodos.todos.length + $incompleteTodos.todos.length > 0}
