@@ -25,11 +25,11 @@ const createTodoStore = () => {
 		processing: false
 	});
 
-	const loadData = async () => {
-		const data = await getTodos();
+	const loadData = async (query: string) => {
+		const data = await getTodos(query);
 		update((store) => ({
 			...store,
-			todos: data.rows.map((t) => ({ ...t.doc!, expanded: false }))
+			todos: data.docs.map((t) => ({ ...t, expanded: false }))
 		}));
 	};
 
@@ -181,17 +181,15 @@ const createTodoStore = () => {
 
 const todoStore = createTodoStore();
 
-const sortedStore = derived(todoStore, (store) => ({
+const sortByDate = (a: Todo, b: Todo) =>
+	new Date(b.updated).getTime() - new Date(a.updated).getTime();
+export const completedTodos = derived(todoStore, (store) => ({
 	...store,
-	todos: store.todos.sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime())
+	todos: store.todos.sort(sortByDate).filter((t) => t.completed === true)
 }));
-export const completedTodos = derived(sortedStore, (store) => ({
+export const incompleteTodos = derived(todoStore, (store) => ({
 	...store,
-	todos: store.todos.filter((t) => t.completed === true)
-}));
-export const incompleteTodos = derived(sortedStore, (store) => ({
-	...store,
-	todos: store.todos.filter((t) => t.completed !== true)
+	todos: store.todos.sort(sortByDate).filter((t) => t.completed !== true)
 }));
 
 export default todoStore;
