@@ -4,7 +4,7 @@
 	import Task from './components/Task.svelte';
 	import Button from './components/Button.svelte';
 	import { toastActions, toastMessage } from './stores';
-	import todoStore, { incompleteTodos, completedTodos } from './stores/todos';
+	import todoStore, { incompleteTodos, completedTodos, LIMIT } from './stores/todos';
 	import type { Todo } from './lib/pouchdb';
 	import { throttle } from './lib/helpers';
 
@@ -16,10 +16,12 @@
 		loadData: loadTodos,
 		handleToggleExpand,
 		expandAll,
-		collapseAll
+		collapseAll,
+		setPage
 	} = todoStore;
 
 	let task = $state<Todo | null>(null);
+	let currentPage = $state(1);
 
 	let searchInput: HTMLInputElement;
 
@@ -29,6 +31,12 @@
 
 	const clearEdit = () => {
 		task = null;
+	};
+
+	const handlePageChange = (newPage: number) => {
+		currentPage = newPage;
+		setPage(newPage);
+		loadTodos(query, newPage);
 	};
 
 	const handleUpdate = async (data: Todo) => {
@@ -147,7 +155,7 @@
 			</Button>
 		{/if}
 	</form>
-	{#await loadTodos(query)}
+	{#await loadTodos(query, currentPage)}
 		<p class="Message">Loading data... 👩🏼‍🔧</p>
 	{:then _}
 		{#if $completedTodos.todos.length + $incompleteTodos.todos.length > 0}
@@ -202,6 +210,25 @@
 					{/each}
 				{/if}
 			</section>
+			<div class="Pagination">
+				<Button
+					onclick={() => handlePageChange(currentPage - 1)}
+					disabled={currentPage === 1}
+					variant="link"
+					size="small"
+				>
+					Previous
+				</Button>
+				<p><span class="Title">{currentPage}</span></p>
+				<Button
+					onclick={() => handlePageChange(currentPage + 1)}
+					disabled={$incompleteTodos.todos.length + $completedTodos.todos.length < LIMIT}
+					variant="link"
+					size="small"
+				>
+					Next
+				</Button>
+			</div>
 		{:else}
 			<p class="Message">Nothing found... 👀</p>
 		{/if}
@@ -248,5 +275,17 @@
 
 	main :global(.ToggleExpand) {
 		margin-left: auto;
+	}
+
+	.Pagination {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 2rem;
+		margin-top: 2rem;
+
+		.Title {
+			margin: 0;
+		}
 	}
 </style>

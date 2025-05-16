@@ -1,5 +1,6 @@
 import { SyncStatus, status, token, isLoggedin } from './stores';
 import { createDatabase, pouchdbFetch, type Todo } from './lib/pouchdb';
+import { LIMIT } from './stores/todos';
 
 const dbName = import.meta.env.VITE_DB_NAME || 'Todone';
 const synced = import.meta.env.VITE_SYNCED === 'true';
@@ -33,35 +34,7 @@ const fetchWithAuth = async (url: string | Request, options: RequestInit = {}) =
 	return response;
 };
 
-// const setupReplication = (db: RxDatabase) => {
-// 	const url = import.meta.env.VITE_REMOTE_DB;
-
-// 	const replicationState = replicateCouchDB({
-// 		replicationIdentifier: 'couchdb-replication',
-// 		collection: db.todos,
-// 		live: true,
-// 		url,
-// 		fetch: fetchWithAuth,
-// 		pull: {},
-// 		push: {}
-// 	});
-
-// 	replicationState.active$.subscribe(() => status.set(SyncStatus.ACTIVE));
-// 	replicationState.error$.subscribe((e) => {
-// 		if (e.parameters.error?.message === 'Token expired') {
-// 			token.set('expired'); // this will trigger logout
-// 		}
-// 		status.set(SyncStatus.ERROR);
-// 	});
-// };
 export const db: PouchDB.Database<Todo> = createDatabase(dbName);
-
-// Create index
-db.createIndex({
-	index: {
-		fields: ['title', 'value']
-	}
-});
 
 // Setup replication
 export const setupReplication = () => {
@@ -101,46 +74,38 @@ const syncDB = (remoteDb: PouchDB.Database<Todo>) => {
 		.on('change', (info) => console.info(`[Sync change]`, info));
 };
 
-export const getDocCount = async () => {
-	const complete = (
-		await db.find({
-			selector: {
-				completed: true
+export const getTodos = async (query: string, limit = LIMIT, skip = 0) => {
+	return db
+		.createIndex({
+			index: {
+				fields: ['updated', 'title', 'value']
 			}
 		})
-	).docs.length;
-
-	const incomplete = (
-		await db.find({
-			selector: {
-				completed: false
-			}
-		})
-	).docs.length;
-
-	return {
-		complete,
-		incomplete
-	};
-};
-
-export const getTodos = async (query: string) => {
-	return db.find({
-		selector: {
-			$or: [
-				{
-					title: {
-						$regex: new RegExp(query, 'i')
-					}
+		.then(() =>
+			db.find({
+				selector: {
+					...(query !== ''
+						? {
+								$or: [
+									{
+										title: {
+											$regex: new RegExp(query, 'i')
+										}
+									},
+									{
+										value: {
+											$regex: new RegExp(query, 'i')
+										}
+									}
+								]
+							}
+						: undefined)
 				},
-				{
-					value: {
-						$regex: new RegExp(query, 'i')
-					}
-				}
-			]
-		}
-	});
+				limit,
+				skip,
+				sort: [{ updated: 'desc' }]
+			})
+		);
 };
 
 export const add = async (data: Omit<Todo, '_id' | '_rev' | 'completed' | 'updated'>) => {

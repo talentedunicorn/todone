@@ -17,19 +17,30 @@ type TodoWithExpanded = Todo & { expanded: boolean };
 type TodoStore = {
 	todos: TodoWithExpanded[];
 	processing: boolean;
+	page: number;
+	limit: number;
+	total: number;
 };
+
+export const LIMIT = 4;
 
 const createTodoStore = () => {
 	const { update, subscribe } = writable<TodoStore>({
 		todos: [],
-		processing: false
+		processing: false,
+		page: 1,
+		limit: LIMIT,
+		total: 0
 	});
 
-	const loadData = async (query: string) => {
-		const data = await getTodos(query);
+	const loadData = async (query: string, page = 1) => {
+		const skip = (page - 1) * LIMIT;
+		const data = await getTodos(query, LIMIT, skip);
 		update((store) => ({
 			...store,
-			todos: data.docs.map((t) => ({ ...t, expanded: false }))
+			todos: data.docs.map((t) => ({ ...t, expanded: false })),
+			page,
+			total: data.docs.length
 		}));
 	};
 
@@ -88,7 +99,7 @@ const createTodoStore = () => {
 		} catch (e: any) {
 			toastMessage.set(e.message);
 		} finally {
-			update((store) => ({ ...store, processing: true }));
+			update((store) => ({ ...store, processing: false }));
 		}
 	};
 
@@ -122,6 +133,14 @@ const createTodoStore = () => {
 			toastMessage.set('Invalid file selected. Please select an exported file');
 			// importForm.reset();
 		}
+	};
+
+	const setPage = (page: number) => {
+		update((store) => ({ ...store, page }));
+	};
+
+	const setLimit = (limit: number) => {
+		update((store) => ({ ...store, limit }));
 	};
 
 	// Listen to changes and update store
@@ -175,7 +194,9 @@ const createTodoStore = () => {
 		exportTodos,
 		importTodos,
 		exportData,
-		importData
+		importData,
+		setPage,
+		setLimit
 	};
 };
 
