@@ -4,6 +4,8 @@
 	import { incompleteTodos, completedTodos } from '../stores/todos';
 
 	import content from '../../About.md?raw';
+	import Button from '../components/Button.svelte';
+	import { push } from 'svelte-spa-router';
 </script>
 
 <svelte:head>
@@ -11,18 +13,18 @@
 </svelte:head>
 
 <section class="Wrapper">
-	<div>
+	<header>
 		<h2 class="Title">Overview</h2>
-		<p>Done &#8212; {$completedTodos.todos.length}</p>
-		<p>ToDo &#8212; {$incompleteTodos.todos.length}</p>
-		<nav>
-			<ExportImport />
-		</nav>
-	</div>
+		<h3>{$completedTodos.todos.length} done &#8212; {$incompleteTodos.todos.length} not done</h3>
+		<Button variant="link" onclick={() => push('/')}>View list</Button>
+	</header>
 	<aside>
 		<h2>About</h2>
 		{@html marked(content)}
 	</aside>
+	<nav>
+		<ExportImport />
+	</nav>
 </section>
 
 <style>
@@ -31,7 +33,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-between;
-		gap: 2rem;
+		gap: 4rem;
 
 		nav {
 			display: inline-flex;
