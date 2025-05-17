@@ -11,13 +11,14 @@
 	import Toast from './components/Toast.svelte';
 	import Logo from './components/Logo.svelte';
 	import ToggleTheme from './components/ToggleTheme.svelte';
-	import About from './routes/About.svelte';
+	import Dashboard from './routes/Dashboard.svelte';
 	import NotFound from './routes/NotFound.svelte';
 	import Login from './routes/Login.svelte';
 	import Home from './routes/Home.svelte';
 	import { checkAuth, initAuth0Client } from './auth';
 	import { toastActions, toastMessage, status, isLoggedin } from './stores';
 	import type { ComponentType } from 'svelte';
+	import { setupReplication } from './db';
 
 	let auth0 = $state<Auth0Client>();
 	let wrapper: HTMLElement;
@@ -43,7 +44,10 @@
 		auth0 = await initAuth0Client();
 		await checkAuth(auth0);
 
-		if ($isLoggedin) push(`/`);
+		if ($isLoggedin) {
+			push(`/`);
+			setupReplication();
+		}
 	};
 
 	$effect(() => {
@@ -52,7 +56,7 @@
 	});
 
 	const routes = {
-		'/about': About,
+		'/dashboard': Dashboard,
 		'/login': wrap({
 			component: Login as unknown as ComponentType,
 			props: {
