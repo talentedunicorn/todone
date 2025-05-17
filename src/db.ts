@@ -172,16 +172,18 @@ export const exportTodos = async (): Promise<Omit<Todo, '_rev'>[]> => {
 			include_docs: true,
 			descending: true
 		})
-	).rows.map(({ doc }) => {
-		const { _id, title, value, completed, updated } = doc!;
-		return {
-			_id,
-			title,
-			value,
-			completed,
-			updated
-		};
-	});
+	).rows
+		.filter((d) => !d.doc?._id.startsWith('_design'))
+		.map(({ doc }) => {
+			const { _id, title, value, completed, updated } = doc!;
+			return {
+				_id,
+				title,
+				value,
+				completed,
+				updated
+			};
+		});
 };
 
 export const importTodos = async (docs: Omit<Todo, '_rev'>[]) => {
