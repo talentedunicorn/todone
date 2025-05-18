@@ -1,3 +1,5 @@
+import type { Todo } from './pouchdb';
+
 export function preventDefault(fn: Function) {
 	return (event: Event) => {
 		event.preventDefault();
@@ -14,3 +16,10 @@ export function throttle(callback: Function, wait = 500) {
 		timeoutRef = setTimeout(() => callback(...args), wait);
 	};
 }
+
+export function title(title?: string) {
+	return `${title ? title : 'ToDone'} — Get it done!`;
+}
+
+export const sortTodoByDateDesc = (a: Todo, b: Todo) =>
+	new Date(b.updated).getTime() - new Date(a.updated).getTime();

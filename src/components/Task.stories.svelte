@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import { userEvent, waitFor, within, expect } from '@storybook/test';
 
@@ -33,11 +33,11 @@ Includes lists \n \
 | MDX supports components | Needs to be `.mdx` format |';
 </script>
 
-{#snippet template(args)}
+{#snippet template(args: any)}
 	<Task
 		{...args}
 		onComplete={() => (args.completed = !args.completed)}
-		onEdit={() => console('Editing')}
+		onEdit={() => console.log('Editing')}
 		onDelete={() => console.info('Deleting')}
 		onToggleExpand={() => (args.expanded = !args.expanded)}
 	/>
