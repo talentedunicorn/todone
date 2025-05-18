@@ -1,8 +1,9 @@
 <script lang="ts">
 	import Button from './Button.svelte';
 	import { marked, Parser, Renderer, type Tokens } from 'marked';
-	import type { HTMLAttributes } from 'svelte/elements';
-	import { toastActions, toastMessage } from '../stores';
+	import toastStore from '../stores/toast';
+
+	const { setMessage, clearMessage } = toastStore;
 
 	marked.use({
 		gfm: true
@@ -20,7 +21,7 @@
 
 	marked.use(tableExtension);
 
-	interface Props extends Partial<HTMLAttributes<HTMLElement>> {
+	interface Props {
 		title: string;
 		value: string;
 		completed: boolean;
@@ -129,17 +130,15 @@
 			data-testid="delete"
 			size="small"
 			onclick={() => {
-				toastActions.set([
+				setMessage(`Delete "${title}"?`, [
 					{
 						label: 'Yes',
 						callback: () => {
 							onDelete();
-							toastMessage.set(null);
-							toastActions.set(null);
+							clearMessage();
 						}
 					}
 				]);
-				toastMessage.set(`Delete "${title}"?`);
 			}}>Delete</Button
 		>
 		<Button data-testid="edit" size="small" onclick={onEdit}>Edit</Button>

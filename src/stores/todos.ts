@@ -11,38 +11,49 @@ import {
 	exportTodos,
 	importTodos
 } from '../db';
-import { toastMessage } from '../stores';
+import toastStore from './toast';
+import { sortTodoByDateDesc } from '../lib/helpers';
 
-type TodoWithExpanded = Todo & { expanded: boolean };
+const { setMessage } = toastStore;
+
+export type TodoWithExpanded = Todo & { expanded: boolean };
 type TodoStore = {
 	todos: TodoWithExpanded[];
+	query: string;
 	processing: boolean;
 	page: number;
 	limit: number;
-	total: number;
 };
-
-export const LIMIT = 4;
 
 const createTodoStore = () => {
 	const { update, subscribe } = writable<TodoStore>({
 		todos: [],
+		query: '',
 		processing: false,
 		page: 1,
-		limit: LIMIT,
-		total: 0
+		limit: 5
 	});
 
-	const loadData = async (query: string, page = 1) => {
-		const skip = (page - 1) * LIMIT;
-		const data = await getTodos(query, LIMIT, skip);
+	const loadData = async () => {
+		console.count('[Loading data...]');
+		const data = await getTodos();
 		update((store) => ({
 			...store,
-			todos: data.docs.map((t) => ({ ...t, expanded: false })),
-			page,
-			total: data.docs.length
+			todos: data.rows
+				.filter((t) => !t.doc?._id.startsWith('_design')) // Filter out _design docs
+				.map((t) => ({ ...t.doc!, expanded: false })) // Add expanded: false to each todo
 		}));
 	};
+
+	const setPage = (page: number) =>
+		update((store) => ({
+			...store,
+			page
+		}));
+
+	const setLimit = (limit: number) => update((store) => ({ ...store, limit, page: 1 }));
+
+	const setQuery = (query: string) => update((store) => ({ ...store, query }));
 
 	const handleToggleExpand = (id: string, expanded: boolean) => {
 		update((store) => {
@@ -95,9 +106,9 @@ const createTodoStore = () => {
 			link.click();
 
 			document.body.removeChild(link);
-			toastMessage.set('Data exported successfully.');
+			setMessage('Data exported successfully.');
 		} catch (e: any) {
-			toastMessage.set(e.message);
+			setMessage(e.message);
 		} finally {
 			update((store) => ({ ...store, processing: false }));
 		}
@@ -125,60 +136,20 @@ const createTodoStore = () => {
 		if (result.success) {
 			try {
 				await importTodos(data);
-				toastMessage.set('Imported data successfully');
+				setMessage('Imported data successfully');
 			} catch (e) {
-				toastMessage.set('Failed to import data');
+				setMessage('Failed to import data');
 			}
 		} else {
-			toastMessage.set('Invalid file selected. Please select an exported file');
-			// importForm.reset();
+			setMessage('Invalid file selected. Please select an exported file');
 		}
-	};
-
-	const setPage = (page: number) => {
-		update((store) => ({ ...store, page }));
-	};
-
-	const setLimit = (limit: number) => {
-		update((store) => ({ ...store, limit }));
 	};
 
 	// Listen to changes and update store
 	db.changes({
-		live: true,
-		include_docs: true
-	}).on('change', (change) => {
-		if (change.doc) {
-			update((store: TodoStore) => {
-				const changedDoc = change.doc as Todo;
-				const index = store.todos.findIndex((doc) => doc._id === changedDoc._id);
-
-				if (change.deleted) {
-					console.info(`[Changes:Delete]:`, change);
-					// Handle deletion
-					if (index !== -1) {
-						return {
-							...store,
-							todos: [...store.todos.slice(0, index), ...store.todos.slice(index + 1)]
-						};
-					}
-				} else {
-					// Handle create or update
-					if (index !== -1) {
-						console.info(`[Changes:Update]:`, change);
-						// Update existing
-						const newDocs = [...store.todos];
-						newDocs[index] = { ...changedDoc, expanded: false };
-						return { ...store, todos: newDocs };
-					} else {
-						console.info(`[Changes:Create]:`, change);
-						// Add new
-						return { ...store, todos: [...store.todos, { ...changedDoc, expanded: false }] };
-					}
-				}
-				return store; // No change affecting the current store structure
-			});
-		}
+		live: true
+	}).on('change', async (change) => {
+		await loadData();
 	});
 
 	return {
@@ -196,21 +167,51 @@ const createTodoStore = () => {
 		exportData,
 		importData,
 		setPage,
-		setLimit
+		setLimit,
+		setQuery
 	};
 };
 
 const todoStore = createTodoStore();
 
-const sortByDate = (a: Todo, b: Todo) =>
-	new Date(b.updated).getTime() - new Date(a.updated).getTime();
-export const completedTodos = derived(todoStore, (store) => ({
+const filteredTodos = derived(todoStore, (store) => ({
 	...store,
-	todos: store.todos.sort(sortByDate).filter((t) => t.completed === true)
+	todos: store.todos.filter((t) => {
+		const { query } = store;
+		// Return all _design docs
+		if (t._id?.startsWith('_design')) return t;
+
+		// Filter by search query
+		if (
+			t.title.toLowerCase().includes(query.toLowerCase()) ||
+			t.value.toLowerCase().includes(query.toLowerCase())
+		)
+			return t;
+	})
 }));
-export const incompleteTodos = derived(todoStore, (store) => ({
+
+export const sortedTodos = derived(filteredTodos, (store) => ({
 	...store,
-	todos: store.todos.sort(sortByDate).filter((t) => t.completed !== true)
+	todos: store.todos.sort(sortTodoByDateDesc)
 }));
+
+export const paginatedTodos = derived(sortedTodos, (store) => {
+	const { page, limit, todos } = store;
+	const start = (page - 1) * limit;
+	const end = start + limit;
+	return {
+		...store,
+		todos: todos.slice(start, end)
+	};
+});
+
+// export const completedTodos = derived(paginatedTodos, (store) => ({
+// 	...store,
+// 	todos: store.todos.filter((t) => t.completed === true)
+// }));
+// export const incompleteTodos = derived(paginatedTodos, (store) => ({
+// 	...store,
+// 	todos: store.todos.filter((t) => t.completed !== true)
+// }));
 
 export default todoStore;

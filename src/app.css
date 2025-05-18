@@ -86,7 +86,7 @@ code {
 
 input[type='checkbox'] {
 	--checkbox-size: 1rem;
-	--chechbox-radius: 0.2rem;
+	--checkbox-radius: 0.2rem;
 	appearance: none;
 	margin: 0 0.5rem 0 0;
 	display: inline-flex;
@@ -98,12 +98,33 @@ input[type='checkbox']::after {
 	content: '';
 	background: var(--checkbox-bg, var(--gray-light));
 	border: 0.2em solid var(--black);
-	border-radius: var(--chechbox-radius);
+	border-radius: var(--checkbox-radius);
 	width: 100%;
 }
 
 input[type='checkbox']:checked {
 	--checkbox-bg: var(--primary);
+}
+
+input[type='text'],
+input[type='search'] {
+	border: none;
+	border-radius: 0.5rem;
+	padding: 0.5em;
+	font-size: inherit;
+	font-family: inherit;
+}
+
+select,
+::picker(select) {
+	appearance: base-select;
+}
+
+select {
+	font-size: inherit;
+	font-family: inherit;
+	border: 0.2em solid;
+	border-radius: 0.5em;
 }
 
 table {

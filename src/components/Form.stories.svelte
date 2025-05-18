@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
 	import Form from './Form.svelte';
 	import { expect } from 'storybook/test';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
@@ -9,7 +9,7 @@
 	});
 </script>
 
-{#snippet template(args)}
+{#snippet template(args: any)}
 	<Form {...args} onSubmit={() => {}} onClear={() => {}} onUpdate={() => {}} />
 {/snippet}
 
@@ -49,7 +49,9 @@
 	args={{
 		defaultValue: {
 			title: 'Things to do',
-			value: '- Write todos in **markdown** \n- Because why not'
+			value: '- Write todos in **markdown** \n- Because why not',
+			completed: false,
+			updated: new Date('2020-01-01').toISOString()
 		}
 	}}
 	play={async ({ canvas, userEvent }) => {

@@ -1,18 +1,18 @@
-import { SyncStatus, status, token, isLoggedin } from './stores';
+import userStore, { SyncStatus } from './stores/user';
 import { createDatabase, pouchdbFetch, type Todo } from './lib/pouchdb';
-import { LIMIT } from './stores/todos';
 
 const dbName = import.meta.env.VITE_DB_NAME || 'Todone';
 const synced = import.meta.env.VITE_SYNCED === 'true';
 const remoteDBURL = import.meta.env.VITE_REMOTE_DB;
+const { setStatus, setToken } = userStore;
 
 let authenticated = false;
-isLoggedin.subscribe((v) => (authenticated = v));
+userStore.subscribe((v) => (authenticated = v.isLoggedIn));
 
 // Custom fetch with Auth token
 const fetchWithAuth = async (url: string | Request, options: RequestInit = {}) => {
-	let authToken = '';
-	token.subscribe((v) => (authToken = v));
+	let authToken: string | undefined;
+	userStore.subscribe((v) => (authToken = v.token));
 
 	const headers = {
 		...options.headers,
@@ -56,11 +56,11 @@ export const setupReplication = () => {
 			.on('error', (error: any) => {
 				// Handle token expiry
 				if (error.message === 'Token expired') {
-					token.set('expired'); // will trigger logout
+					setToken(undefined); // will trigger logout
 				}
 
 				console.error(`[Replication error]:`, error);
-				status.set(SyncStatus.ERROR);
+				setStatus(SyncStatus.ERROR);
 			});
 	}
 	return null;
@@ -69,43 +69,15 @@ export const setupReplication = () => {
 const syncDB = (remoteDb: PouchDB.Database<Todo>) => {
 	// Initialize sync
 	db.sync(remoteDb, { live: true, retry: true, checkpoint: false })
-		.on('error', () => status.set(SyncStatus.ERROR))
-		.on('active', () => status.set(SyncStatus.ACTIVE))
+		.on('error', () => setStatus(SyncStatus.ERROR))
+		.on('active', () => setStatus(SyncStatus.ACTIVE))
 		.on('change', (info) => console.info(`[Sync change]`, info));
 };
 
-export const getTodos = async (query: string, limit = LIMIT, skip = 0) => {
-	return db
-		.createIndex({
-			index: {
-				fields: ['updated', 'title', 'value']
-			}
-		})
-		.then(() =>
-			db.find({
-				selector: {
-					...(query !== ''
-						? {
-								$or: [
-									{
-										title: {
-											$regex: new RegExp(query, 'i')
-										}
-									},
-									{
-										value: {
-											$regex: new RegExp(query, 'i')
-										}
-									}
-								]
-							}
-						: undefined)
-				},
-				limit,
-				skip,
-				sort: [{ updated: 'desc' }]
-			})
-		);
+export const getTodos = async () => {
+	return db.allDocs({
+		include_docs: true
+	});
 };
 
 export const add = async (data: Omit<Todo, '_id' | '_rev' | 'completed' | 'updated'>) => {
@@ -148,7 +120,7 @@ export const remove = async (_id: string) => {
 
 export const setCompleted = async (_id: string, completed: boolean) => {
 	const now = new Date().toISOString();
-	return await db
+	await db
 		.find({
 			selector: {
 				_id

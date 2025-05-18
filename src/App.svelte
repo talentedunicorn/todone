@@ -16,8 +16,10 @@
 	import Login from './routes/Login.svelte';
 	import Home from './routes/Home.svelte';
 	import { checkAuth, initAuth0Client } from './auth';
-	import { toastActions, toastMessage, status, isLoggedin } from './stores';
-	import type { ComponentType } from 'svelte';
+	import userStore from './stores/user';
+	import toastStore from './stores/toast';
+	import todoStore from './stores/todos';
+	import { onMount, type ComponentType } from 'svelte';
 	import { setupReplication } from './db';
 
 	let auth0 = $state<Auth0Client>();
@@ -26,6 +28,8 @@
 	let showBackToTop = $state(false);
 
 	const synced = import.meta.env.VITE_SYNCED === 'true';
+	const { clearMessage } = toastStore;
+	const { loadData } = todoStore;
 
 	const scrollToTop = () => {
 		wrapper.scrollIntoView({
@@ -44,7 +48,7 @@
 		auth0 = await initAuth0Client();
 		await checkAuth(auth0);
 
-		if ($isLoggedin) {
+		if ($userStore.isLoggedIn) {
 			push(`/`);
 			setupReplication();
 		}
@@ -53,6 +57,12 @@
 	$effect(() => {
 		handleBackToTop();
 		if (synced && !auth0) initializeAuth();
+	});
+
+	onMount(() => {
+		if (!synced || (synced && $userStore.isLoggedIn)) {
+			loadData();
+		}
 	});
 
 	const routes = {
@@ -71,7 +81,7 @@
 					return true;
 				},
 				() => {
-					if ($isLoggedin) {
+					if ($userStore.isLoggedIn) {
 						push(`/`);
 						return false;
 					}
@@ -87,7 +97,7 @@
 			conditions: [
 				() => {
 					if (!synced) return true;
-					if (!$isLoggedin) {
+					if (!$userStore.isLoggedIn) {
 						push('/login');
 						return false;
 					}
@@ -107,7 +117,9 @@
 
 <main class="Wrapper" bind:this={wrapper}>
 	<header class="Header">
-		<h1 data-syncing={$status} class="Logo" title="ToDone"><a href="/" use:link><Logo /></a></h1>
+		<h1 data-syncing={$userStore.syncStatus} class="Logo" title="ToDone">
+			<a href="/" use:link><Logo /></a>
+		</h1>
 
 		<ToggleTheme />
 	</header>
@@ -130,16 +142,10 @@
 		</footer>
 	{/if}
 
-	<Toast
-		message={$toastMessage}
-		close={() => {
-			toastMessage.set(null);
-			toastActions.set(null);
-		}}
-	>
+	<Toast message={$toastStore?.message} close={clearMessage}>
 		{#snippet footer()}
-			{#if $toastActions}
-				{#each $toastActions as action}
+			{#if $toastStore.actions}
+				{#each $toastStore.actions as action}
 					<Button size="small" onclick={action.callback}>{action.label}</Button>
 				{/each}
 			{/if}

@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import { expect, fn } from 'storybook/test';
 
@@ -37,7 +37,7 @@ Includes lists \n \
 | MDX supports components | Needs to be `.mdx` format |';
 </script>
 
-{#snippet template(args)}
+{#snippet template(args: any)}
 	<Task
 		{...args}
 		onComplete={() => (args.completed = !args.completed)}
