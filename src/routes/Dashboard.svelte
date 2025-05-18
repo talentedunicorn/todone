@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { marked } from 'marked';
 	import ExportImport from '../components/ExportImport.svelte';
-	import { incompleteTodos, completedTodos } from '../stores/todos';
+	import todoStore from '../stores/todos';
 
 	import content from '../../About.md?raw';
 	import Button from '../components/Button.svelte';
 	import { push } from 'svelte-spa-router';
+
+	const { total } = $todoStore;
 </script>
 
 <svelte:head>
@@ -15,7 +17,7 @@
 <section class="Wrapper">
 	<header>
 		<h2 class="Title">Overview</h2>
-		<h3>{$completedTodos.todos.length} done &#8212; {$incompleteTodos.todos.length} not done</h3>
+		<h3>{total.completed} done &#8212; {total.incomplete} not done</h3>
 		<Button variant="link" onclick={() => push('/')}>View list</Button>
 	</header>
 	<aside>

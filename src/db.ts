@@ -1,6 +1,5 @@
 import { SyncStatus, status, token, isLoggedin } from './stores';
 import { createDatabase, pouchdbFetch, type Todo } from './lib/pouchdb';
-import { LIMIT } from './stores/todos';
 
 const dbName = import.meta.env.VITE_DB_NAME || 'Todone';
 const synced = import.meta.env.VITE_SYNCED === 'true';
@@ -74,7 +73,23 @@ const syncDB = (remoteDb: PouchDB.Database<Todo>) => {
 		.on('change', (info) => console.info(`[Sync change]`, info));
 };
 
-export const getTodos = async (query: string, limit = LIMIT, skip = 0) => {
+export const getTotal = async () => {
+	const rows = (await db.allDocs({ include_docs: true })).rows;
+	let completed = 0;
+	let incomplete = 0;
+	for (const r of rows) {
+		if (r.doc && typeof r.doc.completed === 'boolean') {
+			if (r.doc.completed) {
+				completed++;
+			} else {
+				incomplete++;
+			}
+		}
+	}
+	return { completed, incomplete };
+};
+
+export const getTodos = async (query: string, limit: number, skip = 0) => {
 	return db
 		.createIndex({
 			index: {

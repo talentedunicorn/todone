@@ -4,7 +4,7 @@
 	import Task from './components/Task.svelte';
 	import Button from './components/Button.svelte';
 	import { toastActions, toastMessage } from './stores';
-	import todoStore, { incompleteTodos, completedTodos, LIMIT } from './stores/todos';
+	import todoStore, { incompleteTodos, completedTodos, pageStore } from './stores/todos';
 	import type { Todo } from './lib/pouchdb';
 	import { throttle } from './lib/helpers';
 
@@ -13,15 +13,16 @@
 		remove,
 		update,
 		setCompleted,
-		loadData: loadTodos,
 		handleToggleExpand,
 		expandAll,
 		collapseAll,
-		setPage
+		setPage,
+		loadData
 	} = todoStore;
 
 	let task = $state<Todo | null>(null);
-	let currentPage = $state(1);
+	// let currentPage = $state(1);
+	let currentPage = $derived($todoStore.page);
 
 	let searchInput: HTMLInputElement;
 
@@ -29,14 +30,17 @@
 	let showSearch = $state(false);
 	let deleting = $state(false);
 
+	const totalPages = $derived(
+		Math.ceil(($todoStore.total.completed + $todoStore.total.incomplete) / $pageStore.limit)
+	);
+	const lastPage = $derived(currentPage === totalPages);
+
 	const clearEdit = () => {
 		task = null;
 	};
 
 	const handlePageChange = (newPage: number) => {
-		currentPage = newPage;
 		setPage(newPage);
-		loadTodos(query, newPage);
 	};
 
 	const handleUpdate = async (data: Todo) => {
@@ -84,6 +88,10 @@
 			deleting = false;
 		});
 	};
+
+	$effect(() => {
+		loadData(query, currentPage);
+	});
 </script>
 
 <main>
@@ -155,62 +163,79 @@
 			</Button>
 		{/if}
 	</form>
-	{#await loadTodos(query, currentPage)}
-		<p class="Message">Loading data... 👩🏼‍🔧</p>
-	{:then _}
-		{#if $completedTodos.todos.length + $incompleteTodos.todos.length > 0}
-			<aside>
-				<Button variant="link" size="small" class="ToggleExpand" onclick={expandAll}
-					>Expand all</Button
-				>
-				<Button variant="link" size="small" class="ToggleExpand" onclick={collapseAll}
-					>Collapse all</Button
-				>
-			</aside>
-			<section>
-				{#if $incompleteTodos.todos.length > 0}
-					{#each $incompleteTodos.todos as task, i (i)}
-						{@const { _id, title, value, completed, updated, expanded } = task}
-						<div in:fly={{ y: -100 }} out:fly={{ y: 100 }}>
-							<Task
-								id={`task-${i}`}
-								{title}
-								{value}
-								{completed}
-								updated={new Date(updated)}
-								{expanded}
-								onEdit={() => handleEdit(task)}
-								onDelete={() => handleDelete(_id!)}
-								onComplete={() => handleToggleComplete(task)}
-								onToggleExpand={(expanded) => handleToggleExpand(_id!, expanded)}
-							/>
-						</div>
-					{/each}
-				{/if}
-				{#if $completedTodos.todos.length > 0}
-					<div transition:fly={{ y: 100 }}>
-						<Button onclick={deleteCompleted} disabled={deleting}>Clear completed</Button>
+	{#if $completedTodos.todos.length + $incompleteTodos.todos.length > 0}
+		<aside>
+			<Button variant="link" size="small" class="ToggleExpand" onclick={expandAll}
+				>Expand all</Button
+			>
+			<Button variant="link" size="small" class="ToggleExpand" onclick={collapseAll}
+				>Collapse all</Button
+			>
+		</aside>
+		<section>
+			{#if $incompleteTodos.todos.length > 0}
+				{#each $incompleteTodos.todos as task, i (i)}
+					{@const { _id, title, value, completed, updated, expanded } = task}
+					<div in:fly={{ y: -100 }} out:fly={{ y: 100 }}>
+						<Task
+							id={`task-${i}`}
+							{title}
+							{value}
+							{completed}
+							updated={new Date(updated)}
+							{expanded}
+							onEdit={() => handleEdit(task)}
+							onDelete={() => handleDelete(_id!)}
+							onComplete={() => handleToggleComplete(task)}
+							onToggleExpand={(expanded) => handleToggleExpand(_id!, expanded)}
+						/>
 					</div>
-					{#each $completedTodos.todos as task, i (i)}
-						{@const { _id, title, value, completed, updated, expanded } = task}
-						<div in:fly={{ y: -100 }} out:fly={{ y: 100 }}>
-							<Task
-								id={`task-${i}`}
-								{title}
-								{value}
-								{completed}
-								updated={new Date(updated)}
-								{expanded}
-								onEdit={() => handleEdit(task)}
-								onDelete={() => handleDelete(_id!)}
-								onComplete={() => handleToggleComplete(task)}
-								onToggleExpand={(expanded) => handleToggleExpand(_id!, expanded)}
-							/>
-						</div>
-					{/each}
-				{/if}
-			</section>
-			<div class="Pagination">
+				{/each}
+			{/if}
+			{#if $completedTodos.todos.length > 0}
+				<div transition:fly={{ y: 100 }}>
+					<Button onclick={deleteCompleted} disabled={deleting}>Clear completed</Button>
+				</div>
+				{#each $completedTodos.todos as task, i (i)}
+					{@const { _id, title, value, completed, updated, expanded } = task}
+					<div in:fly={{ y: -100 }} out:fly={{ y: 100 }}>
+						<Task
+							id={`task-${i}`}
+							{title}
+							{value}
+							{completed}
+							updated={new Date(updated)}
+							{expanded}
+							onEdit={() => handleEdit(task)}
+							onDelete={() => handleDelete(_id!)}
+							onComplete={() => handleToggleComplete(task)}
+							onToggleExpand={(expanded) => handleToggleExpand(_id!, expanded)}
+						/>
+					</div>
+				{/each}
+			{/if}
+		</section>
+		<div class="Pagination">
+			<form
+				onsubmit={(e) => {
+					e.preventDefault();
+					const formData = new FormData(e.target as HTMLFormElement);
+					const limit = formData.get('limit');
+					$pageStore.limit = Number(limit);
+				}}
+			>
+				<input
+					class="Input"
+					type="number"
+					name="limit"
+					min="5"
+					defaultValue={$pageStore.limit}
+					max="99"
+				/>
+				<Button type="submit">Update</Button>
+			</form>
+			<section>
+				<p>{currentPage} of <span class="Title">{totalPages}</span></p>
 				<Button
 					onclick={() => handlePageChange(currentPage - 1)}
 					disabled={currentPage === 1}
@@ -219,20 +244,19 @@
 				>
 					Previous
 				</Button>
-				<p><span class="Title">{currentPage}</span></p>
 				<Button
 					onclick={() => handlePageChange(currentPage + 1)}
-					disabled={$incompleteTodos.todos.length + $completedTodos.todos.length < LIMIT}
+					disabled={lastPage}
 					variant="link"
 					size="small"
 				>
 					Next
 				</Button>
-			</div>
-		{:else}
-			<p class="Message">Nothing found... 👀</p>
-		{/if}
-	{/await}
+			</section>
+		</div>
+	{:else}
+		<p class="Message">Nothing found... 👀</p>
+	{/if}
 </main>
 
 <style>
@@ -262,14 +286,17 @@
 		background: var(--white);
 		border-radius: 0.5rem;
 		border: var(--gray-light) 1px solid;
+
+		input {
+			flex: 1;
+		}
 	}
 
-	.Search input {
-		flex: 1;
+	input {
 		border: none;
 		border-radius: 0.5rem;
 		padding: 0.5em;
-		font-size: 1rem;
+		font-size: inherit;
 		font-family: inherit;
 	}
 
@@ -280,9 +307,17 @@
 	.Pagination {
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: space-between;
 		gap: 2rem;
 		margin-top: 2rem;
+		font-weight: bold;
+
+		& > * {
+			display: inline-flex;
+			flex-flow: row;
+			align-items: inherit;
+			gap: 1rem;
+		}
 
 		.Title {
 			margin: 0;

@@ -9,7 +9,8 @@ import {
 	remove,
 	db,
 	exportTodos,
-	importTodos
+	importTodos,
+	getTotal
 } from '../db';
 import { toastMessage } from '../stores';
 
@@ -18,29 +19,51 @@ type TodoStore = {
 	todos: TodoWithExpanded[];
 	processing: boolean;
 	page: number;
-	limit: number;
-	total: number;
+	total: {
+		completed: number;
+		incomplete: number;
+	};
 };
 
-export const LIMIT = 4;
+// export const LIMIT = 5;
+export const pageStore = writable<{
+	page: number;
+	limit: number;
+}>({
+	page: 1,
+	limit: 5
+});
 
 const createTodoStore = () => {
 	const { update, subscribe } = writable<TodoStore>({
 		todos: [],
 		processing: false,
 		page: 1,
-		limit: LIMIT,
-		total: 0
+		total: {
+			completed: 0,
+			incomplete: 0
+		}
 	});
 
 	const loadData = async (query: string, page = 1) => {
-		const skip = (page - 1) * LIMIT;
-		const data = await getTodos(query, LIMIT, skip);
+		pageStore.subscribe(async ({ limit }) => {
+			const skip = (page - 1) * limit;
+			const data = await getTodos(query, limit, skip);
+			const total = await getTotal();
+			update((store) => ({
+				...store,
+				todos: data.docs.map((t) => ({ ...t, expanded: false })),
+				page,
+				total
+			}));
+			console.log(`[loadData]: ${JSON.stringify(total, null, 2)}`);
+		});
+	};
+
+	const setPage = (page: number) => {
 		update((store) => ({
 			...store,
-			todos: data.docs.map((t) => ({ ...t, expanded: false })),
-			page,
-			total: data.docs.length
+			page
 		}));
 	};
 
@@ -131,16 +154,7 @@ const createTodoStore = () => {
 			}
 		} else {
 			toastMessage.set('Invalid file selected. Please select an exported file');
-			// importForm.reset();
 		}
-	};
-
-	const setPage = (page: number) => {
-		update((store) => ({ ...store, page }));
-	};
-
-	const setLimit = (limit: number) => {
-		update((store) => ({ ...store, limit }));
 	};
 
 	// Listen to changes and update store
@@ -153,15 +167,16 @@ const createTodoStore = () => {
 				const changedDoc = change.doc as Todo;
 				const index = store.todos.findIndex((doc) => doc._id === changedDoc._id);
 
+				// Initial state or store is empty
+				if (store.todos.length === 0) {
+					return store;
+				}
+
 				if (change.deleted) {
 					console.info(`[Changes:Delete]:`, change);
 					// Handle deletion
-					if (index !== -1) {
-						return {
-							...store,
-							todos: [...store.todos.slice(0, index), ...store.todos.slice(index + 1)]
-						};
-					}
+					// Reset page
+					loadData('', 1);
 				} else {
 					// Handle create or update
 					if (index !== -1) {
@@ -195,8 +210,7 @@ const createTodoStore = () => {
 		importTodos,
 		exportData,
 		importData,
-		setPage,
-		setLimit
+		setPage
 	};
 };
 
