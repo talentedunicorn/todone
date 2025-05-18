@@ -30,11 +30,6 @@
 			{message}
 			<footer class="toast-footer">
 				{#if footer}{@render footer()}{/if}
-				<!-- {#if $toastActions} -->
-				<!-- 	{#each $toastActions as action} -->
-				<!-- 		<Button size="small" onclick={action.callback}>{action.label}</Button> -->
-				<!-- 	{/each} -->
-				<!-- {/if} -->
 				<Button size="small" onclick={dialogClose}>Close</Button>
 			</footer>
 		</section>

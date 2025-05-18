@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
 	import Form from './Form.svelte';
 	import { within, userEvent, waitFor, expect } from '@storybook/test';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
@@ -9,7 +9,7 @@
 	});
 </script>
 
-{#snippet template(args)}
+{#snippet template(args: any)}
 	<Form {...args} onSubmit={() => {}} onClear={() => {}} onUpdate={() => {}} />
 {/snippet}
 
@@ -34,7 +34,8 @@
 
 		expect(cancelButton).toBeEnabled();
 		expect(submitButton).toBeEnabled();
-		userEvent.click(submitButton);
+		// Clear content
+		userEvent.click(cancelButton);
 
 		waitFor(() => {
 			expect(cancelButton).toBeDisabled();
@@ -51,7 +52,9 @@
 	args={{
 		defaultValue: {
 			title: 'Things to do',
-			value: '- Write todos in **markdown** \n- Because why not'
+			value: '- Write todos in **markdown** \n- Because why not',
+			completed: false,
+			updated: new Date('2020-01-01').toISOString()
 		}
 	}}
 	play={async ({ canvasElement }) => {

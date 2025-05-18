@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
 	import Menu from './Menu.svelte';
 	import Button from './Button.svelte';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
@@ -9,7 +9,7 @@
 	});
 </script>
 
-{#snippet template(args)}
+{#snippet template(args: any)}
 	<Menu {...args}>
 		<Button variant="link">About us</Button>
 	</Menu>
