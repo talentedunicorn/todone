@@ -57,13 +57,20 @@ export const checkAuth = async (auth0: Auth0Client) => {
 		// refresh token after specific period or things will stop
 		// working. Useful for long-lived apps like dashboards.
 		intervalId = setInterval(async () => {
-			const { id_token } = await auth0.getTokenSilently({
-				authorizationParams: {
-					redirect_uri
-				},
-				detailedResponse: true
-			});
-			token.set(id_token);
+			await auth0
+				.getTokenSilently({
+					authorizationParams: {
+						redirect_uri
+					},
+					detailedResponse: true
+				})
+				.then(({ id_token }) => {
+					token.set(id_token);
+				})
+				.catch(() => {
+					// If token fails log out
+					logout(auth0);
+				});
 		}, refreshRate);
 	}
 
