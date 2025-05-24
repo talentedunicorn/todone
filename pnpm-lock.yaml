@@ -106,8 +106,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0(@babel/core@7.27.1)(webpack@5.93.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(esbuild@0.25.4))
       chromatic:
-        specifier: ^11.28.2
-        version: 11.28.2
+        specifier: ^12.0.0
+        version: 12.0.0
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -2723,6 +2723,18 @@ packages:
 
   chromatic@11.28.2:
     resolution: {integrity: sha512-aCmUPcZUs4/p9zRZdMreOoO/5JqO2DiJC3md1/vRx8dlMRcmR/YI5ZbgXZcai2absVR+6hsXZ5XiPxV2sboTuQ==}
+    hasBin: true
+    peerDependencies:
+      '@chromatic-com/cypress': ^0.*.* || ^1.0.0
+      '@chromatic-com/playwright': ^0.*.* || ^1.0.0
+    peerDependenciesMeta:
+      '@chromatic-com/cypress':
+        optional: true
+      '@chromatic-com/playwright':
+        optional: true
+
+  chromatic@12.0.0:
+    resolution: {integrity: sha512-X7v26BLfAzHCU92nxPsCuvt+MazmA7S6cN7pCRRhnDYChDxHES48YvXarOybLdlH9kNP/3lMyknu6iseTh0T9A==}
     hasBin: true
     peerDependencies:
       '@chromatic-com/cypress': ^0.*.* || ^1.0.0
@@ -9066,6 +9078,8 @@ snapshots:
       readdirp: 4.1.2
 
   chromatic@11.28.2: {}
+
+  chromatic@12.0.0: {}
 
   chrome-trace-event@1.0.4: {}
 
