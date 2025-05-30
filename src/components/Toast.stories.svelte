@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
 	import Button from './Button.svelte';
 	import Toast from './Toast.svelte';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
@@ -13,11 +13,11 @@
 	});
 </script>
 
-{#snippet template(args)}
+{#snippet template(args: any)}
 	<Toast {...args} />
 {/snippet}
 
-{#snippet withFooter(args)}
+{#snippet withFooter(args: any)}
 	<Toast {...args}>
 		{#snippet footer()}
 			<Button size="small" onclick={() => alert('Shhh... 🥲')}>Show me</Button>

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { useRegisterSW } from 'virtual:pwa-register/svelte';
-	import { toastActions, toastMessage } from '../stores';
+	import toastStore from '../stores/toast';
+
+	const { setMessage, clearMessage } = toastStore;
 
 	// Register service worker
 	const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW();
@@ -8,18 +10,16 @@
 	const close = () => {
 		offlineReady.set(false);
 		needRefresh.set(false);
-		toastMessage.set(null);
-		toastActions.set(null);
+		clearMessage();
 	};
 
 	$effect(() => {
 		if ($offlineReady) {
-			toastMessage.set('App ready to work offline.');
+			setMessage('App ready to work offline.');
 		}
 
 		if ($needRefresh) {
-			toastMessage.set('New content available, click reload to update.');
-			toastActions.set([
+			setMessage('New content available, click reload to update.', [
 				{
 					label: 'Reload',
 					callback: () => {
