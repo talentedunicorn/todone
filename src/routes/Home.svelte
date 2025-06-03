@@ -14,6 +14,7 @@
 	import userStore from '../stores/user';
 	import { title } from '../lib/helpers';
 	import Search from '../components/Search.svelte';
+	import Pagination from '../components/Pagination.svelte';
 
 	const {
 		setPage,
@@ -34,11 +35,6 @@
 	let currentPage = $derived($todoStore.page);
 
 	let totalPages = $derived(Math.ceil($sortedTodos.todos.length / $todoStore.limit));
-	const lastPage = $derived(currentPage === totalPages);
-
-	const handlePageChange = (newPage: number) => {
-		setPage(newPage);
-	};
 
 	const clearEdit = () => {
 		task = null;
@@ -99,37 +95,13 @@
 		{collapseAll}
 		{deleteCompleted}
 	/>
-	<div class="Pagination">
-		<div>
-			<select onchange={(e) => setLimit(Number((e.currentTarget as HTMLSelectElement).value))}>
-				<option value="5">5</option>
-				<option value="10">10</option>
-				<option value="20">20</option>
-				<option value="50">50</option>
-				<option value="100">100</option>
-			</select>
-			<span>items per page</span>
-		</div>
-		<section class="Pagination-controls">
-			<p>{currentPage} of <span class="Title">{totalPages}</span></p>
-			<Button
-				onclick={() => handlePageChange(currentPage - 1)}
-				disabled={currentPage === 1}
-				variant="link"
-				size="small"
-			>
-				Previous
-			</Button>
-			<Button
-				onclick={() => handlePageChange(currentPage + 1)}
-				disabled={lastPage}
-				variant="link"
-				size="small"
-			>
-				Next
-			</Button>
-		</section>
-	</div>
+	<Pagination
+		{currentPage}
+		{totalPages}
+		limit={$sortedTodos.limit}
+		onPageChange={setPage}
+		onLimitChange={setLimit}
+	/>
 </main>
 
 <style>
@@ -160,31 +132,5 @@
 		display: flex;
 		flex-flow: column;
 		gap: 1rem;
-	}
-
-	.Pagination {
-		display: flex;
-		align-items: end;
-		justify-content: space-between;
-		flex-wrap: wrap;
-		gap: 2rem;
-		margin-top: 2rem;
-
-		& > * {
-			display: inline-flex;
-			flex-flow: row;
-			align-items: inherit;
-			gap: 1rem;
-		}
-
-		.Pagination-controls {
-			margin-left: auto;
-			font-weight: bold;
-
-			p,
-			.Title {
-				margin: 0;
-			}
-		}
 	}
 </style>
