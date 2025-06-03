@@ -59,11 +59,11 @@
 			>
 		</aside>
 		{#if incompleteTodos.length > 0}
-			{#each incompleteTodos as task, i (i)}
+			{#each incompleteTodos as task}
 				{@const { _id, title, value, completed, updated, expanded } = task}
 				<div in:fly={{ y: -100 }} out:fly={{ y: 100 }}>
 					<Task
-						id={`task-${i}`}
+						id={`task-${_id}`}
 						{title}
 						{value}
 						{completed}
@@ -83,11 +83,11 @@
 					>Clear completed</Button
 				>
 			</div>
-			{#each completedTodos as task, i (i)}
+			{#each completedTodos as task}
 				{@const { _id, title, value, completed, updated, expanded } = task}
 				<div in:fly={{ y: -100 }} out:fly={{ y: 100 }}>
 					<Task
-						id={`task-${i}`}
+						id={`task-${_id}`}
 						{title}
 						{value}
 						{completed}
