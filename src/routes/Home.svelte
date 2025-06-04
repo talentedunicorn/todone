@@ -9,14 +9,9 @@
 	import Form from '../components/Form.svelte';
 	import type { Todo } from '../lib/pouchdb';
 	import { update, add } from '../db';
-	import todoStore, { paginatedTodos, sortedTodos } from '../stores/todos';
-	import toastStore from '../stores/toast';
-	import userStore from '../stores/user';
-	import { title } from '../lib/helpers';
-	import Search from '../components/Search.svelte';
-	import Pagination from '../components/Pagination.svelte';
-
-	const {
+	import {
+		paginatedTodos,
+		sortedTodos,
 		setPage,
 		setLimit,
 		setQuery,
@@ -25,16 +20,22 @@
 		handleToggleExpand,
 		expandAll,
 		collapseAll
-	} = todoStore;
+	} from '../stores/todos';
+	import toastStore from '../stores/toast';
+	import userStore from '../stores/user';
+	import { title } from '../lib/helpers';
+	import Search from '../components/Search.svelte';
+	import Pagination from '../components/Pagination.svelte';
+
 	const { setMessage, clearMessage } = toastStore;
 
 	const { auth0: auth0Client } = $props<{ auth0: () => Auth0Client | undefined }>();
 	let auth0 = auth0Client();
 
 	let task = $state<Todo | null>(null);
-	let currentPage = $derived($todoStore.page);
+	let currentPage = $derived($sortedTodos.page);
 
-	let totalPages = $derived(Math.ceil($sortedTodos.todos.length / $todoStore.limit));
+	let totalPages = $derived(Math.ceil($sortedTodos.todos.length / $sortedTodos.limit));
 
 	const clearEdit = () => {
 		task = null;
@@ -81,7 +82,7 @@
 	{/if}
 	<h2 class="Title">ToDone</h2>
 
-	<Search bind:query={() => $todoStore.query, (query: string) => setQuery(query)} />
+	<Search bind:query={() => $sortedTodos.query, (query: string) => setQuery(query)} />
 	<Form defaultValue={task} onSubmit={handleCreate} onUpdate={handleUpdate} onClear={clearEdit} />
 	<List
 		items={$paginatedTodos.todos}

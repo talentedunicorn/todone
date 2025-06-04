@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { marked } from 'marked';
 	import ExportImport from '../components/ExportImport.svelte';
-	import todosStore from '../stores/todos';
+	import { sortedTodos } from '../stores/todos';
 
 	import content from '../../About.md?raw';
 	import Button from '../components/Button.svelte';
 	import { push } from 'svelte-spa-router';
 	import { title } from '../lib/helpers';
 
-	const { todos } = $todosStore;
+	const { todos } = $sortedTodos;
 	const completedTodos = $derived(todos.filter((i) => i.completed === true));
 	const incompleteTodos = $derived(todos.filter((i) => i.completed === false));
 </script>
