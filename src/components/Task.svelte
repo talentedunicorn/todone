@@ -1,8 +1,9 @@
 <script lang="ts">
 	import Button from './Button.svelte';
 	import { marked, Parser, Renderer, type Tokens } from 'marked';
-	import type { HTMLAttributes } from 'svelte/elements';
-	import { toastActions, toastMessage } from '../stores';
+	import toastStore from '../stores/toast';
+
+	const { setMessage, clearMessage } = toastStore;
 
 	marked.use({
 		gfm: true
@@ -20,7 +21,7 @@
 
 	marked.use(tableExtension);
 
-	interface Props extends Partial<HTMLAttributes<HTMLElement>> {
+	interface Props {
 		title: string;
 		value: string;
 		completed: boolean;
@@ -47,7 +48,7 @@
 	}: Props = $props();
 	let completeText = $derived(completed ? 'Mark Incomplete' : 'Mark Completed');
 	let formattedTimestamp = $derived(
-		`Updated ― ${Intl.DateTimeFormat('en-MY', {
+		`${completed ? 'Completed' : 'Updated'} ― ${Intl.DateTimeFormat('en-MY', {
 			dateStyle: 'medium',
 			timeStyle: 'short'
 		}).format(new Date(updated))}`
@@ -79,9 +80,9 @@
 	};
 </script>
 
-<section {...rest}>
+<section data-completed={completed} {...rest}>
 	<header data-updated={formattedTimestamp}>
-		<div class="Title">
+		<div class="Heading">
 			<h3>{title}</h3>
 			<Button
 				data-testid="toggleExpand"
@@ -129,17 +130,15 @@
 			data-testid="delete"
 			size="small"
 			onclick={() => {
-				toastActions.set([
+				setMessage(`Delete "${title}"?`, [
 					{
 						label: 'Yes',
 						callback: () => {
 							onDelete();
-							toastMessage.set(null);
-							toastActions.set(null);
+							clearMessage();
 						}
 					}
 				]);
-				toastMessage.set(`Delete "${title}"?`);
 			}}>Delete</Button
 		>
 		<Button data-testid="edit" size="small" onclick={onEdit}>Edit</Button>
@@ -176,7 +175,7 @@
 		margin: 0;
 	}
 
-	.Title {
+	.Heading {
 		display: inline-flex;
 		align-items: flex-start;
 		gap: 0.5rem;
@@ -219,6 +218,10 @@
 			--content-gradient-visibility: hidden;
 			--content-gradient-opacity: 0;
 		}
+	}
+
+	[data-completed='true'] {
+		filter: saturate(0);
 	}
 
 	:global(.TableWrapper) {
