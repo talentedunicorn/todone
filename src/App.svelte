@@ -18,7 +18,7 @@
 	import { checkAuth, initAuth0Client } from './auth';
 	import userStore from './stores/user';
 	import toastStore from './stores/toast';
-	import todoStore from './stores/todos';
+	import { loadData } from './stores/todos';
 	import { onMount, type ComponentType } from 'svelte';
 	import { setupReplication } from './db';
 
@@ -29,7 +29,6 @@
 
 	const synced = import.meta.env.VITE_SYNCED === 'true';
 	const { clearMessage } = toastStore;
-	const { loadData } = todoStore;
 
 	const scrollToTop = () => {
 		wrapper.scrollIntoView({

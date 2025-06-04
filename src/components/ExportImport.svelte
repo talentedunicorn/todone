@@ -1,8 +1,6 @@
 <script lang="ts">
 	import Button from './Button.svelte';
-	import todosStore from '../stores/todos';
-
-	const { exportData, importData } = todosStore;
+	import { exportData, importData } from '../stores/todos';
 
 	let importField: HTMLInputElement;
 	let files = $state<FileList>();

@@ -1,16 +1,7 @@
 import { z } from 'zod';
 import { derived, writable } from 'svelte/store';
 import type { Todo } from '../lib/pouchdb';
-import {
-	getTodos,
-	add,
-	setCompleted,
-	update as updateTodo,
-	remove,
-	db,
-	exportTodos,
-	importTodos
-} from '../db';
+import { getTodos, add, setCompleted, update, remove, db, exportTodos, importTodos } from '../db';
 import toastStore from './toast';
 import { sortTodoByDateDesc } from '../lib/helpers';
 
@@ -148,22 +139,16 @@ const createTodoStore = () => {
 	// Listen to changes and update store
 	db.changes({
 		live: true
-	}).on('change', async (change) => {
+	}).on('change', async () => {
 		await loadData();
 	});
 
 	return {
 		subscribe,
 		loadData,
-		add,
-		update: updateTodo,
-		remove,
-		setCompleted,
 		handleToggleExpand,
 		expandAll,
 		collapseAll,
-		exportTodos,
-		importTodos,
 		exportData,
 		importData,
 		setPage,
@@ -173,6 +158,34 @@ const createTodoStore = () => {
 };
 
 const todoStore = createTodoStore();
+
+const {
+	loadData,
+	handleToggleExpand,
+	collapseAll,
+	expandAll,
+	exportData,
+	importData,
+	setPage,
+	setLimit,
+	setQuery
+} = todoStore;
+
+export {
+	add,
+	update,
+	remove,
+	setCompleted,
+	handleToggleExpand,
+	expandAll,
+	collapseAll,
+	loadData,
+	exportData,
+	importData,
+	setPage,
+	setLimit,
+	setQuery
+};
 
 const filteredTodos = derived(todoStore, (store) => ({
 	...store,
@@ -204,14 +217,3 @@ export const paginatedTodos = derived(sortedTodos, (store) => {
 		todos: todos.slice(start, end)
 	};
 });
-
-// export const completedTodos = derived(paginatedTodos, (store) => ({
-// 	...store,
-// 	todos: store.todos.filter((t) => t.completed === true)
-// }));
-// export const incompleteTodos = derived(paginatedTodos, (store) => ({
-// 	...store,
-// 	todos: store.todos.filter((t) => t.completed !== true)
-// }));
-
-export default todoStore;
