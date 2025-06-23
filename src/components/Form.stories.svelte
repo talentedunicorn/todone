@@ -1,6 +1,6 @@
 <script module>
 	import Form from './Form.svelte';
-	import { within, userEvent, waitFor, expect } from '@storybook/test';
+	import { within, userEvent, waitFor, expect } from 'storybook/test';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 
 	const { Story } = defineMeta({

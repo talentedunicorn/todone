@@ -1,6 +1,6 @@
 <script module>
 	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import { userEvent, waitFor, within, expect } from '@storybook/test';
+	import { userEvent, waitFor, within, expect } from 'storybook/test';
 
 	import Task from './Task.svelte';
 	const { Story } = defineMeta({
