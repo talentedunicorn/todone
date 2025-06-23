@@ -12,7 +12,8 @@ export default defineConfig({
 		svelte(),
 		VitePWA({
 			workbox: {
-				globPatterns: ['**/*.{js,css,html,ttf}']
+				globPatterns: ['**/*.{js,css,html,ttf}'],
+				maximumFileSizeToCacheInBytes: 3000000
 			},
 			manifest: {
 				name: 'ToDone',
@@ -45,5 +46,5 @@ export default defineConfig({
 			org: 'talentedunicorn',
 			project: 'todone'
 		})
-	],
+	]
 });
