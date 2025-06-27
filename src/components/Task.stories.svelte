@@ -1,6 +1,6 @@
 <script module>
 	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import { userEvent, waitFor, within, expect } from 'storybook/test';
+	import { expect, fn } from 'storybook/test';
 
 	import Task from './Task.svelte';
 	const { Story } = defineMeta({
@@ -11,6 +11,10 @@
 			value: { control: 'text' },
 			updated: { control: 'date' },
 			completed: { control: 'boolean' }
+		},
+		args: {
+			onEdit: fn(),
+			onDelete: fn()
 		}
 	});
 
@@ -36,9 +40,7 @@ Includes lists \n \
 {#snippet template(args)}
 	<Task
 		{...args}
-		onComplete={() => (args.completed = true)}
-		onEdit={() => console('Editing')}
-		onDelete={() => console.info('Deleting')}
+		onComplete={() => (args.completed = !args.completed)}
 		onToggleExpand={() => (args.expanded = !args.expanded)}
 	/>
 {/snippet}
@@ -51,38 +53,27 @@ Includes lists \n \
 		value: taskContent,
 		updated: new Date('2023-01-01 00:00:000')
 	}}
-	play={({ canvasElement }) => {
-		const canvas = within(canvasElement);
+	play={async ({ canvas, userEvent, args }) => {
 		const markCompletedButton = canvas.getByTestId('complete');
 		const editButton = canvas.getByTestId('edit');
 		const deleteButton = canvas.getByTestId('delete');
 		const toggleExpandButton = canvas.getByTestId('toggleExpand');
 		const content = canvas.getByTestId('content');
 
-		userEvent.click(markCompletedButton);
-		// waitFor(() => {
-		// 	expect(consoleSpy).toHaveBeenCalledWith('Marked complete');
-		// });
+		await userEvent.click(markCompletedButton);
+		// expect(args.onComplete).toHaveBeenCalled();
 
-		userEvent.click(editButton);
-		// waitFor(() => {
-		// 	expect(consoleSpy).toHaveBeenCalledWith('Editing');
-		// });
+		await userEvent.click(editButton);
+		expect(args.onEdit).toHaveBeenCalled();
 
-		userEvent.click(deleteButton);
-		// waitFor(() => {
-		// 	expect(consoleSpy).toHaveBeenCalledWith('Deleting');
-		// });
+		await userEvent.click(toggleExpandButton);
+		expect(content).toHaveClass('expanded');
 
-		userEvent.click(toggleExpandButton);
-		waitFor(() => {
-			expect(content).toHaveClass('expanded');
-		});
+		await userEvent.click(toggleExpandButton);
+		expect(content).not.toHaveClass('expanded');
 
-		userEvent.click(toggleExpandButton);
-		waitFor(() => {
-			expect(content).not.toHaveClass('expanded');
-		});
+		await userEvent.click(deleteButton);
+		// expect(args.onDelete).toHaveBeenCalled();
 	}}
 />
 

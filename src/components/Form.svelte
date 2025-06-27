@@ -25,13 +25,6 @@
 
 	let isEdit = $derived(defaultValue !== null);
 
-	$effect(() => {
-		if (isEdit && titleInput) {
-			window.scrollTo({ top: titleInput.scrollHeight });
-			titleInput.focus();
-		}
-	});
-
 	let isEmpty = $derived(data.value.trim().length < 1);
 
 	let invalid = $derived(data.title.trim().length < 1 || isEmpty);
@@ -49,6 +42,11 @@
 	};
 
 	$effect(() => {
+		if (isEdit && titleInput) {
+			window.scrollTo({ top: titleInput.scrollHeight });
+			titleInput.focus();
+		}
+
 		if (defaultValue) {
 			data = defaultValue;
 		}
