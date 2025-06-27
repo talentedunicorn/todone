@@ -12,7 +12,8 @@ const config: StorybookConfig = {
 		getAbsolutePath('@storybook/addon-svelte-csf'),
 		getAbsolutePath('@storybook/addon-coverage'),
 		getAbsolutePath('@chromatic-com/storybook'),
-		getAbsolutePath('@storybook/addon-docs')
+		getAbsolutePath('@storybook/addon-docs'),
+		getAbsolutePath('@storybook/addon-vitest')
 	],
 	docs: {}
 };

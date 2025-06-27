@@ -37,7 +37,7 @@
 		.join(' ')}
 	{onclick}
 >
-	{#if children}{@render children()}{:else}Button text{/if}
+	{@render children?.()}
 </button>
 
 <style>
