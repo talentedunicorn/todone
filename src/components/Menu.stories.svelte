@@ -23,7 +23,7 @@
 		const toggleButton = canvas.getByRole('button');
 
 		await userEvent.click(toggleButton);
-		const aboutLink = canvas.getByText('ToDo');
+		const aboutLink = canvas.getByText('About us');
 		expect(aboutLink).toBeInTheDocument();
 		await userEvent.click(toggleButton);
 	}}

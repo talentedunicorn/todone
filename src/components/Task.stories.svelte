@@ -73,7 +73,7 @@ Includes lists \n \
 		expect(content).not.toHaveClass('expanded');
 
 		await userEvent.click(deleteButton);
-		// expect(args.onDelete).toHaveBeenCalled();
+		expect(args.onDelete).toHaveBeenCalled();
 	}}
 />
 
