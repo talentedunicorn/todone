@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from './Button.svelte';
 	import { preventDefault } from '../lib/helpers';
-	import type { Todo } from '../db';
+	import type { Todo } from '../lib/pouchdb';
 
 	type Content = { title: string; value: string };
 

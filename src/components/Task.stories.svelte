@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import { expect, fn } from 'storybook/test';
 
@@ -14,7 +14,8 @@
 		},
 		args: {
 			onEdit: fn(),
-			onDelete: fn()
+			onDelete: fn(),
+			onComplete: fn()
 		}
 	});
 
@@ -37,12 +38,8 @@ Includes lists \n \
 | MDX supports components | Needs to be `.mdx` format |';
 </script>
 
-{#snippet template(args)}
-	<Task
-		{...args}
-		onComplete={() => (args.completed = !args.completed)}
-		onToggleExpand={() => (args.expanded = !args.expanded)}
-	/>
+{#snippet template(args: any)}
+	<Task {...args} onToggleExpand={() => (args.expanded = !args.expanded)} />
 {/snippet}
 
 <Story
@@ -51,7 +48,8 @@ Includes lists \n \
 	args={{
 		title: 'Test task',
 		value: taskContent,
-		updated: new Date('2023-01-01 00:00:000')
+		updated: new Date('2023-01-01 00:00:000'),
+		completed: false
 	}}
 	play={async ({ canvas, userEvent, args }) => {
 		const markCompletedButton = canvas.getByTestId('complete');
@@ -61,7 +59,7 @@ Includes lists \n \
 		const content = canvas.getByTestId('content');
 
 		await userEvent.click(markCompletedButton);
-		// expect(args.onComplete).toHaveBeenCalled();
+		expect(args.onComplete).toHaveBeenCalled();
 
 		await userEvent.click(editButton);
 		expect(args.onEdit).toHaveBeenCalled();
@@ -73,7 +71,7 @@ Includes lists \n \
 		expect(content).not.toHaveClass('expanded');
 
 		await userEvent.click(deleteButton);
-		// expect(args.onDelete).toHaveBeenCalled();
+		expect(args.onDelete).toHaveBeenCalled();
 	}}
 />
 

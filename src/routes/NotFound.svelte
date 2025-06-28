@@ -1,9 +1,13 @@
+<script>
+	import { title } from '../lib/helpers';
+</script>
+
 <svelte:head>
-	<title>Not found &#8212; Get it done!</title>
+	<title>{title('Not found')}</title>
 </svelte:head>
 
 <section>
-	<h1>The route was not found</h1>
+	<h1>This page does not exist or has moved.</h1>
 </section>
 
 <style>
