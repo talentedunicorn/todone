@@ -51,6 +51,12 @@
 		await add(data);
 	};
 
+	const handleDelete = async (id: string) => {
+		await remove(id);
+		// Reset the page to 1 so if the last task in page 2 is deleted we aren't stuck in page 2
+		setPage(1);
+	};
+
 	const deleteCompleted = (callback: () => void) => {
 		setMessage('Delete all completed?', [
 			{
@@ -89,7 +95,7 @@
 		onEdit={(data) => {
 			task = data;
 		}}
-		{remove}
+		remove={handleDelete}
 		{setCompleted}
 		{handleToggleExpand}
 		{expandAll}

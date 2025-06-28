@@ -1,9 +1,6 @@
 <script lang="ts">
 	import Button from './Button.svelte';
 	import { marked, Parser, Renderer, type Tokens } from 'marked';
-	import toastStore from '../stores/toast';
-
-	const { setMessage, clearMessage } = toastStore;
 
 	marked.use({
 		gfm: true
@@ -126,21 +123,7 @@
 		{@html marked(value)}
 	</div>
 	<div class="Actions">
-		<Button
-			data-testid="delete"
-			size="small"
-			onclick={() => {
-				setMessage(`Delete "${title}"?`, [
-					{
-						label: 'Yes',
-						callback: () => {
-							onDelete();
-							clearMessage();
-						}
-					}
-				]);
-			}}>Delete</Button
-		>
+		<Button data-testid="delete" size="small" onclick={onDelete}>Delete</Button>
 		<Button data-testid="edit" size="small" onclick={onEdit}>Edit</Button>
 		<Button data-testid="complete" size="small" variant="primary" onclick={onComplete}
 			>{completeText}</Button

@@ -3,6 +3,8 @@
 	import Task from './Task.svelte';
 	import Button from './Button.svelte';
 	import type { TodoWithExpanded } from '../stores/todos';
+	import toastStore from '../stores/toast';
+	const { setMessage, clearMessage } = toastStore;
 
 	interface Props {
 		items: TodoWithExpanded[];
@@ -31,7 +33,15 @@
 	let deleting = $state(false);
 
 	const handleDelete = async (id: string) => {
-		await remove(id);
+		setMessage(`Delete task?`, [
+			{
+				label: 'Yes',
+				callback: async () => {
+					await remove(id);
+					clearMessage();
+				}
+			}
+		]);
 	};
 
 	const handleToggleComplete = async (task: TodoWithExpanded) => {

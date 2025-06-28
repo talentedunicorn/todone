@@ -14,7 +14,8 @@
 		},
 		args: {
 			onEdit: fn(),
-			onDelete: fn()
+			onDelete: fn(),
+			onComplete: fn()
 		}
 	});
 
@@ -38,11 +39,7 @@ Includes lists \n \
 </script>
 
 {#snippet template(args: any)}
-	<Task
-		{...args}
-		onComplete={() => (args.completed = !args.completed)}
-		onToggleExpand={() => (args.expanded = !args.expanded)}
-	/>
+	<Task {...args} onToggleExpand={() => (args.expanded = !args.expanded)} />
 {/snippet}
 
 <Story
@@ -62,7 +59,7 @@ Includes lists \n \
 		const content = canvas.getByTestId('content');
 
 		await userEvent.click(markCompletedButton);
-		// expect(args.onComplete).toHaveBeenCalled();
+		expect(args.onComplete).toHaveBeenCalled();
 
 		await userEvent.click(editButton);
 		expect(args.onEdit).toHaveBeenCalled();
