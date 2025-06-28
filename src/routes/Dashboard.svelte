@@ -8,9 +8,8 @@
 	import { push } from 'svelte-spa-router';
 	import { title } from '../lib/helpers';
 
-	const { todos } = $sortedTodos;
-	const completedTodos = $derived(todos.filter((i) => i.completed === true));
-	const incompleteTodos = $derived(todos.filter((i) => i.completed === false));
+	const completedTodos = $derived($sortedTodos.todos.filter((i) => i.completed === true));
+	const incompleteTodos = $derived($sortedTodos.todos.filter((i) => i.completed === false));
 </script>
 
 <svelte:head>
