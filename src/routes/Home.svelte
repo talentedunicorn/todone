@@ -102,13 +102,15 @@
 		{collapseAll}
 		{deleteCompleted}
 	/>
-	<Pagination
-		{currentPage}
-		{totalPages}
-		limit={$sortedTodos.limit}
-		onPageChange={setPage}
-		onLimitChange={setLimit}
-	/>
+	{#if totalPages > 0}
+		<Pagination
+			{currentPage}
+			{totalPages}
+			limit={$sortedTodos.limit}
+			onPageChange={setPage}
+			onLimitChange={setLimit}
+		/>
+	{/if}
 </main>
 
 <style>
