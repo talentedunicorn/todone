@@ -61,6 +61,7 @@
 	},
 	"dependencies": {
 		"@sentry/vite-plugin": "^3.5.0",
+		"@wysimark/standalone": "^3.0.20",
 		"events": "^3.3.0",
 		"marked": "^16.0.0",
 		"rxdb": "^16.15.0",
