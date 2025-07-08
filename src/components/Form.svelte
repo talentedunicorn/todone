@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { createWysimark, type Wysimark } from '@wysimark/standalone';
 	import Button from './Button.svelte';
 	import { preventDefault } from '../lib/helpers';
 	import type { Todo } from '../db';
+	import { onMount } from 'svelte';
 
 	type Content = { title: string; value: string };
 
@@ -15,6 +17,8 @@
 	let { defaultValue, onClear, onSubmit, onUpdate }: Props = $props();
 
 	let titleInput: HTMLInputElement;
+	let editor: HTMLDivElement;
+	let wysimark: Wysimark;
 
 	let data = $state<Todo | Content>(
 		defaultValue || {
@@ -33,6 +37,7 @@
 	const clear = () => {
 		defaultValue = null;
 		data = { title: '', value: '' };
+		wysimark.setMarkdown('');
 		onClear();
 	};
 
@@ -44,12 +49,22 @@
 	$effect(() => {
 		if (isEdit && titleInput) {
 			window.scrollTo({ top: titleInput.scrollHeight });
-			titleInput.focus();
 		}
 
 		if (defaultValue) {
 			data = defaultValue;
+      wysimark?.setMarkdown(data.value)
 		}
+	});
+
+	onMount(() => {
+		wysimark = createWysimark(editor, {
+			initialMarkdown: defaultValue?.value ?? '',
+			onChange: (value) => {
+				data.value = value;
+			}
+		});
+
 	});
 </script>
 
@@ -80,7 +95,7 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<textarea data-testid="content" data-empty={isEmpty} bind:value={data.value}></textarea>
+	<div bind:this={editor} class="editor" data-testid="content"></div>
 	<div class="Actions">
 		<Button data-testid="cancel" onclick={clear} disabled={invalid}>Cancel</Button>
 		<Button data-testid="submit" type="submit" variant="primary" disabled={invalid}
@@ -118,29 +133,22 @@ Form component with a title and content inputs
 		}
 
 		input {
-			flex: 100%;
+			width: 100%;
 			font-size: 1.5rem;
 			font-weight: bold;
 			font-family: inherit;
 			overflow-x: auto;
 		}
 
-		textarea {
+		.editor {
 			flex: var(--textarea-width);
-			font-size: 1rem;
-			line-height: 1.5rem;
-			font-family: monospace;
-			resize: vertical;
 
-			&[data-empty='false'] {
-				min-height: var(--textarea-height);
+			:global(:first-of-type) {
+				color: var(--black);
 			}
-		}
 
-		@supports (field-sizing: content) {
-			textarea {
-				field-sizing: content;
-				--textarea-height: auto;
+			:global(:first-of-type > :first-of-type) {
+				background-color: inherit;
 			}
 		}
 	}
