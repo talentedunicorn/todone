@@ -69,6 +69,6 @@
 		"vite-plugin-pwa": "^1.0.3",
 		"zod": "^4.1.5"
 	},
-	"packageManager": "pnpm@10.14.0",
+	"packageManager": "pnpm@10.15.0",
 	"nx": {}
 }
