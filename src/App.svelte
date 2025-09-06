@@ -110,7 +110,7 @@
 	<Router {routes} />
 	{#if showBackToTop}
 		<footer class="Footer" transition:fly={{ y: 100, duration: 500 }}>
-			<Button onclick={scrollToTop}
+			<Button data-umami-event="Back to top" onclick={scrollToTop}
 				><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width={25}>
 					<title>Back to top</title>
 					<path
