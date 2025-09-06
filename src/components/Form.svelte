@@ -82,9 +82,15 @@ Form component with a title and content inputs
 	<label class="visually-hidden" for="content">Content</label>
 	<textarea data-testid="content" data-empty={isEmpty} bind:value={data.value}></textarea>
 	<div class="Actions">
-		<Button data-testid="cancel" onclick={clear} disabled={invalid}>Cancel</Button>
-		<Button data-testid="submit" type="submit" variant="primary" disabled={invalid}
-			>{buttonText}</Button
+		<Button data-testid="cancel" data-umami-event="Cancel edit" onclick={clear} disabled={invalid}
+			>Cancel</Button
+		>
+		<Button
+			data-testid="submit"
+			data-umami-event="Save"
+			type="submit"
+			variant="primary"
+			disabled={invalid}>{buttonText}</Button
 		>
 	</div>
 </form>

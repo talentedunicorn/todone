@@ -127,6 +127,7 @@
 	<div class="Actions">
 		<Button
 			data-testid="delete"
+			data-umami-event="Delete task"
 			size="small"
 			onclick={() => {
 				toastActions.set([
@@ -142,9 +143,15 @@
 				toastMessage.set(`Delete "${title}"?`);
 			}}>Delete</Button
 		>
-		<Button data-testid="edit" size="small" onclick={onEdit}>Edit</Button>
-		<Button data-testid="complete" size="small" variant="primary" onclick={onComplete}
-			>{completeText}</Button
+		<Button data-testid="edit" data-umami-event="Edit task" size="small" onclick={onEdit}
+			>Edit</Button
+		>
+		<Button
+			data-testid="complete"
+			data-umami-event="Toggle complete"
+			size="small"
+			variant="primary"
+			onclick={onComplete}>{completeText}</Button
 		>
 	</div>
 </section>
