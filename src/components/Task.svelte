@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Button from './Button.svelte';
+	import toastStore from '../stores/toast';
 	import { marked, Parser, Renderer, type Tokens } from 'marked';
 
 	marked.use({
@@ -123,10 +124,31 @@
 		{@html marked(value)}
 	</div>
 	<div class="Actions">
-		<Button data-testid="delete" size="small" onclick={onDelete}>Delete</Button>
-		<Button data-testid="edit" size="small" onclick={onEdit}>Edit</Button>
-		<Button data-testid="complete" size="small" variant="primary" onclick={onComplete}
-			>{completeText}</Button
+		<Button
+			data-testid="delete"
+			data-umami-event="Delete task"
+			size="small"
+			onclick={() => {
+				toastStore.setMessage(`Delete "${title}"?`, [
+					{
+						label: 'Yes',
+						callback: () => {
+							onDelete();
+							toastStore.clearMessage();
+						}
+					}
+				]);
+			}}>Delete</Button
+		>
+		<Button data-testid="edit" data-umami-event="Edit task" size="small" onclick={onEdit}
+			>Edit</Button
+		>
+		<Button
+			data-testid="complete"
+			data-umami-event="Toggle complete"
+			size="small"
+			variant="primary"
+			onclick={onComplete}>{completeText}</Button
 		>
 	</div>
 </section>

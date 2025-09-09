@@ -24,8 +24,14 @@
 		bind:this={importField}
 		bind:files
 	/>
-	<Button type="button" size="large" onclick={() => importField.click()} disabled={processing}
-		>Import</Button
+	<Button
+		data-umami-event="Import data"
+		type="button"
+		size="large"
+		onclick={() => importField.click()}
+		disabled={processing}>Import</Button
 	>
 </form>
-<Button size="large" onclick={exportData} disabled={processing}>Export</Button>
+<Button data-umami-event="Export data" size="large" onclick={exportData} disabled={processing}
+	>Export</Button
+>
