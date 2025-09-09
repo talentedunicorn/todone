@@ -6,12 +6,10 @@
 	let opened = $state(false);
 	interface Props {
 		title?: string;
-		menuItems?: any;
 		children?: Snippet;
-		goTo: (path: string) => void;
 	}
 
-	let { title = '', menuItems = [], children, goTo }: Props = $props();
+	let { title, children }: Props = $props();
 </script>
 
 <nav class={opened ? '' : 'closed'}>
@@ -38,17 +36,6 @@
 			{#if title}
 				<header data-testId="header">{title}</header>
 			{/if}
-			{#each menuItems as menuitem (menuitem.label)}
-				<Button
-					variant="link"
-					size="large"
-					selected={menuitem.selected}
-					onclick={() => {
-						goTo(menuitem.label);
-						opened = false;
-					}}>{menuitem.label}</Button
-				>
-			{/each}
 			{@render children?.()}
 		</div>
 	{/if}

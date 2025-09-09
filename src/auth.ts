@@ -1,6 +1,7 @@
 import { type Auth0Client, createAuth0Client } from '@auth0/auth0-spa-js';
-import { user, isLoggedin, token } from './stores';
+import userStore from './stores/user';
 
+const { setUser, setToken, setIsLoggedIn } = userStore;
 // Default Auth0 expiration time is 10 hours or something like that.
 // If you want to get fancy you can parse the JWT token and get
 // token's actual expiration time.
@@ -30,18 +31,18 @@ export const checkAuth = async (auth0: Auth0Client) => {
 		window.history.replaceState({}, document.title, '/');
 	}
 
-	token.subscribe((v) => {
-		if (v === 'expired') {
+	userStore.subscribe((v) => {
+		if (!v.token) {
 			logout(auth0);
 		}
 	});
 
 	const _isAuthenticated = await auth0.isAuthenticated();
-	isLoggedin.set(_isAuthenticated);
+	setIsLoggedIn(_isAuthenticated);
 
 	if (_isAuthenticated) {
 		// while on it, fetch the user info
-		user.set((await auth0.getUser()) || {});
+		setUser((await auth0.getUser()) || {});
 
 		// Get the access token. Make sure to supply audience property
 		// in Auth0 config, otherwise you will soon start throwing stuff!
@@ -52,18 +53,25 @@ export const checkAuth = async (auth0: Auth0Client) => {
 			detailedResponse: true
 		});
 
-		token.set(id_token);
+		setToken(id_token);
 
 		// refresh token after specific period or things will stop
 		// working. Useful for long-lived apps like dashboards.
 		intervalId = setInterval(async () => {
-			const { id_token } = await auth0.getTokenSilently({
-				authorizationParams: {
-					redirect_uri
-				},
-				detailedResponse: true
-			});
-			token.set(id_token);
+			await auth0
+				.getTokenSilently({
+					authorizationParams: {
+						redirect_uri
+					},
+					detailedResponse: true
+				})
+				.then(({ id_token }) => {
+					setToken(id_token);
+				})
+				.catch(() => {
+					// If token fails log out
+					logout(auth0);
+				});
 		}, refreshRate);
 	}
 

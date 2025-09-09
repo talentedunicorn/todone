@@ -62,8 +62,9 @@
 	"dependencies": {
 		"@sentry/vite-plugin": "^4.3.0",
 		"events": "^3.3.0",
+		"pouchdb-browser": "^9.0.0",
+		"pouchdb-find": "^9.0.0",
 		"marked": "^16.2.1",
-		"rxdb": "^16.19.0",
 		"rxjs": "^7.8.2",
 		"svelte-spa-router": "^4.0.1",
 		"vite-plugin-pwa": "^1.0.3",
