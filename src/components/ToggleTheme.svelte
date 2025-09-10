@@ -1,32 +1,22 @@
 <script lang="ts">
 	import Button from './Button.svelte';
-
-	let theme = $state<string | null>(null);
+	import themeStore from '../stores/theme';
 
 	const ICON_SIZE = 24;
 	const toggleTheme = () => {
 		const html = document.querySelector('html');
-		const themeData = html?.getAttribute('data-theme');
-		let nextTheme;
-		switch (themeData) {
-			case 'dark':
-				nextTheme = 'light';
-				break;
-			case 'light':
-				nextTheme = null;
-				break;
-			default:
-				nextTheme = 'dark';
-				break;
-		}
-		theme = nextTheme;
-		nextTheme ? html?.setAttribute('data-theme', nextTheme) : html?.removeAttribute('data-theme');
+		const themeData = html?.getAttribute('data-theme') ?? null;
+
+		themeStore.toggleTheme(themeData);
+		$themeStore.theme
+			? html?.setAttribute('data-theme', $themeStore.theme)
+			: html?.removeAttribute('data-theme');
 	};
 </script>
 
 <!-- Icons from https://icon-sets.iconify.design/tabler/ -->
 <Button size="small" class="ColorToggle" variant="link" onclick={toggleTheme}>
-	{#if theme === 'dark'}
+	{#if $themeStore?.theme === 'dark'}
 		<svg
 			width={ICON_SIZE}
 			height={ICON_SIZE}
@@ -44,7 +34,7 @@
 				d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z"
 			/>
 		</svg>
-	{:else if theme === 'light'}
+	{:else if $themeStore?.theme === 'light'}
 		<svg
 			width={ICON_SIZE}
 			height={ICON_SIZE}
