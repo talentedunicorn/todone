@@ -4,7 +4,7 @@
 	import type { Todo } from '../db';
 	import Highlight from 'svelte-highlight';
 	import markdown from 'svelte-highlight/languages/markdown';
-	import { dracula, github } from 'svelte-highlight/styles';
+	import { dracula, base16Github } from 'svelte-highlight/styles';
 	import themeStore from '../stores/theme';
 	import { MediaQuery } from 'svelte/reactivity';
 
@@ -67,7 +67,7 @@
 	{#if darkMode}
 		{@html dracula}
 	{:else}
-		{@html github}
+		{@html base16Github}
 	{/if}
 </svelte:head>
 
@@ -147,9 +147,10 @@ Form component with a title and content inputs
 			& :global(.highlight) {
 				grid-area: 1/1/1/1;
 				font-size: 1rem;
-				line-height: 1.2;
+				line-height: 1.7;
 				font-family: monospace;
 				margin: 0;
+				word-break: break-all;
 			}
 
 			& :global(.highlight) {

@@ -155,6 +155,7 @@
 		.Footer {
 			align-self: flex-end;
 			position: sticky;
+			z-index: 9;
 			bottom: 2rem;
 			padding: 0 1rem 0 0;
 			display: flex;
