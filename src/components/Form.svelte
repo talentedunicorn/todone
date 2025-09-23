@@ -150,7 +150,7 @@ Form component with a title and content inputs
 				line-height: 1.7;
 				font-family: monospace;
 				margin: 0;
-				word-break: break-all;
+				word-wrap: break-word;
 			}
 
 			& :global(.highlight) {
