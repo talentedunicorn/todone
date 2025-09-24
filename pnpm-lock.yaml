@@ -19,7 +19,7 @@ importers:
         version: 16.3.0
       rxdb:
         specifier: ^16.19.0
-        version: 16.19.0(rxjs@7.8.2)
+        version: 16.19.1(rxjs@7.8.2)
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
@@ -764,10 +764,6 @@ packages:
 
   '@babel/runtime@7.27.0':
     resolution: {integrity: sha512-VtPOkrdPHZsKc/clNqyi9WUA8TINkZ4cGk63UUE3u4pmB2k+ZMQRDuIOagv8UVd6j7k0T3+RRIb7beKTebNbcw==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/runtime@7.28.2':
-    resolution: {integrity: sha512-KHp2IflsnGywDjBWDkR9iEqiWSpc8GIi0lgTT3mOElT0PP1tG26P4tmFI2YvAdzgq9RGyoHZQEIEdZy6Ec5xCA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.28.4':
@@ -4769,8 +4765,8 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
-  rxdb@16.19.0:
-    resolution: {integrity: sha512-Tq4R1rTp+fWWwINnk7c9wmMAPlhLoKL4dNmBf1Je8+MGYzzLweCRvslUZ/AqJv1YrVaiDG8xOtN2fJ9aJttD+Q==}
+  rxdb@16.19.1:
+    resolution: {integrity: sha512-q+1GSgnNthoUY/mbOv9dlCc7008/QJiBfPbjaKtWxbBCR4nPVU7qf8dPatvvSImrezpMAFjSs/uvISQZxfmkhA==}
     engines: {node: '>=18'}
     peerDependencies:
       rxjs: ^7.8.0
@@ -6510,8 +6506,6 @@ snapshots:
   '@babel/runtime@7.27.0':
     dependencies:
       regenerator-runtime: 0.14.1
-
-  '@babel/runtime@7.28.2': {}
 
   '@babel/runtime@7.28.4': {}
 
@@ -11254,9 +11248,9 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.52.1
       fsevents: 2.3.3
 
-  rxdb@16.19.0(rxjs@7.8.2):
+  rxdb@16.19.1(rxjs@7.8.2):
     dependencies:
-      '@babel/runtime': 7.28.2
+      '@babel/runtime': 7.28.4
       '@types/clone': 2.1.4
       '@types/cors': 2.8.19
       '@types/express': 5.0.3
