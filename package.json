@@ -16,7 +16,8 @@
 		"build-storybook": "storybook build",
 		"test-storybook": "test-storybook --index-json",
 		"test-storybook:coverage": "test-storybook --index-json --coverage && nyc report --reporter=text -t coverage/storybook --report-dir .storybook",
-		"chromatic": "npx chromatic"
+		"chromatic": "npx chromatic",
+		"upgrade:packages": "nx migrate latest"
 	},
 	"devDependencies": {
 		"@auth0/auth0-spa-js": "^2.4.1",
