@@ -20,7 +20,7 @@
 
 	marked.use(tableExtension);
 
-	interface Props extends Partial<HTMLAttributes<HTMLElement>> {
+	interface Props {
 		title: string;
 		value: string;
 		completed: boolean;
@@ -226,12 +226,23 @@
 			--content-gradient-visibility: hidden;
 			--content-gradient-opacity: 0;
 		}
-	}
 
-	:global(.TableWrapper) {
-		overflow-x: auto;
-		border: var(--border);
-		border-radius: 1rem;
+		:global(pre) {
+			font-size: 1rem;
+			border-radius: 0.5rem;
+			overflow: auto;
+		}
+
+		:global(code) {
+			border-radius: 0.5rem;
+			padding: 1rem;
+		}
+
+		:global(.TableWrapper) {
+			overflow-x: auto;
+			border: var(--border);
+			border-radius: 1rem;
+		}
 	}
 
 	@media screen and (min-width: 50rem) {

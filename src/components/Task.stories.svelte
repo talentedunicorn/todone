@@ -87,3 +87,22 @@ Includes lists \n \
 		completed: true
 	}}
 />
+
+<Story
+	{template}
+	name="Code snippets"
+	args={{
+		title: 'Code snippets',
+		value: `## Database connection setup
+\`\`\`javascript
+const API_KEY = api_key 
+const DATABASE_URI = database_connection_string
+
+const connectToDB = async () => {
+  const db = await connect(DATABASE_URI)
+}
+\`\`\``,
+		updated: new Date('2023-01-01 00:00:000'),
+		completed: true
+	}}
+/>
