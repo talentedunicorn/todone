@@ -93,7 +93,7 @@ Includes lists \n \
 	name="Code snippets"
 	args={{
 		title: 'Code snippets',
-		value: `## Database connection setup
+		value: `## Javascript
 \`\`\`javascript
 const API_KEY = api_key 
 const DATABASE_URI = database_connection_string
@@ -101,6 +101,31 @@ const DATABASE_URI = database_connection_string
 const connectToDB = async () => {
   const db = await connect(DATABASE_URI)
 }
+\`\`\`
+
+ ## Typescript
+\`\`\`typescript
+const API_KEY: string;
+const DATABASE_URI: string;
+
+interface Props {
+  title: string
+}
+\`\`\`
+
+## CSS
+\`\`\`css
+body {
+  font-size: 18px;
+}
+\`\`\`
+
+## Text
+\`\`\`text
+Text that breaks
+into
+multiple
+lines
 \`\`\``,
 		updated: new Date('2023-01-01 00:00:000'),
 		completed: true
