@@ -2,13 +2,7 @@
 	import Button from './Button.svelte';
 	import { marked, Parser, Renderer, type Tokens } from 'marked';
 	import hljs from 'highlight.js';
-	import javascript from 'highlight.js/lib/languages/javascript';
-	import typescript from 'highlight.js/lib/languages/typescript';
 	import { toastActions, toastMessage } from '../stores';
-	import 'highlight.js/styles/tomorrow-night-blue.min.css';
-
-	hljs.registerLanguage('javascript', javascript);
-	hljs.registerLanguage('typescript', typescript);
 
 	marked.use({
 		gfm: true
@@ -85,7 +79,9 @@
 	};
 
 	$effect(() => {
-		hljs.highlightAll();
+		if (title || value) {
+			hljs.highlightAll();
+		}
 	});
 </script>
 

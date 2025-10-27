@@ -26,9 +26,6 @@ importers:
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
-      svelte-highlight:
-        specifier: ^7.9.0
-        version: 7.9.0
       svelte-spa-router:
         specifier: ^4.0.1
         version: 4.0.1
@@ -5074,9 +5071,6 @@ packages:
 
   svelte-dev-helper@1.1.9:
     resolution: {integrity: sha512-oU+Xv7Dl4kRU2kdFjsoPLfJfnt5hUhsFUZtuzI3Ku/f2iAFZqBoEuXOqK3N9ngD4dxQOmN4OKWPHVi3NeAeAfQ==}
-
-  svelte-highlight@7.9.0:
-    resolution: {integrity: sha512-226LBTtvTnM2L2JkQq8mZeKEeMfPLYyta7VxZatFT4UPX5zdHEerKeMTvrfbxm7MVTWc7TPThsNoVdhWC177KQ==}
 
   svelte-hmr@0.14.12:
     resolution: {integrity: sha512-4QSW/VvXuqVcFZ+RhxiR8/newmwOCTlbYIezvkeN6302YFRE8cXy0naamHcjz8Y9Ce3ITTZtrHrIL0AGfyo61w==}
@@ -11650,10 +11644,6 @@ snapshots:
       - picomatch
 
   svelte-dev-helper@1.1.9: {}
-
-  svelte-highlight@7.9.0:
-    dependencies:
-      highlight.js: 11.11.1
 
   svelte-hmr@0.14.12(svelte@5.42.2):
     dependencies:
