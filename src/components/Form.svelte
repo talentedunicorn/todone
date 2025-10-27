@@ -1,12 +1,8 @@
 <script lang="ts">
+	import hljs from 'highlight.js';
 	import Button from './Button.svelte';
 	import { preventDefault } from '../lib/helpers';
 	import type { Todo } from '../db';
-	import Highlight from 'svelte-highlight';
-	import markdown from 'svelte-highlight/languages/markdown';
-	import { dracula, base16Github } from 'svelte-highlight/styles';
-	import themeStore from '../stores/theme';
-	import { MediaQuery } from 'svelte/reactivity';
 
 	type Content = { title: string; value: string };
 
@@ -35,11 +31,6 @@
 	const invalid = $derived(data.title.trim().length < 1 || isEmpty);
 	const buttonText = $derived(isEdit ? 'Update' : 'Submit');
 
-	const prefers = new MediaQuery('(prefers-color-scheme: dark)');
-	const darkMode = $derived(
-		$themeStore?.theme === null ? prefers.current : $themeStore?.theme === 'dark'
-	);
-
 	const clear = () => {
 		defaultValue = null;
 		data = { title: '', value: '' };
@@ -61,15 +52,9 @@
 			data = defaultValue;
 		}
 	});
-</script>
 
-<svelte:head>
-	{#if darkMode}
-		{@html dracula}
-	{:else}
-		{@html base16Github}
-	{/if}
-</svelte:head>
+	const higlighted = $derived(hljs.highlight(data.value, { language: 'markdown' }).value);
+</script>
 
 <!--
 @component 
@@ -101,7 +86,7 @@ Form component with a title and content inputs
 	<div class="content-wrapper">
 		<textarea id="content" data-testid="content" data-empty={isEmpty} bind:value={data.value}
 		></textarea>
-		<Highlight class="highlight" language={markdown} code={data.value} />
+		<pre class="overlay highlight language-markdown">{@html higlighted}</pre>
 	</div>
 	<div class="Actions">
 		<Button data-testid="cancel" data-umami-event="Cancel edit" onclick={clear} disabled={invalid}
@@ -123,7 +108,7 @@ Form component with a title and content inputs
 		--textarea-height: 50vh;
 		gap: 1rem;
 		padding: 1rem;
-		border-radius: 0.5em;
+		border-radius: 0.5rem;
 		background-color: var(--gray-light);
 
 		&,
@@ -144,18 +129,23 @@ Form component with a title and content inputs
 			display: grid;
 
 			& textarea,
-			& :global(.highlight) {
+			& :global(.overlay) {
 				grid-area: 1/1/1/1;
 				font-size: 1rem;
 				line-height: 1.7;
 				font-family: monospace;
+				padding: 1rem;
 				margin: 0;
-				word-wrap: break-word;
+				white-space: pre-wrap;
+				width: 100%;
+				overflow-x: auto;
+				border-radius: 0.5rem;
+				border: 0.2em solid var(--white);
 			}
 
-			& :global(.highlight) {
+			/* & :global(.overlay) {
 				display: grid;
-			}
+			} */
 		}
 
 		input {
@@ -181,7 +171,6 @@ Form component with a title and content inputs
 			background: transparent;
 			caret-color: var(--black);
 			border: none;
-			padding: 1rem;
 
 			&[data-empty='false'] {
 				min-height: var(--textarea-height);
