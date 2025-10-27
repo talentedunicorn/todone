@@ -1,8 +1,14 @@
 <script lang="ts">
 	import Button from './Button.svelte';
 	import { marked, Parser, Renderer, type Tokens } from 'marked';
-	import type { HTMLAttributes } from 'svelte/elements';
+	import hljs from 'highlight.js';
+	import javascript from 'highlight.js/lib/languages/javascript';
+	import typescript from 'highlight.js/lib/languages/typescript';
 	import { toastActions, toastMessage } from '../stores';
+	import 'highlight.js/styles/tomorrow-night-blue.min.css';
+
+	hljs.registerLanguage('javascript', javascript);
+	hljs.registerLanguage('typescript', typescript);
 
 	marked.use({
 		gfm: true
@@ -33,7 +39,7 @@
 		[key: string]: any;
 	}
 
-	let {
+	const {
 		title = '',
 		value = '',
 		completed = false,
@@ -45,8 +51,8 @@
 		onEdit,
 		...rest
 	}: Props = $props();
-	let completeText = $derived(completed ? 'Mark Incomplete' : 'Mark Completed');
-	let formattedTimestamp = $derived(
+	const completeText = $derived(completed ? 'Mark Incomplete' : 'Mark Completed');
+	const formattedTimestamp = $derived(
 		`Updated ― ${Intl.DateTimeFormat('en-MY', {
 			dateStyle: 'medium',
 			timeStyle: 'short'
@@ -77,6 +83,10 @@
 			destroy: () => el.removeEventListener('click', scrollToID)
 		};
 	};
+
+	$effect(() => {
+		hljs.highlightAll();
+	});
 </script>
 
 <section {...rest}>
@@ -234,6 +244,7 @@
 		}
 
 		:global(code) {
+			display: inline-block;
 			border-radius: 0.5rem;
 			padding: 1rem;
 		}
