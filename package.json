@@ -20,7 +20,7 @@
 		"upgrade:packages": "nx migrate latest"
 	},
 	"devDependencies": {
-		"@auth0/auth0-spa-js": "^2.7.0",
+		"@auth0/auth0-spa-js": "^2.8.0",
 		"@babel/core": "^7.28.5",
 		"@chromatic-com/storybook": "^4.1.1",
 		"@csstools/postcss-light-dark-function": "^2.0.11",
@@ -38,7 +38,7 @@
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
 		"@tsconfig/svelte": "^5.0.5",
 		"@types/pouchdb-browser": "^6.1.5",
-		"@vitest/ui": "^4.0.0",
+		"@vitest/ui": "^4.0.4",
 		"autoprefixer": "^10.4.21",
 		"babel-loader": "^10.0.0",
 		"chromatic": "^13.3.2",
@@ -51,13 +51,13 @@
 		"prettier-plugin-svelte": "^3.4.0",
 		"pretty-quick": "^4.2.2",
 		"storybook": "9.1.3",
-		"svelte": "^5.42.2",
+		"svelte": "^5.42.3",
 		"svelte-check": "^4.3.3",
 		"svelte-loader": "^3.2.4",
 		"tslib": "^2.8.1",
 		"typescript": "^5.9.3",
 		"vite": "7.1.11",
-		"vitest": "^4.0.0",
+		"vitest": "^4.0.4",
 		"workbox-window": "^7.3.0"
 	},
 	"dependencies": {
