@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { pwaInfo } from 'virtual:pwa-info';
+	import { MediaQuery } from 'svelte/reactivity';
 	import Router, { link, push } from 'svelte-spa-router';
 	import { wrap } from 'svelte-spa-router/wrap';
 	import { fly } from 'svelte/transition';
@@ -17,8 +18,8 @@
 	import Home from './routes/Home.svelte';
 	import { checkAuth, initAuth0Client } from './auth';
 	import { toastActions, toastMessage, status, isLoggedin } from './stores';
+	import themeStore from './stores/theme';
 	import type { ComponentType } from 'svelte';
-	import 'highlight.js/styles/base16/nord.min.css';
 
 	let auth0 = $state<Auth0Client>();
 	let wrapper: HTMLElement;
@@ -26,6 +27,9 @@
 	let showBackToTop = $state(false);
 
 	const synced = import.meta.env.VITE_SYNCED === 'true';
+	const prefersDark = $derived(
+		new MediaQuery('prefers-color-scheme: dark').current || $themeStore.theme === 'dark'
+	);
 
 	const scrollToTop = () => {
 		wrapper.scrollIntoView({
@@ -99,6 +103,17 @@
 <svelte:head>
 	{#if import.meta.env.PROD}
 		{pwaInfo?.webManifest.linkTag}
+	{/if}
+	{#if prefersDark}
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/stackoverflow-dark.min.css"
+		/>
+	{:else}
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/stackoverflow-light.min.css"
+		/>
 	{/if}
 </svelte:head>
 
