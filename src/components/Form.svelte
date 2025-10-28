@@ -122,8 +122,11 @@ Form component with a title and content inputs
 			gap: 1rem;
 			align-items: flex-end;
 			justify-content: space-between;
-			position: sticky;
-			bottom: 1rem;
+
+			@media (width > 48rem) {
+				position: sticky;
+				bottom: 1rem;
+			}
 		}
 
 		.content-wrapper {
