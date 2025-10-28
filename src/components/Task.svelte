@@ -166,7 +166,7 @@
 	section {
 		padding: 1rem;
 		border: 1px solid var(--gray-light);
-		border-radius: 0.5em;
+		border-radius: 1rem;
 		background: var(--white);
 	}
 
@@ -196,6 +196,7 @@
 
 		& :global([data-toggle]) {
 			order: -1;
+			padding-left: 0;
 		}
 
 		& :global([data-toggle] a) {
