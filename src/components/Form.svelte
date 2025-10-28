@@ -104,12 +104,12 @@ Form component with a title and content inputs
 
 <style>
 	form {
-		--textarea-width: 20rem;
+		--textarea-width: 30rem;
 		--textarea-height: 50vh;
 		gap: 1rem;
 		padding: 1rem;
-		border-radius: 0.5rem;
-		background-color: var(--gray-light);
+		border-radius: 1rem;
+		border: 0.2em solid var(--gray);
 
 		&,
 		& .Actions {
@@ -118,9 +118,12 @@ Form component with a title and content inputs
 		}
 
 		& .Actions {
+			align-self: end;
 			gap: 1rem;
 			align-items: flex-end;
 			justify-content: space-between;
+			position: sticky;
+			bottom: 1rem;
 		}
 
 		.content-wrapper {
@@ -137,15 +140,12 @@ Form component with a title and content inputs
 				padding: 1rem;
 				margin: 0;
 				white-space: pre-wrap;
+				word-break: break-word;
 				width: 100%;
 				overflow-x: auto;
-				border-radius: 0.5rem;
-				border: 0.2em solid var(--white);
+				border-radius: 1rem;
+				border: 0.2em solid var(--black);
 			}
-
-			/* & :global(.overlay) {
-				display: grid;
-			} */
 		}
 
 		input {
@@ -157,7 +157,7 @@ Form component with a title and content inputs
 
 			border: none;
 			background: var(--white);
-			border-radius: 0.3em;
+			border-radius: 0.5rem;
 			padding: 0.5em;
 		}
 
@@ -175,11 +175,6 @@ Form component with a title and content inputs
 			&[data-empty='false'] {
 				min-height: var(--textarea-height);
 			}
-		}
-
-		:global(.hljs) {
-			padding: 1rem;
-			white-space: pre-wrap;
 		}
 
 		@supports (field-sizing: content) {
