@@ -12,7 +12,7 @@ export default defineConfig({
 		svelte(),
 		VitePWA({
 			workbox: {
-				globPatterns: ['**/*.{js,css,html,ttf}', 'https://cdnjs.*'],
+				globPatterns: ['**/*.{js,css,html,ttf}'],
 				maximumFileSizeToCacheInBytes: 3000000
 			},
 			manifest: {
