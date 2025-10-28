@@ -28,7 +28,9 @@
 
 	const synced = import.meta.env.VITE_SYNCED === 'true';
 	const prefersDark = $derived(
-		new MediaQuery('prefers-color-scheme: dark').current || $themeStore.theme === 'dark'
+		$themeStore.theme === null // if we don't have a theme selected fallback to user preferences
+			? new MediaQuery('prefers-color-scheme: dark').current
+			: $themeStore.theme === 'dark'
 	);
 
 	const scrollToTop = () => {
