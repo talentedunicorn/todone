@@ -40,7 +40,7 @@
 	const handleBackToTop = () => {
 		window.addEventListener('scroll', () => {
 			const scrolled = document.querySelector('html')?.scrollTop || 0;
-			showBackToTop = scrolled > window.innerHeight;
+			showBackToTop = scrolled > window.innerHeight * 2;
 		});
 	};
 
@@ -169,13 +169,11 @@
 		display: flex;
 		min-height: 100vh;
 		.Footer {
-			align-self: flex-end;
 			position: sticky;
 			z-index: 9;
-			bottom: 2rem;
-			padding: 0 1rem 0 0;
+			bottom: 1rem;
+			padding: 1rem;
 			display: flex;
-			justify-content: flex-end;
 		}
 
 		.Header {

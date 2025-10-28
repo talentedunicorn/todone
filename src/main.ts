@@ -7,7 +7,12 @@ import { mount } from 'svelte';
 if (import.meta.env.MODE === 'production') {
 	Sentry.init({
 		dsn: import.meta.env.VITE_SENTRY_DSN,
-		integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+		integrations: [
+			Sentry.browserTracingIntegration(),
+			Sentry.feedbackIntegration({
+				colorScheme: 'system'
+			})
+		],
 		// Performance Monitoring
 		tracesSampleRate: 1.0, //  Capture 100% of the transactions
 		// Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
