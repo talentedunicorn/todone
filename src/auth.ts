@@ -31,7 +31,7 @@ export const checkAuth = async (auth0: Auth0Client) => {
 	}
 
 	token.subscribe((v) => {
-		if (v === 'expired') {
+		if (v === null) {
 			logout(auth0);
 		}
 	});

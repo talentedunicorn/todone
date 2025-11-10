@@ -83,8 +83,9 @@ const setupReplication = (db: RxDatabase) => {
 
 	replicationState.active$.subscribe(() => status.set(SyncStatus.ACTIVE));
 	replicationState.error$.subscribe((e) => {
-		if (e.parameters.error?.message === 'Token expired') {
-			token.set('expired'); // this will trigger logout
+		// Handle expired token
+		if (e.parameters?.errors?.at(0)?.message === 'Token expired') {
+			token.set(null);
 		}
 		status.set(SyncStatus.ERROR);
 	});
