@@ -34,16 +34,15 @@ const fetchWithAuth = async (url: RequestInfo | URL, options: any) => {
 	token.subscribe((v) => (authToken = v));
 	optionsWithAuth.headers['Authorization'] = `Bearer ${authToken}`;
 
-	// return fetch(url, optionsWithAuth)
 	const response = await fetch(url, optionsWithAuth);
 
 	if (!response.ok) {
 		const { error, reason }: { error: string; reason: string } = await response.json();
 
 		if (reason === 'exp not in future') {
+			token.set(null);
 			throw new Error('Token expired');
 		}
-		throw new Error(error);
 	}
 
 	return response;
