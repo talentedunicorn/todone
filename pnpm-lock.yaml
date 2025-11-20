@@ -18,8 +18,8 @@ importers:
         specifier: ^11.11.1
         version: 11.11.1
       marked:
-        specifier: ^16.4.2
-        version: 16.4.2
+        specifier: ^17.0.0
+        version: 17.0.1
       rxdb:
         specifier: ^16.20.0
         version: 16.20.0(rxjs@7.8.2)
@@ -4198,8 +4198,8 @@ packages:
   makeerror@1.0.12:
     resolution: {integrity: sha512-JmqCvUhmt43madlpFzG4BQzG2Z3m6tvQDNKdClZnO3VbIudJYmxsT0FNJMeiB2+JTSlTQTSbU8QdesVmwJcmLg==}
 
-  marked@16.4.2:
-    resolution: {integrity: sha512-TI3V8YYWvkVf3KJe1dRkpnjs68JUPyEa5vjKrp1XEEJUAOaQc+Qj+L1qWbPd0SJuAdQkFU0h73sXXqwDYxsiDA==}
+  marked@17.0.1:
+    resolution: {integrity: sha512-boeBdiS0ghpWcSwoNm/jJBwdpFaMnZWRzjA6SkUMYb40SVaN1x7mmfGKp0jvexGcx+7y2La5zRZsYFZI6Qpypg==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -10625,7 +10625,7 @@ snapshots:
     dependencies:
       tmpl: 1.0.5
 
-  marked@16.4.2: {}
+  marked@17.0.1: {}
 
   math-intrinsics@1.1.0: {}
 
