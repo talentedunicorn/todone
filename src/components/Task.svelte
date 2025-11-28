@@ -240,11 +240,6 @@
 			overflow: auto;
 		}
 
-		:global(code) {
-			display: inline-block;
-			padding: 0.3rem;
-		}
-
 		:global(.hljs) {
 			border-radius: 0.5rem;
 			padding: 1rem;
