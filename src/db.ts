@@ -76,7 +76,9 @@ const setupReplication = (db: RxDatabase) => {
 		live: true,
 		url,
 		fetch: fetchWithAuth,
-		pull: {},
+		pull: {
+			batchSize: 500 // increase this if sync doesn't fetch all records
+		},
 		push: {}
 	});
 
