@@ -13,7 +13,7 @@ export default defineConfig({
 		VitePWA({
 			workbox: {
 				globPatterns: ['**/*.{js,css,html,ttf}'],
-				maximumFileSizeToCacheInBytes: 3000000
+				maximumFileSizeToCacheInBytes: 5 * 1024 ** 2 // 5MB
 			},
 			manifest: {
 				name: 'ToDone',
