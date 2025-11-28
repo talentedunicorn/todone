@@ -79,7 +79,9 @@ const setupReplication = (db: RxDatabase) => {
 		pull: {
 			batchSize: 500 // increase this if sync doesn't fetch all records
 		},
-		push: {}
+		push: {
+			batchSize: 500
+		}
 	});
 
 	replicationState.active$.subscribe(() => status.set(SyncStatus.ACTIVE));
