@@ -25,3 +25,12 @@ export const token = writable<string | null | undefined>(undefined);
 
 export const toastMessage = writable<string | null>(null);
 export const toastActions = writable<Action[] | null>(null);
+
+const storedExpandedTasks = localStorage.getItem('expandedTasks');
+export const expandedTasks = writable<Set<string>>(
+	storedExpandedTasks ? new Set(JSON.parse(storedExpandedTasks)) : new Set()
+);
+
+expandedTasks.subscribe((set) => {
+	localStorage.setItem('expandedTasks', JSON.stringify(Array.from(set)));
+});
