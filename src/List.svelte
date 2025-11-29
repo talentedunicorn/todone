@@ -3,11 +3,10 @@
 	import Form from './components/Form.svelte';
 	import Task from './components/Task.svelte';
 	import Button from './components/Button.svelte';
-	import { currentTab, toastActions, toastMessage } from './stores';
+	import { currentTab, toastActions, toastMessage, expandedTasks } from './stores';
 	import { getTodos, add, update, remove, type Todo, setCompleted } from './db';
 
-	type TodoWithExpanded = Todo & { expanded: boolean };
-	let data = $state<TodoWithExpanded[]>([]);
+	let data = $state<Todo[]>([]);
 	let completedTodos = $derived(data.filter((t) => t.completed === true));
 	let incompleteTodos = $derived(data.filter((t) => t.completed === false));
 	let task = $state<Todo | null>(null);
@@ -26,7 +25,7 @@
 	const loadTodos = async () => {
 		const todos = await getTodos();
 		todos?.subscribe((tasks) => {
-			data = tasks.map((t) => ({ ...t.toJSON(), expanded: false }));
+			data = tasks.map((t) => t.toJSON());
 		});
 	};
 
@@ -75,21 +74,27 @@
 	};
 
 	const handleToggleExpand = (id: string, expanded: boolean) => {
-		const taskIndex = data.findIndex((t) => t.id === id);
-		if (taskIndex > -1) {
-			data[taskIndex] = { ...data[taskIndex], expanded };
-		}
+		expandedTasks.update((set) => {
+			if (expanded) {
+				set.add(id);
+			} else {
+				set.delete(id);
+			}
+			return new Set(set);
+		});
 	};
 
 	const expandAll = () => {
-		data.forEach((t) => {
-			t.expanded = true;
+		expandedTasks.update((set) => {
+			renderedTodos.forEach((t) => set.add(t.id));
+			return new Set(set);
 		});
 	};
 
 	const collapseAll = () => {
-		data.forEach((t) => {
-			t.expanded = false;
+		expandedTasks.update((set) => {
+			renderedTodos.forEach((t) => set.delete(t.id));
+			return new Set(set);
 		});
 	};
 </script>
@@ -189,7 +194,7 @@
 				>
 			</div>
 			{#each renderedTodos as task, i (i)}
-				{@const { id, title, value, completed, updated, expanded } = task}
+				{@const { id, title, value, completed, updated } = task}
 				<div transition:fly={{ duration: 500, y: 100 }}>
 					<Task
 						id={`task-${i}`}
@@ -197,7 +202,7 @@
 						{value}
 						{completed}
 						updated={new Date(updated)}
-						{expanded}
+						expanded={$expandedTasks.has(id)}
 						onEdit={() => handleEdit(task)}
 						onDelete={() => remove(id)}
 						onComplete={() => handleToggleComplete(task)}
