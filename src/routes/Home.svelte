@@ -9,7 +9,7 @@
 	import { push } from 'svelte-spa-router';
 
 	const { auth0: auth0Client } = $props<{ auth0: () => Auth0Client | undefined }>();
-	let auth0 = auth0Client();
+	let auth0 = () => auth0Client();
 
 	let menuItems = $derived(
 		tabs.map((item) => ({
@@ -36,7 +36,7 @@
 	{#if $isLoggedin}
 		<div class="Profile">
 			<img src={$user.picture} alt={$user.nickname} />
-			<Button onclick={() => logout(auth0)}>Log out</Button>
+			<Button onclick={() => logout(auth0())}>Log out</Button>
 		</div>
 	{/if}
 	<List />

@@ -17,12 +17,10 @@
 
 	let titleInput: HTMLInputElement;
 
-	let data = $state<Todo | Content>(
-		defaultValue || {
-			title: '',
-			value: ''
-		}
-	);
+	let data = $state<Todo | Content>({
+		title: '',
+		value: ''
+	});
 
 	const isEdit = $derived(defaultValue !== null);
 
