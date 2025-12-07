@@ -7,7 +7,7 @@
 
 	const { auth0: auth0Client } = $props<{ auth0: () => Auth0Client | undefined }>();
 
-	let auth0 = auth0Client();
+	let auth0 = () => auth0Client();
 </script>
 
 <svelte:head>
@@ -18,7 +18,7 @@
 	{#if $isLoggedin}
 		<p>You are already logged in.</p>
 	{:else}
-		<Button onclick={() => login(auth0)}>Log in</Button>
+		<Button onclick={() => login(auth0())}>Log in</Button>
 	{/if}
 </main>
 
