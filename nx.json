@@ -32,10 +32,15 @@
 			"plugin": "@nx/vite/plugin",
 			"options": {
 				"buildTargetName": "vite:build",
-				"testTargetName": "test",
 				"serveTargetName": "serve",
 				"previewTargetName": "vite:preview",
 				"serveStaticTargetName": "serve-static"
+			}
+		},
+		{
+			"plugin": "@nx/vitest",
+			"options": {
+				"testTargetName": "test"
 			}
 		}
 	]
