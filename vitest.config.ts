@@ -37,7 +37,10 @@ export default mergeConfig(
 						setupFiles: ['.storybook/vitest.setup.ts']
 					}
 				}
-			]
+			],
+			coverage: {
+				reporter: ['text', 'html', 'json', 'json-summary']
+			}
 		}
 	})
 );
