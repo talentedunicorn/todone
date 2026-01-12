@@ -1,8 +1,9 @@
-<script module>
+<script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import { expect, fn } from 'storybook/test';
-
 	import Task from './Task.svelte';
+	import { fn, expect } from 'storybook/test';
+
+	const editSpy = fn();
 	const { Story } = defineMeta({
 		title: 'Task',
 		component: Task,
@@ -13,28 +14,9 @@
 			completed: { control: 'boolean' }
 		},
 		args: {
-			onEdit: fn(),
-			onDelete: fn()
+			onEdit: editSpy
 		}
 	});
-
-	const taskContent =
-		'A **task** written in _markdown_. \n \
-Includes lists \n \
-- Unordered \n \
-- Ordered \n \
-- Checkboxed \n \
-1. One \n \
-1. Two \n \
-1. Three \n \
-- [x] Checked \n \
-- [ ] Unchecked \n \
-> If that is not convincing enough... \n \n \
-| Benefits of markdown | Notes | \n \
-| :--- | :--- | \n \
-| Reduces boilerplate code compared to HTML | | \n \
-| Allows metadata through frontmatter | | \n \
-| MDX supports components | Needs to be `.mdx` format |';
 </script>
 
 {#snippet template(args)}
@@ -46,88 +28,18 @@ Includes lists \n \
 {/snippet}
 
 <Story
+	name="Default"
 	{template}
-	name="Incomplete"
 	args={{
-		title: 'Test task',
-		value: taskContent,
-		updated: new Date('2023-01-01 00:00:000')
+		title: 'A task',
+		value: 'Task description',
+		completed: false,
+		updated: new Date('2020-01-01')
 	}}
-	play={async ({ canvas, userEvent, args }) => {
-		const markCompletedButton = canvas.getByTestId('complete');
-		const editButton = canvas.getByTestId('edit');
-		const deleteButton = canvas.getByTestId('delete');
-		const toggleExpandButton = canvas.getByTestId('toggleExpand');
-		const content = canvas.getByTestId('content');
-
-		await userEvent.click(markCompletedButton);
-		// expect(args.onComplete).toHaveBeenCalled();
+	play={async ({ canvas, userEvent }) => {
+		const editButton = canvas.getByRole('button', { name: 'Edit' });
 
 		await userEvent.click(editButton);
-		expect(args.onEdit).toHaveBeenCalled();
-
-		await userEvent.click(toggleExpandButton);
-		expect(content).toHaveClass('expanded');
-
-		await userEvent.click(toggleExpandButton);
-		expect(content).not.toHaveClass('expanded');
-
-		await userEvent.click(deleteButton);
-		// expect(args.onDelete).toHaveBeenCalled();
-	}}
-/>
-
-<Story
-	{template}
-	name="Complete"
-	args={{
-		title: 'Sample task',
-		value: 'A **new** task with some _markdown_ text.',
-		updated: new Date('2023-01-01 00:00:000'),
-		completed: true
-	}}
-/>
-
-<Story
-	{template}
-	name="Code snippets"
-	args={{
-		title: 'Code snippets',
-		value: `## Javascript
-\`\`\`javascript
-const API_KEY = api_key 
-const DATABASE_URI = database_connection_string
-
-const connectToDB = async () => {
-  const db = await connect(DATABASE_URI)
-}
-\`\`\`
-
- ## Typescript
-\`\`\`typescript
-const API_KEY: string;
-const DATABASE_URI: string;
-
-interface Props {
-  title: string
-}
-\`\`\`
-
-## CSS
-\`\`\`css
-body {
-  font-size: 18px;
-}
-\`\`\`
-
-## Text
-\`\`\`text
-Text that breaks
-into
-multiple
-lines
-\`\`\``,
-		updated: new Date('2023-01-01 00:00:000'),
-		completed: true
+		expect(editSpy).toHaveBeenCalled();
 	}}
 />

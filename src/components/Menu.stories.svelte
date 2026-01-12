@@ -2,6 +2,7 @@
 	import Menu from './Menu.svelte';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import { expect } from 'storybook/test';
+
 	const { Story } = defineMeta({
 		title: 'Menu',
 		component: Menu
