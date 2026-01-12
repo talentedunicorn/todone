@@ -34,7 +34,7 @@
 		title: 'A task',
 		value: 'Task description',
 		completed: false,
-		updated: new Date()
+		updated: new Date('2020-01-01')
 	}}
 	play={async ({ canvas, userEvent }) => {
 		const editButton = canvas.getByRole('button', { name: 'Edit' });
