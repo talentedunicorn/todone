@@ -1,7 +1,8 @@
-<script context="module">
+<script module lang="ts">
 	import Button from './Button.svelte';
-
 	import { defineMeta } from '@storybook/addon-svelte-csf';
+	import { expect } from 'storybook/test';
+
 	const { Story } = defineMeta({
 		title: 'Button',
 		component: Button,
@@ -20,7 +21,16 @@
 
 <Story name="Default" {template} args={{}} />
 
-<Story name="Primary" {template} args={{ variant: 'primary' }} />
+<Story
+	name="Primary"
+	{template}
+	args={{ variant: 'primary' }}
+	play={async ({ canvas, userEvent }) => {
+		const button = canvas.getByRole('button');
+		await userEvent.click(button);
+		expect(button).toBeInTheDocument();
+	}}
+/>
 
 <Story name="Link" {template} args={{ variant: 'link' }} />
 

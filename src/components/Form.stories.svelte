@@ -1,18 +1,11 @@
 <script module>
 	import Form from './Form.svelte';
-	import { expect, mocked } from 'storybook/test';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import { sb } from 'storybook/test';
-	import themeStore from '../stores/theme';
-
-	sb.mock(import('../stores/theme'));
+	import { expect } from 'storybook/test';
 
 	const { Story } = defineMeta({
 		title: 'Form',
-		component: Form,
-		beforeEach: async () => {
-			mocked(themeStore).subscribe((v) => v);
-		}
+		component: Form
 	});
 </script>
 
