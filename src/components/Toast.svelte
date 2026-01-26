@@ -47,6 +47,7 @@
 		bottom: 0;
 		border: none;
 		background: none;
+		z-index: 2;
 
 		.wrapper {
 			border-radius: 1rem;
