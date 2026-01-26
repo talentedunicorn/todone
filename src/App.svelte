@@ -172,7 +172,7 @@
 		min-height: 100vh;
 		.Footer {
 			position: sticky;
-			z-index: 9;
+			z-index: 1;
 			bottom: 1rem;
 			padding: 1rem;
 			display: flex;
