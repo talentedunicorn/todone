@@ -4,6 +4,7 @@ import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
 import { createCollection, createDatabase } from './lib/rxdb';
 import { type Todo, todoSchema } from './domain/todo';
 import { setupReplication } from './sync/replication';
+import type { Observable } from 'rxjs';
 
 if (import.meta.env.DEV) {
 	addRxPlugin(RxDBDevModePlugin);
@@ -22,13 +23,13 @@ const getDB = async () => {
 				await createCollection(db, 'todos', todoSchema);
 				return db;
 			});
+
+			if (import.meta.env.VITE_SYNCED === 'true') {
+				const url = import.meta.env.VITE_REMOTE_DB;
+				setupReplication(db, url);
+			}
 		} else {
 			return db;
-		}
-
-		if (import.meta.env.VITE_SYNCED === 'true') {
-			const url = import.meta.env.VITE_REMOTE_DB;
-			setupReplication(db, url);
 		}
 
 		return db;
