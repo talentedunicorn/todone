@@ -1,7 +1,6 @@
 <script lang="ts">
 	import hljs from 'highlight.js';
 	import Button from './Button.svelte';
-	import { preventDefault } from '../lib/helpers';
 	import type { Todo } from '../db';
 
 	type Content = { title: string; value: string };
@@ -70,7 +69,12 @@ Form component with a title and content inputs
 />
 ```
 -->
-<form onsubmit={preventDefault(submit)}>
+<form
+	onsubmit={(e) => {
+		e.preventDefault();
+		submit();
+	}}
+>
 	<label class="visually-hidden" for="title">Title</label>
 	<input
 		type="text"

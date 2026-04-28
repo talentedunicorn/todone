@@ -23,10 +23,10 @@ export const createDatabase = (name: string) =>
 		ignoreDuplicate: import.meta.env.DEV
 	});
 
-export const createCollection = async (
+export const createCollection = async <T extends object>(
 	db: RxDatabase,
 	collectionName: string,
-	schema: RxJsonSchema<unknown>
+	schema: RxJsonSchema<T>
 ) => {
 	await db.addCollections({
 		[collectionName]: {
