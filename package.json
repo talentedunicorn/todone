@@ -55,7 +55,7 @@
 		"prettier": "^3.8.1",
 		"prettier-plugin-svelte": "^3.4.1",
 		"pretty-quick": "^4.2.2",
-		"storybook": "10.1.11",
+		"storybook": "10.2.10",
 		"svelte": "^5.53.5",
 		"svelte-check": "^4.3.5",
 		"svelte-loader": "^3.2.4",
