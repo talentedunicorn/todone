@@ -1,6 +1,7 @@
 <script module>
 	import { defineMeta } from '@storybook/addon-svelte-csf';
-	const { Story } = defineMeta({ title: 'Docs/WYSIWYG MVP', component: null as any });
+	import DocsWysiwygPlan from './DocsWysiwygPlan.svelte';
+	const { Story } = defineMeta({ title: 'Docs/WYSIWYG MVP', component: DocsWysiwygPlan });
 </script>
 
 <Story name="Plan">
