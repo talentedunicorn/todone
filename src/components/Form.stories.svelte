@@ -30,6 +30,13 @@
 
 		userEvent.click(contentField);
 		await userEvent.keyboard(`Markdown content goes **here**`);
+		// MVP: apply Bold to 'Markdown' via toolbar
+		const boldBtn = canvas.getByTestId('toolbar-bold');
+		contentField.focus();
+		contentField.setSelectionRange(0, 8);
+		await userEvent.click(boldBtn);
+		const _val = contentField.value;
+		expect(_val).toBe('**Markdown** content goes **here**');
 
 		expect(cancelButton).toBeEnabled();
 		expect(submitButton).toBeEnabled();
