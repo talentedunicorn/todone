@@ -14,6 +14,87 @@
 
 	let { defaultValue, onClear, onSubmit, onUpdate }: Props = $props();
 
+	// Lightweight WYSIWYG toolbar helpers (minimal MVP)
+	const wrapSelection = (startToken: string, endToken?: string) => {
+		const ta = document.getElementById('content') as HTMLTextAreaElement | null;
+		if (!ta) return;
+		const s = ta.selectionStart;
+		const e = ta.selectionEnd;
+		const value = ta.value;
+		const sel = value.substring(s, e);
+		const inner = sel.length > 0 ? sel : 'text';
+		const newValue =
+			value.substring(0, s) + startToken + inner + (endToken ?? '') + value.substring(e);
+		// Update data and caret position
+		data = { ...(data as any), value: newValue } as any;
+		const caret = s + startToken.length + inner.length + (endToken ? endToken.length : 0);
+		requestAnimationFrame(() => {
+			ta.focus();
+			ta.setSelectionRange(caret, caret);
+		});
+	};
+
+	const prefixLines = (prefix: string) => {
+		const ta = document.getElementById('content') as HTMLTextAreaElement | null;
+		if (!ta) return;
+		const s = ta.selectionStart;
+		const e = ta.selectionEnd;
+		const value = ta.value;
+		const lines = value.split('\n');
+		const startLine = value.substring(0, s).split('\n').length - 1;
+		const endLine = value.substring(0, e).split('\n').length - 1;
+		for (let i = startLine; i <= endLine; i++) {
+			lines[i] = lines[i] || '' ? prefix + lines[i] : prefix + '';
+		}
+		const newValue = lines.join('\n');
+		data = { ...(data as any), value: newValue } as any;
+		const caret = value.substring(0, s).length + prefix.length;
+		requestAnimationFrame(() => {
+			ta.focus();
+			ta.setSelectionRange(caret, caret);
+		});
+	};
+
+	const insertCodeBlock = () => {
+		const ta = document.getElementById('content') as HTMLTextAreaElement | null;
+		if (!ta) return;
+		const s = ta.selectionStart;
+		const e = ta.selectionEnd;
+		const value = ta.value;
+		const sel = value.substring(s, e);
+		const inner = sel.length > 0 ? sel : 'code';
+		const block = '```markdown\n' + inner + '\n```';
+		const newValue = value.substring(0, s) + block + value.substring(e);
+		data = { ...(data as any), value: newValue } as any;
+		const caret = s + '```markdown\n'.length;
+		requestAnimationFrame(() => {
+			ta.focus();
+			ta.setSelectionRange(caret, caret);
+		});
+	};
+
+	const insertHeading = () => {
+		const ta = document.getElementById('content') as HTMLTextAreaElement | null;
+		if (!ta) return;
+		const value = ta.value;
+		const s = ta.selectionStart;
+		const e = ta.selectionEnd;
+		const startLine = value.substring(0, s).split('\n').length - 1;
+		const endLine = value.substring(0, e).split('\n').length - 1;
+		const lines = value.split('\n');
+		const prefix = '# ';
+		for (let i = startLine; i <= endLine; i++) {
+			lines[i] = prefix + (lines[i] ?? '');
+		}
+		const newValue = lines.join('\n');
+		data = { ...(data as any), value: newValue } as any;
+		const caret = value.substring(0, s).length + prefix.length;
+		requestAnimationFrame(() => {
+			ta.focus();
+			ta.setSelectionRange(caret, caret);
+		});
+	};
+
 	let titleInput: HTMLInputElement;
 
 	let data = $state<Todo | Content>({
@@ -85,6 +166,41 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
+	<!-- MVP WYSIWYG Toolbar: text-labeled buttons above content -->
+	<div
+		class="WysiwygToolbar"
+		aria-label="Markdown toolbar"
+		role="toolbar"
+		style="display:flex; gap:0.5rem; margin:0.25rem 0 0 0;"
+	>
+		<button type="button" data-testid="toolbar-bold" onclick={() => wrapSelection('**', '**')}
+			>Bold</button
+		>
+		<button type="button" data-testid="toolbar-italic" onclick={() => wrapSelection('*', '*')}
+			>Italic</button
+		>
+		<button type="button" data-testid="toolbar-heading" onclick={() => insertHeading()}
+			>Heading</button
+		>
+		<button type="button" data-testid="toolbar-inlinecode" onclick={() => wrapSelection('`', '`')}
+			>Inline Code</button
+		>
+		<button type="button" data-testid="toolbar-codeblock" onclick={() => insertCodeBlock()}
+			>Code Block</button
+		>
+		<button type="button" data-testid="toolbar-ul" onclick={() => prefixLines('- ')}
+			>Bulleted List</button
+		>
+		<button type="button" data-testid="toolbar-ol" onclick={() => prefixLines('1. ')}
+			>Numbered List</button
+		>
+		<button type="button" data-testid="toolbar-check" onclick={() => prefixLines('- [ ] ')}
+			>Checklist</button
+		>
+		<button type="button" data-testid="toolbar-link" onclick={() => wrapSelection('[', '](url)')}
+			>Link</button
+		>
+	</div>
 	<div class="content-wrapper">
 		<textarea id="content" data-testid="content" data-empty={isEmpty} bind:value={data.value}
 		></textarea>
