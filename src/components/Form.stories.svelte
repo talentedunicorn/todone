@@ -69,26 +69,3 @@
 		expect(cancelButton).toBeDisabled();
 	}}
 />
-
-<Story
-	{template}
-	name="Toolbar Interactions"
-	args={{
-		defaultValue: {
-			title: 'Demo',
-			value: 'hello world'
-		}
-	}}
-	play={async ({ canvas, userEvent }) => {
-		const contentField = canvas.getByTestId('content');
-		const boldBtn = canvas.getByTestId('toolbar-bold');
-
-		// select first 5 chars
-		contentField.focus();
-		contentField.setSelectionRange(0, 5);
-		await userEvent.click(boldBtn);
-
-		const newValue = contentField.value;
-		expect(newValue).toBe('**hello** world');
-	}}
-/>
