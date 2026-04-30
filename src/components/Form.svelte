@@ -103,11 +103,20 @@
 
 	const handleKeydown = (e: KeyboardEvent) => {
 		if (e.key === 'Enter' && activeListPrefix) {
-			e.preventDefault();
 			const ta = document.getElementById('content') as HTMLTextAreaElement | null;
 			if (!ta) return;
 			const s = ta.selectionStart;
 			const value = ta.value;
+			const lineStart = value.lastIndexOf('\n', s - 1) + 1;
+			const currentLine = value.substring(lineStart, s);
+			const isEmptyListItem =
+				currentLine.replace(activeListIndent, '').replace(activeListPrefix, '').trim() === '';
+			if (isEmptyListItem) {
+				activeListPrefix = '';
+				activeListIndent = '';
+				return;
+			}
+			e.preventDefault();
 			const newValue =
 				value.substring(0, s) + '\n' + activeListIndent + activeListPrefix + value.substring(s);
 			data = { ...(data as any), value: newValue } as any;
