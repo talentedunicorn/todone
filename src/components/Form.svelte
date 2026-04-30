@@ -34,7 +34,7 @@
 		});
 	};
 
-	const prefixLines = (prefix: string) => {
+	const prefixLines = (prefix: string, insertNewLine = false) => {
 		const ta = document.getElementById('content') as HTMLTextAreaElement | null;
 		if (!ta) return;
 		const s = ta.selectionStart;
@@ -46,9 +46,12 @@
 		for (let i = startLine; i <= endLine; i++) {
 			lines[i] = lines[i] || '' ? prefix + lines[i] : prefix + '';
 		}
-		const newValue = lines.join('\n');
+		let newValue = lines.join('\n');
+		if (insertNewLine) {
+			newValue += '\n';
+		}
 		data = { ...(data as any), value: newValue } as any;
-		const caret = value.substring(0, s).length + prefix.length;
+		const caret = value.substring(0, s).length + prefix.length + (insertNewLine ? 1 : 0);
 		requestAnimationFrame(() => {
 			ta.focus();
 			ta.setSelectionRange(caret, caret);
@@ -93,6 +96,39 @@
 			ta.focus();
 			ta.setSelectionRange(caret, caret);
 		});
+	};
+
+	let activeListPrefix = $state('');
+
+	const handleKeydown = (e: KeyboardEvent) => {
+		if (e.key === 'Enter' && activeListPrefix) {
+			e.preventDefault();
+			prefixLines(activeListPrefix, true);
+		}
+	};
+
+	const checkActiveList = () => {
+		const ta = document.getElementById('content') as HTMLTextAreaElement | null;
+		if (!ta) {
+			activeListPrefix = '';
+			return;
+		}
+		const value = ta.value;
+		const cursorPos = ta.selectionStart;
+		const lineStart = value.lastIndexOf('\n', cursorPos - 1) + 1;
+		const currentLine = value.substring(lineStart, cursorPos);
+		if (currentLine.match(/^(\d+\. |- |- \[ \])/)) {
+			if (currentLine.match(/^\d+\. /)) {
+				const num = currentLine.match(/^(\d+)\. /)?.[1];
+				activeListPrefix = `${parseInt(num || '1') + 1}. `;
+			} else if (currentLine.match(/^- \[ \]/)) {
+				activeListPrefix = '- [ ] ';
+			} else {
+				activeListPrefix = currentLine.match(/^- /)?.[0] || '- ';
+			}
+		} else {
+			activeListPrefix = '';
+		}
 	};
 
 	let titleInput: HTMLInputElement;
@@ -166,43 +202,41 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<!-- MVP WYSIWYG Toolbar: text-labeled buttons above content -->
-	<div
-		class="WysiwygToolbar"
-		aria-label="Markdown toolbar"
-		role="toolbar"
-		style="display:flex; gap:0.5rem; margin:0.25rem 0 0 0;"
-	>
-		<button type="button" data-testid="toolbar-bold" onclick={() => wrapSelection('**', '**')}
-			>Bold</button
+	<!-- MVP WYSIWYG Toolbar: emoji buttons above content -->
+	<div class="WysiwygToolbar" aria-label="Markdown toolbar" role="toolbar">
+		<Button data-testid="toolbar-bold" size="small" onclick={() => wrapSelection('**', '**')}
+			>B</Button
 		>
-		<button type="button" data-testid="toolbar-italic" onclick={() => wrapSelection('*', '*')}
-			>Italic</button
+		<Button data-testid="toolbar-italic" size="small" onclick={() => wrapSelection('*', '*')}
+			>I</Button
 		>
-		<button type="button" data-testid="toolbar-heading" onclick={() => insertHeading()}
-			>Heading</button
+		<Button data-testid="toolbar-heading" size="small" onclick={() => insertHeading()}>H</Button>
+		<Button data-testid="toolbar-code" size="small" onclick={() => wrapSelection('`', '`')}
+			>&lt;/&gt;</Button
 		>
-		<button type="button" data-testid="toolbar-inlinecode" onclick={() => wrapSelection('`', '`')}
-			>Inline Code</button
+		<Button data-testid="toolbar-codeblock" size="small" onclick={() => insertCodeBlock()}
+			>```</Button
 		>
-		<button type="button" data-testid="toolbar-codeblock" onclick={() => insertCodeBlock()}
-			>Code Block</button
+		<Button data-testid="toolbar-ul" size="small" onclick={() => prefixLines('- ', false)}>•</Button
 		>
-		<button type="button" data-testid="toolbar-ul" onclick={() => prefixLines('- ')}
-			>Bulleted List</button
+		<Button data-testid="toolbar-ol" size="small" onclick={() => prefixLines('1. ', false)}
+			>1.</Button
 		>
-		<button type="button" data-testid="toolbar-ol" onclick={() => prefixLines('1. ')}
-			>Numbered List</button
+		<Button data-testid="toolbar-check" size="small" onclick={() => prefixLines('- [ ] ', false)}
+			>☐</Button
 		>
-		<button type="button" data-testid="toolbar-check" onclick={() => prefixLines('- [ ] ')}
-			>Checklist</button
-		>
-		<button type="button" data-testid="toolbar-link" onclick={() => wrapSelection('[', '](url)')}
-			>Link</button
+		<Button data-testid="toolbar-link" size="small" onclick={() => wrapSelection('[', '](url)')}
+			>🔗</Button
 		>
 	</div>
 	<div class="content-wrapper">
-		<textarea id="content" data-testid="content" data-empty={isEmpty} bind:value={data.value}
+		<textarea
+			id="content"
+			data-testid="content"
+			data-empty={isEmpty}
+			bind:value={data.value}
+			onkeydown={handleKeydown}
+			oninput={checkActiveList}
 		></textarea>
 		<pre class="overlay highlight language-markdown">{@html higlighted}</pre>
 	</div>
