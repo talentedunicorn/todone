@@ -141,8 +141,10 @@
 				activeListPrefix = '- [ ] ';
 			} else if (currentLine.match(/^\s*- \[x\] /)) {
 				activeListPrefix = '- [ ] ';
+			} else if (currentLine.match(/^\s*- /)) {
+				activeListPrefix = '- ';
 			} else {
-				activeListPrefix = currentLine.match(/^\s*- /)?.[0]?.trim() || '- ';
+				activeListPrefix = '- ';
 			}
 		} else {
 			activeListPrefix = '';
