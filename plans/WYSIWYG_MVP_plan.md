@@ -1,24 +1,27 @@
 # WYSIWYG MVP Plan: Form Body Toolbar
 
-Overview
+## Overview
 
 - Add a minimal, toolbar-based WYSIWYG for the form body (content textarea) using markdown syntax.
-- MVP uses text labels on buttons (Plan B) and does not implement keyboard shortcuts in MVP (tech debt).
+- MVP uses text labels on buttons and does not implement keyboard shortcuts in MVP (tech debt).
+- **Status**: Implemented in Form.svelte with full text labels and auto-insert for lists.
 
-Scope (MVP)
+## Scope (MVP) - COMPLETED
 
 - Toolbar above the content textarea
 - Actions: Bold, Italic, Heading, Inline Code, Code Block, Bulleted List, Numbered List, Checklist, Link
-- Behavior: If text is selected, wrap/insert markdown tokens around the selection; if no selection, insert a sensible placeholder and place caret for typing.
+- Auto-insert on Enter for list items (like GitHub comment form)
+- Nested list handling with proper indentation
+- Press Enter on empty list item creates new paragraph
 - Data persistence remains as markdown text in the existing Todo value field.
 
-UI/UX
+## UI/UX - COMPLETED
 
 - Toolbar positioned above the content area, always visible (non-floating)
 - Buttons use text labels: Bold, Italic, Heading, Inline Code, Code Block, Bulleted List, Numbered List, Checklist, Link
-- Styling to be minimal, alignment with existing app theme
+- Toolbar stretches across full form width
 
-Tech Debt (Keyboard Shortcuts)
+## Tech Debt (Keyboard Shortcuts)
 
 - Record keyboard shortcuts for WYSIWYG actions as tech debt
 - Priority: Medium
@@ -28,15 +31,40 @@ Tech Debt (Keyboard Shortcuts)
   - No MVP implementation; schedule for a future sprint
   - Include test plan notes and docs updates
 
-Testing Plan (MVP)
+## Testing Plan (MVP) - COMPLETED
 
 - QA: toolbar renders above content, labels are correct
 - Verify: inserting tokens around selection and placeholders when nothing selected
 - Confirm markdown stored in Todo.value is valid markdown
 - Visual regression: existing markdown highlight/preview unaffected
+- All 23 tests passing
 
-Next Steps
+## Future Work: carta-md Integration
 
-- Create a plan task for UI integration in Form.svelte (no code changes in MVP mode)
-- Document out-of-scope items and dependencies
-- Schedule implementation and tests in a future sprint
+See `plans/carta_md_integration_plan.md` for details.
+
+Rationale for future:
+
+- Current custom implementation has edge cases with list handling
+- carta-md provides better out-of-box list behavior, extensibility, and maintenance
+- Would reduce custom code and leverage well-tested library
+
+Implementation approach:
+
+1. Install carta-md
+2. Replace custom toolbar + textarea with carta-md editor
+3. Verify all list types work correctly
+4. Run full test suite
+5. Update storybook tests
+
+## Out of Scope
+
+- Keyboard shortcuts (deferred to tech debt)
+- Image upload handling
+- Theme customization beyond default
+
+## Next Steps
+
+- Merge PR #571
+- Schedule carta-md integration for future sprint
+- Address keyboard shortcuts tech debt in future
