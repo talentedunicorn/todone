@@ -300,6 +300,14 @@ Form component with a title and content inputs
 			}
 		}
 
+		.WysiwygToolbar {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.25rem;
+			width: 100%;
+			justify-content: flex-start;
+		}
+
 		.content-wrapper {
 			position: relative;
 			flex: var(--textarea-width);
