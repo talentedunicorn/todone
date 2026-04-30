@@ -99,6 +99,7 @@
 	};
 
 	let activeListPrefix = $state('');
+	let activeListIndent = $state('');
 
 	const handleKeydown = (e: KeyboardEvent) => {
 		if (e.key === 'Enter' && activeListPrefix) {
@@ -107,9 +108,10 @@
 			if (!ta) return;
 			const s = ta.selectionStart;
 			const value = ta.value;
-			const newValue = value.substring(0, s) + '\n' + activeListPrefix + value.substring(s);
+			const newValue =
+				value.substring(0, s) + '\n' + activeListIndent + activeListPrefix + value.substring(s);
 			data = { ...(data as any), value: newValue } as any;
-			const caret = s + 1 + activeListPrefix.length;
+			const caret = s + 1 + activeListIndent.length + activeListPrefix.length;
 			requestAnimationFrame(() => {
 				ta.focus();
 				ta.setSelectionRange(caret, caret);
@@ -121,25 +123,30 @@
 		const ta = document.getElementById('content') as HTMLTextAreaElement | null;
 		if (!ta) {
 			activeListPrefix = '';
+			activeListIndent = '';
 			return;
 		}
 		const value = ta.value;
 		const cursorPos = ta.selectionStart;
 		const lineStart = value.lastIndexOf('\n', cursorPos - 1) + 1;
 		const currentLine = value.substring(lineStart, cursorPos);
-		if (currentLine.match(/^(\d+\. |- |- \[ \])/)) {
-			if (currentLine.match(/^\d+\. /)) {
-				const num = currentLine.match(/^(\d+)\. /)?.[1];
+		const indentMatch = currentLine.match(/^(\s*)/);
+		const indent = indentMatch ? indentMatch[1] : '';
+		if (currentLine.match(/^(\s*)(\d+\. |- |- \[ \])/)) {
+			activeListIndent = indent;
+			if (currentLine.match(/^\s*\d+\. /)) {
+				const num = currentLine.match(/^\s*(\d+)\. /)?.[1];
 				activeListPrefix = `${parseInt(num || '1') + 1}. `;
-			} else if (currentLine.match(/^- \[ \]/)) {
+			} else if (currentLine.match(/^\s*- \[ \]/)) {
 				activeListPrefix = '- [ ] ';
-			} else if (currentLine.match(/^- \[x\] /)) {
+			} else if (currentLine.match(/^\s*- \[x\] /)) {
 				activeListPrefix = '- [ ] ';
 			} else {
-				activeListPrefix = currentLine.match(/^- /)?.[0] || '- ';
+				activeListPrefix = currentLine.match(/^\s*- /)?.[0]?.trim() || '- ';
 			}
 		} else {
 			activeListPrefix = '';
+			activeListIndent = '';
 		}
 	};
 
