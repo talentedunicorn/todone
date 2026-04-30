@@ -67,7 +67,7 @@
 	args={{ defaultValue: { title: 'Test', value: 'code' } }}
 	play={async ({ canvas, userEvent }) => {
 		const contentField = canvas.getByTestId('content');
-		const codeBtn = canvas.getByTestId('toolbar-inlinecode');
+		const codeBtn = canvas.getByTestId('toolbar-code');
 
 		contentField.focus();
 		contentField.setSelectionRange(0, 4);
