@@ -232,35 +232,188 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<!-- MVP WYSIWYG Toolbar: full text buttons above content -->
+	<!-- MVP WYSIWYG Toolbar: icon buttons above content -->
 	<div class="WysiwygToolbar" aria-label="Markdown toolbar" role="toolbar">
-		<Button data-testid="toolbar-bold" size="small" onclick={() => wrapSelection('**', '**')}
-			>Bold</Button
+		<Button
+			data-testid="toolbar-bold"
+			size="small"
+			onclick={() => wrapSelection('**', '**')}
+			aria-label="Bold"
 		>
-		<Button data-testid="toolbar-italic" size="small" onclick={() => wrapSelection('*', '*')}
-			>Italic</Button
+			<svg
+				width="18"
+				height="18"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="1.5"
+				><g
+					><path
+						d="M5 6c0-1.414 0-2.121.44-2.56C5.878 3 6.585 3 8 3h4.579C15.02 3 17 5.015 17 7.5S15.02 12 12.579 12H5z"
+						clip-rule="evenodd"
+					/><path
+						d="M12.429 12h1.238C16.06 12 18 14.015 18 16.5S16.06 21 13.667 21H8c-1.414 0-2.121 0-2.56-.44C5 20.122 5 19.415 5 18v-6"
+					/></g
+				></svg
+			>
+		</Button>
+		<Button
+			data-testid="toolbar-italic"
+			size="small"
+			onclick={() => wrapSelection('*', '*')}
+			aria-label="Italic"
 		>
-		<Button data-testid="toolbar-heading" size="small" onclick={() => insertHeading()}
-			>Heading</Button
+			<svg
+				width="18"
+				height="18"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-width="1.5"><path d="M12 4h7M8 20l8-16M5 20h7" /></svg
+			>
+		</Button>
+		<Button
+			data-testid="toolbar-heading"
+			size="small"
+			onclick={() => insertHeading()}
+			aria-label="Heading"
 		>
-		<Button data-testid="toolbar-code" size="small" onclick={() => wrapSelection('`', '`')}
-			>Inline Code</Button
+			<svg
+				width="18"
+				height="18"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="1.5"><path d="M4 5v14M14 5v14m3 0h1.5m1.5 0h-1.5m0 0v-8L17 12M4 12h10" /></svg
+			>
+		</Button>
+		<Button
+			data-testid="toolbar-code"
+			size="small"
+			onclick={() => wrapSelection('`', '`')}
+			aria-label="Inline Code"
 		>
-		<Button data-testid="toolbar-codeblock" size="small" onclick={() => insertCodeBlock()}
-			>Code Block</Button
+			<svg
+				width="18"
+				height="18"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="1.5"
+				><path
+					d="m16 7l3.066 2.643C20.356 10.754 21 11.31 21 12s-.645 1.246-1.934 2.357L16 17M8 7L4.934 9.643C3.644 10.754 3 11.31 3 12s.645 1.246 1.934 2.357L8 17"
+				/></svg
+			>
+		</Button>
+		<Button
+			data-testid="toolbar-codeblock"
+			size="small"
+			onclick={() => insertCodeBlock()}
+			aria-label="Code Block"
 		>
-		<Button data-testid="toolbar-ul" size="small" onclick={() => prefixLines('- ', false)}
-			>Bulleted List</Button
+			<svg
+				width="18"
+				height="18"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.5"
+				><path
+					d="M20.61 18.105A3.375 3.375 0 0 0 18.625 12h-.251a3.375 3.375 0 0 0-1.984 6.105m4.218 0a3.36 3.36 0 0 1-1.984.645h-.25a3.36 3.36 0 0 1-1.984-.645m4.218 0l.583 1.835c.222.7.334 1.05.303 1.268c-.063.454-.433.79-.87.792c-.21 0-.524-.164-1.153-.494c-.27-.142-.404-.212-.542-.254a1.5 1.5 0 0 0-.86 0c-.138.042-.273.112-.542.254c-.629.33-.943.495-1.153.494c-.437-.002-.807-.338-.87-.792c-.03-.218.08-.568.303-1.268l.583-1.835M13 11a2 2 0 1 1-4 0a2 2 0 0 1 4 0Z"
+				/><path
+					stroke-linecap="round"
+					d="M20 9.131C19.13 5.057 15.475 2 11.098 2C6.073 2 2 6.03 2 11s4.073 9 9.098 9q.716 0 1.402-.106"
+				/><path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="m17.363 4.636l-2.121 2.121m-8.484 8.485l-2.122 2.121"
+				/></svg
+			>
+		</Button>
+		<Button
+			data-testid="toolbar-ul"
+			size="small"
+			onclick={() => prefixLines('- ', false)}
+			aria-label="Bulleted List"
 		>
-		<Button data-testid="toolbar-ol" size="small" onclick={() => prefixLines('1. ', false)}
-			>Numbered List</Button
+			<svg
+				width="18"
+				height="18"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="1.5"><path d="M4 5h16M4 12h16M4 19h16" /></svg
+			>
+		</Button>
+		<Button
+			data-testid="toolbar-ol"
+			size="small"
+			onclick={() => prefixLines('1. ', false)}
+			aria-label="Numbered List"
 		>
-		<Button data-testid="toolbar-check" size="small" onclick={() => prefixLines('- [ ] ', false)}
-			>Checklist</Button
+			<svg
+				width="18"
+				height="18"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="1.5"><path d="M4 5h12M4 12h16M4 19h8" /></svg
+			>
+		</Button>
+		<Button
+			data-testid="toolbar-check"
+			size="small"
+			onclick={() => prefixLines('- [ ] ', false)}
+			aria-label="Checklist"
 		>
-		<Button data-testid="toolbar-link" size="small" onclick={() => wrapSelection('[', '](url)')}
-			>Link</Button
+			<svg
+				width="18"
+				height="18"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-width="1.5"
+				><path d="M11 6h10m-10 6h10m-10 6h10" /><path
+					stroke-linejoin="round"
+					d="M3 7.393S4 8.045 4.5 9C4.5 9 6 5.25 8 4M3 18.393S4 19.045 4.5 20c0 0 1.5-3.75 3.5-5"
+				/></svg
+			>
+		</Button>
+		<Button
+			data-testid="toolbar-link"
+			size="small"
+			onclick={() => wrapSelection('[', '](url)')}
+			aria-label="Link"
 		>
+			<svg
+				width="18"
+				height="18"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-width="1.5"
+				><g
+					><path
+						d="m9.143 10.691l.207-.207a5.067 5.067 0 1 1 7.166 7.166l-2.866 2.866a5.067 5.067 0 1 1-7.166-7.166l.464-.464"
+					/><path
+						d="m17.052 11.114l.464-.464a5.067 5.067 0 1 0-7.166-7.166L7.484 6.35a5.067 5.067 0 1 0 7.166 7.166l.207-.207"
+					/></g
+				></svg
+			>
+		</Button>
 	</div>
 	<div class="content-wrapper">
 		<textarea
@@ -317,9 +470,10 @@ Form component with a title and content inputs
 		.WysiwygToolbar {
 			display: flex;
 			flex-wrap: wrap;
-			gap: 0.25rem;
+			gap: 0.5rem;
 			width: 100%;
 			justify-content: flex-start;
+			padding: 0.5rem 0;
 		}
 
 		.content-wrapper {
