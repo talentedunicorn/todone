@@ -232,31 +232,34 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<!-- MVP WYSIWYG Toolbar: emoji buttons above content -->
+	<!-- MVP WYSIWYG Toolbar: full text buttons above content -->
 	<div class="WysiwygToolbar" aria-label="Markdown toolbar" role="toolbar">
 		<Button data-testid="toolbar-bold" size="small" onclick={() => wrapSelection('**', '**')}
-			>B</Button
+			>Bold</Button
 		>
 		<Button data-testid="toolbar-italic" size="small" onclick={() => wrapSelection('*', '*')}
-			>I</Button
+			>Italic</Button
 		>
-		<Button data-testid="toolbar-heading" size="small" onclick={() => insertHeading()}>H</Button>
+		<Button data-testid="toolbar-heading" size="small" onclick={() => insertHeading()}
+			>Heading</Button
+		>
 		<Button data-testid="toolbar-code" size="small" onclick={() => wrapSelection('`', '`')}
-			>&lt;/&gt;</Button
+			>Inline Code</Button
 		>
 		<Button data-testid="toolbar-codeblock" size="small" onclick={() => insertCodeBlock()}
-			>```</Button
+			>Code Block</Button
 		>
-		<Button data-testid="toolbar-ul" size="small" onclick={() => prefixLines('- ', false)}>•</Button
+		<Button data-testid="toolbar-ul" size="small" onclick={() => prefixLines('- ', false)}
+			>Bulleted List</Button
 		>
 		<Button data-testid="toolbar-ol" size="small" onclick={() => prefixLines('1. ', false)}
-			>1.</Button
+			>Numbered List</Button
 		>
 		<Button data-testid="toolbar-check" size="small" onclick={() => prefixLines('- [ ] ', false)}
-			>☐</Button
+			>Checklist</Button
 		>
 		<Button data-testid="toolbar-link" size="small" onclick={() => wrapSelection('[', '](url)')}
-			>🔗</Button
+			>Link</Button
 		>
 	</div>
 	<div class="content-wrapper">
