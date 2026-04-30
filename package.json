@@ -67,6 +67,7 @@
 	},
 	"dependencies": {
 		"@sentry/vite-plugin": "^5.2.1",
+		"carta-md": "^4.11.2",
 		"events": "^3.3.0",
 		"highlight.js": "^11.11.1",
 		"marked": "^18.0.3",
