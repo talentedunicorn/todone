@@ -1,8 +1,6 @@
 <script lang="ts">
 	import hljs from 'highlight.js';
 	import Button from './Button.svelte';
-	import { Carta, MarkdownEditor } from 'carta-md';
-	import 'carta-md/default.css';
 	import type { Todo } from '../db';
 
 	type Content = { title: string; value: string };
@@ -16,8 +14,152 @@
 
 	let { defaultValue, onClear, onSubmit, onUpdate }: Props = $props();
 
-	const sanitize = (html: string) => html;
-	const carta = new Carta({ sanitizer: sanitize });
+	// Lightweight WYSIWYG toolbar helpers (minimal MVP)
+	const wrapSelection = (startToken: string, endToken?: string) => {
+		const ta = document.getElementById('content') as HTMLTextAreaElement | null;
+		if (!ta) return;
+		const s = ta.selectionStart;
+		const e = ta.selectionEnd;
+		const value = ta.value;
+		const sel = value.substring(s, e);
+		const inner = sel.length > 0 ? sel : 'text';
+		const newValue =
+			value.substring(0, s) + startToken + inner + (endToken ?? '') + value.substring(e);
+		// Update data and caret position
+		data = { ...(data as any), value: newValue } as any;
+		const caret = s + startToken.length + inner.length + (endToken ? endToken.length : 0);
+		requestAnimationFrame(() => {
+			ta.focus();
+			ta.setSelectionRange(caret, caret);
+		});
+	};
+
+	const prefixLines = (prefix: string, insertNewLine = false) => {
+		const ta = document.getElementById('content') as HTMLTextAreaElement | null;
+		if (!ta) return;
+		const s = ta.selectionStart;
+		const e = ta.selectionEnd;
+		const value = ta.value;
+		const lines = value.split('\n');
+		const startLine = value.substring(0, s).split('\n').length - 1;
+		const endLine = value.substring(0, e).split('\n').length - 1;
+		for (let i = startLine; i <= endLine; i++) {
+			lines[i] = lines[i] || '' ? prefix + lines[i] : prefix + '';
+		}
+		let newValue = lines.join('\n');
+		if (insertNewLine) {
+			newValue += '\n';
+		}
+		data = { ...(data as any), value: newValue } as any;
+		const caret = value.substring(0, s).length + prefix.length + (insertNewLine ? 1 : 0);
+		requestAnimationFrame(() => {
+			ta.focus();
+			ta.setSelectionRange(caret, caret);
+		});
+	};
+
+	const insertCodeBlock = () => {
+		const ta = document.getElementById('content') as HTMLTextAreaElement | null;
+		if (!ta) return;
+		const s = ta.selectionStart;
+		const e = ta.selectionEnd;
+		const value = ta.value;
+		const sel = value.substring(s, e);
+		const inner = sel.length > 0 ? sel : 'code';
+		const block = '```markdown\n' + inner + '\n```';
+		const newValue = value.substring(0, s) + block + value.substring(e);
+		data = { ...(data as any), value: newValue } as any;
+		const caret = s + '```markdown\n'.length;
+		requestAnimationFrame(() => {
+			ta.focus();
+			ta.setSelectionRange(caret, caret);
+		});
+	};
+
+	const insertHeading = () => {
+		const ta = document.getElementById('content') as HTMLTextAreaElement | null;
+		if (!ta) return;
+		const value = ta.value;
+		const s = ta.selectionStart;
+		const e = ta.selectionEnd;
+		const startLine = value.substring(0, s).split('\n').length - 1;
+		const endLine = value.substring(0, e).split('\n').length - 1;
+		const lines = value.split('\n');
+		const prefix = '# ';
+		for (let i = startLine; i <= endLine; i++) {
+			lines[i] = prefix + (lines[i] ?? '');
+		}
+		const newValue = lines.join('\n');
+		data = { ...(data as any), value: newValue } as any;
+		const caret = value.substring(0, s).length + prefix.length;
+		requestAnimationFrame(() => {
+			ta.focus();
+			ta.setSelectionRange(caret, caret);
+		});
+	};
+
+	let activeListPrefix = $state('');
+	let activeListIndent = $state('');
+
+	const handleKeydown = (e: KeyboardEvent) => {
+		if (e.key === 'Enter' && activeListPrefix) {
+			const ta = document.getElementById('content') as HTMLTextAreaElement | null;
+			if (!ta) return;
+			const s = ta.selectionStart;
+			const value = ta.value;
+			const lineStart = value.lastIndexOf('\n', s - 1) + 1;
+			const currentLine = value.substring(lineStart, s);
+			const isEmptyListItem =
+				currentLine.replace(activeListIndent, '').replace(activeListPrefix, '').trim() === '';
+			if (isEmptyListItem) {
+				activeListPrefix = '';
+				activeListIndent = '';
+				return;
+			}
+			e.preventDefault();
+			const newValue =
+				value.substring(0, s) + '\n' + activeListIndent + activeListPrefix + value.substring(s);
+			data = { ...(data as any), value: newValue } as any;
+			const caret = s + 1 + activeListIndent.length + activeListPrefix.length;
+			requestAnimationFrame(() => {
+				ta.focus();
+				ta.setSelectionRange(caret, caret);
+			});
+		}
+	};
+
+	const checkActiveList = () => {
+		const ta = document.getElementById('content') as HTMLTextAreaElement | null;
+		if (!ta) {
+			activeListPrefix = '';
+			activeListIndent = '';
+			return;
+		}
+		const value = ta.value;
+		const cursorPos = ta.selectionStart;
+		const lineStart = value.lastIndexOf('\n', cursorPos - 1) + 1;
+		const currentLine = value.substring(lineStart, cursorPos);
+		const indentMatch = currentLine.match(/^(\s*)/);
+		const indent = indentMatch ? indentMatch[1] : '';
+		if (currentLine.match(/^(\s*)(\d+\. |- |- \[ \])/)) {
+			activeListIndent = indent;
+			if (currentLine.match(/^\s*\d+\. /)) {
+				const num = currentLine.match(/^\s*(\d+)\. /)?.[1];
+				activeListPrefix = `${parseInt(num || '1') + 1}. `;
+			} else if (currentLine.match(/^\s*- \[ \]/)) {
+				activeListPrefix = '- [ ] ';
+			} else if (currentLine.match(/^\s*- \[x\] /)) {
+				activeListPrefix = '- [ ] ';
+			} else if (currentLine.match(/^\s*- /)) {
+				activeListPrefix = '- ';
+			} else {
+				activeListPrefix = '- ';
+			}
+		} else {
+			activeListPrefix = '';
+			activeListIndent = '';
+		}
+	};
 
 	let titleInput: HTMLInputElement;
 
@@ -58,6 +200,22 @@
 	const higlighted = $derived(hljs.highlight(data.value, { language: 'markdown' }).value);
 </script>
 
+<!--
+@component 
+### Form.svelte
+
+Form component with a title and content inputs
+
+#### Example
+```svelte
+<Form
+	defaultValue={Content}
+	onSubmit={}
+	onUpdate={}
+	onClear={}
+/>
+```
+-->
 <form
 	onsubmit={(e) => {
 		e.preventDefault();
@@ -74,8 +232,45 @@
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
+	<!-- MVP WYSIWYG Toolbar: full text buttons above content -->
+	<div class="WysiwygToolbar" aria-label="Markdown toolbar" role="toolbar">
+		<Button data-testid="toolbar-bold" size="small" onclick={() => wrapSelection('**', '**')}
+			>Bold</Button
+		>
+		<Button data-testid="toolbar-italic" size="small" onclick={() => wrapSelection('*', '*')}
+			>Italic</Button
+		>
+		<Button data-testid="toolbar-heading" size="small" onclick={() => insertHeading()}
+			>Heading</Button
+		>
+		<Button data-testid="toolbar-code" size="small" onclick={() => wrapSelection('`', '`')}
+			>Inline Code</Button
+		>
+		<Button data-testid="toolbar-codeblock" size="small" onclick={() => insertCodeBlock()}
+			>Code Block</Button
+		>
+		<Button data-testid="toolbar-ul" size="small" onclick={() => prefixLines('- ', false)}
+			>Bulleted List</Button
+		>
+		<Button data-testid="toolbar-ol" size="small" onclick={() => prefixLines('1. ', false)}
+			>Numbered List</Button
+		>
+		<Button data-testid="toolbar-check" size="small" onclick={() => prefixLines('- [ ] ', false)}
+			>Checklist</Button
+		>
+		<Button data-testid="toolbar-link" size="small" onclick={() => wrapSelection('[', '](url)')}
+			>Link</Button
+		>
+	</div>
 	<div class="content-wrapper">
-		<MarkdownEditor bind:value={data.value} {carta} />
+		<textarea
+			id="content"
+			data-testid="content"
+			data-empty={isEmpty}
+			bind:value={data.value}
+			onkeydown={handleKeydown}
+			oninput={checkActiveList}
+		></textarea>
 		<pre class="overlay highlight language-markdown">{@html higlighted}</pre>
 	</div>
 	<div class="Actions">
@@ -119,11 +314,34 @@
 			}
 		}
 
+		.WysiwygToolbar {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.25rem;
+			width: 100%;
+			justify-content: flex-start;
+		}
+
 		.content-wrapper {
 			position: relative;
 			flex: var(--textarea-width);
 			display: grid;
-			width: 100%;
+
+			& textarea,
+			& :global(.overlay) {
+				grid-area: 1/1/1/1;
+				font-size: 1rem;
+				line-height: 1.7;
+				font-family: monospace;
+				padding: 1rem;
+				margin: 0;
+				white-space: pre-wrap;
+				word-break: break-word;
+				width: 100%;
+				overflow-x: auto;
+				border-radius: 1rem;
+				border: 0.2em solid var(--black);
+			}
 		}
 
 		input {
@@ -139,73 +357,27 @@
 			padding: 0.5em;
 		}
 
-		:global(.carta-editor) {
+		textarea {
+			position: relative;
+			z-index: 1;
+			resize: none;
 			width: 100%;
-			min-height: var(--textarea-height);
-		}
-
-		:global(.carta-editor textarea) {
-			font-size: 1rem;
-			line-height: 1.7;
-			font-family: monospace;
-			padding: 1rem;
-			border-radius: 1rem;
-			border: 0.2em solid var(--black);
-			width: 100%;
-			resize: vertical;
-		}
-
-		:global(.carta-toolbar) {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0.25rem;
-			padding: 0.5rem;
-			border: 0.2em solid var(--black);
-			border-bottom: none;
-			border-radius: 1rem 1rem 0 0;
-			background: var(--white);
-		}
-
-		:global(.carta-toolbar button) {
-			padding: 0.25rem 0.5rem;
-			border: 0.1em solid var(--gray);
-			border-radius: 0.3rem;
-			background: var(--white);
-			cursor: pointer;
-			font-size: 0.9rem;
-		}
-
-		:global(.carta-toolbar button:hover) {
-			background: var(--gray-light);
-		}
-
-		:global(.carta-preview) {
-			display: none;
-		}
-
-		pre.overlay {
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			pointer-events: none;
-			overflow: auto;
-			white-space: pre-wrap;
-			word-break: break-word;
-			font-size: 1rem;
-			line-height: 1.7;
-			font-family: monospace;
-			padding: 1rem;
-			border-radius: 1rem;
-			border: 0.2em solid var(--black);
+			height: 100%;
 			color: transparent;
 			background: transparent;
+			caret-color: var(--black);
+			border: none;
+
+			&[data-empty='false'] {
+				min-height: var(--textarea-height);
+			}
 		}
 
-		:global(pre code.hljs) {
-			color: transparent;
-			background: transparent;
+		@supports (field-sizing: content) {
+			textarea {
+				field-sizing: content;
+				--textarea-height: auto;
+			}
 		}
 	}
 </style>
