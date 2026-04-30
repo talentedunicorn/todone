@@ -103,7 +103,17 @@
 	const handleKeydown = (e: KeyboardEvent) => {
 		if (e.key === 'Enter' && activeListPrefix) {
 			e.preventDefault();
-			prefixLines(activeListPrefix, true);
+			const ta = document.getElementById('content') as HTMLTextAreaElement | null;
+			if (!ta) return;
+			const s = ta.selectionStart;
+			const value = ta.value;
+			const newValue = value.substring(0, s) + '\n' + activeListPrefix + value.substring(s);
+			data = { ...(data as any), value: newValue } as any;
+			const caret = s + 1 + activeListPrefix.length;
+			requestAnimationFrame(() => {
+				ta.focus();
+				ta.setSelectionRange(caret, caret);
+			});
 		}
 	};
 
@@ -122,6 +132,8 @@
 				const num = currentLine.match(/^(\d+)\. /)?.[1];
 				activeListPrefix = `${parseInt(num || '1') + 1}. `;
 			} else if (currentLine.match(/^- \[ \]/)) {
+				activeListPrefix = '- [ ] ';
+			} else if (currentLine.match(/^- \[x\] /)) {
 				activeListPrefix = '- [ ] ';
 			} else {
 				activeListPrefix = currentLine.match(/^- /)?.[0] || '- ';
