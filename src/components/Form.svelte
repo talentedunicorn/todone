@@ -102,6 +102,23 @@
 	let activeListIndent = $state('');
 
 	const handleKeydown = (e: KeyboardEvent) => {
+		// Allow inserting a literal tab character inside the markdown content
+		// by intercepting the Tab key. This mirrors typical code editor behavior
+		// and makes composing multi-line content more ergonomic.
+		if (e.key === 'Tab') {
+			e.preventDefault();
+			const ta = document.getElementById('content') as HTMLTextAreaElement | null;
+			if (!ta) return;
+			const s = ta.selectionStart;
+			const value = ta.value;
+			const newValue = value.substring(0, s) + '\t' + value.substring(s);
+			data = { ...(data as any), value: newValue } as any;
+			requestAnimationFrame(() => {
+				ta.focus();
+				ta.setSelectionRange(s + 1, s + 1);
+			});
+			return;
+		}
 		if (e.key === 'Enter' && activeListPrefix) {
 			const ta = document.getElementById('content') as HTMLTextAreaElement | null;
 			if (!ta) return;
