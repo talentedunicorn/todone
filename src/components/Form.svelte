@@ -240,7 +240,7 @@ Form component with a title and content inputs
 			size="small"
 			onclick={() => wrapSelection('**', '**')}
 			aria-label="Bold"
-			title="Bold (Ctrl+B)"
+			title="Bold"
 		>
 			<svg
 				width="18"
@@ -266,7 +266,7 @@ Form component with a title and content inputs
 			size="small"
 			onclick={() => wrapSelection('*', '*')}
 			aria-label="Italic"
-			title="Italic (Ctrl+I)"
+			title="Italic"
 		>
 			<svg
 				width="18"
@@ -283,7 +283,7 @@ Form component with a title and content inputs
 			size="small"
 			onclick={() => insertHeading()}
 			aria-label="Heading"
-			title="Heading (Ctrl+Shift+H)"
+			title="Heading"
 		>
 			<svg
 				width="18"
@@ -304,7 +304,7 @@ Form component with a title and content inputs
 			size="small"
 			onclick={() => wrapSelection('`', '`')}
 			aria-label="Inline Code"
-			title="Inline Code (Ctrl+E)"
+			title="Inline Code"
 		>
 			<svg
 				width="18"
@@ -325,7 +325,7 @@ Form component with a title and content inputs
 			size="small"
 			onclick={() => insertCodeBlock()}
 			aria-label="Code Block"
-			title="Code Block (Ctrl+Shift+K)"
+			title="Code Block"
 		>
 			<svg
 				width="18"
@@ -348,7 +348,7 @@ Form component with a title and content inputs
 			size="small"
 			onclick={() => prefixLines('- ', false)}
 			aria-label="Bulleted List"
-			title="Bulleted List (Ctrl+Shift+U)"
+			title="Bulleted List"
 		>
 			<svg
 				width="18"
@@ -371,7 +371,7 @@ Form component with a title and content inputs
 			size="small"
 			onclick={() => prefixLines('1. ', false)}
 			aria-label="Numbered List"
-			title="Numbered List (Ctrl+Shift+O)"
+			title="Numbered List"
 		>
 			<svg
 				width="18"
@@ -394,7 +394,7 @@ Form component with a title and content inputs
 			size="small"
 			onclick={() => prefixLines('- [ ] ', false)}
 			aria-label="Checklist"
-			title="Checklist (Ctrl+Shift+C)"
+			title="Checklist"
 		>
 			<svg
 				width="18"
@@ -415,7 +415,7 @@ Form component with a title and content inputs
 			size="small"
 			onclick={() => wrapSelection('[', '](url)')}
 			aria-label="Link"
-			title="Link (Ctrl+K)"
+			title="Link"
 		>
 			<svg
 				width="18"
