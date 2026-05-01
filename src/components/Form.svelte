@@ -249,7 +249,7 @@ Form component with a title and content inputs
 				stroke="currentColor"
 				stroke-linecap="round"
 				stroke-linejoin="round"
-				stroke-width="1.5"
+				stroke-width="2.5"
 				><g
 					><path
 						d="M5 6c0-1.414 0-2.121.44-2.56C5.878 3 6.585 3 8 3h4.579C15.02 3 17 5.015 17 7.5S15.02 12 12.579 12H5z"
@@ -273,7 +273,7 @@ Form component with a title and content inputs
 				fill="none"
 				stroke="currentColor"
 				stroke-linecap="round"
-				stroke-width="1.5"><path d="M12 4h7M8 20l8-16M5 20h7" /></svg
+				stroke-width="2.5"><path d="M12 4h7M8 20l8-16M5 20h7" /></svg
 			>
 		</Button>
 		<Button
@@ -290,7 +290,7 @@ Form component with a title and content inputs
 				stroke="currentColor"
 				stroke-linecap="round"
 				stroke-linejoin="round"
-				stroke-width="1.5"
+				stroke-width="2.5"
 				><path
 					d="M3.5 5v14m10-14v14m7 0h-4v-.31c0-.438 0-.657.087-.852c.086-.194.249-.34.575-.634l2.605-2.344c.467-.42.733-1.018.733-1.646V13a2 2 0 1 0-4 0v.4M3.5 12h10"
 				/></svg
@@ -310,7 +310,7 @@ Form component with a title and content inputs
 				stroke="currentColor"
 				stroke-linecap="round"
 				stroke-linejoin="round"
-				stroke-width="1.5"
+				stroke-width="2.5"
 				><path
 					d="m16 7l3.066 2.643C20.356 10.754 21 11.31 21 12s-.645 1.246-1.934 2.357L16 17M8 7L4.934 9.643C3.644 10.754 3 11.31 3 12s.645 1.246 1.934 2.357L8 17"
 				/></svg
@@ -328,7 +328,7 @@ Form component with a title and content inputs
 				viewBox="0 0 24 24"
 				fill="none"
 				stroke="currentColor"
-				stroke-width="1.5"
+				stroke-width="2.5"
 				><g stroke-linecap="round" stroke-linejoin="round"
 					><path
 						d="m16 10l1.227 1.057c.515.445.773.667.773.943s-.258.498-.773.943L16 14m-8-4l-1.227 1.057C6.258 11.502 6 11.724 6 12s.258.498.773.943L8 14m5-5l-2 6"
@@ -351,7 +351,7 @@ Form component with a title and content inputs
 				fill="none"
 				stroke="currentColor"
 				stroke-linecap="round"
-				stroke-width="1.5"
+				stroke-width="2.5"
 				><g
 					><path d="M8 5.5h12m-12 7h12m-12 7h12" /><path
 						stroke-linejoin="round"
@@ -373,7 +373,7 @@ Form component with a title and content inputs
 				fill="none"
 				stroke="currentColor"
 				stroke-linecap="round"
-				stroke-width="1.5"
+				stroke-width="2.5"
 				><g
 					><path d="M11 6h10m-10 6h10m-10 6h10" /><path
 						stroke-linejoin="round"
@@ -395,7 +395,7 @@ Form component with a title and content inputs
 				fill="none"
 				stroke="currentColor"
 				stroke-linecap="round"
-				stroke-width="1.5"
+				stroke-width="2.5"
 				><path d="M11 6h10m-10 6h10m-10 6h10" /><path
 					stroke-linejoin="round"
 					d="M3 7.393S4 8.045 4.5 9C4.5 9 6 5.25 8 4M3 18.393S4 19.045 4.5 20c0 0 1.5-3.75 3.5-5"
@@ -415,7 +415,7 @@ Form component with a title and content inputs
 				fill="none"
 				stroke="currentColor"
 				stroke-linecap="round"
-				stroke-width="1.5"
+				stroke-width="2.5"
 				><g
 					><path
 						d="m9.143 10.691l.207-.207a5.067 5.067 0 1 1 7.166 7.166l-2.866 2.866a5.067 5.067 0 1 1-7.166-7.166l.464-.464"
