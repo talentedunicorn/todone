@@ -325,15 +325,12 @@ Form component with a title and content inputs
 				fill="none"
 				stroke="currentColor"
 				stroke-width="1.5"
+				><g stroke-linecap="round" stroke-linejoin="round"
+					><path
+						d="m16 10l1.227 1.057c.515.445.773.667.773.943s-.258.498-.773.943L16 14m-8-4l-1.227 1.057C6.258 11.502 6 11.724 6 12s.258.498.773.943L8 14m5-5l-2 6"
+					/></g
 				><path
-					d="M20.61 18.105A3.375 3.375 0 0 0 18.625 12h-.251a3.375 3.375 0 0 0-1.984 6.105m4.218 0a3.36 3.36 0 0 1-1.984.645h-.25a3.36 3.36 0 0 1-1.984-.645m4.218 0l.583 1.835c.222.7.334 1.05.303 1.268c-.063.454-.433.79-.87.792c-.21 0-.524-.164-1.153-.494c-.27-.142-.404-.212-.542-.254a1.5 1.5 0 0 0-.86 0c-.138.042-.273.112-.542.254c-.629.33-.943.495-1.153.494c-.437-.002-.807-.338-.87-.792c-.03-.218.08-.568.303-1.268l.583-1.835M13 11a2 2 0 1 1-4 0a2 2 0 0 1 4 0Z"
-				/><path
-					stroke-linecap="round"
-					d="M20 9.131C19.13 5.057 15.475 2 11.098 2C6.073 2 2 6.03 2 11s4.073 9 9.098 9q.716 0 1.402-.106"
-				/><path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					d="m17.363 4.636l-2.121 2.121m-8.484 8.485l-2.122 2.121"
+					d="M2.5 12c0-4.478 0-6.718 1.391-8.109S7.521 2.5 12 2.5c4.478 0 6.718 0 8.109 1.391S21.5 7.521 21.5 12c0 4.478 0 6.718-1.391 8.109S16.479 21.5 12 21.5c-4.478 0-6.718 0-8.109-1.391S2.5 16.479 2.5 12Z"
 				/></svg
 			>
 		</Button>
@@ -350,8 +347,13 @@ Form component with a title and content inputs
 				fill="none"
 				stroke="currentColor"
 				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="1.5"><path d="M4 5h16M4 12h16M4 19h16" /></svg
+				stroke-width="1.5"
+				><g
+					><path d="M8 5.5h12m-12 7h12m-12 7h12" /><path
+						stroke-linejoin="round"
+						d="M4.375 5.5H4.25m.25 0a.25.25 0 1 1-.5 0a.25.25 0 0 1 .5 0m-.125 7H4.25m.25 0a.25.25 0 1 1-.5 0a.25.25 0 0 1 .5 0m-.125 7H4.25m.25 0a.25.25 0 1 1-.5 0a.25.25 0 0 1 .5 0"
+					/></g
+				></svg
 			>
 		</Button>
 		<Button
@@ -367,8 +369,13 @@ Form component with a title and content inputs
 				fill="none"
 				stroke="currentColor"
 				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="1.5"><path d="M4 5h12M4 12h16M4 19h8" /></svg
+				stroke-width="1.5"
+				><g
+					><path d="M11 6h10m-10 6h10m-10 6h10" /><path
+						stroke-linejoin="round"
+						d="M3 15h1.5c.279 0 .418 0 .534.023a1.2 1.2 0 0 1 .943.943C6 16.082 6 16.22 6 16.5s0 .418-.023.534a1.2 1.2 0 0 1-.943.943C4.918 18 4.78 18 4.5 18s-.418 0-.534.023a1.2 1.2 0 0 0-.943.943C3 19.082 3 19.22 3 19.5v.9c0 .283 0 .424.088.512s.23.088.512.088H6M3 3h1.2a.3.3 0 0 1 .3.3V9m0 0H3m1.5 0H6"
+					/></g
+				></svg
 			>
 		</Button>
 		<Button
