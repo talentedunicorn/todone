@@ -85,7 +85,7 @@
 		const startLine = value.substring(0, s).split('\n').length - 1;
 		const endLine = value.substring(0, e).split('\n').length - 1;
 		const lines = value.split('\n');
-		const prefix = '# ';
+		const prefix = '## ';
 		for (let i = startLine; i <= endLine; i++) {
 			lines[i] = prefix + (lines[i] ?? '');
 		}
@@ -141,7 +141,7 @@
 		const currentLine = value.substring(lineStart, cursorPos);
 		const indentMatch = currentLine.match(/^(\s*)/);
 		const indent = indentMatch ? indentMatch[1] : '';
-		if (currentLine.match(/^(\s*)(\d+\. |- |- \[ \])/)) {
+		if (currentLine.match(/^(\s*)(\d+\. |[-*] |- \[ \])/)) {
 			activeListIndent = indent;
 			if (currentLine.match(/^\s*\d+\. /)) {
 				const num = currentLine.match(/^\s*(\d+)\. /)?.[1];
@@ -150,8 +150,9 @@
 				activeListPrefix = '- [ ] ';
 			} else if (currentLine.match(/^\s*- \[x\] /)) {
 				activeListPrefix = '- [ ] ';
-			} else if (currentLine.match(/^\s*- /)) {
-				activeListPrefix = '- ';
+			} else if (currentLine.match(/^\s*[-*] /)) {
+				const bullet = currentLine.match(/^\s*([-*]) /)?.[1];
+				activeListPrefix = `${bullet} `;
 			} else {
 				activeListPrefix = '- ';
 			}
@@ -289,7 +290,10 @@ Form component with a title and content inputs
 				stroke="currentColor"
 				stroke-linecap="round"
 				stroke-linejoin="round"
-				stroke-width="1.5"><path d="M4 5v14M14 5v14m3 0h1.5m1.5 0h-1.5m0 0v-8L17 12M4 12h10" /></svg
+				stroke-width="1.5"
+				><path
+					d="M3.5 5v14m10-14v14m7 0h-4v-.31c0-.438 0-.657.087-.852c.086-.194.249-.34.575-.634l2.605-2.344c.467-.42.733-1.018.733-1.646V13a2 2 0 1 0-4 0v.4M3.5 12h10"
+				/></svg
 			>
 		</Button>
 		<Button
