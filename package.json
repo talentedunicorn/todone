@@ -68,8 +68,10 @@
 	},
 	"dependencies": {
 		"@sentry/vite-plugin": "^4.8.0",
+		"carta-md": "^4.11.2",
 		"events": "^3.3.0",
 		"highlight.js": "^11.11.1",
+		"isomorphic-dompurify": "^3.11.0",
 		"marked": "^17.0.1",
 		"rxdb": "^16.21.1",
 		"rxjs": "^7.8.2",
