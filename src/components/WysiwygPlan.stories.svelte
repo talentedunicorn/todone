@@ -57,7 +57,7 @@
 		contentField.setSelectionRange(0, 5);
 		await userEvent.click(headingBtn);
 
-		expect(contentField.value).toBe('# Title');
+		expect(contentField.value).toBe('## Title');
 	}}
 />
 
