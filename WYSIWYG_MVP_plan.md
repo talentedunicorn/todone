@@ -68,3 +68,4 @@ Implementation approach:
 - Merge PR #571
 - Schedule carta-md integration for future sprint
 - Address keyboard shortcuts tech debt in future
+- Implement multi-line indentation on Tab when multiple lines selected and add Shift+Tab outdent support in the content textarea. Update tests and docs accordingly.
