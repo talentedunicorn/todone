@@ -111,7 +111,8 @@
 			if (!ta) return;
 			const s = ta.selectionStart;
 			const value = ta.value;
-			const newValue = value.substring(0, s) + '\t' + value.substring(s);
+			// Use a single space instead of a tab character for MVP simplicity
+			const newValue = value.substring(0, s) + ' ' + value.substring(s);
 			data = { ...(data as any), value: newValue } as any;
 			requestAnimationFrame(() => {
 				ta.focus();
