@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { marked } from 'marked';
+	import { Carta, Markdown } from 'carta-md';
+	import 'carta-md/default.css';
 	import ExportImport from '../components/ExportImport.svelte';
 	import { getDocCount } from '../db';
 
@@ -7,6 +8,10 @@
 
 	let complete = $state<number>(0);
 	let incomplete = $state<number>(0);
+
+	const carta = new Carta({
+		sanitizer: false
+	});
 
 	const fetchCount = async () => {
 		const { complete: completeSub, incomplete: incompleteSub } = await getDocCount();
@@ -28,7 +33,7 @@
 </svelte:head>
 
 <section class="Wrapper">
-	<div>{@html marked(content)}</div>
+	<div><Markdown {carta} value={content} /></div>
 	<details>
 		<summary>Data summary</summary>
 		<p>Done &#8212; {complete}</p>
@@ -52,5 +57,14 @@
 			align-items: flex-start;
 			gap: 2rem;
 		}
+	}
+
+	:global(.carta-md) {
+		font-size: 1.2rem;
+		line-height: 1.7;
+	}
+
+	:global(.carta-md a) {
+		color: var(--primary);
 	}
 </style>
