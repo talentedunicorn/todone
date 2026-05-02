@@ -5,6 +5,8 @@
 	import { component } from '@cartamd/plugin-component';
 	import { svelte, initializeComponents } from '@cartamd/plugin-component/svelte';
 	import SimpleImage from './SimpleImage.svelte';
+	import IconH2 from './IconH2.svelte';
+	import IconH3 from './IconH3.svelte';
 	import Button from './Button.svelte';
 	import type { Todo } from '../db';
 
@@ -29,6 +31,7 @@
 
 			carta = new Carta({
 				sanitizer: DOMPurify.sanitize,
+				disableIcons: ['heading'],
 				extensions: [
 					component(mapped, initializeComponents),
 					{
@@ -36,12 +39,12 @@
 							{
 								id: 'h2',
 								action: (input: any) => input.toggleLinePrefix('## '),
-								component: { render: () => 'H2' } as any
+								component: IconH2
 							},
 							{
 								id: 'h3',
 								action: (input: any) => input.toggleLinePrefix('### '),
-								component: { render: () => 'H3' } as any
+								component: IconH3
 							}
 						]
 					}
@@ -52,7 +55,7 @@
 
 	let titleInput: HTMLInputElement;
 
-	let data = $state<Todo | Content>(defaultValue ?? { title: '', value: '' });
+	let data = $state<Todo | Content>({ title: '', value: '' });
 
 	$effect(() => {
 		if (defaultValue) {
@@ -160,6 +163,7 @@ Form component with a title and content inputs
 
 		.editor-wrapper {
 			width: 100%;
+			min-height: 200px;
 			border-radius: 1rem;
 			border: 0.2em solid var(--black);
 			overflow: hidden;
