@@ -5,7 +5,22 @@
 
 	const { Story } = defineMeta({
 		title: 'Form',
-		component: Form
+		component: Form,
+		decorators: [
+			(story, { args }) => {
+				if (args.theme) {
+					document.documentElement.dataset.theme = args.theme;
+				}
+				return story();
+			}
+		],
+		argTypes: {
+			theme: {
+				control: 'select',
+				options: ['light', 'dark'],
+				description: 'Theme to apply'
+			}
+		}
 	});
 </script>
 
@@ -16,7 +31,7 @@
 <Story
 	{template}
 	name="Empty"
-	args={{ enableEditor: false }}
+	args={{ enableEditor: true }}
 	play={async ({ canvas }) => {
 		const titleInput = canvas.getByPlaceholderText('Start something...');
 		expect(titleInput).toBeInTheDocument();
@@ -27,7 +42,7 @@
 	{template}
 	name="With default value"
 	args={{
-		enableEditor: false,
+		enableEditor: true,
 		defaultValue: {
 			title: 'Things to do',
 			value: '- Write todos'
