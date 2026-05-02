@@ -4,7 +4,7 @@
 	import { code } from '@cartamd/plugin-code';
 	import { toastActions, toastMessage } from '../stores';
 
-	// Shared carta instance for rendering
+	// Create a per-component carta instance to ensure reactivity and avoid shared state issues
 	const carta = new Carta({
 		sanitizer: false,
 		extensions: [code()]
@@ -112,7 +112,9 @@
 		</div>
 	</header>
 	<div data-testid="content" class="Content" class:expanded>
-		<Markdown {carta} {value} />
+		{#key value}
+			<Markdown {carta} {value} />
+		{/key}
 	</div>
 	<div class="Actions">
 		<Button
