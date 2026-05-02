@@ -16,6 +16,7 @@
 <Story
 	{template}
 	name="Empty"
+	args={{ enableEditor: false }}
 	play={async ({ canvas }) => {
 		const titleInput = canvas.getByPlaceholderText('Start something...');
 		expect(titleInput).toBeInTheDocument();
@@ -26,6 +27,7 @@
 	{template}
 	name="With default value"
 	args={{
+		enableEditor: false,
 		defaultValue: {
 			title: 'Things to do',
 			value: '- Write todos'
