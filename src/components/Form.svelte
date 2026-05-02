@@ -18,30 +18,34 @@
 		defaultValue?: Todo | null;
 		enableEditor?: boolean;
 		onClear: () => void;
-		onUpdate: (data: Todo) => void;
-		onSubmit: (data: Todo) => void;
+		onUpdate: (data: Todo) => Promise<void> | void;
+		onSubmit: (data: Todo) => Promise<void> | void;
 	}
 
 	let { defaultValue, enableEditor = true, onClear, onSubmit, onUpdate }: Props = $props();
 
 	let carta = $state<any>(null);
 	let isBrowser = $state(false);
+	let codeTheme = $state<'github-light' | 'github-dark'>('github-light');
 
-	onMount(async () => {
-		if (typeof window === 'undefined' || !enableEditor) return;
-		await tick();
-		isBrowser = true;
+	const resolveCodeTheme = (): 'github-light' | 'github-dark' => {
+		if (typeof window === 'undefined') return 'github-light';
+		const configuredTheme = document.documentElement.dataset.theme;
+		if (configuredTheme === 'dark') return 'github-dark';
+		if (configuredTheme === 'light') return 'github-light';
+		return window.matchMedia('(prefers-color-scheme: dark)').matches
+			? 'github-dark'
+			: 'github-light';
+	};
 
+	const buildCarta = (theme: 'github-light' | 'github-dark') => {
 		const mapped = [svelte('img', SimpleImage)];
-		carta = new Carta({
+		return new Carta({
 			sanitizer: DOMPurify.sanitize,
 			disableIcons: ['heading'],
 			extensions: [
 				code({
-					theme: {
-						light: 'github-light',
-						dark: 'github-dark'
-					}
+					theme
 				}),
 				component(mapped, initializeComponents),
 				{
@@ -63,6 +67,46 @@
 				themes: ['github-light', 'github-dark']
 			}
 		});
+	};
+
+	onMount(() => {
+		if (typeof window === 'undefined' || !enableEditor) return;
+
+		let observer: MutationObserver | null = null;
+		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+		const onSystemThemeChange = () => {
+			if (!document.documentElement.dataset.theme) {
+				codeTheme = resolveCodeTheme();
+				carta = buildCarta(codeTheme);
+			}
+		};
+
+		const initializeEditor = async () => {
+			await tick();
+			isBrowser = true;
+			codeTheme = resolveCodeTheme();
+			carta = buildCarta(codeTheme);
+
+			observer = new MutationObserver(() => {
+				const nextTheme = resolveCodeTheme();
+				if (nextTheme !== codeTheme) {
+					codeTheme = nextTheme;
+					carta = buildCarta(nextTheme);
+				}
+			});
+			observer.observe(document.documentElement, {
+				attributes: true,
+				attributeFilter: ['data-theme']
+			});
+		};
+
+		void initializeEditor();
+		mediaQuery.addEventListener('change', onSystemThemeChange);
+
+		return () => {
+			observer?.disconnect();
+			mediaQuery.removeEventListener('change', onSystemThemeChange);
+		};
 	});
 
 	let titleInput: HTMLInputElement;
@@ -88,8 +132,12 @@
 		onClear();
 	};
 
-	const submit = () => {
-		isEdit ? onUpdate(data as Todo) : onSubmit(data as Todo);
+	const submit = async () => {
+		if (isEdit) {
+			await onUpdate(data as Todo);
+		} else {
+			await onSubmit(data as Todo);
+		}
 		clear();
 	};
 
@@ -135,7 +183,9 @@ Form component with a title and content inputs
 	<label class="visually-hidden" for="content">Content</label>
 	<div class="editor-wrapper">
 		{#if isBrowser && carta}
-			<MarkdownEditor {carta} bind:value={data.value} />
+			{#key carta}
+				<MarkdownEditor {carta} bind:value={data.value} />
+			{/key}
 		{/if}
 	</div>
 	<div class="Actions">
