@@ -10,14 +10,22 @@ When asked about Svelte or SvelteKit topics, ALWAYS use this tool at the start o
 ### 2. get-documentation
 
 Retrieves full documentation content for specific sections. Accepts single or multiple sections.
-After calling the list-sections tool, you MUST analyze the returned documentation sections (especially the use_cases field) and then use the get-documentation tool to fetch ALL documentation sections that are relevant for the user's task.
+After calling the list-sections tool, MUST analyze the returned documentation sections (especially the use_cases field) and then use the get-documentation tool to fetch ALL documentation sections that are relevant for the user's task.
 
 ### 3. svelte-autofixer
 
 Analyzes Svelte code and returns issues and suggestions.
-You MUST use this tool whenever writing Svelte code before sending it to the user. Keep calling it until no issues or suggestions are returned.
+MUST use this tool whenever writing Svelte code before sending it to the user.
 
 ### 4. playground-link
 
 Generates a Svelte Playground link with the provided code.
-After completing the code, ask the user if they want a playground link. Only call this tool after user confirmation and NEVER if code was written to files in their project.
+After completing the code, ask the user if they want a playground link.
+
+---
+
+## Plan Management
+
+The `plans/` directory contains markdown roadmap documents. When working on features, review relevant plans to understand current state and next steps.
+
+At the start of each session, check for stale plans — verify current state against the codebase and update accordingly. Never commit changes to `plans/` directory.

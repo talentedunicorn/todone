@@ -24,12 +24,9 @@ importers:
       carta-md:
         specifier: ^4.11.2
         version: 4.11.2(svelte@5.53.5)
-      events:
-        specifier: ^3.3.0
-        version: 3.3.0
       isomorphic-dompurify:
         specifier: ^3.11.0
-        version: 3.11.0
+        version: 3.12.0
       marked:
         specifier: ^17.0.1
         version: 17.0.1
@@ -3714,8 +3711,8 @@ packages:
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
-  isomorphic-dompurify@3.11.0:
-    resolution: {integrity: sha512-il0sNhLnfawc6vKoMqnZX1JXzEzw0pP3DZWg7mM7VJNJ8cq6DCxeAjEcfjTazyBF8dkUn+rBsBPS5NQs4ZaI3g==}
+  isomorphic-dompurify@3.12.0:
+    resolution: {integrity: sha512-8n+j+6ypTHvriJwFOQ2qusQ6bzGjZVcR3jbe1pBpLcGI1dn4WIl0ctLBngqE5QttquQBAlKXwJeTMw+X7x7qKw==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24.0.0}
 
   isomorphic-ws@5.0.0:
@@ -9640,7 +9637,7 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  isomorphic-dompurify@3.11.0:
+  isomorphic-dompurify@3.12.0:
     dependencies:
       dompurify: 3.4.2
       jsdom: 29.1.1
