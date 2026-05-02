@@ -1,13 +1,51 @@
 <script lang="ts">
 	import Button from './Button.svelte';
 	import { Markdown, Carta } from 'carta-md';
+	import 'carta-md/default.css';
 	import { code } from '@cartamd/plugin-code';
 	import { toastActions, toastMessage } from '../stores';
+	import { onMount } from 'svelte';
 
-	// Create a per-component carta instance to ensure reactivity and avoid shared state issues
-	const carta = new Carta({
-		sanitizer: false,
-		extensions: [code()]
+	let carta = $state<any>(null);
+	let currentTheme = $state<'github-light' | 'github-dark'>('github-light');
+
+	const resolveCodeTheme = (): 'github-light' | 'github-dark' => {
+		if (typeof window === 'undefined') return 'github-light';
+		const configuredTheme = document.documentElement.dataset.theme;
+		if (configuredTheme === 'dark') return 'github-dark';
+		if (configuredTheme === 'light') return 'github-light';
+		return window.matchMedia('(prefers-color-scheme: dark)').matches
+			? 'github-dark'
+			: 'github-light';
+	};
+
+	const buildCarta = (theme: 'github-light' | 'github-dark') => {
+		return new Carta({
+			sanitizer: false,
+			extensions: [code({ theme })],
+			shikiOptions: {
+				themes: ['github-light', 'github-dark']
+			}
+		});
+	};
+
+	onMount(() => {
+		currentTheme = resolveCodeTheme();
+		carta = buildCarta(currentTheme);
+
+		const observer = new MutationObserver(() => {
+			const nextTheme = resolveCodeTheme();
+			if (nextTheme !== currentTheme) {
+				currentTheme = nextTheme;
+				carta = buildCarta(nextTheme);
+			}
+		});
+		observer.observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['data-theme']
+		});
+
+		return () => observer.disconnect();
 	});
 
 	interface Props {
@@ -112,9 +150,11 @@
 		</div>
 	</header>
 	<div data-testid="content" class="Content" class:expanded>
-		{#key value}
-			<Markdown {carta} {value} />
-		{/key}
+		{#if carta}
+			{#key `${value}-${currentTheme}`}
+				<Markdown {carta} {value} />
+			{/key}
+		{/if}
 	</div>
 	<div class="Actions">
 		<Button
@@ -226,8 +266,7 @@
 			overflow: auto;
 		}
 
-		:global(.hljs) {
-			border-radius: 0.5rem;
+		:global(.shiki) {
 			padding: 1rem;
 		}
 
