@@ -2,6 +2,7 @@
 	import { Carta, MarkdownEditor } from 'carta-md';
 	import 'carta-md/default.css';
 	import DOMPurify from 'isomorphic-dompurify';
+	import { code } from '@cartamd/plugin-code';
 	import { component } from '@cartamd/plugin-component';
 	import { svelte, initializeComponents } from '@cartamd/plugin-component/svelte';
 	import SimpleImage from './SimpleImage.svelte';
@@ -33,6 +34,12 @@
 				sanitizer: DOMPurify.sanitize,
 				disableIcons: ['heading'],
 				extensions: [
+					code({
+						theme: {
+							light: 'github-light',
+							dark: 'github-dark'
+						}
+					}),
 					component(mapped, initializeComponents),
 					{
 						icons: [
@@ -48,7 +55,10 @@
 							}
 						]
 					}
-				]
+				],
+				shikiOptions: {
+					themes: ['github-light', 'github-dark']
+				}
 			});
 		}
 	});
