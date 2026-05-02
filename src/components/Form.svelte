@@ -163,7 +163,6 @@ Form component with a title and content inputs
 
 		.editor-wrapper {
 			width: 100%;
-			min-height: 200px;
 			border-radius: 1rem;
 			border: 0.2em solid var(--black);
 			overflow: hidden;
