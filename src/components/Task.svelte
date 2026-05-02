@@ -1,24 +1,14 @@
 <script lang="ts">
 	import Button from './Button.svelte';
-	import { marked, Parser, Renderer, type Tokens } from 'marked';
-	import hljs from 'highlight.js';
+	import { Markdown, Carta } from 'carta-md';
+	import { code } from '@cartamd/plugin-code';
 	import { toastActions, toastMessage } from '../stores';
 
-	marked.use({
-		gfm: true
+	// Shared carta instance for rendering
+	const carta = new Carta({
+		sanitizer: false,
+		extensions: [code()]
 	});
-	const originalRenderer = new Renderer();
-	originalRenderer.parser = new Parser();
-
-	const tableExtension = {
-		renderer: {
-			table(token: Tokens.Table) {
-				return `<div class="TableWrapper">${originalRenderer.table(token)}</div> `;
-			}
-		}
-	};
-
-	marked.use(tableExtension);
 
 	interface Props {
 		title: string;
@@ -77,12 +67,6 @@
 			destroy: () => el.removeEventListener('click', scrollToID)
 		};
 	};
-
-	$effect(() => {
-		if (title || value) {
-			hljs.highlightAll();
-		}
-	});
 </script>
 
 <section {...rest}>
@@ -128,7 +112,7 @@
 		</div>
 	</header>
 	<div data-testid="content" class="Content" class:expanded>
-		{@html marked(value)}
+		<Markdown {carta} {value} />
 	</div>
 	<div class="Actions">
 		<Button

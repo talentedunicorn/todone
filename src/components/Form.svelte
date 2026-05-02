@@ -1,5 +1,10 @@
 <script lang="ts">
+	import { Carta, MarkdownEditor } from 'carta-md';
+	import 'carta-md/default.css';
 	import DOMPurify from 'isomorphic-dompurify';
+	import { component } from '@cartamd/plugin-component';
+	import { svelte, initializeComponents } from '@cartamd/plugin-component/svelte';
+	import SimpleImage from './SimpleImage.svelte';
 	import Button from './Button.svelte';
 	import type { Todo } from '../db';
 
@@ -14,32 +19,40 @@
 
 	let { defaultValue, onClear, onSubmit, onUpdate }: Props = $props();
 
-	let carta: any = $state(null);
+	let carta = $state<any>(null);
 	let isBrowser = $state(false);
-	let MarkdownEditor: any = $state(null);
-	let mounted = $state(false);
 
 	$effect(() => {
-		mounted = true;
-	});
-
-	$effect(() => {
-		if (mounted && typeof window !== 'undefined' && !isBrowser) {
+		if (typeof window !== 'undefined' && !isBrowser) {
 			isBrowser = true;
-			Promise.all([import('carta-md'), import('carta-md/default.css')]).then(
-				([{ Carta, MarkdownEditor: ME }, _]) => {
-					carta = new Carta({
-						sanitizer: DOMPurify.sanitize
-					});
-					MarkdownEditor = ME;
-				}
-			);
+			const mapped = [svelte('img', SimpleImage)];
+
+			carta = new Carta({
+				sanitizer: DOMPurify.sanitize,
+				extensions: [
+					component(mapped, initializeComponents),
+					{
+						icons: [
+							{
+								id: 'h2',
+								action: (input: any) => input.toggleLinePrefix('## '),
+								component: { render: () => 'H2' } as any
+							},
+							{
+								id: 'h3',
+								action: (input: any) => input.toggleLinePrefix('### '),
+								component: { render: () => 'H3' } as any
+							}
+						]
+					}
+				]
+			});
 		}
 	});
 
 	let titleInput: HTMLInputElement;
 
-	let data = $state<Todo | Content>({ title: '', value: '' });
+	let data = $state<Todo | Content>(defaultValue ?? { title: '', value: '' });
 
 	$effect(() => {
 		if (defaultValue) {
@@ -106,14 +119,8 @@ Form component with a title and content inputs
 	/>
 	<label class="visually-hidden" for="content">Content</label>
 	<div class="editor-wrapper">
-		{#if isBrowser && carta && MarkdownEditor}
+		{#if isBrowser && carta}
 			<MarkdownEditor {carta} bind:value={data.value} />
-		{:else}
-			<textarea
-				class="fallback-editor"
-				bind:value={data.value}
-				placeholder="Write your markdown here..."
-			></textarea>
 		{/if}
 	</div>
 	<div class="Actions">
@@ -149,11 +156,6 @@ Form component with a title and content inputs
 			gap: 1rem;
 			align-items: flex-end;
 			justify-content: space-between;
-
-			@media (width > 48rem) {
-				position: sticky;
-				bottom: 1rem;
-			}
 		}
 
 		.editor-wrapper {
@@ -161,19 +163,6 @@ Form component with a title and content inputs
 			border-radius: 1rem;
 			border: 0.2em solid var(--black);
 			overflow: hidden;
-		}
-
-		.fallback-editor {
-			width: 100%;
-			min-height: 50vh;
-			padding: 1rem;
-			font-size: 1rem;
-			line-height: 1.7;
-			font-family: monospace;
-			border: none;
-			resize: none;
-			background: var(--white);
-			border-radius: 1rem;
 		}
 
 		input {
@@ -188,5 +177,69 @@ Form component with a title and content inputs
 			border-radius: 0.5rem;
 			padding: 0.5em;
 		}
+	}
+
+	:global(.carta-editor) {
+		background-color: var(--white) !important;
+		color: var(--black) !important;
+		border: none !important;
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease;
+	}
+
+	:global(.carta-toolbar) {
+		background-color: var(--white) !important;
+		color: var(--black) !important;
+		border: none !important;
+		border-bottom: 0.1em solid var(--gray-light) !important;
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease;
+	}
+
+	:global(.carta-toolbar button) {
+		color: var(--black) !important;
+		background: transparent !important;
+		border: none !important;
+		cursor: pointer;
+		padding: 0.5rem !important;
+		font-size: 1rem !important;
+		font-family: inherit !important;
+
+		&:hover {
+			background-color: var(--gray-light) !important;
+		}
+	}
+
+	:global(.carta-icon) {
+		width: 2rem !important;
+		height: 2rem !important;
+	}
+
+	:global(.carta-editor textarea) {
+		background-color: var(--white) !important;
+		color: var(--black) !important;
+		caret-color: var(--black) !important;
+		border: none !important;
+		font-size: 1rem !important;
+		line-height: 1.7 !important;
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease;
+	}
+
+	:global(.carta-font-code) {
+		font-family: monospace !important;
+		font-size: 1rem !important;
+		line-height: 1.7 !important;
+	}
+
+	:global(.carta-editor code) {
+		background: transparent !important;
+		border: none !important;
+		padding: 0 !important;
+		font-size: inherit !important;
+		display: inline !important;
 	}
 </style>
