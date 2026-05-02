@@ -2,7 +2,6 @@
 	import { Carta, MarkdownEditor } from 'carta-md';
 	import 'carta-md/default.css';
 	import DOMPurify from 'isomorphic-dompurify';
-	import { code } from '@cartamd/plugin-code';
 	import { component } from '@cartamd/plugin-component';
 	import { svelte, initializeComponents } from '@cartamd/plugin-component/svelte';
 	import { onMount, tick } from 'svelte';
@@ -26,27 +25,13 @@
 
 	let carta = $state<any>(null);
 	let isBrowser = $state(false);
-	let codeTheme = $state<'github-light' | 'github-dark'>('github-light');
 
-	const resolveCodeTheme = (): 'github-light' | 'github-dark' => {
-		if (typeof window === 'undefined') return 'github-light';
-		const configuredTheme = document.documentElement.dataset.theme;
-		if (configuredTheme === 'dark') return 'github-dark';
-		if (configuredTheme === 'light') return 'github-light';
-		return window.matchMedia('(prefers-color-scheme: dark)').matches
-			? 'github-dark'
-			: 'github-light';
-	};
-
-	const buildCarta = (theme: 'github-light' | 'github-dark') => {
+	const buildCarta = () => {
 		const mapped = [svelte('img', SimpleImage)];
 		return new Carta({
 			sanitizer: DOMPurify.sanitize,
 			disableIcons: ['heading'],
 			extensions: [
-				code({
-					theme
-				}),
 				component(mapped, initializeComponents),
 				{
 					icons: [
@@ -64,51 +49,20 @@
 						}
 					]
 				}
-			],
-			shikiOptions: {
-				themes: ['github-light', 'github-dark']
-			}
+			]
 		});
 	};
 
 	onMount(() => {
 		if (typeof window === 'undefined' || !enableEditor) return;
 
-		let observer: MutationObserver | null = null;
-		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-		const onSystemThemeChange = () => {
-			if (!document.documentElement.dataset.theme) {
-				codeTheme = resolveCodeTheme();
-				carta = buildCarta(codeTheme);
-			}
-		};
-
 		const initializeEditor = async () => {
 			await tick();
 			isBrowser = true;
-			codeTheme = resolveCodeTheme();
-			carta = buildCarta(codeTheme);
-
-			observer = new MutationObserver(() => {
-				const nextTheme = resolveCodeTheme();
-				if (nextTheme !== codeTheme) {
-					codeTheme = nextTheme;
-					carta = buildCarta(nextTheme);
-				}
-			});
-			observer.observe(document.documentElement, {
-				attributes: true,
-				attributeFilter: ['data-theme']
-			});
+			carta = buildCarta();
 		};
 
 		void initializeEditor();
-		mediaQuery.addEventListener('change', onSystemThemeChange);
-
-		return () => {
-			observer?.disconnect();
-			mediaQuery.removeEventListener('change', onSystemThemeChange);
-		};
 	});
 
 	let titleInput: HTMLInputElement;
