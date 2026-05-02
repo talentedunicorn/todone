@@ -53,12 +53,14 @@
 						{
 							id: 'h2',
 							action: (input: any) => input.toggleLinePrefix('## '),
-							component: IconH2
+							component: IconH2,
+							label: 'Heading 2'
 						},
 						{
 							id: 'h3',
 							action: (input: any) => input.toggleLinePrefix('### '),
-							component: IconH3
+							component: IconH3,
+							label: 'Heading 3'
 						}
 					]
 				}
@@ -184,7 +186,15 @@ Form component with a title and content inputs
 	<div class="editor-wrapper">
 		{#if isBrowser && carta}
 			{#key carta}
-				<MarkdownEditor {carta} bind:value={data.value} />
+				<MarkdownEditor
+					{carta}
+					bind:value={data.value}
+					userLabels={{
+						iconsLabels: {
+							heading: 'Heading'
+						}
+					}}
+				/>
 			{/key}
 		{/if}
 	</div>
@@ -306,5 +316,14 @@ Form component with a title and content inputs
 		padding: 0 !important;
 		font-size: inherit !important;
 		display: inline !important;
+	}
+
+	:global(.carta-icons-menu) {
+		background: var(--white) !important;
+		color: var(--black) !important;
+	}
+
+	:global(.carta-icons-menu button) {
+		color: var(--black) !important;
 	}
 </style>
