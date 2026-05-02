@@ -23,7 +23,7 @@
 		[key: string]: any;
 	}
 
-	const {
+	let {
 		title = '',
 		value = '',
 		completed = false,
