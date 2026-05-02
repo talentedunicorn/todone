@@ -1,10 +1,10 @@
 # WYSIWYG MVP Plan: Form Body Toolbar
 
-## Overview
+## Status: Superseded by carta-md Integration
 
-- Add a minimal, toolbar-based WYSIWYG for the form body (content textarea) using markdown syntax.
-- MVP uses text labels on buttons and does not implement keyboard shortcuts in MVP (tech debt).
-- **Status**: Implemented in Form.svelte with full text labels and auto-insert for lists.
+This plan documented the original custom toolbar approach. The implementation was replaced by carta-md (see carta_integration_roadmap.md).
+
+**Historical note**: The custom toolbar was implemented in Form.svelte but has been superseded.
 
 ## Scope (MVP) - COMPLETED
 

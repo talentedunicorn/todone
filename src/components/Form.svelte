@@ -8,6 +8,8 @@
 	import SimpleImage from './SimpleImage.svelte';
 	import IconH2 from './IconH2.svelte';
 	import IconH3 from './IconH3.svelte';
+	import IconTable from './IconTable.svelte';
+	import IconImage from './IconImage.svelte';
 	import Button from './Button.svelte';
 	import type { Todo } from '../db';
 
@@ -46,6 +48,43 @@
 							action: (input: any) => input.toggleLinePrefix('### '),
 							component: IconH3,
 							label: 'Heading 3'
+						},
+						{
+							id: 'table',
+							action: (input: any) => {
+								const table = `| Header 1 | Header 2 | Header 3 |
+|----------|----------|----------|
+| Cell 1   | Cell 2   | Cell 3   |
+| Cell 4   | Cell 5   | Cell 6   |
+`;
+								const selection = input.getSelection();
+								input.insertAt(selection.start, table);
+								input.textarea.setSelectionRange(selection.start + 12, selection.start + 18);
+							},
+							component: IconTable,
+							label: 'Insert Table'
+						},
+						{
+							id: 'image',
+							action: (input: any) => {
+								const selection = input.getSelection();
+								const imageMarkdown = '![Alt text](image-url)';
+								let insertText: string;
+								let cursorPos: number;
+
+								if (selection.slice) {
+									insertText = `![${selection.slice}](image-url)`;
+									cursorPos = selection.start + insertText.length;
+								} else {
+									insertText = imageMarkdown;
+									cursorPos = selection.start + 2;
+								}
+
+								input.insertAt(selection.start, insertText);
+								input.textarea.setSelectionRange(cursorPos, cursorPos);
+							},
+							component: IconImage,
+							label: 'Insert Image'
 						}
 					]
 				}

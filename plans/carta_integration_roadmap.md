@@ -33,13 +33,30 @@ Resolved technical debt:
 - Keyboard shortcuts now use carta defaults (Cmd/Ctrl+B, I, H, `, K)
 - List formatting edge cases handled by editor library
 
+### Phase 1.5: Table & Image Toolbar Extensions ✅ In Progress
+
+Objective: Add table and image toolbar buttons to the carta-md editor.
+
+Features:
+
+- **Table**: Insert 3x3 markdown table template at cursor
+- **Image**: Insert image markdown syntax `![Alt text](url)` at cursor
+- Uses existing SimpleImage component for rendering
+
+Implementation:
+
+1. Create `IconTable.svelte` component
+2. Create `IconImage.svelte` component
+3. Add custom icons to carta extensions in Form.svelte
+
 ---
 
 ## Next Steps
 
-1. Add syntax highlighting support for dynamic light/dark theme switching
-2. Test with Storybook to verify UI changes after theming and editor updates
-3. Decide whether to keep `marked` in `Task.svelte` or switch rendering to carta for consistency
+1. Implement Table & Image toolbar buttons (Phase 1.5)
+2. Add syntax highlighting support for dynamic light/dark theme switching
+3. Test with Storybook to verify UI changes after theming and editor updates
+4. Decide whether to keep `marked` in `Task.svelte` or switch rendering to carta for consistency
 
 ---
 
@@ -87,4 +104,6 @@ Candidates:
 - `pnpm-lock.yaml`
 - `src/components/Form.svelte`
 - `src/components/Form.stories.svelte`
+- `src/components/IconTable.svelte` (new)
+- `src/components/IconImage.svelte` (new)
 - `vitest.config.ts`
