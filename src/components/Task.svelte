@@ -47,8 +47,8 @@
 		ev.preventDefault();
 		const offset = document.querySelector('.Menu')?.getBoundingClientRect().height ?? 0; // Set offset so menu doesn't cover the task
 		const el = ev.currentTarget as HTMLLinkElement;
-		const id = el.getAttribute('href')?.slice(0);
-		const target = document.querySelector(id!);
+		const id = el.getAttribute('href')?.slice(1);
+		const target = document.getElementById(id!);
 		const bodyPosition = document.body.getBoundingClientRect().top;
 		const targetPosition = target?.getBoundingClientRect().top ?? 0;
 

@@ -34,9 +34,8 @@
 	};
 
 	const handleUpdate = async (data: any) => {
-		update(data).then(() => {
-			clearEdit();
-		});
+		await update(data);
+		clearEdit();
 	};
 
 	const handleCreate = async (data: any) => {

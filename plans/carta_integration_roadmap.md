@@ -1,80 +1,71 @@
-# Carta Integration Roadmap
+# Carta Integration Plan (Consolidated)
 
-## Executive Summary
+## Overview
 
-Replace custom WYSIWYG toolbar in `Form.svelte` with carta-md editor, then progressively enhance with plugins and features through phased releases.
+Replace the custom WYSIWYG toolbar in `Form.svelte` with `carta-md`, keep markdown storage unchanged, and roll out future editor enhancements in phases.
 
----
+## Why Carta
 
-## Phase 1: MVP Integration ✅ COMPLETED
-
-### Objective
-
-Replace custom toolbar code with carta-md core, maintain feature parity, reduce ~150 lines of custom code.
-
-### Completed Steps
-
-1. Installed `carta-md` + `isomorphic-dompurify`
-2. Updated `Form.svelte` with dynamic browser-side import
-3. Removed custom toolbar functions
-4. Verified tests pass (14/14)
-
-### Tech Debt Resolved
-
-- Keyboard shortcuts now included (carta default: Cmd/Ctrl+B, I, H, `, K)
-- List handling edge cases handled by library
+- Svelte 5 compatible markdown editor
+- Built-in toolbar and keyboard shortcuts
+- Better list handling and reduced custom editor logic
+- Extensible plugin system for future enhancements
+- Syntax highlighting support via Shiki
 
 ---
 
-## Phase 2: Rendering Consistency (Optional) - NOT STARTED
+## Current Status
 
-### Objective
+### Phase 1: MVP Integration ✅ Completed
 
-Use carta for markdown rendering in `Task.svelte` for consistency with editor.
+Objective: replace custom toolbar code with `carta-md` core while maintaining feature parity.
 
-### Decision Point
+Completed:
 
-**Keep `marked` or switch to carta?**
+1. Installed `carta-md` and `isomorphic-dompurify`
+2. Updated `Form.svelte` with browser-safe integration
+3. Removed custom toolbar/list-manipulation helpers
+4. Verified existing tests passed
+5. Updated Storybook coverage for form editor behavior
 
-| Aspect       | Keep `marked`      | Switch to carta                          |
-| ------------ | ------------------ | ---------------------------------------- |
-| Code changes | None               | Replace `marked()` with `carta.render()` |
-| Consistency  | Different libs     | Same lib for edit/render                 |
-| Highlight.js | Already integrated | Replaced by Shiki                        |
-| Bundle size  | Current            | May increase                             |
+Resolved technical debt:
 
-**Recommendation**: Keep `marked` for now, revisit after Phase 1 proven stable.
-
----
-
-## Phase 3: Plugin Integration - NOT STARTED
-
-### Plugins to Consider
-
-| Plugin                   | Install    | Use Case                 | Priority |
-| ------------------------ | ---------- | ------------------------ | -------- |
-| `@cartamd/plugin-anchor` | `pnpm add` | Heading anchor links     | MEDIUM   |
-| `@cartamd/plugin-code`   | `pnpm add` | Better code highlighting | LOW      |
-| `@cartamd/plugin-emoji`  | `pnpm add` | Emoji picker             | LOW      |
-| `@cartamd/plugin-slash`  | `pnpm add` | Slash commands           | LOW      |
-
-**Decision**: Defer all plugins until Phase 1 proven stable.
+- Keyboard shortcuts now use carta defaults (Cmd/Ctrl+B, I, H, `, K)
+- List formatting edge cases handled by editor library
 
 ---
 
-## Phase 4: Theme Customization - NOT STARTED
+## Next Steps
 
-### Options
-
-1. Use default carta theme (simplest)
-2. Override CSS variables to match app (`--black`, `--white`, etc.)
-3. Custom toolbar icons
-
-**Decision**: Use default for now, revisit after user feedback.
+1. Add syntax highlighting support for dynamic light/dark theme switching
+2. Test with Storybook to verify UI changes after theming and editor updates
+3. Decide whether to keep `marked` in `Task.svelte` or switch rendering to carta for consistency
 
 ---
 
-## Phase 5: Advanced Features - FUTURE
+## Post-MVP Roadmap
+
+### Phase 2: Rendering Consistency (Optional)
+
+Use carta for markdown rendering in `Task.svelte` only if consistency benefits outweigh migration cost.
+
+Recommendation: keep `marked` for now and revisit after theme updates stabilize.
+
+### Phase 3: Plugin Integration
+
+Candidates:
+
+- `@cartamd/plugin-anchor` (heading anchor links, medium priority)
+- `@cartamd/plugin-code` (enhanced code highlighting, low priority)
+- `@cartamd/plugin-emoji` (emoji picker, low priority)
+- `@cartamd/plugin-slash` (slash commands, low priority)
+
+### Phase 4: Theme Customization
+
+- Start with carta defaults, then map styles to app variables
+- Keep custom CSS minimal to reduce maintenance
+
+### Phase 5: Advanced Features
 
 - Image upload/embedding
 - Custom component rendering (task-specific)
@@ -84,18 +75,16 @@ Use carta for markdown rendering in `Task.svelte` for consistency with editor.
 
 ## Risk Considerations
 
-1. **Breaking changes**: Carta v4 is active (latest: Jun 2025). Monitor for breaking changes in minor releases.
-2. **Bundle size**: carta adds Shiki (~500KB). Consider tree-shaking if needed.
-3. **SSR**: App appears SPA (`vite-plugin-pwa`), but carta supports SSR if needed later.
+1. Carta v4 is actively evolving; monitor release notes for breaking changes.
+2. Shiki can increase bundle size; optimize only if performance metrics require it.
+3. Current app is SPA-oriented, but future SSR usage may require hydration checks.
 
 ---
 
-## File Changes Summary
+## Files Updated During MVP
 
-| File                                        | Change                                 |
-| ------------------------------------------- | -------------------------------------- |
-| `package.json`                              | Add `carta-md`, `isomorphic-dompurify` |
-| `src/components/Form.svelte`                | Replace toolbar/textarea with carta    |
-| `src/components/Form.stories.svelte`        | Update stories                         |
-| `src/components/WysiwygPlan.stories.svelte` | Deleted (old toolbar tests)            |
-| `plans/carta_md_integration_plan.md`        | Mark MVP complete                      |
+- `package.json`
+- `pnpm-lock.yaml`
+- `src/components/Form.svelte`
+- `src/components/Form.stories.svelte`
+- `vitest.config.ts`
