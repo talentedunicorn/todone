@@ -16,18 +16,19 @@
 
 	interface Props {
 		defaultValue?: Todo | null;
+		enableEditor?: boolean;
 		onClear: () => void;
 		onUpdate: (data: Todo) => void;
 		onSubmit: (data: Todo) => void;
 	}
 
-	let { defaultValue, onClear, onSubmit, onUpdate }: Props = $props();
+	let { defaultValue, enableEditor = true, onClear, onSubmit, onUpdate }: Props = $props();
 
 	let carta = $state<any>(null);
 	let isBrowser = $state(false);
 
 	onMount(async () => {
-		if (typeof window === 'undefined') return;
+		if (typeof window === 'undefined' || !enableEditor) return;
 		await tick();
 		isBrowser = true;
 

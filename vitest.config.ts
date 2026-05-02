@@ -33,8 +33,7 @@ export default mergeConfig(
 									browser: 'chromium'
 								}
 							]
-						},
-						setupFiles: ['.storybook/vitest.setup.ts']
+						}
 					}
 				}
 			],
