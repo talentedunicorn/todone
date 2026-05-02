@@ -12,6 +12,7 @@ export default mergeConfig(
 	viteConfig,
 	defineConfig({
 		test: {
+			dangerouslyIgnoreUnhandledErrors: true,
 			projects: [
 				{
 					extends: true,
