@@ -41,7 +41,7 @@
 
 ## Future Work: carta-md Integration
 
-See `plans/carta_md_integration_plan.md` for details.
+See `plans/carta_integration_roadmap.md` for details.
 
 Rationale for future:
 
