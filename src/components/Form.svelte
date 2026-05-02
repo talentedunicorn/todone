@@ -5,6 +5,7 @@
 	import { code } from '@cartamd/plugin-code';
 	import { component } from '@cartamd/plugin-component';
 	import { svelte, initializeComponents } from '@cartamd/plugin-component/svelte';
+	import { onMount, tick } from 'svelte';
 	import SimpleImage from './SimpleImage.svelte';
 	import IconH2 from './IconH2.svelte';
 	import IconH3 from './IconH3.svelte';
@@ -25,42 +26,42 @@
 	let carta = $state<any>(null);
 	let isBrowser = $state(false);
 
-	$effect(() => {
-		if (typeof window !== 'undefined' && !isBrowser) {
-			isBrowser = true;
-			const mapped = [svelte('img', SimpleImage)];
+	onMount(async () => {
+		if (typeof window === 'undefined') return;
+		await tick();
+		isBrowser = true;
 
-			carta = new Carta({
-				sanitizer: DOMPurify.sanitize,
-				disableIcons: ['heading'],
-				extensions: [
-					code({
-						theme: {
-							light: 'github-light',
-							dark: 'github-dark'
-						}
-					}),
-					component(mapped, initializeComponents),
-					{
-						icons: [
-							{
-								id: 'h2',
-								action: (input: any) => input.toggleLinePrefix('## '),
-								component: IconH2
-							},
-							{
-								id: 'h3',
-								action: (input: any) => input.toggleLinePrefix('### '),
-								component: IconH3
-							}
-						]
+		const mapped = [svelte('img', SimpleImage)];
+		carta = new Carta({
+			sanitizer: DOMPurify.sanitize,
+			disableIcons: ['heading'],
+			extensions: [
+				code({
+					theme: {
+						light: 'github-light',
+						dark: 'github-dark'
 					}
-				],
-				shikiOptions: {
-					themes: ['github-light', 'github-dark']
+				}),
+				component(mapped, initializeComponents),
+				{
+					icons: [
+						{
+							id: 'h2',
+							action: (input: any) => input.toggleLinePrefix('## '),
+							component: IconH2
+						},
+						{
+							id: 'h3',
+							action: (input: any) => input.toggleLinePrefix('### '),
+							component: IconH3
+						}
+					]
 				}
-			});
-		}
+			],
+			shikiOptions: {
+				themes: ['github-light', 'github-dark']
+			}
+		});
 	});
 
 	let titleInput: HTMLInputElement;
