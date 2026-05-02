@@ -193,11 +193,11 @@
 					>Collapse all</Button
 				>
 			</div>
-			{#each renderedTodos as task, i (i)}
+			{#each renderedTodos as task (task.id)}
 				{@const { id, title, value, completed, updated } = task}
 				<div transition:fly={{ duration: 500, y: 100 }}>
 					<Task
-						id={`task-${i}`}
+						id={`task-${id}`}
 						{title}
 						{value}
 						{completed}
