@@ -61,7 +61,7 @@
 	const routes = {
 		'/about': About,
 		'/login': wrap({
-			component: Login as unknown as ComponentType,
+			component: Login,
 			props: {
 				auth0: () => auth0
 			},
@@ -83,7 +83,7 @@
 			]
 		}),
 		'/': wrap({
-			component: Home as unknown as ComponentType,
+			component: Home,
 			props: {
 				auth0: () => auth0
 			},
