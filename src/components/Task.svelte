@@ -6,7 +6,7 @@
 	import { toastActions, toastMessage } from '../stores';
 	import { onMount } from 'svelte';
 
-	let carta = $state<any>(null);
+	let carta = $state<Carta | null>(null);
 	let currentTheme = $state<'github-light' | 'github-dark'>('github-light');
 
 	const resolveCodeTheme = (): 'github-light' | 'github-dark' => {

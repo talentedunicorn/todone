@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Carta, MarkdownEditor } from 'carta-md';
+	import { Carta, MarkdownEditor, type InputEnhancer } from 'carta-md';
 	import 'carta-md/default.css';
 	import DOMPurify from 'isomorphic-dompurify';
 	import { component } from '@cartamd/plugin-component';
@@ -25,7 +25,7 @@
 
 	let { defaultValue, enableEditor = true, onClear, onSubmit, onUpdate }: Props = $props();
 
-	let carta = $state<any>(null);
+	let carta = $state<Carta | null>(null);
 	let isBrowser = $state(false);
 
 	const buildCarta = () => {
@@ -39,19 +39,19 @@
 					icons: [
 						{
 							id: 'h2',
-							action: (input: any) => input.toggleLinePrefix('## '),
+							action: (input: InputEnhancer) => input.toggleLinePrefix('## '),
 							component: IconH2,
 							label: 'Heading 2'
 						},
 						{
 							id: 'h3',
-							action: (input: any) => input.toggleLinePrefix('### '),
+							action: (input: InputEnhancer) => input.toggleLinePrefix('### '),
 							component: IconH3,
 							label: 'Heading 3'
 						},
 						{
 							id: 'table',
-							action: (input: any) => {
+							action: (input: InputEnhancer) => {
 								const table = `| Header 1 | Header 2 | Header 3 |
 |----------|----------|----------|
 | Cell 1   | Cell 2   | Cell 3   |
@@ -66,7 +66,7 @@
 						},
 						{
 							id: 'image',
-							action: (input: any) => {
+							action: (input: InputEnhancer) => {
 								const selection = input.getSelection();
 								const imageMarkdown = '![Alt text](image-url)';
 								let insertText: string;

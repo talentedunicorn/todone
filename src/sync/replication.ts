@@ -30,17 +30,18 @@ export const setupReplication = (db: RxDatabase, url: string) => {
 	return replicationState;
 };
 
-const fetchWithAuth = async (url: RequestInfo | URL, options: any) => {
+const fetchWithAuth = async (url: RequestInfo | URL, options?: RequestInit) => {
 	let authToken: string | null | undefined;
-	const optionsWithAuth = Object.assign({}, options);
-	if (!optionsWithAuth.headers) {
-		optionsWithAuth.headers = {};
-	}
+
+	const headers = new Headers(options?.headers);
 
 	token.subscribe((v) => (authToken = v));
-	optionsWithAuth.headers['Authorization'] = `Bearer ${authToken}`;
+	headers.set('Authorization', `Bearer ${authToken}`);
 
-	const response = await fetch(url, optionsWithAuth);
+	const response = await fetch(url, {
+		...options,
+		headers
+	});
 
 	if (!response.ok) {
 		const { error, reason }: { error: string; reason: string } = await response.json();
