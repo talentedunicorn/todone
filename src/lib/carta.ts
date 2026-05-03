@@ -1,9 +1,6 @@
 import { Carta } from 'carta-md';
 import DOMPurify from 'isomorphic-dompurify';
-import { component } from '@cartamd/plugin-component';
-import { svelte, initializeComponents } from '@cartamd/plugin-component/svelte';
 import { code } from '@cartamd/plugin-code';
-import SimpleImage from '../components/SimpleImage.svelte';
 import IconH2 from '../components/IconH2.svelte';
 import IconH3 from '../components/IconH3.svelte';
 import IconTable from '../components/IconTable.svelte';
@@ -56,7 +53,6 @@ export function createViewerCarta(options: ViewerOptions = {}) {
 
 export function createEditorCarta(options: EditorOptions = {}) {
 	const sanitizer = options.sanitizer ?? DOMPurify.sanitize;
-	const mapped = [svelte('img', SimpleImage)];
 
 	const defaultIcons = [
 		{
@@ -111,7 +107,6 @@ export function createEditorCarta(options: EditorOptions = {}) {
 	];
 
 	const extensions: any[] = [
-		component(mapped, initializeComponents),
 		{
 			icons: options.customIcons ?? defaultIcons
 		}
