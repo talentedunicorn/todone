@@ -248,7 +248,7 @@ Form component with a title and content inputs
 	}
 
 	:global(.carta-renderer, .carta-input) {
-		max-height: 20rem; /* Sets a maximum height for the editor and input */
+		max-height: 25rem; /* Sets a maximum height for the editor and input */
 	}
 
 	:global(.carta-editor) {
