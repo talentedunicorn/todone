@@ -247,6 +247,10 @@ Form component with a title and content inputs
 		}
 	}
 
+	:global(.carta-renderer, .carta-input) {
+		max-height: 20rem; /* Sets a maximum height for the editor and input */
+	}
+
 	:global(.carta-editor) {
 		background-color: var(--white) !important;
 		color: var(--black) !important;
