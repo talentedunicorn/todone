@@ -1,16 +1,9 @@
 <script lang="ts">
-	import { Carta, MarkdownEditor, type InputEnhancer } from 'carta-md';
+	import { Carta, MarkdownEditor } from 'carta-md';
 	import 'carta-md/default.css';
-	import DOMPurify from 'isomorphic-dompurify';
-	import { component } from '@cartamd/plugin-component';
-	import { svelte, initializeComponents } from '@cartamd/plugin-component/svelte';
 	import { onMount, tick } from 'svelte';
-	import SimpleImage from './SimpleImage.svelte';
-	import IconH2 from './IconH2.svelte';
-	import IconH3 from './IconH3.svelte';
-	import IconTable from './IconTable.svelte';
-	import IconImage from './IconImage.svelte';
 	import Button from './Button.svelte';
+	import { createEditorCarta } from '../lib/carta';
 	import type { Todo } from '../db';
 
 	type Content = { title: string; value: string };
@@ -28,81 +21,11 @@
 	let carta = $state<Carta | null>(null);
 	let isBrowser = $state(false);
 
-	const buildCarta = () => {
-		const mapped = [svelte('img', SimpleImage)];
-		return new Carta({
-			sanitizer: DOMPurify.sanitize,
-			disableIcons: ['heading'],
-			extensions: [
-				component(mapped, initializeComponents),
-				{
-					icons: [
-						{
-							id: 'h2',
-							action: (input: InputEnhancer) => input.toggleLinePrefix('## '),
-							component: IconH2,
-							label: 'Heading 2'
-						},
-						{
-							id: 'h3',
-							action: (input: InputEnhancer) => input.toggleLinePrefix('### '),
-							component: IconH3,
-							label: 'Heading 3'
-						},
-						{
-							id: 'table',
-							action: (input: InputEnhancer) => {
-								const table = `| Header 1 | Header 2 | Header 3 |
-|----------|----------|----------|
-| Cell 1   | Cell 2   | Cell 3   |
-| Cell 4   | Cell 5   | Cell 6   |
-`;
-								const selection = input.getSelection();
-								input.insertAt(selection.start, table);
-								input.textarea.setSelectionRange(selection.start + 12, selection.start + 18);
-							},
-							component: IconTable,
-							label: 'Insert Table'
-						},
-						{
-							id: 'image',
-							action: (input: InputEnhancer) => {
-								const selection = input.getSelection();
-								const imageMarkdown = '![Alt text](image-url)';
-								let insertText: string;
-								let cursorPos: number;
-
-								if (selection.slice) {
-									insertText = `![${selection.slice}](image-url)`;
-									cursorPos = selection.start + insertText.length;
-								} else {
-									insertText = imageMarkdown;
-									cursorPos = selection.start + 2;
-								}
-
-								input.insertAt(selection.start, insertText);
-								input.textarea.setSelectionRange(cursorPos, cursorPos);
-							},
-							component: IconImage,
-							label: 'Insert Image'
-						}
-					]
-				}
-			]
-		});
+	const initializeEditor = async () => {
+		await tick();
+		isBrowser = true;
+		carta = createEditorCarta();
 	};
-
-	onMount(() => {
-		if (typeof window === 'undefined' || !enableEditor) return;
-
-		const initializeEditor = async () => {
-			await tick();
-			isBrowser = true;
-			carta = buildCarta();
-		};
-
-		void initializeEditor();
-	});
 
 	let titleInput: HTMLInputElement;
 
