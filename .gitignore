@@ -28,8 +28,7 @@ storybook-static
 coverage
 .nyc_output
 
-.nx/cache
-.nx/workspace-data
+.cursor/
 
 vite.config.*.timestamp*
 vitest.config.*.timestamp*
