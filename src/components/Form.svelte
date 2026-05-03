@@ -27,6 +27,12 @@
 		carta = createEditorCarta();
 	};
 
+	onMount(() => {
+		if (typeof window === 'undefined' || !enableEditor) return;
+
+		void initializeEditor();
+	});
+
 	let titleInput: HTMLInputElement;
 
 	let data = $state<Todo | Content>({ title: '', value: '' });
