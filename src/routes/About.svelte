@@ -1,17 +1,16 @@
 <script lang="ts">
-	import { Carta, Markdown } from 'carta-md';
+	import { Markdown } from 'carta-md';
 	import 'carta-md/default.css';
 	import ExportImport from '../components/ExportImport.svelte';
 	import { getDocCount } from '../db';
+	import { createViewerCarta } from '../lib/carta';
 
 	import content from '../../About.md?raw';
 
 	let complete = $state<number>(0);
 	let incomplete = $state<number>(0);
 
-	const carta = new Carta({
-		sanitizer: false
-	});
+	const carta = createViewerCarta();
 
 	const fetchCount = async () => {
 		const { complete: completeSub, incomplete: incompleteSub } = await getDocCount();
