@@ -37,8 +37,8 @@
 
 			document.body.removeChild(link);
 			toastMessage.set('Data exported successfully.');
-		} catch (e: any) {
-			toastMessage.set(e.message);
+		} catch (e) {
+			toastMessage.set(e instanceof Error ? e.message : 'An error occurred');
 		} finally {
 			processing = false;
 		}

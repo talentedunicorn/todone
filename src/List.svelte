@@ -33,12 +33,12 @@
 		task = null;
 	};
 
-	const handleUpdate = async (data: any) => {
+	const handleUpdate = async (data: Todo) => {
 		await update(data);
 		clearEdit();
 	};
 
-	const handleCreate = async (data: any) => {
+	const handleCreate = async (data: Todo) => {
 		await add(data);
 	};
 

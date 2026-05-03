@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { node } = $props<{ node: any }>();
+	let { node } = $props<{ node: { url: string; alt: string } }>();
 </script>
 
 <div class="custom-image-wrapper">
