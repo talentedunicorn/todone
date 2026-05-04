@@ -50,7 +50,7 @@ importers:
         version: 5.1.2(storybook@10.3.6(@testing-library/dom@10.4.1)(prettier@3.8.3)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@csstools/postcss-light-dark-function':
         specifier: ^3.0.0
-        version: 3.0.0(postcss@8.5.13)
+        version: 3.0.0(postcss@8.5.14)
       '@nx/storybook':
         specifier: 22.7.1
         version: 22.7.1(@babel/traverse@7.29.0)(@nx/web@22.7.1(@babel/traverse@7.29.0)(@nx/cypress@22.7.1(@babel/traverse@7.29.0)(@zkochan/js-yaml@0.0.7)(eslint@10.3.0(jiti@2.6.1))(nx@22.7.1)(typescript@6.0.3))(@nx/eslint@22.7.1(@babel/traverse@7.29.0)(@zkochan/js-yaml@0.0.7)(eslint@10.3.0(jiti@2.6.1))(nx@22.7.1))(@nx/vite@22.7.1(@babel/traverse@7.29.0)(@nx/eslint@22.7.1(@babel/traverse@7.29.0)(@zkochan/js-yaml@0.0.7)(eslint@10.3.0(jiti@2.6.1))(nx@22.7.1))(nx@22.7.1)(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.7)(jiti@2.6.1)(terser@5.46.2)(yaml@2.8.0))(vitest@4.1.5))(nx@22.7.1))(@zkochan/js-yaml@0.0.7)(eslint@10.3.0(jiti@2.6.1))(nx@22.7.1)(storybook@10.3.6(@testing-library/dom@10.4.1)(prettier@3.8.3)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(typescript@6.0.3)
@@ -107,7 +107,7 @@ importers:
         version: 4.1.5(vitest@4.1.5)
       autoprefixer:
         specifier: ^10.5.0
-        version: 10.5.0(postcss@8.5.13)
+        version: 10.5.0(postcss@8.5.14)
       babel-loader:
         specifier: ^10.1.1
         version: 10.1.1(@babel/core@7.29.0)
@@ -128,7 +128,7 @@ importers:
         version: 1.59.1
       postcss:
         specifier: ^8.5.13
-        version: 8.5.13
+        version: 8.5.14
       prettier:
         specifier: ^3.8.3
         version: 3.8.3
@@ -3409,8 +3409,8 @@ packages:
   postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
 
-  postcss@8.5.13:
-    resolution: {integrity: sha512-qif0+jGGZoLWdHey3UFHHWP0H7Gbmsk8T5VEqyYFbWqPr1XqvLGBbk/sl8V5exGmcYJklJOhOQq1pV9IcsiFag==}
+  postcss@8.5.14:
+    resolution: {integrity: sha512-SoSL4+OSEtR99LHFZQiJLkT59C5B1amGO1NzTwj7TT1qCUgUO6hxOvzkOYxD+vMrXBM3XJIKzokoERdqQq/Zmg==}
     engines: {node: ^10 || ^12 || >=14}
 
   prelude-ls@1.2.1:
@@ -5093,22 +5093,22 @@ snapshots:
 
   '@csstools/css-tokenizer@4.0.0': {}
 
-  '@csstools/postcss-light-dark-function@3.0.0(postcss@8.5.13)':
+  '@csstools/postcss-light-dark-function@3.0.0(postcss@8.5.14)':
     dependencies:
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-tokenizer': 4.0.0
-      '@csstools/postcss-progressive-custom-properties': 5.0.0(postcss@8.5.13)
-      '@csstools/utilities': 3.0.0(postcss@8.5.13)
-      postcss: 8.5.13
+      '@csstools/postcss-progressive-custom-properties': 5.0.0(postcss@8.5.14)
+      '@csstools/utilities': 3.0.0(postcss@8.5.14)
+      postcss: 8.5.14
 
-  '@csstools/postcss-progressive-custom-properties@5.0.0(postcss@8.5.13)':
+  '@csstools/postcss-progressive-custom-properties@5.0.0(postcss@8.5.14)':
     dependencies:
-      postcss: 8.5.13
+      postcss: 8.5.14
       postcss-value-parser: 4.2.0
 
-  '@csstools/utilities@3.0.0(postcss@8.5.13)':
+  '@csstools/utilities@3.0.0(postcss@8.5.14)':
     dependencies:
-      postcss: 8.5.13
+      postcss: 8.5.14
 
   '@emnapi/core@1.10.0':
     dependencies:
@@ -6314,13 +6314,13 @@ snapshots:
 
   at-least-node@1.0.0: {}
 
-  autoprefixer@10.5.0(postcss@8.5.13):
+  autoprefixer@10.5.0(postcss@8.5.14):
     dependencies:
       browserslist: 4.28.2
       caniuse-lite: 1.0.30001791
       fraction.js: 5.3.4
       picocolors: 1.1.1
-      postcss: 8.5.13
+      postcss: 8.5.14
       postcss-value-parser: 4.2.0
 
   available-typed-arrays@1.0.7:
@@ -7875,7 +7875,7 @@ snapshots:
 
   postcss-value-parser@4.2.0: {}
 
-  postcss@8.5.13:
+  postcss@8.5.14:
     dependencies:
       nanoid: 3.3.12
       picocolors: 1.1.1
@@ -8614,7 +8614,7 @@ snapshots:
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.4
-      postcss: 8.5.13
+      postcss: 8.5.14
       rolldown: 1.0.0-rc.17
       tinyglobby: 0.2.16
     optionalDependencies:
