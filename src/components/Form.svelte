@@ -24,7 +24,7 @@
 	const initializeEditor = async () => {
 		await tick();
 		isBrowser = true;
-		carta = createEditorCarta();
+		carta = createEditorCarta({ enableCodeHighlighting: true });
 	};
 
 	onMount(() => {
