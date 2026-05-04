@@ -4,18 +4,32 @@
 	import 'carta-md/default.css';
 	import { toastActions, toastMessage } from '../stores';
 	import { onMount } from 'svelte';
-	import { setupThemeAwareViewer } from '../lib/carta';
+	import { createViewerCarta, resolveCodeTheme } from '../lib/carta';
 
-	let cartaState = $state<{ carta: Carta | null; destroy: () => void } | null>(null);
+	let cartaInstance = $state<Carta | null>(null);
+	let key = $state(0);
 
 	onMount(() => {
-		const viewer = setupThemeAwareViewer();
-		cartaState = viewer;
+		const initialTheme = resolveCodeTheme();
+		cartaInstance = createViewerCarta({ theme: initialTheme, enableCodeHighlighting: true });
 
-		return () => viewer.destroy();
+		const observer = new MutationObserver((mutations) => {
+			for (const mutation of mutations) {
+				if (mutation.attributeName === 'data-theme') {
+					const newTheme = resolveCodeTheme();
+					cartaInstance = createViewerCarta({ theme: newTheme, enableCodeHighlighting: true });
+					key++;
+				}
+			}
+		});
+
+		observer.observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['data-theme']
+		});
+
+		return () => observer.disconnect();
 	});
-
-	const carta = $derived(cartaState?.carta);
 
 	interface Props {
 		title: string;
@@ -119,9 +133,9 @@
 		</div>
 	</header>
 	<div data-testid="content" class="Content" class:expanded>
-		{#if carta}
-			{#key `${value}-${carta}`}
-				<Markdown {carta} {value} />
+		{#if cartaInstance}
+			{#key key}
+				<Markdown carta={cartaInstance} {value} />
 			{/key}
 		{/if}
 	</div>

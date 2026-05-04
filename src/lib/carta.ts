@@ -1,6 +1,7 @@
 import { Carta } from 'carta-md';
 import DOMPurify from 'isomorphic-dompurify';
 import { code } from '@cartamd/plugin-code';
+import { writable, get } from 'svelte/store';
 import IconH2 from '../components/IconH2.svelte';
 import IconH3 from '../components/IconH3.svelte';
 import IconTable from '../components/IconTable.svelte';
@@ -128,14 +129,29 @@ export function createEditorCarta(options: EditorOptions = {}) {
 }
 
 export function setupThemeAwareViewer(options: ViewerOptions = {}) {
+	if (typeof window === 'undefined') {
+		return {
+			carta: createViewerCarta({
+				...options,
+				theme: resolveCodeTheme(),
+				enableCodeHighlighting: true
+			}),
+			cartaStore: writable(null as any),
+			destroy: () => {}
+		};
+	}
+
 	let currentTheme = resolveCodeTheme();
 	let carta = createViewerCarta({ ...options, theme: currentTheme, enableCodeHighlighting: true });
+
+	const store = writable(carta);
 
 	const observer = new MutationObserver(() => {
 		const nextTheme = resolveCodeTheme();
 		if (nextTheme !== currentTheme) {
 			currentTheme = nextTheme;
 			carta = createViewerCarta({ ...options, theme: currentTheme, enableCodeHighlighting: true });
+			store.set(carta);
 		}
 	});
 
@@ -145,9 +161,8 @@ export function setupThemeAwareViewer(options: ViewerOptions = {}) {
 	});
 
 	return {
-		get carta() {
-			return carta;
-		},
+		carta,
+		cartaStore: store,
 		destroy: () => observer.disconnect()
 	};
 }
