@@ -177,6 +177,10 @@ Form component with a title and content inputs
 		}
 	}
 
+	:global(img) {
+		border-radius: 0.5rem;
+	}
+
 	:global(.carta-renderer, .carta-input) {
 		max-height: 25rem; /* Sets a maximum height for the editor and input */
 	}
@@ -252,5 +256,12 @@ Form component with a title and content inputs
 
 	:global(.carta-icons-menu button) {
 		color: var(--black) !important;
+	}
+
+	:global(.shiki) {
+		padding: 1rem;
+		font-size: 1rem;
+		border-radius: 0.5rem;
+		overflow: auto;
 	}
 </style>

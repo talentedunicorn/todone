@@ -246,20 +246,21 @@
 			--content-gradient-opacity: 0;
 		}
 
-		:global(pre) {
+		:global(.shiki) {
+			padding: 1rem;
 			font-size: 1rem;
 			border-radius: 0.5rem;
 			overflow: auto;
-		}
-
-		:global(.shiki) {
-			padding: 1rem;
 		}
 
 		:global(.TableWrapper) {
 			overflow-x: auto;
 			border: var(--border);
 			border-radius: 1rem;
+		}
+
+		:global(img) {
+			border-radius: 0.5rem;
 		}
 	}
 
