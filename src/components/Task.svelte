@@ -7,7 +7,6 @@
 	import { createViewerCarta, resolveCodeTheme } from '../lib/carta';
 
 	let cartaInstance = $state<Carta | null>(null);
-	let key = $state(0);
 
 	onMount(() => {
 		const initialTheme = resolveCodeTheme();
@@ -16,12 +15,9 @@
 		const observer = new MutationObserver((mutations) => {
 			for (const mutation of mutations) {
 				if (mutation.attributeName === 'data-theme') {
-					cartaInstance = null;
-					setTimeout(() => {
-						const newTheme = resolveCodeTheme();
-						cartaInstance = createViewerCarta({ theme: newTheme, enableCodeHighlighting: true });
-						key++;
-					}, 0);
+					console.log('Theme changed, creating new Carta');
+					const newTheme = resolveCodeTheme();
+					cartaInstance = createViewerCarta({ theme: newTheme, enableCodeHighlighting: true });
 				}
 			}
 		});
@@ -137,7 +133,7 @@
 	</header>
 	<div data-testid="content" class="Content" class:expanded>
 		{#if cartaInstance}
-			{#key key}
+			{#key `${value}-${cartaInstance}`}
 				<Markdown carta={cartaInstance} {value} />
 			{/key}
 		{/if}
