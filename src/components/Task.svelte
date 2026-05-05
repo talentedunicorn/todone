@@ -15,9 +15,13 @@
 		const observer = new MutationObserver((mutations) => {
 			for (const mutation of mutations) {
 				if (mutation.attributeName === 'data-theme') {
-					console.log('Theme changed, creating new Carta');
-					const newTheme = resolveCodeTheme();
-					cartaInstance = createViewerCarta({ theme: newTheme, enableCodeHighlighting: true });
+					console.log('Theme changed');
+					cartaInstance = null;
+					requestAnimationFrame(() => {
+						const newTheme = resolveCodeTheme();
+						console.log('Creating new Carta with theme:', newTheme);
+						cartaInstance = createViewerCarta({ theme: newTheme, enableCodeHighlighting: true });
+					});
 				}
 			}
 		});
