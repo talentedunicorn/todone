@@ -53,7 +53,7 @@ function createTaskDatabase(config: DbConfig): Promise<TaskDatabase>;
 
 **Key Decision**: Use `Stream<T>` instead of RxJS Observable for DB-agnostic compatibility. RxDB observables wrapped to satisfy Stream; other stores can implement differently.
 
-**Status**: Approved for implementation
+**Status**: ✅ COMPLETED (2026-05-05)
 
 ---
 
@@ -106,7 +106,7 @@ Option A with pruning — split into 2 focused modules, delete dead code:
 - Focus on fixing types, not creating new abstractions
 - Let components handle theme switching inline (as Task.svelte already does)
 
-**Status**: Approved for implementation
+**Status**: ✅ COMPLETED (2026-05-05)
 
 ---
 
@@ -130,7 +130,7 @@ Option A with pruning — split into 2 focused modules, delete dead code:
 
 **Why not multi-provider**: Delta is +5-8 hours for no current need. Auth0 works.
 
-**Status**: Approved for implementation
+**Status**: ✅ COMPLETED (2026-05-05)
 
 ---
 
@@ -281,10 +281,10 @@ Candidates:
 
 ## Prioritization
 
-1. **Finding 1: Database Adapter** — Next to implement (design finalized)
+1. **Finding 1: Database Adapter** — ✅ COMPLETED (2026-05-05)
 2. **Finding 2: Shallow RxDB Wrapper** — Deferred to Finding 1
-3. **Finding 3: Mixed Carta Module** — Next to implement (design finalized)
-4. **Finding 4: Hardcoded Auth** — Next to implement (design finalized)
+3. **Finding 3: Mixed Carta Module** — ✅ COMPLETED (2026-05-05)
+4. **Finding 4: Hardcoded Auth** — ✅ COMPLETED (2026-05-05)
 5. **Finding 5: No Test Surface** — After Finding 1
 6. **Finding 6: Domain couples to RxDB** — After Finding 1
 7. **Finding 7: Replication couples to auth** — After Finding 1
