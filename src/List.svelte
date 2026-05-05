@@ -25,7 +25,7 @@
 	const loadTodos = async () => {
 		const todos = await getTodos();
 		todos?.subscribe((tasks) => {
-			data = tasks.map((t) => t.toJSON());
+			data = tasks;
 		});
 	};
 
@@ -33,13 +33,12 @@
 		task = null;
 	};
 
-	const handleUpdate = async (data: any) => {
-		update(data).then(() => {
-			clearEdit();
-		});
+	const handleUpdate = async (data: Todo) => {
+		await update(data);
+		clearEdit();
 	};
 
-	const handleCreate = async (data: any) => {
+	const handleCreate = async (data: Todo) => {
 		await add(data);
 	};
 
@@ -193,11 +192,11 @@
 					>Collapse all</Button
 				>
 			</div>
-			{#each renderedTodos as task, i (i)}
+			{#each renderedTodos as task (task.id)}
 				{@const { id, title, value, completed, updated } = task}
 				<div transition:fly={{ duration: 500, y: 100 }}>
 					<Task
-						id={`task-${i}`}
+						id={`task-${id}`}
 						{title}
 						{value}
 						{completed}

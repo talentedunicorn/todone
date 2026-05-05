@@ -76,15 +76,6 @@ li:last-child {
 	border-bottom: none;
 }
 
-code {
-	background: color-mix(in hsl, var(--primary), transparent);
-	font-size: 0.8rem;
-	padding: 0.1em 0.4em;
-	border-radius: 0.3em;
-	border: 0.2em solid var(--primary);
-	display: inline-flex;
-}
-
 input[type='checkbox'] {
 	--checkbox-size: 1rem;
 	--chechbox-radius: 0.2rem;

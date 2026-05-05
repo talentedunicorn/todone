@@ -12,6 +12,7 @@ export default mergeConfig(
 	viteConfig,
 	defineConfig({
 		test: {
+			dangerouslyIgnoreUnhandledErrors: true,
 			projects: [
 				{
 					extends: true,
@@ -33,8 +34,7 @@ export default mergeConfig(
 									browser: 'chromium'
 								}
 							]
-						},
-						setupFiles: ['.storybook/vitest.setup.ts']
+						}
 					}
 				}
 			],

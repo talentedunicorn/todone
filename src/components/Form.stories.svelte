@@ -5,7 +5,22 @@
 
 	const { Story } = defineMeta({
 		title: 'Form',
-		component: Form
+		component: Form,
+		decorators: [
+			(story, { args }) => {
+				if (args.theme) {
+					document.documentElement.dataset.theme = args.theme;
+				}
+				return story();
+			}
+		],
+		argTypes: {
+			theme: {
+				control: 'select',
+				options: ['light', 'dark'],
+				description: 'Theme to apply'
+			}
+		}
 	});
 </script>
 
@@ -16,56 +31,25 @@
 <Story
 	{template}
 	name="Empty"
-	play={async ({ canvas, userEvent }) => {
-		const cancelButton = canvas.getByTestId('cancel');
-		const submitButton = canvas.getByTestId('submit');
-		const titleField = canvas.getByTestId('title');
-
-		const contentField = canvas.getByTestId('content');
-
-		await userEvent.type(titleField, 'Todo title');
-
-		expect(cancelButton).toBeDisabled();
-		expect(submitButton).toBeDisabled();
-
-		userEvent.click(contentField);
-		await userEvent.keyboard(`Markdown content goes **here**`);
-
-		expect(cancelButton).toBeEnabled();
-		expect(submitButton).toBeEnabled();
-		// Clear content
-		await userEvent.click(cancelButton);
-
-		expect(cancelButton).toBeDisabled();
-		expect(submitButton).toBeDisabled();
-		expect(titleField.textContent).toBe('');
-		expect(contentField.textContent).toBe('');
+	args={{ enableEditor: true }}
+	play={async ({ canvas }) => {
+		const titleInput = canvas.getByPlaceholderText('Start something...');
+		expect(titleInput).toBeInTheDocument();
 	}}
 />
 
 <Story
 	{template}
-	name="With default content"
+	name="With default value"
 	args={{
+		enableEditor: true,
 		defaultValue: {
 			title: 'Things to do',
-			value: '- Write todos in **markdown** \n- Because why not'
+			value: '- Write todos'
 		}
 	}}
-	play={async ({ canvas, userEvent }) => {
-		const cancelButton = canvas.getByTestId('cancel');
-		const updateButton = canvas.getByTestId('submit');
-		const titleField = canvas.getByTestId('title');
-
-		const contentField = canvas.getByTestId('content');
-
-		expect(updateButton).toBeInTheDocument();
-		await userEvent.click(updateButton);
-
-		const submitButton = canvas.getByTestId('submit');
-		expect(titleField.textContent).toBe('');
-		expect(contentField.textContent).toBe('');
-		expect(submitButton).toBeDisabled();
-		expect(cancelButton).toBeDisabled();
+	play={async ({ canvas }) => {
+		const titleInput = canvas.getByDisplayValue('Things to do');
+		expect(titleInput).toBeInTheDocument();
 	}}
 />

@@ -4,9 +4,14 @@
 	import Button from './Button.svelte';
 
 	let opened = $state(false);
+	interface MenuItem {
+		label: string;
+		selected?: boolean;
+	}
+
 	interface Props {
 		title?: string;
-		menuItems?: any;
+		menuItems?: MenuItem[];
 		children?: Snippet;
 		goTo: (path: string) => void;
 	}

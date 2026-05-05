@@ -1,15 +1,13 @@
 <script lang="ts">
-	import { Auth0Client } from '@auth0/auth0-spa-js';
-
 	import List from '../List.svelte';
 	import Button from '../components/Button.svelte';
 	import Menu from '../components/Menu.svelte';
 	import { isLoggedin, tabs, currentTab, user } from '../stores';
 	import { logout } from '../auth';
+	import { getAuth0Client } from '../lib/auth-client';
 	import { push } from 'svelte-spa-router';
 
-	const { auth0: auth0Client } = $props<{ auth0: () => Auth0Client | undefined }>();
-	let auth0 = () => auth0Client();
+	let auth0 = getAuth0Client;
 
 	let menuItems = $derived(
 		tabs.map((item) => ({
@@ -36,7 +34,7 @@
 	{#if $isLoggedin}
 		<div class="Profile">
 			<img src={$user.picture} alt={$user.nickname} />
-			<Button onclick={() => logout(auth0())}>Log out</Button>
+			<Button onclick={() => auth0() && logout(auth0()!)}>Log out</Button>
 		</div>
 	{/if}
 	<List />

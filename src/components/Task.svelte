@@ -1,24 +1,38 @@
 <script lang="ts">
 	import Button from './Button.svelte';
-	import { marked, Parser, Renderer, type Tokens } from 'marked';
-	import hljs from 'highlight.js';
+	import { Markdown, type Carta } from 'carta-md';
+	import 'carta-md/default.css';
 	import { toastActions, toastMessage } from '../stores';
+	import { onMount } from 'svelte';
+	import { createViewerCarta, resolveCodeTheme } from '../lib/carta';
 
-	marked.use({
-		gfm: true
-	});
-	const originalRenderer = new Renderer();
-	originalRenderer.parser = new Parser();
+	let cartaInstance = $state<Carta | null>(null);
 
-	const tableExtension = {
-		renderer: {
-			table(token: Tokens.Table) {
-				return `<div class="TableWrapper">${originalRenderer.table(token)}</div> `;
+	onMount(() => {
+		const initialTheme = resolveCodeTheme();
+		cartaInstance = createViewerCarta({ theme: initialTheme, enableCodeHighlighting: true });
+
+		const observer = new MutationObserver((mutations) => {
+			for (const mutation of mutations) {
+				if (mutation.attributeName === 'data-theme') {
+					console.log('Theme changed');
+					cartaInstance = null;
+					requestAnimationFrame(() => {
+						const newTheme = resolveCodeTheme();
+						console.log('Creating new Carta with theme:', newTheme);
+						cartaInstance = createViewerCarta({ theme: newTheme, enableCodeHighlighting: true });
+					});
+				}
 			}
-		}
-	};
+		});
 
-	marked.use(tableExtension);
+		observer.observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['data-theme']
+		});
+
+		return () => observer.disconnect();
+	});
 
 	interface Props {
 		title: string;
@@ -33,7 +47,7 @@
 		[key: string]: any;
 	}
 
-	const {
+	let {
 		title = '',
 		value = '',
 		completed = false,
@@ -57,8 +71,8 @@
 		ev.preventDefault();
 		const offset = document.querySelector('.Menu')?.getBoundingClientRect().height ?? 0; // Set offset so menu doesn't cover the task
 		const el = ev.currentTarget as HTMLLinkElement;
-		const id = el.getAttribute('href')?.slice(0);
-		const target = document.querySelector(id!);
+		const id = el.getAttribute('href')?.slice(1);
+		const target = document.getElementById(id!);
 		const bodyPosition = document.body.getBoundingClientRect().top;
 		const targetPosition = target?.getBoundingClientRect().top ?? 0;
 
@@ -77,12 +91,6 @@
 			destroy: () => el.removeEventListener('click', scrollToID)
 		};
 	};
-
-	$effect(() => {
-		if (title || value) {
-			hljs.highlightAll();
-		}
-	});
 </script>
 
 <section {...rest}>
@@ -128,7 +136,11 @@
 		</div>
 	</header>
 	<div data-testid="content" class="Content" class:expanded>
-		{@html marked(value)}
+		{#if cartaInstance}
+			{#key `${value}-${cartaInstance}`}
+				<Markdown carta={cartaInstance} {value} />
+			{/key}
+		{/if}
 	</div>
 	<div class="Actions">
 		<Button
@@ -234,21 +246,21 @@
 			--content-gradient-opacity: 0;
 		}
 
-		:global(pre) {
+		:global(.shiki) {
+			padding: 1rem;
 			font-size: 1rem;
 			border-radius: 0.5rem;
 			overflow: auto;
-		}
-
-		:global(.hljs) {
-			border-radius: 0.5rem;
-			padding: 1rem;
 		}
 
 		:global(.TableWrapper) {
 			overflow-x: auto;
 			border: var(--border);
 			border-radius: 1rem;
+		}
+
+		:global(img) {
+			border-radius: 0.5rem;
 		}
 	}
 
