@@ -28,11 +28,8 @@ storybook-static
 coverage
 .nyc_output
 
-.cursor/
+# Build artifacts
+.nx/
+.vite/
 
-vite.config.*.timestamp*
-vitest.config.*.timestamp*
-.cursor/rules/nx-rules.mdc
-.github/instructions/nx.instructions.md
-plans/
-plans/
+.cursor/
