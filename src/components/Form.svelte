@@ -116,6 +116,7 @@ Form component with a title and content inputs
 							heading: 'Heading'
 						}
 					}}
+					mode="tabs"
 				/>
 			{/key}
 		{/if}
