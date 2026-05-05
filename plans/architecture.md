@@ -75,11 +75,11 @@ function createTaskDatabase(config: DbConfig): Promise<TaskDatabase>;
 
 ---
 
-### Finding 3: Mixed Carta Module
+### Finding 3: Mixed Carta Module (grilled 2026-05-05)
 
 **Files**: `src/lib/carta.ts`
 
-**Problem**: 153 lines mixing:
+**Problem**: 168 lines mixing:
 
 - Theme resolution (`resolveCodeTheme`)
 - Viewer creation (`createViewerCarta`)
@@ -88,25 +88,49 @@ function createTaskDatabase(config: DbConfig): Promise<TaskDatabase>;
 
 The interface takes `any[]` for plugins and sanitizer — typed as `any` not `Sanitizer`. This leaks into `Task.svelte` and `Form.svelte`.
 
-**Solution**: Split into:
+**Critical finding**: `setupThemeAwareViewer` is dead code — returns a Svelte store that no component uses. Task.svelte reimplements the same logic inline using `$state` + `{#key}`.
 
-- **MarkdownViewer** module — creates viewers, handles theme switching
-- **MarkdownEditor** module — creates editors with icon configurations
-- Each has a focused interface with proper typing
+**Solution (grilled)**:
 
-**Status**: Pending
+Option A with pruning — split into 2 focused modules, delete dead code:
+
+- `createEditorCarta` → stays in `carta.ts` (or move to `carta-editor.ts`)
+- `createViewerCarta` → stays in `carta.ts` (or move to `carta-viewer.ts`)
+- `resolveCodeTheme` → keep as shared utility
+- `setupThemeAwareViewer` → **DELETE** (dead code, no consumers)
+- Fix `any` types to use proper Carta/Extension types
+
+**Scope decision**:
+
+- Keep single file `carta.ts` — the logic is small enough
+- Focus on fixing types, not creating new abstractions
+- Let components handle theme switching inline (as Task.svelte already does)
+
+**Status**: Approved for implementation
 
 ---
 
-### Finding 4: Hardcoded Auth (No Seam)
+### Finding 4: Hardcoded Auth (No Seam) (grilled 2026-05-05)
 
 **Files**: `src/auth.ts`, `src/stores/auth.ts`
 
-**Problem**: Auth0 is hardcoded directly in `src/auth.ts`. There's a database adapter pattern (unused) but no auth adapter. If you wanted to swap Auth0 for another provider, you'd refactor everywhere.
+**Problem**: Auth0 hardcoded in `auth.ts`, `Auth0Client` prop-drilled through App → Home → Login.
 
-**Solution**: Define an `AuthModule` interface (login, logout, getToken, getUser), implement it behind a seam. This mirrors the attempted database adapter architecture.
+**Solution (grilled)** — Option C: Refactor without formal interface:
 
-**Status**: Pending
+1. Extract auth config into `config` object in `auth.ts` (domain, clientId, redirectUri)
+2. Create Svelte context for `Auth0Client` instead of prop-drilling
+3. Wrap store access in helper functions in `auth.ts`
+
+**Scope decision**:
+
+- No formal `AuthModule` interface (overkill, no current need to switch)
+- Focus on reducing prop-drilling via context
+- Stores already generic, they're the right abstraction
+
+**Why not multi-provider**: Delta is +5-8 hours for no current need. Auth0 works.
+
+**Status**: Approved for implementation
 
 ---
 
@@ -259,8 +283,8 @@ Candidates:
 
 1. **Finding 1: Database Adapter** — Next to implement (design finalized)
 2. **Finding 2: Shallow RxDB Wrapper** — Deferred to Finding 1
-3. **Finding 3: Mixed Carta Module** — Pending
-4. **Finding 4: Hardcoded Auth** — Pending
+3. **Finding 3: Mixed Carta Module** — Next to implement (design finalized)
+4. **Finding 4: Hardcoded Auth** — Next to implement (design finalized)
 5. **Finding 5: No Test Surface** — After Finding 1
 6. **Finding 6: Domain couples to RxDB** — After Finding 1
 7. **Finding 7: Replication couples to auth** — After Finding 1
@@ -285,6 +309,37 @@ Candidates:
 - Stream interface: `subscribe(callback) => unsubscribe`
 - Separate factory for initialization
 - Sync remains in `sync/replication.ts` (takes adapter)
+
+### Finding 3: Mixed Carta Module (grilled 2026-05-05)
+
+**Q**: Is the store in setupThemeAwareViewer working as intended?
+**A**: No — it's dead code. No component uses it. Task.svelte reimplements the same logic inline using `$state` + `{#key}`. About.svelte doesn't need theme switching.
+
+**Q**: What's the right scope for the split?
+**A**: Option A with pruning — keep single file, delete dead function, fix types.
+
+**Decisions captured**:
+
+- DELETE `setupThemeAwareViewer` (no consumers)
+- Fix `any` types to use proper Carta/Extension types
+- Components handle theme switching inline (as Task.svelte already does)
+
+### Finding 4: Hardcoded Auth (grilled 2026-05-05)
+
+**Q**: What's the actual problem?
+**A**: Auth0 hardcoded + prop-drilling Auth0Client through 3+ components. But stores are already generic — seam partially exists.
+
+**Q**: What's the right scope for an auth adapter?
+**A**: Option C — refactor without formal interface. Extract config, create context, wrap store access. Multi-provider (+5-8 hours) is overkill with no current need.
+
+**Q**: How much more effort for multi-provider?
+**A**: +5-8 hours delta. Not worth it now.
+
+**Decisions captured**:
+
+- No formal AuthModule interface
+- Use Svelte context to eliminate prop-drilling
+- Extract auth config to object
 
 ---
 

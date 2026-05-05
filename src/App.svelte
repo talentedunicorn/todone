@@ -17,6 +17,7 @@
 	import Login from './routes/Login.svelte';
 	import Home from './routes/Home.svelte';
 	import { checkAuth, initAuth0Client } from './auth';
+	import { setAuth0Client, getAuth0Client } from './lib/auth-client';
 	import { toastActions, toastMessage, status, isLoggedin } from './stores';
 	import themeStore from './stores/theme';
 	import type { ComponentType } from 'svelte';
@@ -48,6 +49,7 @@
 
 	const initializeAuth = async () => {
 		auth0 = await initAuth0Client();
+		setAuth0Client(auth0);
 		await checkAuth(auth0);
 
 		if ($isLoggedin) push(`/`);
@@ -62,9 +64,6 @@
 		'/about': About,
 		'/login': wrap({
 			component: Login,
-			props: {
-				auth0: () => auth0
-			},
 			conditions: [
 				() => {
 					if (!synced) {
@@ -84,9 +83,6 @@
 		}),
 		'/': wrap({
 			component: Home,
-			props: {
-				auth0: () => auth0
-			},
 			conditions: [
 				() => {
 					if (!synced) return true;

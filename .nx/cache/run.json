@@ -1,0 +1,21 @@
+{
+	"run": {
+		"command": "nx vite:build",
+		"startTime": "2026-05-04T19:05:54.649Z",
+		"endTime": "2026-05-04T19:05:58.298Z",
+		"inner": false
+	},
+	"tasks": [
+		{
+			"taskId": "todone:vite:build",
+			"target": "vite:build",
+			"projectName": "todone",
+			"hash": "7494050126124840381",
+			"startTime": "2026-05-04T19:05:54.697Z",
+			"endTime": "2026-05-04T19:05:58.163Z",
+			"params": "",
+			"cacheStatus": "cache-miss",
+			"status": 0
+		}
+	]
+}

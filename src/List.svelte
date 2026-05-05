@@ -25,7 +25,7 @@
 	const loadTodos = async () => {
 		const todos = await getTodos();
 		todos?.subscribe((tasks) => {
-			data = tasks.map((t) => t.toJSON());
+			data = tasks;
 		});
 	};
 
