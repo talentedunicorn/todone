@@ -102,17 +102,6 @@
 	{#if import.meta.env.PROD}
 		{pwaInfo?.webManifest.linkTag}
 	{/if}
-	{#if prefersDark}
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/stackoverflow-dark.min.css"
-		/>
-	{:else}
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/stackoverflow-light.min.css"
-		/>
-	{/if}
 </svelte:head>
 
 <main class="Wrapper" bind:this={wrapper}>

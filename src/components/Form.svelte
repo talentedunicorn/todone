@@ -185,13 +185,8 @@ Form component with a title and content inputs
 		max-height: 25rem; /* Sets a maximum height for the editor and input */
 	}
 
-	:global(.carta-editor) {
-		background-color: var(--white) !important;
-		color: var(--black) !important;
-		border: none !important;
-		transition:
-			background-color 0.2s ease,
-			color 0.2s ease;
+	:global(.carta-highlight) {
+		z-index: 1;
 	}
 
 	:global(.carta-toolbar) {
@@ -223,30 +218,11 @@ Form component with a title and content inputs
 		height: 2rem !important;
 	}
 
-	:global(.carta-editor textarea) {
-		background-color: var(--white) !important;
-		color: var(--black) !important;
-		caret-color: var(--black) !important;
-		border: none !important;
-		font-size: 1rem !important;
-		line-height: 1.7 !important;
-		transition:
-			background-color 0.2s ease,
-			color 0.2s ease;
-	}
-
 	:global(.carta-font-code) {
-		font-family: monospace !important;
+		caret-color: var(--black) !important;
 		font-size: 1rem !important;
 		line-height: 1.7 !important;
-	}
-
-	:global(.carta-editor code) {
-		background: transparent !important;
-		border: none !important;
-		padding: 0 !important;
-		font-size: inherit !important;
-		display: inline !important;
+		z-index: inherit;
 	}
 
 	:global(.carta-icons-menu) {
@@ -259,8 +235,6 @@ Form component with a title and content inputs
 	}
 
 	:global(.shiki) {
-		padding: 1rem;
-		font-size: 1rem;
 		border-radius: 0.5rem;
 		overflow: auto;
 	}
