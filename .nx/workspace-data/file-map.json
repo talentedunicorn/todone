@@ -1,0 +1,396 @@
+{
+  "version": "6.0",
+  "nxVersion": "22.7.1",
+  "pathMappings": {},
+  "nxJsonPlugins": [
+    {
+      "name": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "vite:build",
+        "serveTargetName": "serve",
+        "previewTargetName": "vite:preview",
+        "serveStaticTargetName": "serve-static"
+      }
+    },
+    {
+      "name": "@nx/vitest",
+      "version": "22.7.1",
+      "options": {
+        "testTargetName": "test"
+      }
+    }
+  ],
+  "fileMap": {
+    "nonProjectFiles": [],
+    "projectFileMap": {
+      "todone": [
+        {
+          "file": ".github/workflows/chromatic.yml",
+          "hash": "8044920827060093944"
+        },
+        {
+          "file": ".github/workflows/tests.yml",
+          "hash": "7739718349447666289"
+        },
+        {
+          "file": ".gitignore",
+          "hash": "6683523243225190292"
+        },
+        {
+          "file": ".husky/pre-commit",
+          "hash": "4171583313604027339"
+        },
+        {
+          "file": ".nycrc.json",
+          "hash": "9018054665916762539"
+        },
+        {
+          "file": ".prettierignore",
+          "hash": "8181841663612920295"
+        },
+        {
+          "file": ".prettierrc",
+          "hash": "5649980425948680652"
+        },
+        {
+          "file": ".storybook/main.ts",
+          "hash": "7682687661293178617",
+          "deps": [
+            "npm:@storybook/svelte-vite"
+          ]
+        },
+        {
+          "file": ".storybook/preview-head.html",
+          "hash": "7067212201601444799"
+        },
+        {
+          "file": ".storybook/preview.js",
+          "hash": "12060102163309686811"
+        },
+        {
+          "file": ".storybook/vitest.setup.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "AGENTS.md",
+          "hash": "220726314558268186"
+        },
+        {
+          "file": "About.md",
+          "hash": "6495632257595750534"
+        },
+        {
+          "file": "README.md",
+          "hash": "16683493407460274530"
+        },
+        {
+          "file": "env.sample",
+          "hash": "7455361961001016653"
+        },
+        {
+          "file": "index.html",
+          "hash": "5909799321674757413"
+        },
+        {
+          "file": "nx.json",
+          "hash": "10865141555735308571"
+        },
+        {
+          "file": "package.json",
+          "hash": "12680385407255488299"
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "hash": "6896581366551232631"
+        },
+        {
+          "file": "postcss.config.cjs",
+          "hash": "17704588738384071712",
+          "deps": [
+            "npm:autoprefixer",
+            "npm:@csstools/postcss-light-dark-function"
+          ]
+        },
+        {
+          "file": "public/favicon.ico",
+          "hash": "10405553461853907905"
+        },
+        {
+          "file": "public/logo-192.png",
+          "hash": "17622788470155620490"
+        },
+        {
+          "file": "public/logo-512.png",
+          "hash": "16681012050082560546"
+        },
+        {
+          "file": "public/logo.svg",
+          "hash": "17011371271186134208"
+        },
+        {
+          "file": "renovate.json",
+          "hash": "17754747776914184589"
+        },
+        {
+          "file": "src/App.svelte",
+          "hash": "15335384311603290045"
+        },
+        {
+          "file": "src/List.svelte",
+          "hash": "9959150395523753683"
+        },
+        {
+          "file": "src/adapters/database.ts",
+          "hash": "4279815380843418886",
+          "deps": [
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "src/app.css",
+          "hash": "13698158464440244368"
+        },
+        {
+          "file": "src/assets/fonts/Dosis-VariableFont_wght.ttf",
+          "hash": "7047598765407990744"
+        },
+        {
+          "file": "src/assets/fonts/OFL.txt",
+          "hash": "909309494413088029"
+        },
+        {
+          "file": "src/assets/svelte.svg",
+          "hash": "9470217384013036094"
+        },
+        {
+          "file": "src/auth.ts",
+          "hash": "7278403041166721376",
+          "deps": [
+            "npm:@auth0/auth0-spa-js"
+          ]
+        },
+        {
+          "file": "src/components/Button.stories.svelte",
+          "hash": "10787577415599200238"
+        },
+        {
+          "file": "src/components/Button.svelte",
+          "hash": "8794024355958370734"
+        },
+        {
+          "file": "src/components/ExportImport.svelte",
+          "hash": "16657552033497986346"
+        },
+        {
+          "file": "src/components/Form.stories.svelte",
+          "hash": "574049533161377447"
+        },
+        {
+          "file": "src/components/Form.svelte",
+          "hash": "2890959958917910988"
+        },
+        {
+          "file": "src/components/IconH2.svelte",
+          "hash": "6369065608421950133"
+        },
+        {
+          "file": "src/components/IconH3.svelte",
+          "hash": "8630211773159232806"
+        },
+        {
+          "file": "src/components/IconImage.svelte",
+          "hash": "1039232309108624423"
+        },
+        {
+          "file": "src/components/IconTable.svelte",
+          "hash": "5204182746628317303"
+        },
+        {
+          "file": "src/components/Logo.stories.svelte",
+          "hash": "637400855943420670"
+        },
+        {
+          "file": "src/components/Logo.svelte",
+          "hash": "4125375914926312140"
+        },
+        {
+          "file": "src/components/Menu.stories.svelte",
+          "hash": "11881752446295802642"
+        },
+        {
+          "file": "src/components/Menu.svelte",
+          "hash": "12803702615035679542"
+        },
+        {
+          "file": "src/components/ReloadPrompt.svelte",
+          "hash": "15791729695617949125"
+        },
+        {
+          "file": "src/components/Task.stories.svelte",
+          "hash": "1048653987661540227"
+        },
+        {
+          "file": "src/components/Task.svelte",
+          "hash": "14725684590869643618"
+        },
+        {
+          "file": "src/components/Toast.stories.svelte",
+          "hash": "13936387349252669984"
+        },
+        {
+          "file": "src/components/Toast.svelte",
+          "hash": "6664020524965861477"
+        },
+        {
+          "file": "src/components/ToggleTheme.svelte",
+          "hash": "9725192681939921288"
+        },
+        {
+          "file": "src/components/ToolbarIcon.svelte",
+          "hash": "1103717458915879050"
+        },
+        {
+          "file": "src/db.ts",
+          "hash": "517233732476637834",
+          "deps": [
+            "npm:rxdb",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "src/domain/todo.ts",
+          "hash": "10516810435408389915",
+          "deps": [
+            "npm:rxdb"
+          ]
+        },
+        {
+          "file": "src/lib/carta.ts",
+          "hash": "14228187830983491515",
+          "deps": [
+            "npm:carta-md",
+            "npm:isomorphic-dompurify",
+            "npm:@cartamd/plugin-code",
+            "npm:svelte"
+          ]
+        },
+        {
+          "file": "src/lib/rxdb.ts",
+          "hash": "381003247132708452",
+          "deps": [
+            "npm:rxdb"
+          ]
+        },
+        {
+          "file": "src/main.ts",
+          "hash": "16080072296622939839",
+          "deps": [
+            "npm:@sentry/svelte",
+            "npm:svelte"
+          ]
+        },
+        {
+          "file": "src/routes/About.svelte",
+          "hash": "11956844911140384394"
+        },
+        {
+          "file": "src/routes/Home.svelte",
+          "hash": "17556355875335806675"
+        },
+        {
+          "file": "src/routes/Login.svelte",
+          "hash": "15957455417939766118"
+        },
+        {
+          "file": "src/routes/NotFound.svelte",
+          "hash": "8486909163064474015"
+        },
+        {
+          "file": "src/stores.ts",
+          "hash": "12945262542574077148"
+        },
+        {
+          "file": "src/stores/auth.ts",
+          "hash": "17334964971704007595",
+          "deps": [
+            "npm:svelte"
+          ]
+        },
+        {
+          "file": "src/stores/sync.ts",
+          "hash": "5620640707478774987",
+          "deps": [
+            "npm:svelte"
+          ]
+        },
+        {
+          "file": "src/stores/tasks.ts",
+          "hash": "5634909627250924828",
+          "deps": [
+            "npm:svelte"
+          ]
+        },
+        {
+          "file": "src/stores/theme.ts",
+          "hash": "8931707121705338055",
+          "deps": [
+            "npm:svelte"
+          ]
+        },
+        {
+          "file": "src/stores/ui.ts",
+          "hash": "18421787759170464819",
+          "deps": [
+            "npm:svelte"
+          ]
+        },
+        {
+          "file": "src/sync/replication.ts",
+          "hash": "12771891745595072669",
+          "deps": [
+            "npm:rxdb"
+          ]
+        },
+        {
+          "file": "src/vite-env.d.ts",
+          "hash": "4400858007706809591"
+        },
+        {
+          "file": "svelte.config.js",
+          "hash": "9833814794964926738",
+          "deps": [
+            "npm:@sveltejs/vite-plugin-svelte"
+          ]
+        },
+        {
+          "file": "tsconfig.json",
+          "hash": "9042258340077190268"
+        },
+        {
+          "file": "tsconfig.node.json",
+          "hash": "8788926249484642095"
+        },
+        {
+          "file": "vite.config.ts",
+          "hash": "4275207596177714712",
+          "deps": [
+            "npm:vite",
+            "npm:@sveltejs/vite-plugin-svelte",
+            "npm:vite-plugin-pwa",
+            "npm:@sentry/vite-plugin"
+          ]
+        },
+        {
+          "file": "vitest.config.ts",
+          "hash": "424052094488481750",
+          "deps": [
+            "npm:vitest",
+            "npm:@storybook/addon-vitest",
+            "npm:@vitest/browser-playwright"
+          ]
+        }
+      ]
+    }
+  },
+  "externalNodesHash": "14461940839016355884"
+}

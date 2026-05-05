@@ -1,7 +1,6 @@
-import { Carta } from 'carta-md';
+import { Carta, type Plugin, type Icon } from 'carta-md';
 import DOMPurify from 'isomorphic-dompurify';
 import { code } from '@cartamd/plugin-code';
-import { writable, get } from 'svelte/store';
 import IconH2 from '../components/IconH2.svelte';
 import IconH3 from '../components/IconH3.svelte';
 import IconTable from '../components/IconTable.svelte';
@@ -9,18 +8,18 @@ import IconImage from '../components/IconImage.svelte';
 
 export type CodeTheme = 'github-light' | 'github-dark';
 
-interface ViewerOptions {
+export interface ViewerOptions {
 	theme?: CodeTheme;
-	plugins?: any[];
-	sanitizer?: any;
+	plugins?: Plugin[];
+	sanitizer?: (dirty: string) => string;
 	enableCodeHighlighting?: boolean;
 }
 
-interface EditorOptions {
+export interface EditorOptions {
 	enableCodeHighlighting?: boolean;
-	customIcons?: any[];
-	plugins?: any[];
-	sanitizer?: any;
+	customIcons?: Icon[];
+	plugins?: Plugin[];
+	sanitizer?: (dirty: string) => string;
 }
 
 export const resolveCodeTheme = (): CodeTheme => {
@@ -35,9 +34,9 @@ export function createViewerCarta(options: ViewerOptions = {}) {
 	const theme = options.theme ?? resolveCodeTheme();
 	const sanitizer = options.sanitizer ?? DOMPurify.sanitize;
 
-	const extensions: any[] = [];
+	const extensions: Plugin[] = [];
 	if (options.enableCodeHighlighting !== false) {
-		extensions.push(code({ theme }));
+		extensions.push(code({ theme }) as Plugin);
 	}
 	if (options.plugins) {
 		extensions.push(...options.plugins);
@@ -45,32 +44,41 @@ export function createViewerCarta(options: ViewerOptions = {}) {
 
 	return new Carta({
 		sanitizer,
-		extensions,
+		extensions: extensions as any,
 		shikiOptions: {
 			themes: ['github-light', 'github-dark']
 		}
 	});
 }
 
+interface IconActionInput {
+	toggleLinePrefix(prefix: string): void;
+	getSelection(): { start: number; end: number; slice?: string };
+	insertAt(position: number, text: string): void;
+	textarea: HTMLTextAreaElement;
+}
+
+type IconAction = (input: IconActionInput) => void;
+
 export function createEditorCarta(options: EditorOptions = {}) {
 	const sanitizer = options.sanitizer ?? DOMPurify.sanitize;
 
-	const defaultIcons = [
+	const defaultIcons: Icon[] = [
 		{
 			id: 'h2',
-			action: (input: any) => input.toggleLinePrefix('## '),
+			action: ((input: IconActionInput) => input.toggleLinePrefix('## ')) as IconAction,
 			component: IconH2,
 			label: 'Heading 2'
 		},
 		{
 			id: 'h3',
-			action: (input: any) => input.toggleLinePrefix('### '),
+			action: ((input: IconActionInput) => input.toggleLinePrefix('### ')) as IconAction,
 			component: IconH3,
 			label: 'Heading 3'
 		},
 		{
 			id: 'table',
-			action: (input: any) => {
+			action: ((input: IconActionInput) => {
 				const table = `| Header 1 | Header 2 | Header 3 |
 |----------|----------|----------|
 | Cell 1   | Cell 2   | Cell 3   |
@@ -79,13 +87,13 @@ export function createEditorCarta(options: EditorOptions = {}) {
 				const selection = input.getSelection();
 				input.insertAt(selection.start, table);
 				input.textarea.setSelectionRange(selection.start + 12, selection.start + 18);
-			},
+			}) as IconAction,
 			component: IconTable,
 			label: 'Insert Table'
 		},
 		{
 			id: 'image',
-			action: (input: any) => {
+			action: ((input: IconActionInput) => {
 				const selection = input.getSelection();
 				const imageMarkdown = '![Alt text](image-url)';
 				let insertText: string;
@@ -101,20 +109,20 @@ export function createEditorCarta(options: EditorOptions = {}) {
 
 				input.insertAt(selection.start, insertText);
 				input.textarea.setSelectionRange(cursorPos, cursorPos);
-			},
+			}) as IconAction,
 			component: IconImage,
 			label: 'Insert Image'
 		}
 	];
 
-	const extensions: any[] = [
+	const extensions: Plugin[] = [
 		{
 			icons: options.customIcons ?? defaultIcons
-		}
+		} as Plugin
 	];
 
 	if (options.enableCodeHighlighting) {
-		extensions.push(code({ theme: resolveCodeTheme() }));
+		extensions.push(code({ theme: resolveCodeTheme() }) as Plugin);
 	}
 
 	if (options.plugins) {
@@ -124,45 +132,6 @@ export function createEditorCarta(options: EditorOptions = {}) {
 	return new Carta({
 		sanitizer,
 		disableIcons: ['heading'],
-		extensions
+		extensions: extensions as any
 	});
-}
-
-export function setupThemeAwareViewer(options: ViewerOptions = {}) {
-	if (typeof window === 'undefined') {
-		return {
-			carta: createViewerCarta({
-				...options,
-				theme: resolveCodeTheme(),
-				enableCodeHighlighting: true
-			}),
-			cartaStore: writable(null as any),
-			destroy: () => {}
-		};
-	}
-
-	let currentTheme = resolveCodeTheme();
-	let carta = createViewerCarta({ ...options, theme: currentTheme, enableCodeHighlighting: true });
-
-	const store = writable(carta);
-
-	const observer = new MutationObserver(() => {
-		const nextTheme = resolveCodeTheme();
-		if (nextTheme !== currentTheme) {
-			currentTheme = nextTheme;
-			carta = createViewerCarta({ ...options, theme: currentTheme, enableCodeHighlighting: true });
-			store.set(carta);
-		}
-	});
-
-	observer.observe(document.documentElement, {
-		attributes: true,
-		attributeFilter: ['data-theme']
-	});
-
-	return {
-		carta,
-		cartaStore: store,
-		destroy: () => observer.disconnect()
-	};
 }
