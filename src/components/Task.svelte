@@ -16,9 +16,12 @@
 		const observer = new MutationObserver((mutations) => {
 			for (const mutation of mutations) {
 				if (mutation.attributeName === 'data-theme') {
-					const newTheme = resolveCodeTheme();
-					cartaInstance = createViewerCarta({ theme: newTheme, enableCodeHighlighting: true });
-					key++;
+					cartaInstance = null;
+					setTimeout(() => {
+						const newTheme = resolveCodeTheme();
+						cartaInstance = createViewerCarta({ theme: newTheme, enableCodeHighlighting: true });
+						key++;
+					}, 0);
 				}
 			}
 		});
