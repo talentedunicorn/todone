@@ -26,6 +26,6 @@ After completing the code, ask the user if they want a playground link.
 
 ## Plan Management
 
-The `plans/` directory contains markdown roadmap documents. When working on features, review relevant plans to understand current state and next steps.
+Plans are stored in `~/.opencode_plans/todone/` (not in the repo). When working on features, review relevant plans to understand current state and next steps.
 
-At the start of each session, check for stale plans — verify current state against the codebase and update accordingly. Never commit changes to `plans/` directory.
+At the start of each session, check for stale plans — verify current state against the codebase and update accordingly.
