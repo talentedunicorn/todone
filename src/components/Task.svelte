@@ -4,35 +4,10 @@
 	import 'carta-md/default.css';
 	import { toastActions, toastMessage } from '../stores';
 	import { onMount } from 'svelte';
-	import { createViewerCarta, resolveCodeTheme } from '../lib/carta';
+	import { createViewerCarta } from '../lib/carta';
+	import { themeObserver } from '../lib/theme-observer';
 
 	let cartaInstance = $state<Carta | null>(null);
-
-	onMount(() => {
-		const initialTheme = resolveCodeTheme();
-		cartaInstance = createViewerCarta({ theme: initialTheme, enableCodeHighlighting: true });
-
-		const observer = new MutationObserver((mutations) => {
-			for (const mutation of mutations) {
-				if (mutation.attributeName === 'data-theme') {
-					console.log('Theme changed');
-					cartaInstance = null;
-					requestAnimationFrame(() => {
-						const newTheme = resolveCodeTheme();
-						console.log('Creating new Carta with theme:', newTheme);
-						cartaInstance = createViewerCarta({ theme: newTheme, enableCodeHighlighting: true });
-					});
-				}
-			}
-		});
-
-		observer.observe(document.documentElement, {
-			attributes: true,
-			attributeFilter: ['data-theme']
-		});
-
-		return () => observer.disconnect();
-	});
 
 	interface Props {
 		title: string;
@@ -135,7 +110,15 @@
 			</Button>
 		</div>
 	</header>
-	<div data-testid="content" class="Content" class:expanded>
+	<div
+		data-testid="content"
+		class="Content"
+		class:expanded
+		use:themeObserver={{
+			createInstance: (theme) => createViewerCarta({ theme, enableCodeHighlighting: true }),
+			onUpdate: (c) => (cartaInstance = c)
+		}}
+	>
 		{#if cartaInstance}
 			{#key `${value}-${cartaInstance}`}
 				<Markdown carta={cartaInstance} {value} />

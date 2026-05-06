@@ -4,6 +4,7 @@
 	import { onMount, tick } from 'svelte';
 	import Button from './Button.svelte';
 	import { createEditorCarta } from '../lib/carta';
+	import { themeObserver } from '../lib/theme-observer';
 	import type { Todo } from '../db';
 
 	type Content = { title: string; value: string };
@@ -105,7 +106,13 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<div class="editor-wrapper">
+	<div
+		class="editor-wrapper"
+		use:themeObserver={{
+			createInstance: () => createEditorCarta({ enableCodeHighlighting: true }),
+			onUpdate: (c) => (carta = c)
+		}}
+	>
 		{#if isBrowser && carta}
 			{#key carta}
 				<MarkdownEditor
