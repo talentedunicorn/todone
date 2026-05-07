@@ -188,6 +188,12 @@ Form component with a title and content inputs
 		border-radius: 0.5rem;
 	}
 
+	:global(:not(pre) > code) {
+		background: var(--gray-light);
+		padding: 2px 4px;
+		border-radius: 3px;
+	}
+
 	:global(.carta-renderer, .carta-input) {
 		max-height: 25rem; /* Sets a maximum height for the editor and input */
 	}
