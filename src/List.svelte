@@ -4,7 +4,10 @@
 	import Task from './components/Task.svelte';
 	import Button from './components/Button.svelte';
 	import { currentTab, toastActions, toastMessage, expandedTasks } from './stores';
-	import { getTodos, add, update, remove, type Todo, setCompleted } from './db';
+	import { type Todo } from './db';
+	import type { TaskDatabase } from './adapters/database';
+
+	let { db }: { db: TaskDatabase } = $props();
 
 	let data = $state<Todo[]>([]);
 	let completedTodos = $derived(data.filter((t) => t.completed === true));
@@ -23,7 +26,7 @@
 	);
 
 	const loadTodos = async () => {
-		const todos = await getTodos();
+		const todos = await db.getTodos();
 		todos?.subscribe((tasks) => {
 			data = tasks;
 		});
@@ -34,12 +37,12 @@
 	};
 
 	const handleUpdate = async (data: Todo) => {
-		await update(data);
+		await db.update(data);
 		clearEdit();
 	};
 
 	const handleCreate = async (data: Todo) => {
-		await add(data);
+		await db.add(data);
 	};
 
 	const handleEdit = (selected: Todo) => {
@@ -49,7 +52,7 @@
 	};
 
 	const handleToggleComplete = (task: Todo) => {
-		setCompleted(task.id, !task.completed);
+		db.setCompleted(task.id, !task.completed);
 	};
 
 	const deleteCompleted = () => {
@@ -67,7 +70,7 @@
 	};
 	const clearCompleted = async () => {
 		deleting = true;
-		await Promise.all(completedTodos.map((t) => remove(t.id))).finally(() => {
+		await Promise.all(completedTodos.map((t) => db.remove(t.id))).finally(() => {
 			deleting = false;
 		});
 	};
@@ -203,7 +206,7 @@
 						updated={new Date(updated)}
 						expanded={$expandedTasks.has(id)}
 						onEdit={() => handleEdit(task)}
-						onDelete={() => remove(id)}
+						onDelete={() => db.remove(id)}
 						onComplete={() => handleToggleComplete(task)}
 						onToggleExpand={(expanded) => handleToggleExpand(id, expanded)}
 					/>

@@ -6,6 +6,8 @@
 	import { logout } from '../auth';
 	import { getAuth0Client } from '../lib/auth-client';
 	import { push } from 'svelte-spa-router';
+	import { createTaskDatabase } from '../db';
+	import type { TaskDatabase } from '../adapters/database';
 
 	let auth0 = getAuth0Client;
 
@@ -37,7 +39,13 @@
 			<Button onclick={() => auth0() && logout(auth0()!)}>Log out</Button>
 		</div>
 	{/if}
-	<List />
+	{#await createTaskDatabase()}
+		<p class="Message">Loading database... 👩🏼‍🔧</p>
+	{:then db}
+		<List {db} />
+	{:catch err}
+		<p class="Message">Error loading database: {err.message}</p>
+	{/await}
 </section>
 
 <style>
@@ -58,5 +66,10 @@
 			inline-size: 3rem;
 			border-radius: 100%;
 		}
+	}
+
+	.Message {
+		font-size: 1.5rem;
+		padding: 2rem;
 	}
 </style>
