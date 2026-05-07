@@ -7,7 +7,6 @@ import viteConfig from './vite.config';
 const dirname =
 	typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
-// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default mergeConfig(
 	viteConfig,
 	defineConfig({
@@ -16,9 +15,14 @@ export default mergeConfig(
 			projects: [
 				{
 					extends: true,
+					test: {
+						name: 'unit',
+						include: ['tests/**/*.test.ts']
+					}
+				},
+				{
+					extends: true,
 					plugins: [
-						// The plugin will run tests for the stories defined in your Storybook config
-						// See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
 						storybookTest({
 							configDir: path.join(dirname, '.storybook')
 						})
