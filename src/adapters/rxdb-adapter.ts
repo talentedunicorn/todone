@@ -143,7 +143,8 @@ export class RxDBTaskDatabase implements TaskDatabase {
 
 	async exportTodos(): Promise<Todo[]> {
 		const db = this.getDb();
-		return db.todos.find().sort({ updated: 'desc' }).exec();
+		const docs = await db.todos.find().sort({ updated: 'desc' }).exec();
+		return docs.map((d) => d.toJSON() as Todo);
 	}
 
 	async importTodos(data: Todo[]): Promise<unknown> {

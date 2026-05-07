@@ -13,7 +13,7 @@
 	const exportData = async () => {
 		processing = true;
 		try {
-			const data = (await exportTodos()).map((t: Todo) => ({
+			const data = (await exportTodos()).map((t) => ({
 				id: t?.id,
 				title: t?.title,
 				value: t?.value,
