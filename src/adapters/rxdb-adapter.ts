@@ -1,11 +1,61 @@
-import type { RxDatabase } from 'rxdb';
-import { createDatabase, createCollection } from '../lib/rxdb';
-import { type Todo, todoSchema } from '../domain/todo';
-import { type TaskDatabase, type Stream, type DbConfig } from './database';
-export type { TaskDatabase, Stream, DbConfig };
-
+import { createRxDatabase, addRxPlugin, type RxJsonSchema, type RxDatabase } from 'rxdb';
+import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
+import { RxDBQueryBuilderPlugin } from 'rxdb/plugins/query-builder';
+import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
+import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
+import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv';
 import { map } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
+
+if (import.meta.env.DEV) {
+	addRxPlugin(RxDBDevModePlugin);
+}
+
+addRxPlugin(RxDBUpdatePlugin);
+addRxPlugin(RxDBQueryBuilderPlugin);
+
+const storage = wrappedValidateAjvStorage({
+	storage: getRxStorageDexie()
+});
+
+import type { Todo } from '../domain/todo';
+
+const todoSchema: RxJsonSchema<Todo> = {
+	version: 0,
+	primaryKey: 'id',
+	type: 'object',
+	properties: {
+		id: { type: 'string', maxLength: 100 },
+		title: { type: 'string' },
+		value: { type: 'string' },
+		completed: { type: 'boolean', default: false },
+		updated: { type: 'string', format: 'date-time' }
+	},
+	required: ['id', 'title', 'value', 'updated', 'completed'],
+	indexes: ['completed']
+};
+
+const createDatabase = (name: string) =>
+	createRxDatabase({
+		name,
+		storage,
+		ignoreDuplicate: import.meta.env.DEV
+	});
+
+const createCollection = async <T extends object>(
+	db: RxDatabase,
+	collectionName: string,
+	schema: RxJsonSchema<T>
+) => {
+	await db.addCollections({
+		[collectionName]: {
+			schema
+		}
+	});
+};
+
+import { type TaskDatabase, type Stream, type DbConfig } from './database';
+export type { TaskDatabase, Stream, DbConfig };
 
 class RxDBStream<T> implements Stream<T> {
 	constructor(private observable: Observable<T>) {}
