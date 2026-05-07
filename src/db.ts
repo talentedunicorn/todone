@@ -2,6 +2,8 @@ import { createTaskDatabase, getTaskDatabase, type TaskDatabase } from './adapte
 import { setupReplication } from './sync/replication';
 import { type Todo } from './domain/todo';
 import type { Stream } from './adapters/database';
+import { get } from 'svelte/store';
+import { token } from './stores/auth';
 
 const dbName = import.meta.env.VITE_DB_NAME || 'Todone';
 const synced = import.meta.env.VITE_SYNCED === 'true';
@@ -19,7 +21,8 @@ const getDB = async (): Promise<TaskDatabase> => {
 
 		const db = await dbPromise;
 		if (synced && remoteUrl) {
-			(db as any).getDatabase && setupReplication((db as any).getDatabase(), remoteUrl);
+			(db as any).getDatabase &&
+				setupReplication((db as any).getDatabase(), remoteUrl, () => get(token) ?? null);
 		}
 	}
 	return dbPromise;
