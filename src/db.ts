@@ -1,4 +1,9 @@
-import { createTaskDatabase, getTaskDatabase, type TaskDatabase } from './adapters/rxdb-adapter';
+import {
+	createTaskDatabase,
+	getTaskDatabase,
+	type TaskDatabase,
+	RxDBTaskDatabase
+} from './adapters/rxdb-adapter';
 import { setupReplication } from './sync/replication';
 import { type Todo } from './domain/todo';
 import type { Stream } from './adapters/database';
@@ -21,8 +26,8 @@ const getDB = async (): Promise<TaskDatabase> => {
 
 		const db = await dbPromise;
 		if (synced && remoteUrl) {
-			(db as any).getDatabase &&
-				setupReplication((db as any).getDatabase(), remoteUrl, () => get(token) ?? null);
+			const raw = db as unknown as RxDBTaskDatabase;
+			setupReplication(raw.getDatabase(), remoteUrl, () => get(token) ?? null);
 		}
 	}
 	return dbPromise;
