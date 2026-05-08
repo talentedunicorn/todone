@@ -35,6 +35,7 @@
 	});
 
 	let titleInput: HTMLInputElement;
+	let titleFocused = $state(false);
 
 	let data = $state<Todo | Content>({ title: '', value: '' });
 
@@ -45,6 +46,10 @@
 	});
 
 	const isEdit = $derived(defaultValue !== null);
+
+	const showEditor = $derived(
+		isEdit || data.title.trim().length > 0 || data.value.trim().length > 0
+	);
 
 	const isEmpty = $derived(data.value.trim().length < 1);
 
@@ -106,27 +111,30 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<div
-		class="editor-wrapper"
-		use:themeObserver={{
-			createInstance: () => createEditorCarta({ enableCodeHighlighting: true }),
-			onUpdate: (c) => (carta = c)
-		}}
-	>
-		{#if isBrowser && carta}
-			{#key carta}
-				<MarkdownEditor
-					{carta}
-					bind:value={data.value}
-					userLabels={{
-						iconsLabels: {
-							heading: 'Heading'
-						}
-					}}
-					mode="tabs"
-				/>
-			{/key}
-		{/if}
+	<div class="editor-wrapper" class:open={showEditor}>
+		<div class="inner">
+			<div
+				use:themeObserver={{
+					createInstance: () => createEditorCarta({ enableCodeHighlighting: true }),
+					onUpdate: (c) => (carta = c)
+				}}
+			>
+				{#if isBrowser && carta}
+					{#key carta}
+						<MarkdownEditor
+							{carta}
+							bind:value={data.value}
+							userLabels={{
+								iconsLabels: {
+									heading: 'Heading'
+								}
+							}}
+							mode="tabs"
+						/>
+					{/key}
+				{/if}
+			</div>
+		</div>
 	</div>
 	<div class="Actions">
 		<Button data-testid="cancel" data-umami-event="Cancel edit" onclick={clear} disabled={invalid}
@@ -167,7 +175,17 @@ Form component with a title and content inputs
 			width: 100%;
 			border-radius: 1rem;
 			border: 0.2em solid var(--black);
-			overflow: hidden;
+			display: grid;
+			grid-template-rows: 0fr;
+			transition: grid-template-rows 0.3s ease-out;
+
+			&.open {
+				grid-template-rows: 1fr;
+			}
+
+			& .inner {
+				overflow: hidden;
+			}
 		}
 
 		input {
