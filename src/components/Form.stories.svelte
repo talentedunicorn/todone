@@ -1,7 +1,11 @@
 <script module>
 	import Form from './Form.svelte';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import { expect } from 'storybook/test';
+	import { expect, fn } from 'storybook/test';
+
+	const submitSpy = fn();
+	const clearSpy = fn();
+	const updateSpy = fn();
 
 	const { Story } = defineMeta({
 		title: 'Form',
@@ -20,12 +24,17 @@
 				options: ['light', 'dark'],
 				description: 'Theme to apply'
 			}
+		},
+		args: {
+			onSubmit: submitSpy,
+			onClear: clearSpy,
+			onUpdate: updateSpy
 		}
 	});
 </script>
 
 {#snippet template(args)}
-	<Form {...args} onSubmit={() => {}} onClear={() => {}} onUpdate={() => {}} />
+	<Form {...args} />
 {/snippet}
 
 <Story
@@ -51,5 +60,18 @@
 	play={async ({ canvas }) => {
 		const titleInput = canvas.getByDisplayValue('Things to do');
 		expect(titleInput).toBeInTheDocument();
+	}}
+/>
+
+<Story
+	{template}
+	name="Submit fires callback"
+	args={{ enableEditor: false }}
+	play={async ({ canvas, userEvent }) => {
+		const titleInput = canvas.getByPlaceholderText('Start something...');
+		await userEvent.type(titleInput, 'New task');
+		const submitButton = canvas.getByRole('button', { name: 'Submit' });
+		await userEvent.click(submitButton);
+		expect(submitSpy).toHaveBeenCalled();
 	}}
 />
