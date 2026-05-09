@@ -66,12 +66,15 @@
 <Story
 	{template}
 	name="Submit fires callback"
-	args={{ enableEditor: false }}
+	args={{ enableEditor: true }}
 	play={async ({ canvas, userEvent }) => {
 		const titleInput = canvas.getByPlaceholderText('Start something...');
 		await userEvent.type(titleInput, 'New task');
-		const submitButton = canvas.getByRole('button', { name: 'Submit' });
+		const contentInputs = canvas.getAllByRole('textbox');
+		const contentInput = contentInputs[1];
+		await userEvent.type(contentInput, 'Task description');
+		const submitButton = canvas.getByRole('button', { name: 'Update' });
 		await userEvent.click(submitButton);
-		expect(submitSpy).toHaveBeenCalled();
+		expect(updateSpy).toHaveBeenCalledWith({ title: 'New task', value: 'Task description' });
 	}}
 />
