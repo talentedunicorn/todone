@@ -12,6 +12,9 @@ export default defineConfig({
 		setupFiles: ['./tests/vitest.setup.ts'],
 		include: ['tests/**/*.test.ts'],
 		exclude: ['tests/**/*.stories.ts'],
-		environment: 'jsdom'
+		environment: 'jsdom',
+		coverage: {
+			reporter: ['text', 'html', 'json-summary', 'json']
+		}
 	}
 });
