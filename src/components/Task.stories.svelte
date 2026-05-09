@@ -30,11 +30,11 @@
 		{...args}
 		onComplete={() => {
 			args.completed = !args.completed;
-			completeSpy();
+			completeSpy(args.completed);
 		}}
 		onToggleExpand={(expanded) => {
 			args.expanded = expanded;
-			expandSpy();
+			expandSpy(expanded);
 		}}
 	/>
 {/snippet}
@@ -84,6 +84,6 @@
 	play={async ({ canvas, userEvent }) => {
 		const completeButton = canvas.getByRole('button', { name: 'Mark Completed' });
 		await userEvent.click(completeButton);
-		expect(completeSpy).toHaveBeenCalled();
+		expect(completeSpy).toHaveBeenCalledWith(true);
 	}}
 />
