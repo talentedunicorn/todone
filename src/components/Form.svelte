@@ -178,6 +178,7 @@ Form component with a title and content inputs
 			display: grid;
 			grid-template-rows: 0fr;
 			transition: grid-template-rows 0.3s ease-out;
+			overflow: hidden;
 
 			&.open {
 				grid-template-rows: 1fr;
