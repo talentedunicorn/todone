@@ -1,5 +1,6 @@
 import { resolveCodeTheme, type CodeTheme } from './carta';
 import type { Carta } from 'carta-md';
+import { tick } from 'svelte';
 
 export function themeObserver<T extends Carta | null>(
 	node: HTMLElement,
@@ -19,7 +20,7 @@ export function themeObserver<T extends Carta | null>(
 	const observer = new MutationObserver((mutations) => {
 		for (const mutation of mutations) {
 			if (mutation.attributeName === 'data-theme') {
-				update();
+				tick().then(update);
 			}
 		}
 	});
