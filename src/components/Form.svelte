@@ -152,7 +152,6 @@ Form component with a title and content inputs
 
 <style>
 	form {
-		--textarea-width: 30rem;
 		gap: 1rem;
 		padding: 1rem;
 		border-radius: 1rem;
@@ -213,12 +212,13 @@ Form component with a title and content inputs
 		border-radius: 3px;
 	}
 
-	:global(.carta-renderer, .carta-input) {
-		max-height: 25rem; /* Sets a maximum height for the editor and input */
+	:global(.carta-wrapper .carta-input-wrapper) {
+		color-scheme: light;
+		background: var(--white);
 	}
 
-	:global(.carta-highlight) {
-		z-index: 1;
+	:global(.carta-renderer, .carta-input) {
+		max-height: 25rem; /* Sets a maximum height for the editor and input */
 	}
 
 	:global(.carta-toolbar) {
@@ -253,8 +253,8 @@ Form component with a title and content inputs
 	:global(.carta-font-code) {
 		caret-color: var(--black) !important;
 		font-size: 1rem !important;
+		font-family: monospace;
 		line-height: 1.7 !important;
-		z-index: inherit;
 	}
 
 	:global(.carta-icons-menu) {
@@ -266,7 +266,9 @@ Form component with a title and content inputs
 		color: var(--black) !important;
 	}
 
-	:global(.shiki) {
+	:global(.carta-renderer .shiki) {
+		padding: 1rem;
+		font-size: 1rem;
 		border-radius: 0.5rem;
 		overflow: auto;
 	}
