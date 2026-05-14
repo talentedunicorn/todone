@@ -33,14 +33,14 @@
 
 <section class="Wrapper">
 	<div><Markdown {carta} value={content} /></div>
-	<details>
-		<summary>Data summary</summary>
-		<p>Done &#8212; {complete}</p>
-		<p>ToDo &#8212; {incomplete}</p>
+	<aside>
+		<h2>Overview — {complete + incomplete}</h2>
+		<p>{complete} &#8212; completed</p>
+		<p>{incomplete} &#8212; incomplete</p>
 		<nav>
 			<ExportImport />
 		</nav>
-	</details>
+	</aside>
 </section>
 
 <style>
@@ -56,14 +56,5 @@
 			align-items: flex-start;
 			gap: 2rem;
 		}
-	}
-
-	:global(.carta-md) {
-		font-size: 1.2rem;
-		line-height: 1.7;
-	}
-
-	:global(.carta-md a) {
-		color: var(--primary);
 	}
 </style>
