@@ -212,11 +212,6 @@ Form component with a title and content inputs
 		border-radius: 3px;
 	}
 
-	:global(.carta-wrapper .carta-input-wrapper) {
-		color-scheme: light;
-		background: var(--white);
-	}
-
 	:global(.carta-renderer, .carta-input) {
 		max-height: 25rem; /* Sets a maximum height for the editor and input */
 	}
@@ -271,5 +266,38 @@ Form component with a title and content inputs
 		font-size: 1rem;
 		border-radius: 0.5rem;
 		overflow: auto;
+	}
+
+	/** Handle dual themes*/
+
+	:global([data-theme='dark'] .carta-theme__default) {
+		--border-color: var(--border-color-dark);
+		--selection-color: var(--selection-color-dark);
+		--focus-outline: var(--focus-outline-dark);
+		--hover-color: var(--hover-color-dark);
+		--caret-color: var(--caret-color-dark);
+		--text-color: var(--text-color-dark);
+	}
+
+	:global([data-theme='dark'] .carta-input .shiki, [data-theme='dark'] .carta-input .shiki span) {
+		color: var(--shiki-dark) !important;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:global(html:not([data-theme='light']) .carta-theme__default) {
+			--border-color: var(--border-color-dark);
+			--selection-color: var(--selection-color-dark);
+			--focus-outline: var(--focus-outline-dark);
+			--hover-color: var(--hover-color-dark);
+			--caret-color: var(--caret-color-dark);
+			--text-color: var(--text-color-dark);
+		}
+
+		:global(
+			html:not([data-theme='light']) .shiki,
+			html:not([data-theme='light']) .carta-input .shiki span
+		) {
+			color: var(--shiki-dark) !important;
+		}
 	}
 </style>
