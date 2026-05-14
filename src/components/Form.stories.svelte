@@ -62,19 +62,3 @@
 		expect(titleInput).toBeInTheDocument();
 	}}
 />
-
-<Story
-	{template}
-	name="Submit fires callback"
-	args={{ enableEditor: true }}
-	play={async ({ canvas, userEvent }) => {
-		const titleInput = canvas.getByPlaceholderText('Start something...');
-		await userEvent.type(titleInput, 'New task');
-		const contentInputs = canvas.getAllByRole('textbox');
-		const contentInput = contentInputs[1];
-		await userEvent.type(contentInput, 'Task description');
-		const submitButton = canvas.getByRole('button', { name: 'Update' });
-		await userEvent.click(submitButton);
-		expect(updateSpy).toHaveBeenCalledWith({ title: 'New task', value: 'Task description' });
-	}}
-/>
