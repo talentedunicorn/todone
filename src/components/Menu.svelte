@@ -2,6 +2,7 @@
 	import { fade, fly } from 'svelte/transition';
 	import { type Snippet } from 'svelte';
 	import Button from './Button.svelte';
+	import { push } from 'svelte-spa-router';
 
 	let opened = $state(false);
 	interface MenuItem {
@@ -49,6 +50,7 @@
 					size="large"
 					selected={menuitem.selected}
 					onclick={() => {
+						push('/');
 						goTo(menuitem.label);
 						opened = false;
 					}}>{menuitem.label}</Button

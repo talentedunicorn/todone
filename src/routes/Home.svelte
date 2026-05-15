@@ -1,37 +1,18 @@
 <script lang="ts">
 	import List from '../List.svelte';
 	import Button from '../components/Button.svelte';
-	import Menu from '../components/Menu.svelte';
-	import { isLoggedin, tabs, currentTab, user } from '../stores';
+	import { isLoggedin, user } from '../stores';
 	import { logout } from '../auth';
 	import { getAuth0Client } from '../lib/auth-client';
-	import { push } from 'svelte-spa-router';
 	import { createTaskDatabase } from '../db';
-	import type { TaskDatabase } from '../adapters/database';
 
 	let auth0 = getAuth0Client;
-
-	let menuItems = $derived(
-		tabs.map((item) => ({
-			...item,
-			selected: item.label === $currentTab
-		}))
-	);
-
-	const handleMenu = (path: string) => {
-		currentTab.set(path);
-	};
 </script>
 
 <svelte:head>
 	<title>ToDone &#8212; Get it done!</title>
 </svelte:head>
 
-<aside class="Menu">
-	<Menu {menuItems} goTo={handleMenu}>
-		<Button size="large" variant="link" onclick={() => push('/about')}>About</Button>
-	</Menu>
-</aside>
 <section class="Content">
 	{#if $isLoggedin}
 		<div class="Profile">
@@ -49,13 +30,6 @@
 </section>
 
 <style>
-	.Menu {
-		position: fixed;
-		top: 1rem;
-		left: 1rem;
-		z-index: 9;
-	}
-
 	.Profile {
 		display: flex;
 		gap: 1rem;
