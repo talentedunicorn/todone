@@ -65,7 +65,7 @@
 		padding: 1rem;
 		align-items: start;
 		transition: background-color var(--ease) 0.5;
-		border-bottom-right-radius: 1rem;
+		border-radius: 1rem;
 
 		&,
 		& > div {

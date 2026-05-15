@@ -51,7 +51,8 @@
 <style>
 	.Menu {
 		position: fixed;
-		top: 0;
+		top: 1rem;
+		left: 1rem;
 		z-index: 9;
 	}
 
