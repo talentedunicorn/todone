@@ -113,7 +113,7 @@ importers:
         version: 10.1.1(@babel/core@7.29.0)
       chromatic:
         specifier: ^16.6.3
-        version: 16.6.3
+        version: 16.10.1
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -2109,8 +2109,8 @@ packages:
       '@chromatic-com/playwright':
         optional: true
 
-  chromatic@16.6.3:
-    resolution: {integrity: sha512-N9WCRuezqrxujRvgnAlE9XKxXcF6q2kowKH2Ba82FYkRc4xlY9g8r+ESEph9jLv500s43/9oDmB/kZ9r24BcgQ==}
+  chromatic@16.10.1:
+    resolution: {integrity: sha512-u3RusLCCJxN8IZV3qLh6RTpo6Mu5A77bpOTAGJL5A+v2to9fsVKcK3j0GvGjPQeJJPNSI8rAI5c4U9ukbGiZJQ==}
     hasBin: true
     peerDependencies:
       '@chromatic-com/cypress': ^0.*.* || ^1.0.0
@@ -3673,6 +3673,11 @@ packages:
 
   semver@7.7.4:
     resolution: {integrity: sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==}
+    engines: {node: '>=10'}
+    hasBin: true
+
+  semver@7.8.0:
+    resolution: {integrity: sha512-AcM7dV/5ul4EekoQ29Agm5vri8JNqRyj39o0qpX6vDF2GZrtutZl5RwgD1XnZjiTAfncsJhMI48QQH3sN87YNA==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -6619,9 +6624,9 @@ snapshots:
 
   chromatic@13.3.5: {}
 
-  chromatic@16.6.3:
+  chromatic@16.10.1:
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.0
 
   cli-cursor@3.1.0:
     dependencies:
@@ -7652,7 +7657,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.0
 
   marked@18.0.3: {}
 
@@ -8253,6 +8258,8 @@ snapshots:
   semver@6.3.1: {}
 
   semver@7.7.4: {}
+
+  semver@7.8.0: {}
 
   serialize-javascript@7.0.5: {}
 
