@@ -6,6 +6,7 @@
 	import { createEditorCarta } from '../lib/carta';
 	import { themeObserver } from '../lib/theme-observer';
 	import type { Todo } from '../db';
+	import { fly } from 'svelte/transition';
 
 	type Content = { title: string; value: string };
 
@@ -136,18 +137,14 @@ Form component with a title and content inputs
 			</div>
 		</div>
 	</div>
-	<div class="Actions">
-		<Button data-testid="cancel" data-umami-event="Cancel edit" onclick={clear} disabled={invalid}
-			>Cancel</Button
-		>
-		<Button
-			data-testid="submit"
-			data-umami-event="Save"
-			type="submit"
-			variant="primary"
-			disabled={invalid}>{buttonText}</Button
-		>
-	</div>
+	{#if !invalid}
+		<div class="Actions" transition:fly={{ y: 5 }}>
+			<Button data-testid="cancel" data-umami-event="Cancel edit" onclick={clear}>Cancel</Button>
+			<Button data-testid="submit" data-umami-event="Save" type="submit" variant="primary"
+				>{buttonText}</Button
+			>
+		</div>
+	{/if}
 </form>
 
 <style>
