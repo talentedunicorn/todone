@@ -12,14 +12,16 @@
 	import Toast from './components/Toast.svelte';
 	import Logo from './components/Logo.svelte';
 	import ToggleTheme from './components/ToggleTheme.svelte';
+	import Menu from './components/Menu.svelte';
+
 	import About from './routes/About.svelte';
 	import NotFound from './routes/NotFound.svelte';
 	import Login from './routes/Login.svelte';
 	import Home from './routes/Home.svelte';
 	import { checkAuth, initAuth0Client } from './auth';
-	import { toastActions, toastMessage, status, isLoggedin } from './stores';
+	import { setAuth0Client } from './lib/auth-client';
+	import { toastActions, toastMessage, status, isLoggedin, currentTab, tabs } from './stores';
 	import themeStore from './stores/theme';
-	import type { ComponentType } from 'svelte';
 
 	let auth0 = $state<Auth0Client>();
 	let wrapper: HTMLElement;
@@ -48,6 +50,7 @@
 
 	const initializeAuth = async () => {
 		auth0 = await initAuth0Client();
+		setAuth0Client(auth0);
 		await checkAuth(auth0);
 
 		if ($isLoggedin) push(`/`);
@@ -58,13 +61,21 @@
 		if (synced && !auth0) initializeAuth();
 	});
 
+	let menuItems = $derived(
+		tabs.map((item) => ({
+			...item,
+			selected: item.label === $currentTab
+		}))
+	);
+
+	const handleMenu = (path: string) => {
+		currentTab.set(path);
+	};
+
 	const routes = {
 		'/about': About,
 		'/login': wrap({
 			component: Login,
-			props: {
-				auth0: () => auth0
-			},
 			conditions: [
 				() => {
 					if (!synced) {
@@ -84,9 +95,6 @@
 		}),
 		'/': wrap({
 			component: Home,
-			props: {
-				auth0: () => auth0
-			},
 			conditions: [
 				() => {
 					if (!synced) return true;
@@ -106,17 +114,6 @@
 	{#if import.meta.env.PROD}
 		{pwaInfo?.webManifest.linkTag}
 	{/if}
-	{#if prefersDark}
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/stackoverflow-dark.min.css"
-		/>
-	{:else}
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/stackoverflow-light.min.css"
-		/>
-	{/if}
 </svelte:head>
 
 <main class="Wrapper" bind:this={wrapper}>
@@ -125,6 +122,11 @@
 
 		<ToggleTheme />
 	</header>
+	<aside class="Menu">
+		<Menu {menuItems} goTo={handleMenu}>
+			<Button size="large" variant="link" onclick={() => push('/about')}>About</Button>
+		</Menu>
+	</aside>
 	<Router {routes} />
 	{#if showBackToTop}
 		<footer class="Footer" transition:fly={{ y: 100, duration: 500 }}>
@@ -210,5 +212,12 @@
 		&[data-syncing='ERROR'] {
 			--indicator-color: var(--red);
 		}
+	}
+
+	.Menu {
+		position: fixed;
+		top: 1rem;
+		left: 1rem;
+		z-index: 9;
 	}
 </style>

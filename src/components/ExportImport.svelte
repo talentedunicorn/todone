@@ -13,7 +13,7 @@
 	const exportData = async () => {
 		processing = true;
 		try {
-			const data = (await exportTodos()).map((t: Todo) => ({
+			const data = (await exportTodos()).map((t) => ({
 				id: t?.id,
 				title: t?.title,
 				value: t?.value,
@@ -37,8 +37,8 @@
 
 			document.body.removeChild(link);
 			toastMessage.set('Data exported successfully.');
-		} catch (e: any) {
-			toastMessage.set(e.message);
+		} catch (e) {
+			toastMessage.set(e instanceof Error ? e.message : 'An error occurred');
 		} finally {
 			processing = false;
 		}

@@ -1,10 +1,35 @@
 import type { RxDatabase } from 'rxdb';
 import { replicateCouchDB } from 'rxdb/plugins/replication-couchdb';
 import { SyncStatus, status } from '../stores/sync';
-import { token } from '../stores/auth';
 import type { Todo } from '../domain/todo';
 
-export const setupReplication = (db: RxDatabase, url: string) => {
+export const setupReplication = (
+	db: RxDatabase,
+	url: string,
+	getAuthToken: () => string | null
+) => {
+	const authGetter = getAuthToken;
+
+	const fetchWithAuth = async (url: RequestInfo | URL, options?: RequestInit) => {
+		const headers = new Headers(options?.headers);
+		const authToken = authGetter();
+		headers.set('Authorization', `Bearer ${authToken}`);
+
+		const response = await fetch(url, {
+			...options,
+			headers
+		});
+
+		if (!response.ok) {
+			const { error, reason }: { error: string; reason: string } = await response.json();
+			if (reason === 'exp not in future') {
+				throw new Error('Token expired');
+			}
+		}
+
+		return response;
+	};
+
 	const replicationState = replicateCouchDB<Todo>({
 		replicationIdentifier: 'couchdb-replication',
 		collection: db.todos,
@@ -20,35 +45,9 @@ export const setupReplication = (db: RxDatabase, url: string) => {
 	});
 
 	replicationState.active$.subscribe(() => status.set(SyncStatus.ACTIVE));
-	replicationState.error$.subscribe((e) => {
-		if (e.parameters?.errors?.at(0)?.message === 'Token expired') {
-			token.set(null);
-		}
+	replicationState.error$.subscribe(() => {
 		status.set(SyncStatus.ERROR);
 	});
 
 	return replicationState;
-};
-
-const fetchWithAuth = async (url: RequestInfo | URL, options: any) => {
-	let authToken: string | null | undefined;
-	const optionsWithAuth = Object.assign({}, options);
-	if (!optionsWithAuth.headers) {
-		optionsWithAuth.headers = {};
-	}
-
-	token.subscribe((v) => (authToken = v));
-	optionsWithAuth.headers['Authorization'] = `Bearer ${authToken}`;
-
-	const response = await fetch(url, optionsWithAuth);
-
-	if (!response.ok) {
-		const { error, reason }: { error: string; reason: string } = await response.json();
-		if (reason === 'exp not in future') {
-			token.set(null);
-			throw new Error('Token expired');
-		}
-	}
-
-	return response;
 };

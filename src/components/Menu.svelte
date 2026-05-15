@@ -2,11 +2,17 @@
 	import { fade, fly } from 'svelte/transition';
 	import { type Snippet } from 'svelte';
 	import Button from './Button.svelte';
+	import { push } from 'svelte-spa-router';
 
 	let opened = $state(false);
+	interface MenuItem {
+		label: string;
+		selected?: boolean;
+	}
+
 	interface Props {
 		title?: string;
-		menuItems?: any;
+		menuItems?: MenuItem[];
 		children?: Snippet;
 		goTo: (path: string) => void;
 	}
@@ -44,6 +50,7 @@
 					size="large"
 					selected={menuitem.selected}
 					onclick={() => {
+						push('/');
 						goTo(menuitem.label);
 						opened = false;
 					}}>{menuitem.label}</Button
@@ -60,7 +67,7 @@
 		padding: 1rem;
 		align-items: start;
 		transition: background-color var(--ease) 0.5;
-		border-bottom-right-radius: 1rem;
+		border-radius: 1rem;
 
 		&,
 		& > div {
