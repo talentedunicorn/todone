@@ -48,7 +48,7 @@
 		"babel-loader": "^10.1.1",
 		"chromatic": "^16.6.3",
 		"husky": "^9.1.7",
-		"jiti": "2.6.1",
+		"jiti": "2.7.0",
 		"nx": "22.7.1",
 		"playwright": "^1.59.1",
 		"postcss": "^8.5.13",
