@@ -1,54 +1,35 @@
 <script lang="ts">
-	import { Auth0Client } from '@auth0/auth0-spa-js';
-
 	import List from '../List.svelte';
 	import Button from '../components/Button.svelte';
-	import Menu from '../components/Menu.svelte';
-	import { isLoggedin, tabs, currentTab, user } from '../stores';
+	import { isLoggedin, user } from '../stores';
 	import { logout } from '../auth';
-	import { push } from 'svelte-spa-router';
+	import { getAuth0Client } from '../lib/auth-client';
+	import { createTaskDatabase } from '../db';
 
-	const { auth0: auth0Client } = $props<{ auth0: () => Auth0Client | undefined }>();
-	let auth0 = () => auth0Client();
-
-	let menuItems = $derived(
-		tabs.map((item) => ({
-			...item,
-			selected: item.label === $currentTab
-		}))
-	);
-
-	const handleMenu = (path: string) => {
-		currentTab.set(path);
-	};
+	let auth0 = getAuth0Client;
 </script>
 
 <svelte:head>
 	<title>ToDone &#8212; Get it done!</title>
 </svelte:head>
 
-<aside class="Menu">
-	<Menu {menuItems} goTo={handleMenu}>
-		<Button size="large" variant="link" onclick={() => push('/about')}>About</Button>
-	</Menu>
-</aside>
 <section class="Content">
 	{#if $isLoggedin}
 		<div class="Profile">
 			<img src={$user.picture} alt={$user.nickname} />
-			<Button onclick={() => logout(auth0())}>Log out</Button>
+			<Button onclick={() => auth0() && logout(auth0()!)}>Log out</Button>
 		</div>
 	{/if}
-	<List />
+	{#await createTaskDatabase()}
+		<p class="Message">Loading database... 👩🏼‍🔧</p>
+	{:then db}
+		<List {db} />
+	{:catch err}
+		<p class="Message">Error loading database: {err.message}</p>
+	{/await}
 </section>
 
 <style>
-	.Menu {
-		position: fixed;
-		top: 0;
-		z-index: 9;
-	}
-
 	.Profile {
 		display: flex;
 		gap: 1rem;
@@ -60,5 +41,10 @@
 			inline-size: 3rem;
 			border-radius: 100%;
 		}
+	}
+
+	.Message {
+		font-size: 1.5rem;
+		padding: 2rem;
 	}
 </style>

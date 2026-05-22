@@ -1,27 +1,56 @@
 <script lang="ts">
-	import hljs from 'highlight.js';
+	import { Carta, MarkdownEditor } from 'carta-md';
+	import 'carta-md/default.css';
+	import { onMount, tick } from 'svelte';
 	import Button from './Button.svelte';
+	import { createEditorCarta } from '../lib/carta';
+	import { themeObserver } from '../lib/theme-observer';
 	import type { Todo } from '../db';
+	import { fly } from 'svelte/transition';
 
 	type Content = { title: string; value: string };
 
 	interface Props {
 		defaultValue?: Todo | null;
+		enableEditor?: boolean;
 		onClear: () => void;
-		onUpdate: (data: Todo) => void;
-		onSubmit: (data: Todo) => void;
+		onUpdate: (data: Todo) => Promise<void> | void;
+		onSubmit: (data: Todo) => Promise<void> | void;
 	}
 
-	let { defaultValue, onClear, onSubmit, onUpdate }: Props = $props();
+	let { defaultValue, enableEditor = true, onClear, onSubmit, onUpdate }: Props = $props();
+
+	let carta = $state<Carta | null>(null);
+	let isBrowser = $state(false);
+
+	const initializeEditor = async () => {
+		await tick();
+		isBrowser = true;
+		carta = createEditorCarta({ enableCodeHighlighting: true });
+	};
+
+	onMount(() => {
+		if (typeof window === 'undefined' || !enableEditor) return;
+
+		void initializeEditor();
+	});
 
 	let titleInput: HTMLInputElement;
+	let titleFocused = $state(false);
 
-	let data = $state<Todo | Content>({
-		title: '',
-		value: ''
+	let data = $state<Todo | Content>({ title: '', value: '' });
+
+	$effect(() => {
+		if (defaultValue) {
+			data = defaultValue;
+		}
 	});
 
 	const isEdit = $derived(defaultValue !== null);
+
+	const showEditor = $derived(
+		isEdit || data.title.trim().length > 0 || data.value.trim().length > 0
+	);
 
 	const isEmpty = $derived(data.value.trim().length < 1);
 
@@ -34,8 +63,12 @@
 		onClear();
 	};
 
-	const submit = () => {
-		isEdit ? onUpdate(data as Todo) : onSubmit(data as Todo);
+	const submit = async () => {
+		if (isEdit) {
+			await onUpdate(data as Todo);
+		} else {
+			await onSubmit(data as Todo);
+		}
 		clear();
 	};
 
@@ -44,13 +77,7 @@
 			window.scrollTo({ top: titleInput.scrollHeight });
 			titleInput.focus();
 		}
-
-		if (defaultValue) {
-			data = defaultValue;
-		}
 	});
-
-	const higlighted = $derived(hljs.highlight(data.value, { language: 'markdown' }).value);
 </script>
 
 <!--
@@ -85,29 +112,43 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<div class="content-wrapper">
-		<textarea id="content" data-testid="content" data-empty={isEmpty} bind:value={data.value}
-		></textarea>
-		<pre class="overlay highlight language-markdown">{@html higlighted}</pre>
+	<div class="editor-wrapper" class:open={showEditor}>
+		<div class="inner">
+			<div
+				use:themeObserver={{
+					createInstance: () => createEditorCarta({ enableCodeHighlighting: true }),
+					onUpdate: (c) => (carta = c)
+				}}
+			>
+				{#if isBrowser && carta}
+					{#key carta}
+						<MarkdownEditor
+							{carta}
+							bind:value={data.value}
+							userLabels={{
+								iconsLabels: {
+									heading: 'Heading'
+								}
+							}}
+							mode="tabs"
+						/>
+					{/key}
+				{/if}
+			</div>
+		</div>
 	</div>
-	<div class="Actions">
-		<Button data-testid="cancel" data-umami-event="Cancel edit" onclick={clear} disabled={invalid}
-			>Cancel</Button
-		>
-		<Button
-			data-testid="submit"
-			data-umami-event="Save"
-			type="submit"
-			variant="primary"
-			disabled={invalid}>{buttonText}</Button
-		>
-	</div>
+	{#if !invalid}
+		<div class="Actions" transition:fly={{ y: 5 }}>
+			<Button data-testid="cancel" data-umami-event="Cancel edit" onclick={clear}>Cancel</Button>
+			<Button data-testid="submit" data-umami-event="Save" type="submit" variant="primary"
+				>{buttonText}</Button
+			>
+		</div>
+	{/if}
 </form>
 
 <style>
 	form {
-		--textarea-width: 30rem;
-		--textarea-height: 50vh;
 		gap: 1rem;
 		padding: 1rem;
 		border-radius: 1rem;
@@ -124,32 +165,23 @@ Form component with a title and content inputs
 			gap: 1rem;
 			align-items: flex-end;
 			justify-content: space-between;
-
-			@media (width > 48rem) {
-				position: sticky;
-				bottom: 1rem;
-			}
 		}
 
-		.content-wrapper {
-			position: relative;
-			flex: var(--textarea-width);
+		.editor-wrapper {
+			width: 100%;
+			border-radius: 1rem;
+			border: 0.2em solid var(--black);
 			display: grid;
+			grid-template-rows: 0fr;
+			transition: grid-template-rows 0.3s ease-out;
+			overflow: hidden;
 
-			& textarea,
-			& :global(.overlay) {
-				grid-area: 1/1/1/1;
-				font-size: 1rem;
-				line-height: 1.7;
-				font-family: monospace;
-				padding: 1rem;
-				margin: 0;
-				white-space: pre-wrap;
-				word-break: break-word;
-				width: 100%;
-				overflow-x: auto;
-				border-radius: 1rem;
-				border: 0.2em solid var(--black);
+			&.open {
+				grid-template-rows: 1fr;
+			}
+
+			& .inner {
+				overflow: hidden;
 			}
 		}
 
@@ -165,28 +197,104 @@ Form component with a title and content inputs
 			border-radius: 0.5rem;
 			padding: 0.5em;
 		}
+	}
 
-		textarea {
-			position: relative;
-			z-index: 1;
-			resize: none;
-			width: 100%;
-			height: 100%;
-			color: transparent;
-			background: transparent;
-			caret-color: var(--black);
-			border: none;
+	:global(img) {
+		border-radius: 0.5rem;
+	}
 
-			&[data-empty='false'] {
-				min-height: var(--textarea-height);
-			}
+	:global(:not(pre) > code) {
+		background: var(--gray-light);
+		padding: 2px 4px;
+		border-radius: 3px;
+	}
+
+	:global(.carta-renderer, .carta-input) {
+		max-height: 25rem; /* Sets a maximum height for the editor and input */
+	}
+
+	:global(.carta-toolbar) {
+		background-color: var(--white) !important;
+		color: var(--black) !important;
+		border: none !important;
+		border-bottom: 0.1em solid var(--gray-light) !important;
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease;
+	}
+
+	:global(.carta-toolbar button) {
+		color: var(--black) !important;
+		background: transparent !important;
+		border: none !important;
+		cursor: pointer;
+		padding: 0.5rem !important;
+		font-size: 1rem !important;
+		font-family: inherit !important;
+
+		&:hover {
+			background-color: var(--gray-light) !important;
+		}
+	}
+
+	:global(.carta-icon) {
+		width: 2rem !important;
+		height: 2rem !important;
+	}
+
+	:global(.carta-font-code) {
+		caret-color: var(--black) !important;
+		font-size: 1rem !important;
+		font-family: monospace;
+		line-height: 1.7 !important;
+	}
+
+	:global(.carta-icons-menu) {
+		background: var(--white) !important;
+		color: var(--black) !important;
+	}
+
+	:global(.carta-icons-menu button) {
+		color: var(--black) !important;
+	}
+
+	:global(.carta-renderer .shiki) {
+		padding: 1rem;
+		font-size: 1rem;
+		border-radius: 0.5rem;
+		overflow: auto;
+	}
+
+	/** Handle dual themes*/
+
+	:global([data-theme='dark'] .carta-theme__default) {
+		--border-color: var(--border-color-dark);
+		--selection-color: var(--selection-color-dark);
+		--focus-outline: var(--focus-outline-dark);
+		--hover-color: var(--hover-color-dark);
+		--caret-color: var(--caret-color-dark);
+		--text-color: var(--text-color-dark);
+	}
+
+	:global([data-theme='dark'] .carta-input .shiki, [data-theme='dark'] .carta-input .shiki span) {
+		color: var(--shiki-dark) !important;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:global(html:not([data-theme='light']) .carta-theme__default) {
+			--border-color: var(--border-color-dark);
+			--selection-color: var(--selection-color-dark);
+			--focus-outline: var(--focus-outline-dark);
+			--hover-color: var(--hover-color-dark);
+			--caret-color: var(--caret-color-dark);
+			--text-color: var(--text-color-dark);
 		}
 
-		@supports (field-sizing: content) {
-			textarea {
-				field-sizing: content;
-				--textarea-height: auto;
-			}
+		:global(
+			html:not([data-theme='light']) .shiki,
+			html:not([data-theme='light']) .carta-input .shiki span
+		) {
+			color: var(--shiki-dark) !important;
 		}
 	}
 </style>

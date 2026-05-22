@@ -1,73 +1,42 @@
-import { addRxPlugin, type RxDatabase } from 'rxdb';
-import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
-import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
-import { createCollection, createDatabase } from './lib/rxdb';
-import { type Todo, todoSchema } from './domain/todo';
+import { type TaskDatabase, RxDBTaskDatabase } from './adapters/rxdb-adapter';
 import { setupReplication } from './sync/replication';
-import type { Observable } from 'rxjs';
-
-if (import.meta.env.DEV) {
-	addRxPlugin(RxDBDevModePlugin);
-}
-
-addRxPlugin(RxDBUpdatePlugin);
+import { type Todo } from './domain/todo';
+import type { Stream } from './adapters/database';
+import { get } from 'svelte/store';
+import { token } from './stores/auth';
 
 const dbName = import.meta.env.VITE_DB_NAME || 'Todone';
+const synced = import.meta.env.VITE_SYNCED === 'true';
+const remoteUrl = import.meta.env.VITE_REMOTE_DB;
 
-let db: RxDatabase;
+let dbInstance: TaskDatabase | null = null;
 
-const getDB = async () => {
-	try {
-		if (!db) {
-			db = await createDatabase(dbName).then(async (db) => {
-				await createCollection(db, 'todos', todoSchema);
-				return db;
-			});
+const initDB = async (): Promise<TaskDatabase> => {
+	if (!dbInstance) {
+		const rxDb = new RxDBTaskDatabase({ name: dbName, synced, remoteUrl });
+		await rxDb.init();
+		dbInstance = rxDb;
 
-			if (import.meta.env.VITE_SYNCED === 'true') {
-				const url = import.meta.env.VITE_REMOTE_DB;
-				setupReplication(db, url);
-			}
-		} else {
-			return db;
+		if (synced && remoteUrl) {
+			setupReplication(rxDb.getDatabase(), remoteUrl, () => get(token) ?? null);
 		}
-
-		return db;
-	} catch (e) {
-		console.error(`Error initializing database`, e);
 	}
+	return dbInstance;
 };
 
 export const getDocCount = async () => {
-	const db = await getDB();
-	const complete = db!.todos.count({
-		selector: {
-			completed: true
-		}
-	}).$;
-
-	const incomplete = db!.todos.count({
-		selector: {
-			completed: false
-		}
-	}).$;
-
-	return {
-		complete,
-		incomplete
-	};
+	const db = await initDB();
+	return db.getDocCount();
 };
 
 export const getTodos = async () => {
-	const db = await getDB();
-	return db!.todos.find().sort({ updated: 'desc' }).$;
+	const db = await initDB();
+	return db.getTodos();
 };
 
 export const add = async (data: { title: string; value: string }) => {
-	const db = await getDB();
-
-	const now = new Date().toISOString();
-	return db!.todos.insert({ ...data, updated: now, id: now });
+	const db = await initDB();
+	return db.add(data);
 };
 
 export const update = async ({
@@ -81,57 +50,30 @@ export const update = async ({
 	value: string;
 	completed: boolean;
 }) => {
-	const db = await getDB();
-
-	const now = new Date().toISOString();
-	const todo = db!.todos.findOne({
-		selector: { id: { $eq: id } }
-	});
-
-	return todo?.update({
-		$set: {
-			title,
-			value,
-			completed,
-			updated: now
-		}
-	});
+	const db = await initDB();
+	return db.update({ id, title, value, completed });
 };
 
 export const remove = async (id: string) => {
-	const db = await getDB();
-	await db!.todos
-		.findOne({
-			selector: {
-				id
-			}
-		})
-		.remove();
+	const db = await initDB();
+	return db.remove(id);
 };
 
 export const setCompleted = async (id: string, completed: boolean) => {
-	const db = await getDB();
-	return await db!.todos
-		.findOne({
-			selector: {
-				id
-			}
-		})
-		.update({
-			$set: {
-				completed
-			}
-		});
+	const db = await initDB();
+	return db.setCompleted(id, completed);
 };
 
 export const exportTodos = async () => {
-	const db = await getDB();
-	return db!.todos.find().sort({ updated: 'desc' }).exec();
+	const db = await initDB();
+	return db.exportTodos();
 };
 
 export const importTodos = async (data: Todo[]) => {
-	const db = await getDB();
-	return db!.todos.bulkUpsert(data);
+	const db = await initDB();
+	return db.importTodos(data);
 };
 
-export type { Todo };
+export const createTaskDatabase = initDB;
+
+export type { Todo, Stream };

@@ -1,12 +1,16 @@
 <script lang="ts">
-	import { marked } from 'marked';
+	import { Markdown } from 'carta-md';
+	import 'carta-md/default.css';
 	import ExportImport from '../components/ExportImport.svelte';
 	import { getDocCount } from '../db';
+	import { createViewerCarta } from '../lib/carta';
 
 	import content from '../../About.md?raw';
 
 	let complete = $state<number>(0);
 	let incomplete = $state<number>(0);
+
+	const carta = createViewerCarta();
 
 	const fetchCount = async () => {
 		const { complete: completeSub, incomplete: incompleteSub } = await getDocCount();
@@ -28,15 +32,15 @@
 </svelte:head>
 
 <section class="Wrapper">
-	<div>{@html marked(content)}</div>
-	<details>
-		<summary>Data summary</summary>
-		<p>Done &#8212; {complete}</p>
-		<p>ToDo &#8212; {incomplete}</p>
+	<div><Markdown {carta} value={content} /></div>
+	<aside>
+		<h2>Overview — {complete + incomplete}</h2>
+		<p>{complete} &#8212; completed</p>
+		<p>{incomplete} &#8212; incomplete</p>
 		<nav>
 			<ExportImport />
 		</nav>
-	</details>
+	</aside>
 </section>
 
 <style>
