@@ -47,7 +47,7 @@
 		"@vitest/ui": "4.1.5",
 		"autoprefixer": "^10.5.0",
 		"babel-loader": "^10.1.1",
-		"chromatic": "^16.10.1",
+		"chromatic": "^17.0.0",
 		"husky": "^9.1.7",
 		"jiti": "2.7.0",
 		"nx": "22.7.1",
