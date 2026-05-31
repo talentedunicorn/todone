@@ -387,7 +387,6 @@
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		gap: 1.5rem;
-		min-height: 60vh;
 	}
 
 	.archive {
