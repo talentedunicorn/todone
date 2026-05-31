@@ -8,6 +8,7 @@
 	import { currentTab, toastActions, toastMessage, expandedTasks } from './stores';
 	import { type Todo } from './db';
 	import type { TaskDatabase } from './adapters/database';
+	import { registerShortcuts, isInputFocused } from './lib/keyboard';
 
 	let { db }: { db: TaskDatabase } = $props();
 
@@ -35,6 +36,71 @@
 			titleInput.focus();
 		}
 	};
+
+	const focusSearch = () => {
+		searchInput?.focus();
+	};
+
+	$effect(() => {
+		const cleanup = registerShortcuts([
+			{
+				key: '/',
+				handler: (e) => {
+					// Only intercept '/' when not typing in an input
+					if (!isInputFocused()) {
+						e.preventDefault();
+						focusSearch();
+					}
+				},
+				description: 'Focus search'
+			},
+			{
+				key: 'Escape',
+				handler: () => {
+					if (task) {
+						task = null;
+					} else if ($toastMessage) {
+						toastMessage.set(null);
+						toastActions.set(null);
+					}
+				},
+				description: 'Cancel editing / close toast'
+			},
+			{
+				key: 'n',
+				handler: () => {
+					if (!isInputFocused()) {
+						handleFabClick();
+					}
+				},
+				description: 'New task'
+			},
+			{
+				key: ' ',
+				handler: (e) => {
+					if (!isInputFocused()) {
+						e.preventDefault();
+						// Toggle the first rendered task
+						const target = renderedTodos[0];
+						if (target) handleToggleComplete(target);
+					}
+				},
+				description: 'Toggle status of first task'
+			},
+			{
+				key: 'd',
+				handler: () => {
+					if (!isInputFocused()) {
+						const target = renderedTodos[0];
+						if (target) db.remove(target.id);
+					}
+				},
+				description: 'Delete first task'
+			}
+		]);
+
+		return cleanup;
+	});
 	let renderedTodos = $derived(
 		currentTodos.filter((t) => t.title.toLowerCase().includes(query.toLowerCase()))
 	);
