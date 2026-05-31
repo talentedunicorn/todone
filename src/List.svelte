@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
+	import { tick } from 'svelte';
 	import Form from './components/Form.svelte';
 	import Task from './components/Task.svelte';
 	import Button from './components/Button.svelte';
+	import Fab from './components/Fab.svelte';
 	import { currentTab, toastActions, toastMessage, expandedTasks } from './stores';
 	import { type Todo } from './db';
 	import type { TaskDatabase } from './adapters/database';
@@ -21,6 +23,18 @@
 	let deleting = $state(false);
 
 	let currentTodos = $derived($currentTab === 'To Do' ? todoTodos : doneTodos);
+
+	let showFab = $derived($currentTab === 'Done' && task === null);
+
+	const handleFabClick = async () => {
+		currentTab.set('To Do');
+		await tick();
+		const titleInput = document.getElementById('title');
+		if (titleInput) {
+			titleInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			titleInput.focus();
+		}
+	};
 	let renderedTodos = $derived(
 		currentTodos.filter((t) => t.title.toLowerCase().includes(query.toLowerCase()))
 	);
@@ -217,6 +231,8 @@
 			<p class="Message">Nothing found... 👀</p>
 		{/if}
 	{/await}
+
+	<Fab onclick={handleFabClick} visible={showFab} />
 </main>
 
 <style>
