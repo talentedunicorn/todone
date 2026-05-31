@@ -2,35 +2,42 @@
 	import { fly } from 'svelte/transition';
 	import { tick } from 'svelte';
 	import Form from './components/Form.svelte';
-	import Task from './components/Task.svelte';
 	import Button from './components/Button.svelte';
 	import Fab from './components/Fab.svelte';
-	import { currentTab, toastActions, toastMessage, expandedTasks } from './stores';
-	import { type Todo } from './db';
+	import KanbanColumn from './components/KanbanColumn.svelte';
+	import { currentView, toastActions, toastMessage, expandedTasks } from './stores';
+	import { type Todo, type TaskStatus } from './domain/todo';
 	import type { TaskDatabase } from './adapters/database';
 	import { registerShortcuts, isInputFocused } from './lib/keyboard';
 
 	let { db }: { db: TaskDatabase } = $props();
 
 	let data = $state<Todo[]>([]);
-	let doneTodos = $derived(data.filter((t) => t.status === 'done'));
-	let todoTodos = $derived(data.filter((t) => t.status === 'todo' || t.status === 'in-progress'));
 	let task = $state<Todo | null>(null);
 
 	let searchInput: HTMLInputElement;
 
 	let query = $state('');
 	let showSearch = $state(false);
-	let deleting = $state(false);
 	let undoTask = $state<Todo | null>(null);
 	let undoTimeout = $state<ReturnType<typeof setTimeout> | null>(null);
 
-	let currentTodos = $derived($currentTab === 'To Do' ? todoTodos : doneTodos);
+	let isKanban = $derived($currentView === 'kanban');
+	let isArchive = $derived($currentView === 'archive');
 
-	let showFab = $derived($currentTab === 'Done' && task === null);
+	// Filter data by search query across all columns
+	let filteredData = $derived(
+		query ? data.filter((t) => t.title.toLowerCase().includes(query.toLowerCase())) : data
+	);
+	let todoTasks = $derived(filteredData.filter((t) => t.status === 'todo'));
+	let inProgressTasks = $derived(filteredData.filter((t) => t.status === 'in-progress'));
+	let doneTasks = $derived(filteredData.filter((t) => t.status === 'done'));
+	let archivedTasks = $derived(filteredData.filter((t) => t.status === 'archived'));
+
+	// FAB is visible in kanban view when not editing (scroll shortcut)
+	let showFab = $derived(isKanban && task === null);
 
 	const handleFabClick = async () => {
-		currentTab.set('To Do');
 		await tick();
 		const titleInput = document.getElementById('title');
 		if (titleInput) {
@@ -82,30 +89,27 @@
 				handler: (e) => {
 					if (!isInputFocused()) {
 						e.preventDefault();
-						// Toggle the first rendered task
-						const target = renderedTodos[0];
+						// Toggle the first task in todo column
+						const target = todoTasks[0];
 						if (target) handleToggleComplete(target);
 					}
 				},
-				description: 'Toggle status of first task'
+				description: 'Toggle status of first todo task'
 			},
 			{
 				key: 'd',
 				handler: () => {
 					if (!isInputFocused()) {
-						const target = renderedTodos[0];
+						const target = todoTasks[0];
 						if (target) handleDelete(target);
 					}
 				},
-				description: 'Delete first task'
+				description: 'Delete first todo task'
 			}
 		]);
 
 		return cleanup;
 	});
-	let renderedTodos = $derived(
-		currentTodos.filter((t) => t.title.toLowerCase().includes(query.toLowerCase()))
-	);
 
 	const loadTodos = async () => {
 		const todos = await db.getTodos();
@@ -136,6 +140,10 @@
 	const handleToggleComplete = (task: Todo) => {
 		const nextStatus = task.status === 'done' ? 'todo' : 'done';
 		db.setStatus(task.id, nextStatus);
+	};
+
+	const handleStatusChange = (id: string, status: TaskStatus) => {
+		db.setStatus(id, status);
 	};
 
 	const handleDelete = (task: Todo) => {
@@ -171,24 +179,11 @@
 		}, 5000);
 	};
 
-	const deleteCompleted = () => {
-		toastMessage.set('Delete all completed?');
-		toastActions.set([
-			{
-				label: 'Yes',
-				callback: () => {
-					clearCompleted();
-					toastActions.set(null);
-					toastMessage.set(null);
-				}
-			}
-		]);
-	};
-	const clearCompleted = async () => {
-		deleting = true;
-		await Promise.all(doneTodos.map((t) => db.remove(t.id))).finally(() => {
-			deleting = false;
-		});
+	const dropOnColumn = (e: DragEvent, status: TaskStatus) => {
+		const taskId = e.dataTransfer?.getData('text/plain');
+		if (taskId) {
+			handleStatusChange(taskId, status);
+		}
 	};
 
 	const handleToggleExpand = (id: string, expanded: boolean) => {
@@ -201,24 +196,9 @@
 			return new Set(set);
 		});
 	};
-
-	const expandAll = () => {
-		expandedTasks.update((set) => {
-			renderedTodos.forEach((t) => set.add(t.id));
-			return new Set(set);
-		});
-	};
-
-	const collapseAll = () => {
-		expandedTasks.update((set) => {
-			renderedTodos.forEach((t) => set.delete(t.id));
-			return new Set(set);
-		});
-	};
 </script>
 
 <main>
-	<h2 class="Title">{$currentTab}</h2>
 	<form class="Search">
 		<label for="search" class="visually-hidden">Search by title</label>
 		<input
@@ -284,7 +264,8 @@
 			</Button>
 		{/if}
 	</form>
-	{#if $currentTab === 'To Do' || task}
+
+	{#if isKanban || task}
 		<div in:fly={{ y: -20 }}>
 			<Form
 				defaultValue={task}
@@ -294,42 +275,65 @@
 			/>
 		</div>
 	{/if}
+
 	{#await loadTodos()}
 		<p class="Message">Loading data... 👩🏼‍🔧</p>
 	{:then _}
-		{#if renderedTodos.length > 0}
-			{#if $currentTab === 'Done'}
-				<div>
-					<Button onclick={deleteCompleted} disabled={deleting}>Clear completed</Button>
-				</div>
-			{/if}
-			<div>
-				<Button variant="link" size="small" class="ToggleExpand" onclick={expandAll}
-					>Expand all</Button
-				>
-				<Button variant="link" size="small" class="ToggleExpand" onclick={collapseAll}
-					>Collapse all</Button
-				>
+		{#if isKanban}
+			<div class="kanban">
+				<KanbanColumn
+					title="To Do"
+					status="todo"
+					tasks={todoTasks}
+					expandedTasks={$expandedTasks}
+					onToggleExpand={handleToggleExpand}
+					onEdit={handleEdit}
+					onDelete={handleDelete}
+					onStatusChange={handleStatusChange}
+					ondragover={(e) => e.preventDefault()}
+					ondrop={(e) => dropOnColumn(e, 'todo')}
+				/>
+				<KanbanColumn
+					title="In Progress"
+					status="in-progress"
+					tasks={inProgressTasks}
+					expandedTasks={$expandedTasks}
+					onToggleExpand={handleToggleExpand}
+					onEdit={handleEdit}
+					onDelete={handleDelete}
+					onStatusChange={handleStatusChange}
+					ondragover={(e) => e.preventDefault()}
+					ondrop={(e) => dropOnColumn(e, 'in-progress')}
+				/>
+				<KanbanColumn
+					title="Done"
+					status="done"
+					tasks={doneTasks}
+					expandedTasks={$expandedTasks}
+					onToggleExpand={handleToggleExpand}
+					onEdit={handleEdit}
+					onDelete={handleDelete}
+					onStatusChange={handleStatusChange}
+					ondragover={(e) => e.preventDefault()}
+					ondrop={(e) => dropOnColumn(e, 'done')}
+				/>
 			</div>
-			{#each renderedTodos as task (task.id)}
-				{@const { id, title, value, status, updated } = task}
-				<div transition:fly={{ duration: 500, y: 100 }}>
-					<Task
-						id={`task-${id}`}
-						{title}
-						{value}
-						{status}
-						updated={new Date(updated)}
-						expanded={$expandedTasks.has(id)}
-						onEdit={() => handleEdit(task)}
-						onDelete={() => handleDelete(task)}
-						onComplete={() => handleToggleComplete(task)}
-						onToggleExpand={(expanded) => handleToggleExpand(id, expanded)}
-					/>
-				</div>
-			{/each}
-		{:else}
-			<p class="Message">Nothing found... 👀</p>
+		{:else if isArchive}
+			<div class="archive">
+				{#if archivedTasks.length > 0}
+					{#each archivedTasks as task (task.id)}
+						{@const { id, title, value, updated } = task}
+						<div class="archive-item">
+							<div class="archive-title">{title}</div>
+							{#if $expandedTasks.has(id) && value}
+								<div class="archive-body">{value}</div>
+							{/if}
+						</div>
+					{/each}
+				{:else}
+					<p class="Message">No archived tasks.</p>
+				{/if}
+			</div>
 		{/if}
 	{/await}
 
@@ -339,19 +343,12 @@
 <style>
 	main {
 		padding: 0 2rem;
-		max-width: 80rem;
+		max-width: 100rem;
 		width: 100%;
 		margin: 0 auto 4rem;
 		display: flex;
 		flex-flow: column;
 		gap: 2rem;
-	}
-
-	.Title {
-		font-size: clamp(2rem, 5vw, 5rem);
-		font-weight: 100;
-		margin: 1rem 0 0;
-		color: var(--gray);
 	}
 
 	.Message {
@@ -377,7 +374,42 @@
 		font-family: inherit;
 	}
 
-	main :global(.ToggleExpand) {
-		margin-left: auto;
+	.kanban {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.5rem;
+		min-height: 60vh;
+	}
+
+	.archive {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.archive-item {
+		background: var(--white, #ffffff);
+		border: 1px solid var(--gray-light, #e5e7eb);
+		border-radius: 0.5rem;
+		padding: 1rem;
+		opacity: 0.7;
+	}
+
+	.archive-title {
+		font-size: 0.95rem;
+		font-weight: 500;
+	}
+
+	.archive-body {
+		font-size: 0.85rem;
+		color: var(--gray, #6b7280);
+		margin-top: 0.5rem;
+		white-space: pre-wrap;
+	}
+
+	@media (max-width: 60rem) {
+		.kanban {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

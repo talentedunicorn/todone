@@ -6,9 +6,11 @@ type Action = {
 	callback: () => void;
 };
 
-export const tabs = [{ label: 'To Do' }, { label: 'Done' }];
+/** Current view: 'kanban' | 'archive' */
+export const currentView: Writable<string> = writable<string>('kanban');
 
-export const currentTab: Writable<string> = writable<string>(tabs[0].label);
+/** Backward-compat alias for views that still use currentTab */
+export const currentTab: Writable<string> = currentView;
 
 export const toastMessage: Writable<string | null> = writable<string | null>(null);
 

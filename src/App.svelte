@@ -20,7 +20,14 @@
 	import Home from './routes/Home.svelte';
 	import { checkAuth, initAuth0Client } from './auth';
 	import { setAuth0Client } from './lib/auth-client';
-	import { toastActions, toastMessage, status, isLoggedin, currentTab, tabs } from './stores';
+	import {
+		toastActions,
+		toastMessage,
+		status,
+		isLoggedin,
+		currentView,
+		currentTab
+	} from './stores';
 	import themeStore from './stores/theme';
 
 	let auth0 = $state<Auth0Client>();
@@ -61,15 +68,14 @@
 		if (synced && !auth0) initializeAuth();
 	});
 
-	let menuItems = $derived(
-		tabs.map((item) => ({
-			...item,
-			selected: item.label === $currentTab
-		}))
-	);
+	let menuItems = $derived([
+		{ label: 'Kanban', key: 'kanban', selected: $currentView === 'kanban' },
+		{ label: 'Archive', key: 'archive', selected: $currentView === 'archive' }
+	]);
 
-	const handleMenu = (path: string) => {
-		currentTab.set(path);
+	const handleMenu = (label: string) => {
+		const item = menuItems.find((m) => m.label === label);
+		if (item) currentView.set(item.key);
 	};
 
 	const routes = {
