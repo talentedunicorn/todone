@@ -15,6 +15,7 @@
 	--black: light-dark(hsl(0, 0%, 5%), hsl(0, 0%, 99%));
 	--gray: hsl(210, 11%, 71%);
 	--gray-light: light-dark(hsl(210, 11%, 92%), hsl(210, 11%, 31%));
+	--gray-bg: light-dark(hsl(210, 11%, 96%), hsl(210, 11%, 10%));
 	--red: hsl(0, 100%, 71%);
 	--yellow: hsl(44, 95%, 56%);
 	--font: 'Dosis', sans-serif;

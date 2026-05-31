@@ -61,7 +61,7 @@
 			stroke-linecap="round"
 			stroke-linejoin="round"
 		>
-			<path d="m9 6 6 6-6 6" />
+			<path d="m6 9 6 6 6-6" />
 		</svg>
 	</div>
 	{#if !collapsed}
@@ -90,7 +90,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.75rem;
-		background: var(--gray-bg, #f3f4f6);
+		background: var(--gray-bg);
 		border-radius: 0.75rem;
 		padding: 1rem;
 		min-height: auto;
@@ -105,7 +105,7 @@
 		align-items: center;
 		gap: 0.5rem;
 		padding-bottom: 0.5rem;
-		border-bottom: 2px solid var(--gray-light, #e5e7eb);
+		border-bottom: 2px solid var(--gray-light);
 		cursor: pointer;
 		user-select: none;
 	}
@@ -126,7 +126,7 @@
 		font-size: 0.8rem;
 		font-weight: 500;
 		color: var(--gray, #6b7280);
-		background: var(--gray-light, #e5e7eb);
+		background: var(--gray-light);
 		padding: 0.1em 0.5em;
 		border-radius: 999px;
 	}
@@ -134,10 +134,11 @@
 	.collapse-icon {
 		color: var(--gray, #6b7280);
 		transition: transform 0.15s;
+		transform-origin: center;
 	}
 
 	.collapse-icon.collapsed {
-		transform: rotate(90deg);
+		transform: rotate(-90deg);
 	}
 
 	.column-body {

@@ -167,6 +167,7 @@ Form component with a title and content inputs
 			width: 100%;
 			border-radius: 1rem;
 			border: 0.2em solid var(--black);
+			overflow: hidden;
 			display: grid;
 			grid-template-rows: 1fr;
 
