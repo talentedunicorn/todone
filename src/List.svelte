@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { fly } from 'svelte/transition';
-	import Form from './components/Form.svelte';
 	import Button from './components/Button.svelte';
 	import Fab from './components/Fab.svelte';
 	import FullScreenEditor from './components/FullScreenEditor.svelte';
@@ -13,7 +11,6 @@
 	let { db }: { db: TaskDatabase } = $props();
 
 	let data = $state<Todo[]>([]);
-	let task = $state<Todo | null>(null);
 
 	let searchInput: HTMLInputElement;
 
@@ -34,14 +31,15 @@
 	let doneTasks = $derived(filteredData.filter((t) => t.status === 'done'));
 	let archivedTasks = $derived(filteredData.filter((t) => t.status === 'archived'));
 
-	// Full-screen editor dialog state
-	let showEditor = $state(false);
+	// Full-screen editor dialog state (null = create mode, set = edit mode)
+	let editorTask = $state<Todo | null | undefined>(undefined);
+	let showEditor = $derived(editorTask !== undefined);
 
-	// FAB is visible in kanban view when not editing and dialog is closed
-	let showFab = $derived(isKanban && task === null && !showEditor);
+	// FAB is visible in kanban view when dialog is closed
+	let showFab = $derived(isKanban && editorTask === undefined);
 
 	const handleFabClick = () => {
-		showEditor = true;
+		editorTask = null; // null = create mode
 	};
 
 	const focusSearch = () => {
@@ -64,14 +62,14 @@
 			{
 				key: 'Escape',
 				handler: () => {
-					if (task) {
-						task = null;
+					if (showEditor) {
+						editorTask = undefined;
 					} else if ($toastMessage) {
 						toastMessage.set(null);
 						toastActions.set(null);
 					}
 				},
-				description: 'Cancel editing / close toast'
+				description: 'Close editor / close toast'
 			},
 			{
 				key: 'n',
@@ -116,28 +114,21 @@
 		});
 	};
 
-	const clearEdit = () => {
-		task = null;
-	};
-
-	const handleUpdate = async (data: Todo) => {
-		await db.update(data);
-		clearEdit();
-	};
-
-	const handleCreate = async (data: Todo) => {
-		await db.add(data);
-	};
-
-	const handleFabCreate = async (data: Todo) => {
-		await db.add(data);
-		showEditor = false;
-	};
-
 	const handleEdit = (selected: Todo) => {
-		task = {
-			...selected
-		};
+		editorTask = { ...selected }; // set = edit mode
+	};
+
+	const handleSave = async (data: Todo) => {
+		if (editorTask) {
+			await db.update(data);
+		} else {
+			await db.add(data);
+		}
+		editorTask = undefined;
+	};
+
+	const handleDialogClose = () => {
+		editorTask = undefined;
 	};
 
 	const handleToggleComplete = (task: Todo) => {
@@ -268,17 +259,6 @@
 		{/if}
 	</form>
 
-	{#if isKanban || task}
-		<div in:fly={{ y: -20 }}>
-			<Form
-				defaultValue={task}
-				onSubmit={handleCreate}
-				onUpdate={handleUpdate}
-				onClear={clearEdit}
-			/>
-		</div>
-	{/if}
-
 	{#await loadTodos()}
 		<p class="Message">Loading data... 👩🏼‍🔧</p>
 	{:then _}
@@ -344,9 +324,9 @@
 
 	<FullScreenEditor
 		open={showEditor}
-		onClose={() => (showEditor = false)}
-		onSubmit={handleFabCreate}
-		onUpdate={handleUpdate}
+		defaultValue={editorTask}
+		onSave={handleSave}
+		onClose={handleDialogClose}
 	/>
 </main>
 

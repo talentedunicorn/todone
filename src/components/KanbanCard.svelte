@@ -238,7 +238,6 @@
 
 	.card-body {
 		font-size: 0.85rem;
-		color: var(--gray, #6b7280);
 		line-height: 1.5;
 
 		:global(.shiki) {

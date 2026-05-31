@@ -6,27 +6,24 @@
 
 	interface Props {
 		open: boolean;
+		defaultValue?: Todo | null;
 		onClose: () => void;
-		onSubmit: (data: Todo) => Promise<void> | void;
-		onUpdate: (data: Todo) => Promise<void> | void;
+		onSave: (data: Todo) => Promise<void> | void;
 	}
 
-	let { open, onClose, onSubmit, onUpdate }: Props = $props();
+	let { open, defaultValue = null, onClose, onSave }: Props = $props();
 
 	let dialog: HTMLDialogElement | undefined = $state();
+
+	const isEdit = $derived(defaultValue !== null);
 
 	const handleClose = () => {
 		dialog?.close();
 		onClose();
 	};
 
-	const handleSubmit = async (data: Todo) => {
-		await onSubmit(data);
-		handleClose();
-	};
-
-	const handleUpdate = async (data: Todo) => {
-		await onUpdate(data);
+	const handleSave = async (data: Todo) => {
+		await onSave(data);
 		handleClose();
 	};
 
@@ -55,7 +52,7 @@
 	>
 		<div class="dialog-content" transition:fly={{ y: 30, duration: 250 }}>
 			<div class="dialog-header">
-				<h2 class="dialog-title">New Task</h2>
+				<h2 class="dialog-title">{isEdit ? 'Edit Task' : 'New Task'}</h2>
 				<button class="close-btn" onclick={handleClose} aria-label="Close">
 					<svg
 						width="24"
@@ -73,8 +70,9 @@
 				</button>
 			</div>
 			<Form
-				onSubmit={handleSubmit}
-				onUpdate={handleUpdate}
+				{defaultValue}
+				onSubmit={handleSave}
+				onUpdate={handleSave}
 				onClear={handleClose}
 				enableEditor={true}
 			/>
