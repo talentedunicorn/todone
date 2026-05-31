@@ -17,7 +17,7 @@
 				id: t?.id,
 				title: t?.title,
 				value: t?.value,
-				completed: t?.completed,
+				status: t?.status,
 				updated: t?.updated
 			}));
 
@@ -52,7 +52,8 @@
 				id: z.string(),
 				title: z.string(),
 				value: z.string(),
-				completed: z.boolean(),
+				status: z.enum(['todo', 'in-progress', 'done', 'archived']).optional(),
+				completed: z.boolean().optional(),
 				updated: z.coerce.date()
 			})
 		);

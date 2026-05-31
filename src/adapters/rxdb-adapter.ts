@@ -3,6 +3,7 @@ import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
 import { RxDBQueryBuilderPlugin } from 'rxdb/plugins/query-builder';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
+import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
 import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv';
 import { map } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
@@ -13,26 +14,27 @@ if (import.meta.env.DEV) {
 
 addRxPlugin(RxDBUpdatePlugin);
 addRxPlugin(RxDBQueryBuilderPlugin);
+addRxPlugin(RxDBMigrationSchemaPlugin);
 
 const storage = wrappedValidateAjvStorage({
 	storage: getRxStorageDexie()
 });
 
-import type { Todo } from '../domain/todo';
+import type { Todo, TaskStatus } from '../domain/todo';
 
 const todoSchema: RxJsonSchema<Todo> = {
-	version: 0,
+	version: 1,
 	primaryKey: 'id',
 	type: 'object',
 	properties: {
 		id: { type: 'string', maxLength: 100 },
 		title: { type: 'string' },
 		value: { type: 'string' },
-		completed: { type: 'boolean', default: false },
+		status: { type: 'string', default: 'todo' },
 		updated: { type: 'string', format: 'date-time' }
 	},
-	required: ['id', 'title', 'value', 'updated', 'completed'],
-	indexes: ['completed']
+	required: ['id', 'title', 'value', 'updated', 'status'],
+	indexes: ['status']
 };
 
 const createDatabase = (name: string) =>
@@ -42,6 +44,15 @@ const createDatabase = (name: string) =>
 		ignoreDuplicate: import.meta.env.DEV
 	});
 
+const migrationStrategies = {
+	1: (oldDoc: any) => {
+		// v0 had 'completed: boolean', v1 uses 'status: string'
+		oldDoc.status = oldDoc.completed ? 'done' : 'todo';
+		delete oldDoc.completed;
+		return oldDoc;
+	}
+};
+
 const createCollection = async <T extends object>(
 	db: RxDatabase,
 	collectionName: string,
@@ -49,7 +60,9 @@ const createCollection = async <T extends object>(
 ) => {
 	await db.addCollections({
 		[collectionName]: {
-			schema
+			schema,
+			migrationStrategies,
+			autoMigrate: true
 		}
 	});
 };
@@ -107,14 +120,14 @@ export class RxDBTaskDatabase implements TaskDatabase {
 	async add(data: { title: string; value: string }): Promise<Todo> {
 		const db = this.getDb();
 		const now = new Date().toISOString();
-		return db.todos.insert({ ...data, updated: now, id: now });
+		return db.todos.insert({ ...data, status: 'todo', updated: now, id: now });
 	}
 
 	async update(data: {
 		id: string;
 		title: string;
 		value: string;
-		completed: boolean;
+		status: TaskStatus;
 	}): Promise<unknown> {
 		const db = this.getDb();
 		const now = new Date().toISOString();
@@ -123,7 +136,7 @@ export class RxDBTaskDatabase implements TaskDatabase {
 			$set: {
 				title: data.title,
 				value: data.value,
-				completed: data.completed,
+				status: data.status,
 				updated: now
 			}
 		});
@@ -134,10 +147,10 @@ export class RxDBTaskDatabase implements TaskDatabase {
 		return db.todos.findOne({ selector: { id } }).remove();
 	}
 
-	async setCompleted(id: string, completed: boolean): Promise<unknown> {
+	async setStatus(id: string, status: TaskStatus): Promise<unknown> {
 		const db = this.getDb();
 		return db.todos.findOne({ selector: { id } }).update({
-			$set: { completed }
+			$set: { status }
 		});
 	}
 
@@ -149,13 +162,22 @@ export class RxDBTaskDatabase implements TaskDatabase {
 
 	async importTodos(data: Todo[]): Promise<unknown> {
 		const db = this.getDb();
-		return db.todos.bulkUpsert(data);
+		// Migrate legacy imports that still have 'completed' instead of 'status'
+		const migrated = data.map((doc) => {
+			const d = doc as Todo & { completed?: boolean };
+			if (d.completed !== undefined && !d.status) {
+				d.status = d.completed ? 'done' : 'todo';
+				delete d.completed;
+			}
+			return d;
+		});
+		return db.todos.bulkUpsert(migrated);
 	}
 
 	async getDocCount(): Promise<{ complete: Stream<number>; incomplete: Stream<number> }> {
 		const db = this.getDb();
-		const complete = new RxDBStream(db.todos.count({ selector: { completed: true } }).$);
-		const incomplete = new RxDBStream(db.todos.count({ selector: { completed: false } }).$);
+		const complete = new RxDBStream(db.todos.count({ selector: { status: 'done' } }).$);
+		const incomplete = new RxDBStream(db.todos.count({ selector: { status: { $ne: 'done' } } }).$);
 		return { complete, incomplete };
 	}
 }

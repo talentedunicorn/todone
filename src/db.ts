@@ -39,19 +39,21 @@ export const add = async (data: { title: string; value: string }) => {
 	return db.add(data);
 };
 
+import type { TaskStatus } from './domain/todo';
+
 export const update = async ({
 	id,
 	title,
 	value,
-	completed
+	status
 }: {
 	id: string;
 	title: string;
 	value: string;
-	completed: boolean;
+	status: TaskStatus;
 }) => {
 	const db = await initDB();
-	return db.update({ id, title, value, completed });
+	return db.update({ id, title, value, status });
 };
 
 export const remove = async (id: string) => {
@@ -59,9 +61,9 @@ export const remove = async (id: string) => {
 	return db.remove(id);
 };
 
-export const setCompleted = async (id: string, completed: boolean) => {
+export const setStatus = async (id: string, status: TaskStatus) => {
 	const db = await initDB();
-	return db.setCompleted(id, completed);
+	return db.setStatus(id, status);
 };
 
 export const exportTodos = async () => {

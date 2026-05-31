@@ -1,5 +1,5 @@
 import type { TaskDatabase, Stream } from '../../src/adapters/database';
-import type { Todo } from '../../src/domain/todo';
+import type { Todo, TaskStatus } from '../../src/domain/todo';
 
 class SimpleStream<T> implements Stream<T> {
 	private listeners = new Set<(value: T) => void>();
@@ -37,7 +37,7 @@ export class MemoryTaskDatabase implements TaskDatabase {
 
 	async add(data: { title: string; value: string }): Promise<Todo> {
 		const now = new Date().toISOString();
-		const todo: Todo = { ...data, id: now, completed: false, updated: now };
+		const todo: Todo = { ...data, id: now, status: 'todo', updated: now };
 		this.todos.set(todo.id, todo);
 		this.persist();
 		return todo;
@@ -47,7 +47,7 @@ export class MemoryTaskDatabase implements TaskDatabase {
 		id: string;
 		title: string;
 		value: string;
-		completed: boolean;
+		status: TaskStatus;
 	}): Promise<void> {
 		const existing = this.todos.get(data.id);
 		if (!existing) return;
@@ -61,10 +61,10 @@ export class MemoryTaskDatabase implements TaskDatabase {
 		this.persist();
 	}
 
-	async setCompleted(id: string, completed: boolean): Promise<void> {
+	async setStatus(id: string, status: TaskStatus): Promise<void> {
 		const todo = this.todos.get(id);
 		if (!todo) return;
-		this.todos.set(id, { ...todo, completed });
+		this.todos.set(id, { ...todo, status });
 		this.persist();
 	}
 
@@ -89,7 +89,7 @@ export class MemoryTaskDatabase implements TaskDatabase {
 			let c = 0,
 				i = 0;
 			for (const t of this.todos.values()) {
-				if (t.completed) c++;
+				if (t.status === 'done') c++;
 				else i++;
 			}
 			complete.emit(c);
