@@ -1,6 +1,12 @@
 <script lang="ts">
+	import { Markdown, type Carta } from 'carta-md';
+	import 'carta-md/default.css';
+	import { createViewerCarta } from '../lib/carta';
+	import { themeObserver } from '../lib/theme-observer';
 	import type { Todo } from '../domain/todo';
 	import type { TaskStatus } from '../domain/todo';
+
+	let cartaInstance = $state<Carta | null>(null);
 
 	interface Props {
 		task: Todo;
@@ -127,8 +133,18 @@
 	</div>
 
 	{#if expanded && task.value}
-		<div class="card-body">
-			{task.value}
+		<div
+			class="card-body"
+			use:themeObserver={{
+				createInstance: (theme) => createViewerCarta({ theme, enableCodeHighlighting: true }),
+				onUpdate: (c) => (cartaInstance = c)
+			}}
+		>
+			{#if cartaInstance}
+				{#key `${task.value}-${cartaInstance}`}
+					<Markdown carta={cartaInstance} value={task.value} />
+				{/key}
+			{/if}
 		</div>
 	{/if}
 </div>
@@ -224,6 +240,23 @@
 		font-size: 0.85rem;
 		color: var(--gray, #6b7280);
 		line-height: 1.5;
-		white-space: pre-wrap;
+
+		:global(.shiki) {
+			padding: 0.5rem;
+			font-size: 0.85rem;
+			border-radius: 0.25rem;
+			overflow: auto;
+		}
+
+		:global(.TableWrapper) {
+			overflow-x: auto;
+			border: 1px solid var(--gray-light);
+			border-radius: 0.5rem;
+		}
+
+		:global(img) {
+			max-width: 100%;
+			border-radius: 0.25rem;
+		}
 	}
 </style>

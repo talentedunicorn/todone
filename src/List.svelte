@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
-	import { tick } from 'svelte';
 	import Form from './components/Form.svelte';
 	import Button from './components/Button.svelte';
 	import Fab from './components/Fab.svelte';
+	import FullScreenEditor from './components/FullScreenEditor.svelte';
 	import KanbanColumn from './components/KanbanColumn.svelte';
 	import { currentView, toastActions, toastMessage, expandedTasks } from './stores';
 	import { type Todo, type TaskStatus } from './domain/todo';
@@ -34,16 +34,14 @@
 	let doneTasks = $derived(filteredData.filter((t) => t.status === 'done'));
 	let archivedTasks = $derived(filteredData.filter((t) => t.status === 'archived'));
 
-	// FAB is visible in kanban view when not editing (scroll shortcut)
-	let showFab = $derived(isKanban && task === null);
+	// Full-screen editor dialog state
+	let showEditor = $state(false);
 
-	const handleFabClick = async () => {
-		await tick();
-		const titleInput = document.getElementById('title');
-		if (titleInput) {
-			titleInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-			titleInput.focus();
-		}
+	// FAB is visible in kanban view when not editing and dialog is closed
+	let showFab = $derived(isKanban && task === null && !showEditor);
+
+	const handleFabClick = () => {
+		showEditor = true;
 	};
 
 	const focusSearch = () => {
@@ -129,6 +127,11 @@
 
 	const handleCreate = async (data: Todo) => {
 		await db.add(data);
+	};
+
+	const handleFabCreate = async (data: Todo) => {
+		await db.add(data);
+		showEditor = false;
 	};
 
 	const handleEdit = (selected: Todo) => {
@@ -338,6 +341,13 @@
 	{/await}
 
 	<Fab onclick={handleFabClick} visible={showFab} />
+
+	<FullScreenEditor
+		open={showEditor}
+		onClose={() => (showEditor = false)}
+		onSubmit={handleFabCreate}
+		onUpdate={handleUpdate}
+	/>
 </main>
 
 <style>
