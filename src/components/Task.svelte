@@ -12,7 +12,7 @@
 	interface Props {
 		title: string;
 		value: string;
-		completed: boolean;
+		status: string;
 		updated: Date;
 		expanded?: boolean;
 		onToggleExpand: (expanded: boolean) => void;
@@ -25,7 +25,7 @@
 	let {
 		title = '',
 		value = '',
-		completed = false,
+		status = 'todo',
 		updated,
 		expanded = false,
 		onToggleExpand,
@@ -34,7 +34,7 @@
 		onEdit,
 		...rest
 	}: Props = $props();
-	const completeText = $derived(completed ? 'Mark Incomplete' : 'Mark Completed');
+	const completeText = $derived(status === 'done' ? 'Mark Incomplete' : 'Mark Completed');
 	const formattedTimestamp = $derived(
 		`Updated ― ${Intl.DateTimeFormat('en-MY', {
 			dateStyle: 'medium',

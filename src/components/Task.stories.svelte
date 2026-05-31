@@ -14,7 +14,7 @@
 			title: { control: 'text' },
 			value: { control: 'text' },
 			updated: { control: 'date' },
-			completed: { control: 'boolean' }
+			status: { control: 'select', options: ['todo', 'in-progress', 'done', 'archived'] }
 		},
 		args: {
 			onEdit: editSpy,
@@ -29,8 +29,8 @@
 	<Task
 		{...args}
 		onComplete={() => {
-			args.completed = !args.completed;
-			completeSpy(args.completed);
+			args.status = args.status === 'done' ? 'todo' : 'done';
+			completeSpy(args.status);
 		}}
 		onToggleExpand={(expanded) => {
 			args.expanded = expanded;
@@ -45,7 +45,7 @@
 	args={{
 		title: 'A task',
 		value: 'Task description',
-		completed: false,
+		status: 'todo',
 		updated: new Date('2020-01-01')
 	}}
 	play={async ({ canvas, userEvent }) => {
@@ -61,7 +61,7 @@
 	args={{
 		title: 'Expanded task',
 		value: '## Details\n- item 1\n- item 2',
-		completed: false,
+		status: 'todo',
 		updated: new Date('2020-01-01'),
 		expanded: true
 	}}
@@ -78,12 +78,12 @@
 	args={{
 		title: 'Toggle me',
 		value: 'Check this',
-		completed: false,
+		status: 'todo',
 		updated: new Date('2020-01-01')
 	}}
 	play={async ({ canvas, userEvent }) => {
 		const completeButton = canvas.getByRole('button', { name: 'Mark Completed' });
 		await userEvent.click(completeButton);
-		expect(completeSpy).toHaveBeenCalledWith(true);
+		expect(completeSpy).toHaveBeenCalledWith('done');
 	}}
 />

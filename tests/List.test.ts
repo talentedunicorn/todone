@@ -47,14 +47,14 @@ describe('List.svelte', () => {
 		expect(todos[0].title).toBe('New Task');
 	});
 
-	it.skip('task complete calls db.setCompleted', async () => {
+	it.skip('task complete calls db.setStatus', async () => {
 		const todo = await db.add({ title: 'Test', value: 'Content' });
 		render(List, { db });
 		await waitForLoad();
 		const completeBtn = screen.getByTestId('complete');
 		await fireEvent.click(completeBtn);
 		const todos = await db.exportTodos();
-		expect(todos[0].completed).toBe(true);
+		expect(todos[0].status).toBe('done');
 	});
 
 	it.skip('search filters rendered todos', async () => {
@@ -71,7 +71,7 @@ describe('List.svelte', () => {
 
 	it.skip('tab switching shows correct filtered set', async () => {
 		const todo = await db.add({ title: 'Incomplete', value: '' });
-		await db.setCompleted(todo.id, true);
+		await db.setStatus(todo.id, 'done');
 		render(List, { db });
 		await waitForLoad();
 		currentTab.set('Done');
@@ -107,7 +107,7 @@ describe('List.svelte', () => {
 	it.skip('clear completed removes all completed todos', async () => {
 		await db.add({ title: 'To Keep', value: '' });
 		const done = await db.add({ title: 'Done', value: '' });
-		await db.setCompleted(done.id, true);
+		await db.setStatus(done.id, 'done');
 		currentTab.set('Done');
 		render(List, { db });
 		await waitForLoad();

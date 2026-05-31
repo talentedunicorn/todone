@@ -10,8 +10,8 @@
 	let { db }: { db: TaskDatabase } = $props();
 
 	let data = $state<Todo[]>([]);
-	let completedTodos = $derived(data.filter((t) => t.completed === true));
-	let incompleteTodos = $derived(data.filter((t) => t.completed === false));
+	let doneTodos = $derived(data.filter((t) => t.status === 'done'));
+	let todoTodos = $derived(data.filter((t) => t.status === 'todo' || t.status === 'in-progress'));
 	let task = $state<Todo | null>(null);
 
 	let searchInput: HTMLInputElement;
@@ -20,7 +20,7 @@
 	let showSearch = $state(false);
 	let deleting = $state(false);
 
-	let currentTodos = $derived($currentTab === 'To Do' ? incompleteTodos : completedTodos);
+	let currentTodos = $derived($currentTab === 'To Do' ? todoTodos : doneTodos);
 	let renderedTodos = $derived(
 		currentTodos.filter((t) => t.title.toLowerCase().includes(query.toLowerCase()))
 	);
@@ -52,7 +52,8 @@
 	};
 
 	const handleToggleComplete = (task: Todo) => {
-		db.setCompleted(task.id, !task.completed);
+		const nextStatus = task.status === 'done' ? 'todo' : 'done';
+		db.setStatus(task.id, nextStatus);
 	};
 
 	const deleteCompleted = () => {
@@ -70,7 +71,7 @@
 	};
 	const clearCompleted = async () => {
 		deleting = true;
-		await Promise.all(completedTodos.map((t) => db.remove(t.id))).finally(() => {
+		await Promise.all(doneTodos.map((t) => db.remove(t.id))).finally(() => {
 			deleting = false;
 		});
 	};
@@ -196,13 +197,13 @@
 				>
 			</div>
 			{#each renderedTodos as task (task.id)}
-				{@const { id, title, value, completed, updated } = task}
+				{@const { id, title, value, status, updated } = task}
 				<div transition:fly={{ duration: 500, y: 100 }}>
 					<Task
 						id={`task-${id}`}
 						{title}
 						{value}
-						{completed}
+						{status}
 						updated={new Date(updated)}
 						expanded={$expandedTasks.has(id)}
 						onEdit={() => handleEdit(task)}
