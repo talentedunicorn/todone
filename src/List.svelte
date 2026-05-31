@@ -22,6 +22,8 @@
 	let query = $state('');
 	let showSearch = $state(false);
 	let deleting = $state(false);
+	let undoTask = $state<Todo | null>(null);
+	let undoTimeout = $state<ReturnType<typeof setTimeout> | null>(null);
 
 	let currentTodos = $derived($currentTab === 'To Do' ? todoTodos : doneTodos);
 
@@ -92,7 +94,7 @@
 				handler: () => {
 					if (!isInputFocused()) {
 						const target = renderedTodos[0];
-						if (target) db.remove(target.id);
+						if (target) handleDelete(target);
 					}
 				},
 				description: 'Delete first task'
@@ -134,6 +136,39 @@
 	const handleToggleComplete = (task: Todo) => {
 		const nextStatus = task.status === 'done' ? 'todo' : 'done';
 		db.setStatus(task.id, nextStatus);
+	};
+
+	const handleDelete = (task: Todo) => {
+		// Cancel any pending undo
+		if (undoTimeout) clearTimeout(undoTimeout);
+
+		// Store the task for undo and delete it
+		undoTask = { ...task };
+		db.remove(task.id);
+
+		// Show toast with Undo button
+		toastMessage.set(`Deleted "${task.title}"`);
+		toastActions.set([
+			{
+				label: 'Undo',
+				callback: () => {
+					if (undoTask) {
+						db.add(undoTask);
+						undoTask = null;
+					}
+					toastMessage.set(null);
+					toastActions.set(null);
+					if (undoTimeout) clearTimeout(undoTimeout);
+				}
+			}
+		]);
+
+		// Auto-dismiss after 5 seconds
+		undoTimeout = setTimeout(() => {
+			undoTask = null;
+			toastMessage.set(null);
+			toastActions.set(null);
+		}, 5000);
 	};
 
 	const deleteCompleted = () => {
@@ -287,7 +322,7 @@
 						updated={new Date(updated)}
 						expanded={$expandedTasks.has(id)}
 						onEdit={() => handleEdit(task)}
-						onDelete={() => db.remove(id)}
+						onDelete={() => handleDelete(task)}
 						onComplete={() => handleToggleComplete(task)}
 						onToggleExpand={(expanded) => handleToggleExpand(id, expanded)}
 					/>
