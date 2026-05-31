@@ -121,7 +121,6 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 1rem 1.5rem;
-		border-bottom: 1px solid var(--gray-light);
 		flex-shrink: 0;
 	}
 
