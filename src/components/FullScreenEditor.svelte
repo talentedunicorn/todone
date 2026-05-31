@@ -121,7 +121,7 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 1rem 1.5rem;
-		border-bottom: 1px solid var(--gray-light, #e5e7eb);
+		border-bottom: 1px solid var(--gray-light);
 		flex-shrink: 0;
 	}
 
@@ -129,7 +129,7 @@
 		margin: 0;
 		font-size: 1.25rem;
 		font-weight: 600;
-		color: var(--text, #111827);
+		color: var(--black);
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -147,15 +147,15 @@
 		border-radius: 50%;
 		background: transparent;
 		cursor: pointer;
-		color: var(--gray, #6b7280);
+		color: var(--black);
 		transition:
 			background 0.15s,
 			color 0.15s;
 	}
 
 	.close-btn:hover {
-		background: var(--gray-light, #e5e7eb);
-		color: var(--text, #111827);
+		background: var(--gray-light);
+		color: var(--black);
 	}
 
 	@media (max-width: 640px) {
