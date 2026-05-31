@@ -48,10 +48,6 @@
 
 	const isEdit = $derived(defaultValue !== null);
 
-	const showEditor = $derived(
-		isEdit || data.title.trim().length > 0 || data.value.trim().length > 0
-	);
-
 	const isEmpty = $derived(data.value.trim().length < 1);
 
 	const invalid = $derived(data.title.trim().length < 1 || isEmpty);
@@ -112,7 +108,7 @@ Form component with a title and content inputs
 		bind:this={titleInput}
 	/>
 	<label class="visually-hidden" for="content">Content</label>
-	<div class="editor-wrapper" class:open={showEditor}>
+	<div class="editor-wrapper open">
 		<div class="inner">
 			<div
 				use:themeObserver={{
@@ -172,13 +168,7 @@ Form component with a title and content inputs
 			border-radius: 1rem;
 			border: 0.2em solid var(--black);
 			display: grid;
-			grid-template-rows: 0fr;
-			transition: grid-template-rows 0.3s ease-out;
-			overflow: hidden;
-
-			&.open {
-				grid-template-rows: 1fr;
-			}
+			grid-template-rows: 1fr;
 
 			& .inner {
 				overflow: hidden;

@@ -52,7 +52,7 @@
 	>
 		<div class="dialog-content" transition:fly={{ y: 30, duration: 250 }}>
 			<div class="dialog-header">
-				<h2 class="dialog-title">{isEdit ? 'Edit Task' : 'New Task'}</h2>
+				<h2 class="dialog-title">{isEdit ? defaultValue!.title : 'New Task'}</h2>
 				<button class="close-btn" onclick={handleClose} aria-label="Close">
 					<svg
 						width="24"
@@ -113,6 +113,7 @@
 		overflow: hidden;
 		position: relative;
 		top: 5dvh;
+		padding: 1rem;
 	}
 
 	.dialog-header {
@@ -129,6 +130,11 @@
 		font-size: 1.25rem;
 		font-weight: 600;
 		color: var(--text, #111827);
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		flex: 1;
+		min-width: 0;
 	}
 
 	.close-btn {
