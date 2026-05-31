@@ -81,23 +81,36 @@ export class MemoryTaskDatabase implements TaskDatabase {
 		this.persist();
 	}
 
-	async getDocCount(): Promise<{ complete: Stream<number>; incomplete: Stream<number> }> {
-		const complete = new SimpleStream<number>(0);
-		const incomplete = new SimpleStream<number>(0);
+	async getDocCount(): Promise<{
+		todo: Stream<number>;
+		inProgress: Stream<number>;
+		done: Stream<number>;
+		archived: Stream<number>;
+	}> {
+		const todo = new SimpleStream<number>(0);
+		const inProgress = new SimpleStream<number>(0);
+		const done = new SimpleStream<number>(0);
+		const archived = new SimpleStream<number>(0);
 
 		const update = () => {
-			let c = 0,
-				i = 0;
-			for (const t of this.todos.values()) {
-				if (t.status === 'done') c++;
-				else i++;
+			let t = 0,
+				ip = 0,
+				d = 0,
+				a = 0;
+			for (const tsk of this.todos.values()) {
+				if (tsk.status === 'todo') t++;
+				else if (tsk.status === 'in-progress') ip++;
+				else if (tsk.status === 'done') d++;
+				else if (tsk.status === 'archived') a++;
 			}
-			complete.emit(c);
-			incomplete.emit(i);
+			todo.emit(t);
+			inProgress.emit(ip);
+			done.emit(d);
+			archived.emit(a);
 		};
 
 		this.stream.subscribe(update);
 
-		return { complete, incomplete };
+		return { todo, inProgress, done, archived };
 	}
 }

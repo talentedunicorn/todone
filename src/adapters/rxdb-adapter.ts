@@ -174,11 +174,18 @@ export class RxDBTaskDatabase implements TaskDatabase {
 		return db.todos.bulkUpsert(migrated);
 	}
 
-	async getDocCount(): Promise<{ complete: Stream<number>; incomplete: Stream<number> }> {
+	async getDocCount(): Promise<{
+		todo: Stream<number>;
+		inProgress: Stream<number>;
+		done: Stream<number>;
+		archived: Stream<number>;
+	}> {
 		const db = this.getDb();
-		const complete = new RxDBStream(db.todos.count({ selector: { status: 'done' } }).$);
-		const incomplete = new RxDBStream(db.todos.count({ selector: { status: { $ne: 'done' } } }).$);
-		return { complete, incomplete };
+		const todo = new RxDBStream(db.todos.count({ selector: { status: 'todo' } }).$);
+		const inProgress = new RxDBStream(db.todos.count({ selector: { status: 'in-progress' } }).$);
+		const done = new RxDBStream(db.todos.count({ selector: { status: 'done' } }).$);
+		const archived = new RxDBStream(db.todos.count({ selector: { status: 'archived' } }).$);
+		return { todo, inProgress, done, archived };
 	}
 }
 

@@ -14,7 +14,12 @@ export interface TaskDatabase {
 	setStatus(id: string, status: TaskStatus): Promise<unknown>;
 	exportTodos(): Promise<Todo[]>;
 	importTodos(data: Todo[]): Promise<unknown>;
-	getDocCount(): Promise<{ complete: Stream<number>; incomplete: Stream<number> }>;
+	getDocCount(): Promise<{
+		todo: Stream<number>;
+		inProgress: Stream<number>;
+		done: Stream<number>;
+		archived: Stream<number>;
+	}>;
 }
 
 export interface DbConfig {

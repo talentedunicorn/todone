@@ -7,18 +7,28 @@
 
 	import content from '../../About.md?raw';
 
-	let complete = $state<number>(0);
-	let incomplete = $state<number>(0);
+	let todo = $state<number>(0);
+	let inProgress = $state<number>(0);
+	let done = $state<number>(0);
+	let archived = $state<number>(0);
+
+	const total = $derived(todo + inProgress + done + archived);
 
 	const carta = createViewerCarta();
 
 	const fetchCount = async () => {
-		const { complete: completeSub, incomplete: incompleteSub } = await getDocCount();
-		completeSub.subscribe((v: number) => {
-			complete = v;
+		const counts = await getDocCount();
+		counts.todo.subscribe((v: number) => {
+			todo = v;
 		});
-		incompleteSub.subscribe((v: number) => {
-			incomplete = v;
+		counts.inProgress.subscribe((v: number) => {
+			inProgress = v;
+		});
+		counts.done.subscribe((v: number) => {
+			done = v;
+		});
+		counts.archived.subscribe((v: number) => {
+			archived = v;
 		});
 	};
 
@@ -34,9 +44,11 @@
 <section class="Wrapper">
 	<div><Markdown {carta} value={content} /></div>
 	<aside>
-		<h2>Overview — {complete + incomplete}</h2>
-		<p>{complete} &#8212; completed</p>
-		<p>{incomplete} &#8212; incomplete</p>
+		<h2>Overview — {total}</h2>
+		<p>{todo} &#8212; to do</p>
+		<p>{inProgress} &#8212; in progress</p>
+		<p>{done} &#8212; done</p>
+		<p>{archived} &#8212; archived</p>
 		<nav>
 			<ExportImport />
 		</nav>

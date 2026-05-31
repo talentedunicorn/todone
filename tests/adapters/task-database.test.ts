@@ -85,12 +85,16 @@ describe.each(factories)('TaskDatabase (%s)', ({ name, create }) => {
 	});
 
 	describe('getDocCount streams', () => {
-		it('returns separate complete/incomplete streams', async () => {
-			const { complete, incomplete } = await db.getDocCount();
-			expect(complete).toBeDefined();
-			expect(incomplete).toBeDefined();
-			expect(typeof complete.subscribe).toBe('function');
-			expect(typeof incomplete.subscribe).toBe('function');
+		it('returns separate status streams', async () => {
+			const { todo, inProgress, done, archived } = await db.getDocCount();
+			expect(todo).toBeDefined();
+			expect(inProgress).toBeDefined();
+			expect(done).toBeDefined();
+			expect(archived).toBeDefined();
+			expect(typeof todo.subscribe).toBe('function');
+			expect(typeof inProgress.subscribe).toBe('function');
+			expect(typeof done.subscribe).toBe('function');
+			expect(typeof archived.subscribe).toBe('function');
 		});
 	});
 
