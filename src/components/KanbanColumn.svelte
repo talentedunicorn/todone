@@ -118,21 +118,21 @@
 		font-size: 1rem;
 		font-weight: 600;
 		margin: 0;
-		color: var(--text, #111827);
+		color: var(--black);
 		flex: 1;
 	}
 
 	.count {
 		font-size: 0.8rem;
 		font-weight: 500;
-		color: var(--gray, #6b7280);
+		color: var(--black);
 		background: var(--gray-light);
 		padding: 0.1em 0.5em;
 		border-radius: 999px;
 	}
 
 	.collapse-icon {
-		color: var(--gray, #6b7280);
+		color: var(--black);
 		transition: transform 0.15s;
 		transform-origin: center;
 	}
@@ -150,7 +150,7 @@
 
 	.empty {
 		font-size: 0.85rem;
-		color: var(--gray, #9ca3af);
+		color: var(--black);
 		text-align: center;
 		padding: 1rem;
 	}
