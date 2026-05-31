@@ -30,7 +30,7 @@ const todoSchema: RxJsonSchema<Todo> = {
 		id: { type: 'string', maxLength: 100 },
 		title: { type: 'string' },
 		value: { type: 'string' },
-		status: { type: 'string', default: 'todo' },
+		status: { type: 'string', default: 'todo', maxLength: 20 },
 		updated: { type: 'string', format: 'date-time' }
 	},
 	required: ['id', 'title', 'value', 'updated', 'status'],
