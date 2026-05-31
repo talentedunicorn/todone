@@ -22,6 +22,19 @@
 	let isKanban = $derived($currentView === 'kanban');
 	let isArchive = $derived($currentView === 'archive');
 
+	// Track which columns are collapsed (default: all expanded)
+	let collapsedColumns = $state(new Set<string>());
+
+	const toggleCollapse = (key: string) => {
+		const next = new Set(collapsedColumns);
+		if (next.has(key)) {
+			next.delete(key);
+		} else {
+			next.add(key);
+		}
+		collapsedColumns = next;
+	};
+
 	// Filter data by search query across all columns
 	let filteredData = $derived(
 		query ? data.filter((t) => t.title.toLowerCase().includes(query.toLowerCase())) : data
@@ -268,6 +281,8 @@
 					title="To Do"
 					status="todo"
 					tasks={todoTasks}
+					collapsed={collapsedColumns.has('todo')}
+					onToggleCollapse={() => toggleCollapse('todo')}
 					expandedTasks={$expandedTasks}
 					onToggleExpand={handleToggleExpand}
 					onEdit={handleEdit}
@@ -280,6 +295,8 @@
 					title="In Progress"
 					status="in-progress"
 					tasks={inProgressTasks}
+					collapsed={collapsedColumns.has('in-progress')}
+					onToggleCollapse={() => toggleCollapse('in-progress')}
 					expandedTasks={$expandedTasks}
 					onToggleExpand={handleToggleExpand}
 					onEdit={handleEdit}
@@ -292,6 +309,8 @@
 					title="Done"
 					status="done"
 					tasks={doneTasks}
+					collapsed={collapsedColumns.has('done')}
+					onToggleCollapse={() => toggleCollapse('done')}
 					expandedTasks={$expandedTasks}
 					onToggleExpand={handleToggleExpand}
 					onEdit={handleEdit}

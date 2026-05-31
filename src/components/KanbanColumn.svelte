@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { slide } from 'svelte/transition';
 	import type { Todo, TaskStatus } from '../domain/todo';
 	import KanbanCard from './KanbanCard.svelte';
 
@@ -6,6 +7,8 @@
 		title: string;
 		status: TaskStatus;
 		tasks: Todo[];
+		collapsed: boolean;
+		onToggleCollapse: () => void;
 		expandedTasks: Set<string>;
 		onToggleExpand: (id: string, expanded: boolean) => void;
 		onEdit: (task: Todo) => void;
@@ -19,6 +22,8 @@
 		title,
 		status: _status,
 		tasks,
+		collapsed,
+		onToggleCollapse,
 		expandedTasks,
 		onToggleExpand,
 		onEdit,
@@ -29,26 +34,53 @@
 	}: Props = $props();
 </script>
 
-<div class="column" role="region" aria-label={title} {ondrop} {ondragover}>
-	<div class="column-header">
+<div class="column" class:collapsed role="region" aria-label={title} {ondrop} {ondragover}>
+	<div
+		class="column-header"
+		onclick={onToggleCollapse}
+		onkeydown={(e) => {
+			if (e.key === 'Enter' || e.key === ' ') {
+				e.preventDefault();
+				onToggleCollapse();
+			}
+		}}
+		role="button"
+		tabindex="0"
+	>
 		<h3 class="column-title">{title}</h3>
 		<span class="count">{tasks.length}</span>
+		<svg
+			class="collapse-icon"
+			class:collapsed
+			width="20"
+			height="20"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		>
+			<path d="m9 6 6 6-6 6" />
+		</svg>
 	</div>
-	<div class="column-body">
-		{#each tasks as task (task.id)}
-			<KanbanCard
-				{task}
-				expanded={expandedTasks.has(task.id)}
-				{onToggleExpand}
-				{onEdit}
-				{onDelete}
-				{onStatusChange}
-			/>
-		{/each}
-		{#if tasks.length === 0}
-			<p class="empty">No tasks</p>
-		{/if}
-	</div>
+	{#if !collapsed}
+		<div class="column-body" transition:slide={{ duration: 150 }}>
+			{#each tasks as task (task.id)}
+				<KanbanCard
+					{task}
+					expanded={expandedTasks.has(task.id)}
+					{onToggleExpand}
+					{onEdit}
+					{onDelete}
+					{onStatusChange}
+				/>
+			{/each}
+			{#if tasks.length === 0}
+				<p class="empty">No tasks</p>
+			{/if}
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -61,7 +93,11 @@
 		background: var(--gray-bg, #f3f4f6);
 		border-radius: 0.75rem;
 		padding: 1rem;
-		min-height: 200px;
+		min-height: auto;
+	}
+
+	.column.collapsed {
+		min-height: auto;
 	}
 
 	.column-header {
@@ -70,6 +106,12 @@
 		gap: 0.5rem;
 		padding-bottom: 0.5rem;
 		border-bottom: 2px solid var(--gray-light, #e5e7eb);
+		cursor: pointer;
+		user-select: none;
+	}
+
+	.column-header:hover {
+		opacity: 0.8;
 	}
 
 	.column-title {
@@ -77,6 +119,7 @@
 		font-weight: 600;
 		margin: 0;
 		color: var(--text, #111827);
+		flex: 1;
 	}
 
 	.count {
@@ -88,12 +131,20 @@
 		border-radius: 999px;
 	}
 
+	.collapse-icon {
+		color: var(--gray, #6b7280);
+		transition: transform 0.15s;
+	}
+
+	.collapse-icon.collapsed {
+		transform: rotate(90deg);
+	}
+
 	.column-body {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
-		overflow-y: auto;
-		flex: 1;
+		overflow: hidden;
 	}
 
 	.empty {
