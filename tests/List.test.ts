@@ -37,28 +37,6 @@ describe('FlatList', () => {
 		expect(screen.queryByText('My Task')).not.toBeNull();
 	});
 
-	it('filters out archived tasks', () => {
-		data = [
-			{
-				id: '1',
-				title: 'Active',
-				value: '',
-				status: 'todo',
-				updated: new Date().toISOString()
-			},
-			{
-				id: '2',
-				title: 'Archived',
-				value: '',
-				status: 'archived',
-				updated: new Date().toISOString()
-			}
-		];
-		render(FlatList, { data, onEdit, onDelete, onStatusChange });
-		expect(screen.queryByText('Active')).not.toBeNull();
-		expect(screen.queryByText('Archived')).toBeNull();
-	});
-
 	it('calls onStatusChange when status badge clicked', () => {
 		data = [
 			{

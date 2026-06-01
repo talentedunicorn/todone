@@ -85,32 +85,27 @@ export class MemoryTaskDatabase implements TaskDatabase {
 		todo: Stream<number>;
 		inProgress: Stream<number>;
 		done: Stream<number>;
-		archived: Stream<number>;
 	}> {
 		const todo = new SimpleStream<number>(0);
 		const inProgress = new SimpleStream<number>(0);
 		const done = new SimpleStream<number>(0);
-		const archived = new SimpleStream<number>(0);
 
 		const update = () => {
 			let t = 0,
 				ip = 0,
-				d = 0,
-				a = 0;
+				d = 0;
 			for (const tsk of this.todos.values()) {
 				if (tsk.status === 'todo') t++;
 				else if (tsk.status === 'in-progress') ip++;
 				else if (tsk.status === 'done') d++;
-				else if (tsk.status === 'archived') a++;
 			}
 			todo.emit(t);
 			inProgress.emit(ip);
 			done.emit(d);
-			archived.emit(a);
 		};
 
 		this.stream.subscribe(update);
 
-		return { todo, inProgress, done, archived };
+		return { todo, inProgress, done };
 	}
 }

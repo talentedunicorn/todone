@@ -14,7 +14,7 @@
 			title: { control: 'text' },
 			value: { control: 'text' },
 			updated: { control: 'date' },
-			status: { control: 'select', options: ['todo', 'in-progress', 'done', 'archived'] }
+			status: { control: 'select', options: ['todo', 'in-progress', 'done'] }
 		},
 		args: {
 			onEdit: editSpy,

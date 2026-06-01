@@ -52,7 +52,7 @@
 				id: z.string(),
 				title: z.string(),
 				value: z.string(),
-				status: z.enum(['todo', 'in-progress', 'done', 'archived']).optional(),
+				status: z.enum(['todo', 'in-progress', 'done']).optional(),
 				completed: z.boolean().optional(),
 				updated: z.coerce.date()
 			})

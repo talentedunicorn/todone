@@ -15,9 +15,7 @@
 	let { data, onEdit, onDelete, onStatusChange }: Props = $props();
 
 	let activeTasks = $derived(
-		data
-			.filter((t) => t.status !== 'archived')
-			.sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime())
+		data.sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime())
 	);
 </script>
 

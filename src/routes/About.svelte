@@ -10,9 +10,8 @@
 	let todo = $state<number>(0);
 	let inProgress = $state<number>(0);
 	let done = $state<number>(0);
-	let archived = $state<number>(0);
 
-	const total = $derived(todo + inProgress + done + archived);
+	const total = $derived(todo + inProgress + done);
 
 	const carta = createViewerCarta();
 
@@ -26,9 +25,6 @@
 		});
 		counts.done.subscribe((v: number) => {
 			done = v;
-		});
-		counts.archived.subscribe((v: number) => {
-			archived = v;
 		});
 	};
 
@@ -48,7 +44,6 @@
 		<p>{todo} &#8212; to do</p>
 		<p>{inProgress} &#8212; in progress</p>
 		<p>{done} &#8212; done</p>
-		<p>{archived} &#8212; archived</p>
 		<nav>
 			<ExportImport />
 		</nav>

@@ -19,7 +19,6 @@
 	import Login from './routes/Login.svelte';
 	import Home from './routes/Home.svelte';
 	import Kanban from './routes/Kanban.svelte';
-	import Archive from './routes/Archive.svelte';
 	import { checkAuth, initAuth0Client } from './auth';
 	import { setAuth0Client } from './lib/auth-client';
 	import { toastActions, toastMessage, status, isLoggedin } from './stores';
@@ -110,19 +109,7 @@
 				}
 			]
 		}),
-		'/archive': wrap({
-			component: Archive,
-			conditions: [
-				() => {
-					if (!synced) return true;
-					if (!$isLoggedin) {
-						push('/login');
-						return false;
-					}
-					return true;
-				}
-			]
-		}),
+
 		'*': NotFound
 	};
 </script>
@@ -143,7 +130,7 @@
 		<Menu>
 			<Button size="large" variant="link" onclick={() => push('/')}>List</Button>
 			<Button size="large" variant="link" onclick={() => push('/kanban')}>Kanban</Button>
-			<Button size="large" variant="link" onclick={() => push('/archive')}>Archive</Button>
+
 			<Button size="large" variant="link" onclick={() => push('/about')}>About</Button>
 		</Menu>
 	</aside>

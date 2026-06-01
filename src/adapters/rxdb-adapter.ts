@@ -23,14 +23,19 @@ const storage = wrappedValidateAjvStorage({
 import type { Todo, TaskStatus } from '../domain/todo';
 
 const todoSchema: RxJsonSchema<Todo> = {
-	version: 1,
+	version: 2,
 	primaryKey: 'id',
 	type: 'object',
 	properties: {
 		id: { type: 'string', maxLength: 100 },
 		title: { type: 'string' },
 		value: { type: 'string' },
-		status: { type: 'string', default: 'todo', maxLength: 20 },
+		status: {
+			type: 'string',
+			default: 'todo',
+			maxLength: 20,
+			enum: ['todo', 'in-progress', 'done']
+		},
 		updated: { type: 'string', format: 'date-time' }
 	},
 	required: ['id', 'title', 'value', 'updated', 'status'],
@@ -49,6 +54,13 @@ const migrationStrategies = {
 		// v0 had 'completed: boolean', v1 uses 'status: string'
 		oldDoc.status = oldDoc.completed ? 'done' : 'todo';
 		delete oldDoc.completed;
+		return oldDoc;
+	},
+	2: (oldDoc: any) => {
+		// v1 had 'archived' status, v2 restricts to ['todo', 'in-progress', 'done']
+		if (oldDoc.status === 'archived') {
+			oldDoc.status = 'done';
+		}
 		return oldDoc;
 	}
 };
@@ -162,12 +174,17 @@ export class RxDBTaskDatabase implements TaskDatabase {
 
 	async importTodos(data: Todo[]): Promise<unknown> {
 		const db = this.getDb();
-		// Migrate legacy imports that still have 'completed' instead of 'status'
+		// Migrate legacy imports
 		const migrated = data.map((doc) => {
 			const d = doc as Todo & { completed?: boolean };
+			// v0 had 'completed: boolean' instead of 'status: string'
 			if (d.completed !== undefined && !d.status) {
 				d.status = d.completed ? 'done' : 'todo';
 				delete d.completed;
+			}
+			// v1 had 'archived' status, removed in v2
+			if ((d as any).status === 'archived') {
+				(d as any).status = 'done';
 			}
 			return d;
 		});
@@ -178,14 +195,12 @@ export class RxDBTaskDatabase implements TaskDatabase {
 		todo: Stream<number>;
 		inProgress: Stream<number>;
 		done: Stream<number>;
-		archived: Stream<number>;
 	}> {
 		const db = this.getDb();
 		const todo = new RxDBStream(db.todos.count({ selector: { status: 'todo' } }).$);
 		const inProgress = new RxDBStream(db.todos.count({ selector: { status: 'in-progress' } }).$);
 		const done = new RxDBStream(db.todos.count({ selector: { status: 'done' } }).$);
-		const archived = new RxDBStream(db.todos.count({ selector: { status: 'archived' } }).$);
-		return { todo, inProgress, done, archived };
+		return { todo, inProgress, done };
 	}
 }
 

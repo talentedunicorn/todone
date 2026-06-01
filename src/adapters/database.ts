@@ -18,7 +18,6 @@ export interface TaskDatabase {
 		todo: Stream<number>;
 		inProgress: Stream<number>;
 		done: Stream<number>;
-		archived: Stream<number>;
 	}>;
 }
 

@@ -17,15 +17,13 @@
 	const statusColors: Record<string, string> = {
 		todo: 'var(--gray, #9ca3af)',
 		'in-progress': 'var(--yellow, #eab308)',
-		done: 'var(--green, #22c55e)',
-		archived: 'var(--gray-light, #d1d5db)'
+		done: 'var(--green, #22c55e)'
 	};
 
 	const statusLabels: Record<string, string> = {
 		todo: 'To Do',
 		'in-progress': 'In Progress',
-		done: 'Done',
-		archived: 'Archived'
+		done: 'Done'
 	};
 
 	const cycleStatus = () => {
