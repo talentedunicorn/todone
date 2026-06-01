@@ -14,6 +14,8 @@
 		onEdit: (task: Todo) => void;
 		onDelete: (task: Todo) => void;
 		onStatusChange: (id: string, status: TaskStatus) => void;
+		onClear?: () => void;
+		clearLabel?: string;
 		ondrop?: (e: DragEvent) => void;
 		ondragover?: (e: DragEvent) => void;
 	}
@@ -29,6 +31,8 @@
 		onEdit,
 		onDelete,
 		onStatusChange,
+		onClear,
+		clearLabel,
 		ondrop,
 		ondragover
 	}: Props = $props();
@@ -49,6 +53,17 @@
 	>
 		<h3 class="column-title">{title}</h3>
 		<span class="count">{tasks.length}</span>
+		{#if onClear}
+			<button
+				class="clear-btn"
+				onclick={(e) => {
+					e.stopPropagation();
+					onClear();
+				}}
+			>
+				{clearLabel || 'Clear'}
+			</button>
+		{/if}
 		<svg
 			class="collapse-icon"
 			class:collapsed
@@ -139,6 +154,22 @@
 
 	.collapse-icon.collapsed {
 		transform: rotate(-90deg);
+	}
+
+	.clear-btn {
+		font-size: 0.75rem;
+		padding: 0.2em 0.6em;
+		border-radius: 0.25rem;
+		border: 1px solid var(--gray-light);
+		background: var(--white);
+		color: var(--black);
+		cursor: pointer;
+		line-height: 1.4;
+		white-space: nowrap;
+	}
+
+	.clear-btn:hover {
+		background: var(--gray-light);
 	}
 
 	.column-body {

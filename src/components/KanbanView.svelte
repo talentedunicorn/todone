@@ -37,6 +37,12 @@
 			return new Set(set);
 		});
 	};
+
+	const clearDone = () => {
+		for (const task of doneTasks) {
+			onDelete(task);
+		}
+	};
 </script>
 
 <div class="kanban">
@@ -79,6 +85,8 @@
 		{onEdit}
 		{onDelete}
 		{onStatusChange}
+		onClear={doneTasks.length > 0 ? clearDone : undefined}
+		clearLabel="Clear done"
 		ondragover={(e) => e.preventDefault()}
 		ondrop={(e) => dropOnColumn(e, 'done')}
 	/>
