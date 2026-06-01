@@ -42,8 +42,8 @@
 		width: 56px;
 		height: 56px;
 		border-radius: 50%;
-		background: var(--primary, #3b82f6);
-		color: white;
+		background: var(--primary);
+		color: var(--black);
 		border: none;
 		box-shadow:
 			0 4px 12px rgba(0, 0, 0, 0.25),
@@ -59,7 +59,7 @@
 	}
 
 	.Fab:hover {
-		background: var(--primary-hover, #2563eb);
+		background: var(--white);
 		transform: scale(1.1);
 		box-shadow:
 			0 6px 20px rgba(0, 0, 0, 0.3),
@@ -71,7 +71,7 @@
 	}
 
 	.Fab:focus-visible {
-		outline: 3px solid var(--primary, #3b82f6);
+		outline: 3px solid var(--primary);
 		outline-offset: 2px;
 	}
 
