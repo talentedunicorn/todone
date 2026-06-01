@@ -18,16 +18,11 @@
 	import NotFound from './routes/NotFound.svelte';
 	import Login from './routes/Login.svelte';
 	import Home from './routes/Home.svelte';
+	import Kanban from './routes/Kanban.svelte';
+	import Archive from './routes/Archive.svelte';
 	import { checkAuth, initAuth0Client } from './auth';
 	import { setAuth0Client } from './lib/auth-client';
-	import {
-		toastActions,
-		toastMessage,
-		status,
-		isLoggedin,
-		currentView,
-		currentTab
-	} from './stores';
+	import { toastActions, toastMessage, status, isLoggedin } from './stores';
 	import themeStore from './stores/theme';
 
 	let auth0 = $state<Auth0Client>();
@@ -68,16 +63,6 @@
 		if (synced && !auth0) initializeAuth();
 	});
 
-	let menuItems = $derived([
-		{ label: 'Kanban', key: 'kanban', selected: $currentView === 'kanban' },
-		{ label: 'Archive', key: 'archive', selected: $currentView === 'archive' }
-	]);
-
-	const handleMenu = (label: string) => {
-		const item = menuItems.find((m) => m.label === label);
-		if (item) currentView.set(item.key);
-	};
-
 	const routes = {
 		'/about': About,
 		'/login': wrap({
@@ -112,6 +97,32 @@
 				}
 			]
 		}),
+		'/kanban': wrap({
+			component: Kanban,
+			conditions: [
+				() => {
+					if (!synced) return true;
+					if (!$isLoggedin) {
+						push('/login');
+						return false;
+					}
+					return true;
+				}
+			]
+		}),
+		'/archive': wrap({
+			component: Archive,
+			conditions: [
+				() => {
+					if (!synced) return true;
+					if (!$isLoggedin) {
+						push('/login');
+						return false;
+					}
+					return true;
+				}
+			]
+		}),
 		'*': NotFound
 	};
 </script>
@@ -129,7 +140,10 @@
 		<ToggleTheme />
 	</header>
 	<aside class="Menu">
-		<Menu {menuItems} goTo={handleMenu}>
+		<Menu>
+			<Button size="large" variant="link" onclick={() => push('/')}>List</Button>
+			<Button size="large" variant="link" onclick={() => push('/kanban')}>Kanban</Button>
+			<Button size="large" variant="link" onclick={() => push('/archive')}>Archive</Button>
 			<Button size="large" variant="link" onclick={() => push('/about')}>About</Button>
 		</Menu>
 	</aside>

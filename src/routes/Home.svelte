@@ -1,5 +1,6 @@
 <script lang="ts">
-	import List from '../List.svelte';
+	import TaskShell from '../components/TaskShell.svelte';
+	import FlatList from '../components/FlatList.svelte';
 	import Button from '../components/Button.svelte';
 	import { isLoggedin, user } from '../stores';
 	import { logout } from '../auth';
@@ -23,7 +24,16 @@
 	{#await createTaskDatabase()}
 		<p class="Message">Loading database... 👩🏼‍🔧</p>
 	{:then db}
-		<List {db} />
+		<TaskShell {db}>
+			{#snippet children(data, handlers)}
+				<FlatList
+					{data}
+					onEdit={handlers.handleEdit}
+					onDelete={handlers.handleDelete}
+					onStatusChange={handlers.handleStatusChange}
+				/>
+			{/snippet}
+		</TaskShell>
 	{:catch err}
 		<p class="Message">Error loading database: {err.message}</p>
 	{/await}
@@ -46,5 +56,11 @@
 	.Message {
 		font-size: 1.5rem;
 		padding: 2rem;
+	}
+
+	.Content {
+		display: flex;
+		flex-flow: column;
+		gap: 1.5rem;
 	}
 </style>

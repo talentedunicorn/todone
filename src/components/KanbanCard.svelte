@@ -1,12 +1,7 @@
 <script lang="ts">
-	import { Markdown, type Carta } from 'carta-md';
-	import 'carta-md/default.css';
-	import { createViewerCarta } from '../lib/carta';
-	import { themeObserver } from '../lib/theme-observer';
 	import type { Todo } from '../domain/todo';
 	import type { TaskStatus } from '../domain/todo';
-
-	let cartaInstance = $state<Carta | null>(null);
+	import MarkdownContent from './MarkdownContent.svelte';
 
 	interface Props {
 		task: Todo;
@@ -133,18 +128,8 @@
 	</div>
 
 	{#if expanded && task.value}
-		<div
-			class="card-body"
-			use:themeObserver={{
-				createInstance: (theme) => createViewerCarta({ theme, enableCodeHighlighting: true }),
-				onUpdate: (c) => (cartaInstance = c)
-			}}
-		>
-			{#if cartaInstance}
-				{#key `${task.value}-${cartaInstance}`}
-					<Markdown carta={cartaInstance} value={task.value} />
-				{/key}
-			{/if}
+		<div class="card-body">
+			<MarkdownContent value={task.value} />
 		</div>
 	{/if}
 </div>

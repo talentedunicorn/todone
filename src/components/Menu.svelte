@@ -2,22 +2,15 @@
 	import { fade, fly } from 'svelte/transition';
 	import { type Snippet } from 'svelte';
 	import Button from './Button.svelte';
-	import { push } from 'svelte-spa-router';
 
 	let opened = $state(false);
-	interface MenuItem {
-		label: string;
-		selected?: boolean;
-	}
 
 	interface Props {
 		title?: string;
-		menuItems?: MenuItem[];
 		children?: Snippet;
-		goTo: (path: string) => void;
 	}
 
-	let { title = '', menuItems = [], children, goTo }: Props = $props();
+	let { title = '', children }: Props = $props();
 </script>
 
 <nav class={opened ? '' : 'closed'}>
@@ -40,22 +33,19 @@
 		</svg>
 	</Button>
 	{#if opened}
-		<div data-testId="menu" out:fly={{ x: -50, duration: 200 }} in:fade>
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<div
+			data-testId="menu"
+			out:fly={{ x: -50, duration: 200 }}
+			in:fade
+			onclick={() => {
+				opened = false;
+			}}
+		>
 			{#if title}
 				<header data-testId="header">{title}</header>
 			{/if}
-			{#each menuItems as menuitem (menuitem.label)}
-				<Button
-					variant="link"
-					size="large"
-					selected={menuitem.selected}
-					onclick={() => {
-						push('/');
-						goTo(menuitem.label);
-						opened = false;
-					}}>{menuitem.label}</Button
-				>
-			{/each}
 			{@render children?.()}
 		</div>
 	{/if}

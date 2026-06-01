@@ -8,7 +8,7 @@
 		type?: 'button' | 'submit' | 'reset';
 		selected?: boolean;
 		children?: Snippet;
-		onclick?: () => void;
+		onclick?: (e: MouseEvent) => void;
 		[key: string]: any;
 	}
 
