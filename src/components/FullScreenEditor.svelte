@@ -52,7 +52,7 @@
 	>
 		<div class="dialog-content" transition:fly={{ y: 30, duration: 250 }}>
 			<div class="dialog-header">
-				<h2 class="dialog-title">{isEdit ? defaultValue!.title : 'New Task'}</h2>
+				<h2 class="dialog-title">{isEdit ? defaultValue!.title : ''}</h2>
 				<button class="close-btn" onclick={handleClose} aria-label="Close">
 					<svg
 						width="24"
@@ -120,7 +120,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 1rem 1.5rem;
+		padding: 0 0 1rem 0;
 		flex-shrink: 0;
 	}
 
