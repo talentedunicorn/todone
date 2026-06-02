@@ -21,7 +21,7 @@
 
 <div class="list">
 	{#each activeTasks as task (task.id)}
-		<article
+		<div
 			class="task-item"
 			class:done={task.status === 'done'}
 			role="button"
@@ -105,7 +105,7 @@
 					<MarkdownContent value={task.value} />
 				</div>
 			{/if}
-		</article>
+		</div>
 	{:else}
 		<p class="empty">No tasks yet. Press <kbd>n</kbd> or tap + to create one.</p>
 	{/each}
