@@ -109,6 +109,10 @@
 		border-radius: 0.75rem;
 		padding: 1rem;
 		min-height: auto;
+
+		@media screen and (min-width: 40rem) {
+			min-width: 40rem;
+		}
 	}
 
 	.column.collapsed {

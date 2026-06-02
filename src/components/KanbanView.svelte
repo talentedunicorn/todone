@@ -97,6 +97,13 @@
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		gap: 1.5rem;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		overscroll-behavior-x: contain;
+
+		& > :global(*) {
+			scroll-snap-align: start;
+		}
 	}
 
 	@media (max-width: 60rem) {
