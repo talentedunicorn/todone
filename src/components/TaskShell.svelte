@@ -171,89 +171,91 @@
 	};
 </script>
 
-<form class="Search">
-	<label for="search" class="visually-hidden">Search by title</label>
-	<input
-		type="search"
-		name="query"
-		id="search"
-		class:visually-hidden={!showSearch}
-		bind:value={query}
-		bind:this={searchInput}
-		placeholder="Type to search"
+<div class="Shell">
+	<form class="Search">
+		<label for="search" class="visually-hidden">Search by title</label>
+		<input
+			type="search"
+			name="query"
+			id="search"
+			class:visually-hidden={!showSearch}
+			bind:value={query}
+			bind:this={searchInput}
+			placeholder="Type to search"
+		/>
+		{#if showSearch}
+			<Button
+				onclick={() => {
+					showSearch = false;
+					query = '';
+				}}
+				size="small"
+				variant="link"
+			>
+				<svg
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="currentColor"
+					xmlns="http://www.w3.org/2000/svg"
+					aria-label="Hide search"
+					><path
+						fill="none"
+						stroke="currentColor"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="m9 6l6 6l-6 6"
+					/>
+				</svg>
+			</Button>
+		{:else}
+			<Button
+				onclick={() => {
+					showSearch = true;
+					searchInput.focus();
+				}}
+				size="small"
+				variant="link"
+			>
+				<svg
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="currentColor"
+					xmlns="http://www.w3.org/2000/svg"
+					aria-label="Show search"
+					><path
+						fill="none"
+						stroke="currentColor"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M11.36 20.213L9 21v-8.5L4.52 7.572A2 2 0 0 1 4 6.227V4h16v2.172a2 2 0 0 1-.586 1.414L15 12m0 6a3 3 0 1 0 6 0a3 3 0 1 0-6 0m5.2 2.2L22 22"
+					/>
+				</svg>
+			</Button>
+		{/if}
+	</form>
+
+	{#await loadTodos()}
+		<p class="Message">Loading data... 👩🏼‍🔧</p>
+	{:then _}
+		{@render children(
+			data.filter((t) => !query || t.title.toLowerCase().includes(query.toLowerCase())),
+			handlers
+		)}
+	{/await}
+
+	<Fab onclick={handleFabClick} visible={showFab} />
+
+	<FullScreenEditor
+		open={showEditor}
+		defaultValue={editorTask}
+		onSave={handleSave}
+		onClose={handleDialogClose}
 	/>
-	{#if showSearch}
-		<Button
-			onclick={() => {
-				showSearch = false;
-				query = '';
-			}}
-			size="small"
-			variant="link"
-		>
-			<svg
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="currentColor"
-				xmlns="http://www.w3.org/2000/svg"
-				aria-label="Hide search"
-				><path
-					fill="none"
-					stroke="currentColor"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="m9 6l6 6l-6 6"
-				/>
-			</svg>
-		</Button>
-	{:else}
-		<Button
-			onclick={() => {
-				showSearch = true;
-				searchInput.focus();
-			}}
-			size="small"
-			variant="link"
-		>
-			<svg
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="currentColor"
-				xmlns="http://www.w3.org/2000/svg"
-				aria-label="Show search"
-				><path
-					fill="none"
-					stroke="currentColor"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M11.36 20.213L9 21v-8.5L4.52 7.572A2 2 0 0 1 4 6.227V4h16v2.172a2 2 0 0 1-.586 1.414L15 12m0 6a3 3 0 1 0 6 0a3 3 0 1 0-6 0m5.2 2.2L22 22"
-				/>
-			</svg>
-		</Button>
-	{/if}
-</form>
-
-{#await loadTodos()}
-	<p class="Message">Loading data... 👩🏼‍🔧</p>
-{:then _}
-	{@render children(
-		data.filter((t) => !query || t.title.toLowerCase().includes(query.toLowerCase())),
-		handlers
-	)}
-{/await}
-
-<Fab onclick={handleFabClick} visible={showFab} />
-
-<FullScreenEditor
-	open={showEditor}
-	defaultValue={editorTask}
-	onSave={handleSave}
-	onClose={handleDialogClose}
-/>
+</div>
 
 <style>
 	.Message {
@@ -261,6 +263,7 @@
 	}
 
 	.Search {
+		margin-left: auto;
 		align-self: flex-end;
 		display: inline-flex;
 		gap: 1rem;
@@ -279,5 +282,11 @@
 		font-family: inherit;
 		background: transparent;
 		color: var(--black);
+	}
+
+	.Shell {
+		padding: 1rem;
+		display: grid;
+		gap: 1rem;
 	}
 </style>
