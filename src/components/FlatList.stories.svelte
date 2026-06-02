@@ -51,7 +51,7 @@
 		]
 	}}
 	play={async ({ canvas, userEvent }) => {
-		const badge = canvas.getByText('To Do');
+		const badge = canvas.getByText((content) => content.includes('To Do'));
 		await userEvent.click(badge);
 		expect(statusSpy).toHaveBeenCalledWith('1', 'in-progress');
 	}}
