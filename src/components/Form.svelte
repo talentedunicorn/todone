@@ -122,21 +122,21 @@ Form component with a title and content inputs
 			<legend>Status</legend>
 			<div class="Badges">
 				<Button
-					size="small"
+					variant="pill"
 					selected={data.status === 'todo'}
 					onclick={() => (data.status = 'todo')}
 				>
 					To Do
 				</Button>
 				<Button
-					size="small"
+					variant="pill"
 					selected={data.status === 'in-progress'}
 					onclick={() => (data.status = 'in-progress')}
 				>
 					In Progress
 				</Button>
 				<Button
-					size="small"
+					variant="pill"
 					selected={data.status === 'done'}
 					onclick={() => (data.status = 'done')}
 				>

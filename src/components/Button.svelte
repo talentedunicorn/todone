@@ -3,7 +3,7 @@
 	import type { Snippet } from 'svelte';
 
 	interface Props extends HTMLButtonAttributes {
-		variant?: 'link' | 'primary' | '';
+		variant?: 'link' | 'primary' | 'pill' | '';
 		size?: string;
 		type?: 'button' | 'submit' | 'reset';
 		selected?: boolean;
@@ -45,12 +45,14 @@
 		--button-color: var(--black);
 		--button-bg: var(--white);
 		--border-color: var(--black);
+		--border-radius: 0.7em;
+		--border-width: 0.2em;
 
 		font-family: inherit;
 		font-weight: bold;
 		font-size: 1rem;
-		border: 0.2em solid var(--border-color);
-		border-radius: 0.7em;
+		border: var(--border-width) solid var(--border-color);
+		border-radius: var(--border-radius);
 		cursor: pointer;
 		display: inline-flex;
 		align-items: center;
@@ -62,7 +64,7 @@
 		padding: 0.5em;
 		white-space: nowrap;
 
-		&:hover:not(:disabled):not(.link) {
+		&:hover:not(:disabled):not(.link):not(.pill) {
 			background-color: var(--button-color);
 			color: var(--button-bg);
 		}
@@ -86,9 +88,23 @@
 		--border-color: var(--primary);
 	}
 
+	.pill {
+		--border-radius: 999px;
+		padding: 0.5em 1em;
+		border: none;
+		white-space: nowrap;
+		flex-shrink: 0;
+
+		&:hover:not(:disabled) {
+			opacity: 0.8;
+			background-color: var(--gray-light);
+		}
+	}
+
 	.link {
 		--button-color: var(--primary);
 		--border-color: var(--white);
+		--border-width: 0;
 	}
 
 	.link.selected:not(:disabled),

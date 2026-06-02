@@ -7,7 +7,7 @@
 		title: 'Button',
 		component: Button,
 		argTypes: {
-			variant: { control: 'select', options: ['', 'primary', 'link'], default: '' },
+			variant: { control: 'select', options: ['', 'primary', 'link', 'pill'], default: '' },
 			size: { control: 'radio', options: ['', 'large', 'small'], default: '' },
 			type: { control: 'select', options: ['submit', 'button', 'reset'], default: 'button' },
 			selected: { control: 'boolean', default: false }
@@ -33,6 +33,8 @@
 />
 
 <Story name="Link" {template} args={{ variant: 'link' }} />
+
+<Story name="Pill" {template} args={{ variant: 'pill' }} />
 
 <Story name="Disabled" {template} args={{ disabled: true }} />
 
