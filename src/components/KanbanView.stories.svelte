@@ -114,7 +114,7 @@
 		const toggle = within(authFlowCard).getByTestId('toggleExpand');
 		await userEvent.click(toggle);
 		await waitFor(() => {
-			const heading = canvas.getByText((content) => content.includes('Providers'));
+			const heading = canvas.getByRole('heading', { name: 'Providers' });
 			expect(heading).toBeInTheDocument();
 		});
 	}}
@@ -127,7 +127,7 @@
 	play={async ({ canvas }) => {
 		const columns = canvas.getAllByRole('region');
 		expect(columns).toHaveLength(3);
-		const emptyMsg = canvas.getByText((content) => content.includes('No tasks'));
+		const emptyMsg = canvas.getByText('No tasks');
 		expect(emptyMsg).toBeInTheDocument();
 	}}
 />
@@ -147,7 +147,7 @@
 		]
 	}}
 	play={async ({ canvas, userEvent }) => {
-		const badge = canvas.getByText((content) => content.includes('To Do'));
+		const badge = canvas.getByRole('button', { name: 'To Do' });
 		await userEvent.click(badge);
 		expect(statusSpy).toHaveBeenCalledWith('1', 'in-progress');
 	}}
