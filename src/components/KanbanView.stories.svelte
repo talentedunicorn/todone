@@ -127,8 +127,8 @@
 	play={async ({ canvas }) => {
 		const columns = canvas.getAllByRole('region');
 		expect(columns).toHaveLength(3);
-		const emptyMsg = canvas.getByText('No tasks');
-		expect(emptyMsg).toBeInTheDocument();
+		const emptyMsgs = canvas.getAllByText('No tasks');
+		expect(emptyMsgs).toHaveLength(3);
 	}}
 />
 
