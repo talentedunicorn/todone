@@ -205,17 +205,6 @@ Form component with a title and content inputs
 			justify-content: space-between;
 		}
 
-		& .Actions .Delete {
-			display: flex;
-			align-items: center;
-		}
-
-		& .Actions .Save {
-			display: flex;
-			gap: 1rem;
-			align-items: center;
-		}
-
 		.Status {
 			display: flex;
 			align-items: center;

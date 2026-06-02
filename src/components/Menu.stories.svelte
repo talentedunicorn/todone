@@ -1,5 +1,6 @@
-<script module>
+<script module lang="ts">
 	import Menu from './Menu.svelte';
+	import Button from './Button.svelte';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import { expect } from 'storybook/test';
 
@@ -10,11 +11,10 @@
 </script>
 
 {#snippet template(args)}
-	<Menu
-		{...args}
-		menuItems={[{ label: 'ToDo', selected: true }, { label: 'Done' }]}
-		goTo={() => {}}
-	/>
+	<Menu {...args}>
+		<Button variant="link">ToDo</Button>
+		<Button variant="link">Done</Button>
+	</Menu>
 {/snippet}
 
 <Story
@@ -24,8 +24,8 @@
 		const toggleButton = canvas.getByRole('button');
 
 		await userEvent.click(toggleButton);
-		const aboutLink = canvas.getByText('ToDo');
-		expect(aboutLink).toBeInTheDocument();
+		const todoLink = canvas.getByText('ToDo');
+		expect(todoLink).toBeInTheDocument();
 		await userEvent.click(toggleButton);
 	}}
 />
