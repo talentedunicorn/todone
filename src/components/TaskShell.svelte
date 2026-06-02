@@ -254,6 +254,7 @@
 		defaultValue={editorTask}
 		onSave={handleSave}
 		onClose={handleDialogClose}
+		onDelete={handlers.handleDelete}
 	/>
 </div>
 

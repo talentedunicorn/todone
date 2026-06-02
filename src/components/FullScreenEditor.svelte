@@ -9,9 +9,10 @@
 		defaultValue?: Todo | null;
 		onClose: () => void;
 		onSave: (data: Todo) => Promise<void> | void;
+		onDelete?: (data: Todo) => Promise<void> | void;
 	}
 
-	let { open, defaultValue = null, onClose, onSave }: Props = $props();
+	let { open, defaultValue = null, onClose, onSave, onDelete }: Props = $props();
 
 	let dialog: HTMLDialogElement | undefined = $state();
 
@@ -75,6 +76,7 @@
 				onUpdate={handleSave}
 				onClear={handleClose}
 				enableEditor={true}
+				{onDelete}
 			/>
 		</div>
 	</dialog>

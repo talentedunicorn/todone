@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Button from './Button.svelte';
+	import Icon from './Icon.svelte';
 	import themeStore from '../stores/theme';
 
 	const ICON_SIZE = 24;
@@ -17,13 +18,7 @@
 <!-- Icons from https://icon-sets.iconify.design/tabler/ -->
 <Button size="small" class="ColorToggle" variant="link" onclick={toggleTheme}>
 	{#if $themeStore?.theme === 'dark'}
-		<svg
-			width={ICON_SIZE}
-			height={ICON_SIZE}
-			viewBox="0 0 24 24"
-			fill="currentColor"
-			xmlns="http://www.w3.org/2000/svg"
-		>
+		<Icon fill="currentColor">
 			<title>Dark</title>
 			<path
 				fill="none"
@@ -33,15 +28,9 @@
 				stroke-width="2"
 				d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z"
 			/>
-		</svg>
+		</Icon>
 	{:else if $themeStore?.theme === 'light'}
-		<svg
-			width={ICON_SIZE}
-			height={ICON_SIZE}
-			viewBox="0 0 24 24"
-			fill="currentColor"
-			xmlns="http://www.w3.org/2000/svg"
-		>
+		<Icon fill="currentColor">
 			<title>Light</title><path
 				fill="none"
 				stroke="currentColor"
@@ -50,15 +39,9 @@
 				stroke-width="2"
 				d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0-8 0m-5 0h1m8-9v1m8 8h1m-9 8v1M5.6 5.6l.7.7m12.1-.7l-.7.7m0 11.4l.7.7m-12.1-.7l-.7.7"
 			/>
-		</svg>
+		</Icon>
 	{:else}
-		<svg
-			width={ICON_SIZE}
-			height={ICON_SIZE}
-			viewBox="0 0 24 24"
-			fill="currentColor"
-			xmlns="http://www.w3.org/2000/svg"
-		>
+		<Icon fill="currentColor">
 			<title>System preference</title><g
 				fill="none"
 				stroke="currentColor"
@@ -69,6 +52,6 @@
 					d="m11.294 12.707l.174.247a7.5 7.5 0 0 0 8.845 2.492A9 9 0 0 1 5.642 18.36M3 12h1m8-9v1M5.6 5.6l.7.7M3 21L21 3"
 				/></g
 			>
-		</svg>
+		</Icon>
 	{/if}
 </Button>

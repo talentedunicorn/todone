@@ -5,10 +5,11 @@
 	import Button from './Button.svelte';
 	import { createEditorCarta } from '../lib/carta';
 	import { themeObserver } from '../lib/theme-observer';
-	import type { Todo } from '../db';
+	import type { Todo, TaskStatus } from '../domain/todo';
 	import { fly } from 'svelte/transition';
 
 	type Content = { title: string; value: string };
+	type FormTodo = Omit<Todo, 'id' | 'updated'> & { status?: TaskStatus };
 
 	interface Props {
 		defaultValue?: Todo | null;
@@ -16,9 +17,17 @@
 		onClear: () => void;
 		onUpdate: (data: Todo) => Promise<void> | void;
 		onSubmit: (data: Todo) => Promise<void> | void;
+		onDelete?: (task: Todo) => Promise<void> | void;
 	}
 
-	let { defaultValue, enableEditor = true, onClear, onSubmit, onUpdate }: Props = $props();
+	let {
+		defaultValue,
+		enableEditor = true,
+		onClear,
+		onSubmit,
+		onUpdate,
+		onDelete
+	}: Props = $props();
 
 	let carta = $state<Carta | null>(null);
 	let isBrowser = $state(false);
@@ -38,7 +47,7 @@
 	let titleInput: HTMLInputElement;
 	let titleFocused = $state(false);
 
-	let data = $state<Todo | Content>({ title: '', value: '' });
+	let data = $state<FormTodo>({ title: '', value: '', status: 'todo' });
 
 	$effect(() => {
 		if (defaultValue) {
@@ -55,7 +64,7 @@
 
 	const clear = () => {
 		defaultValue = null;
-		data = { title: '', value: '' };
+		data = { title: '', value: '', status: 'todo' };
 		onClear();
 	};
 
@@ -107,6 +116,18 @@ Form component with a title and content inputs
 		bind:value={data.title}
 		bind:this={titleInput}
 	/>
+
+	{#if isEdit}
+		<div class="Status">
+			<label for="status">Status</label>
+			<select id="status" bind:value={data.status}>
+				<option value="todo">To Do</option>
+				<option value="in-progress">In Progress</option>
+				<option value="done">Done</option>
+			</select>
+		</div>
+	{/if}
+
 	<label class="visually-hidden" for="content">Content</label>
 	<div class="editor-wrapper open">
 		<div class="inner">
@@ -135,10 +156,17 @@ Form component with a title and content inputs
 	</div>
 	{#if !invalid}
 		<div class="Actions" transition:fly={{ y: 5 }}>
-			<Button data-testid="cancel" data-umami-event="Cancel edit" onclick={clear}>Cancel</Button>
-			<Button data-testid="submit" data-umami-event="Save" type="submit" variant="primary"
-				>{buttonText}</Button
-			>
+			<div class="Delete">
+				{#if isEdit && onDelete}
+					<Button variant="link" onclick={() => onDelete(data as Todo)}>Delete</Button>
+				{/if}
+			</div>
+			<div class="Save">
+				<Button data-testid="cancel" data-umami-event="Cancel edit" onclick={clear}>Cancel</Button>
+				<Button data-testid="submit" data-umami-event="Save" type="submit" variant="primary"
+					>{buttonText}</Button
+				>
+			</div>
 		</div>
 	{/if}
 </form>
@@ -159,8 +187,34 @@ Form component with a title and content inputs
 		& .Actions {
 			align-self: end;
 			gap: 1rem;
-			align-items: flex-end;
+			align-items: center;
 			justify-content: space-between;
+		}
+
+		& .Actions .Delete {
+			display: flex;
+			align-items: center;
+		}
+
+		& .Actions .Save {
+			display: flex;
+			gap: 1rem;
+			align-items: center;
+		}
+
+		.Status {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			font-size: 0.9rem;
+
+			select {
+				padding: 0.2rem;
+				border-radius: 0.3rem;
+				border: 1px solid var(--gray);
+				background: var(--white);
+				font-family: inherit;
+			}
 		}
 
 		.editor-wrapper {

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Button from './Button.svelte';
+	import Icon from './Icon.svelte';
 	import { Markdown, type Carta } from 'carta-md';
 	import 'carta-md/default.css';
 	import { toastActions, toastMessage } from '../stores';
@@ -80,12 +81,7 @@
 				onclick={() => onToggleExpand(!expanded)}
 			>
 				<a href={`#${rest.id}`} use:scrollIntoView>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 24 24"
-						width="24"
-						fill="currentColor"
-					>
+					<Icon>
 						{#if expanded}
 							<path
 								fill="none"
@@ -105,7 +101,7 @@
 								d="m9 6l6 6l-6 6"
 							/>
 						{/if}
-					</svg>
+					</Icon>
 				</a>
 			</Button>
 		</div>
