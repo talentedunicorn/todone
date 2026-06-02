@@ -67,7 +67,7 @@
 				</button>
 				<span class="item-title">{task.title}</span>
 				<div class="item-actions">
-					<Button size="small" variant="link" onclick={() => onEdit(task)}>
+					<Button size="small" variant="link" aria-label="Edit" onclick={() => onEdit(task)}>
 						<svg
 							width="16"
 							height="16"
@@ -82,7 +82,7 @@
 							<path d="m15 5 4 4" />
 						</svg>
 					</Button>
-					<Button size="small" variant="link" onclick={() => onDelete(task)}>
+					<Button size="small" variant="link" aria-label="Delete" onclick={() => onDelete(task)}>
 						<svg
 							width="16"
 							height="16"

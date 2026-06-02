@@ -1,7 +1,7 @@
 <script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import FlatList from './FlatList.svelte';
-	import { fn, expect } from 'storybook/test';
+	import { fn, expect, waitFor } from 'storybook/test';
 
 	const editSpy = fn();
 	const deleteSpy = fn();
@@ -82,8 +82,10 @@
 	play={async ({ canvas, userEvent }) => {
 		const taskItem = canvas.getByText('Implement auth flow');
 		await userEvent.click(taskItem);
-		const heading = canvas.getByText('Steps');
-		expect(heading).toBeInTheDocument();
+		await waitFor(() => {
+			const heading = canvas.getByText('Steps');
+			expect(heading).toBeInTheDocument();
+		});
 	}}
 />
 
