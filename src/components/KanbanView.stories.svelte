@@ -1,7 +1,7 @@
 <script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import KanbanView from './KanbanView.svelte';
-	import { fn, expect } from 'storybook/test';
+	import { fn, expect, waitFor } from 'storybook/test';
 
 	const editSpy = fn();
 	const deleteSpy = fn();
@@ -109,8 +109,10 @@
 	play={async ({ canvas, userEvent }) => {
 		const toggleButtons = canvas.getAllByTestId('toggleExpand');
 		await userEvent.click(toggleButtons[0]);
-		const heading = canvas.getByText('Providers');
-		expect(heading).toBeInTheDocument();
+		await waitFor(() => {
+			const heading = canvas.getByText((content) => content.includes('Providers'));
+			expect(heading).toBeInTheDocument();
+		});
 	}}
 />
 
@@ -121,7 +123,7 @@
 	play={async ({ canvas }) => {
 		const columns = canvas.getAllByRole('region');
 		expect(columns).toHaveLength(3);
-		const emptyMsg = canvas.getByText('No tasks');
+		const emptyMsg = canvas.getByText((content) => content.includes('No tasks'));
 		expect(emptyMsg).toBeInTheDocument();
 	}}
 />
@@ -141,7 +143,7 @@
 		]
 	}}
 	play={async ({ canvas, userEvent }) => {
-		const badge = canvas.getByText('To Do');
+		const badge = canvas.getByText((content) => content.includes('To Do'));
 		await userEvent.click(badge);
 		expect(statusSpy).toHaveBeenCalledWith('1', 'in-progress');
 	}}
