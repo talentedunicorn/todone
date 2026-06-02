@@ -137,7 +137,7 @@
 
 	.item-header {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		gap: 0.75rem;
 	}
 
@@ -180,7 +180,6 @@
 		min-width: 0;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		white-space: nowrap;
 	}
 
 	.item-actions {
