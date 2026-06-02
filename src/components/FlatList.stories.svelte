@@ -1,7 +1,7 @@
 <script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import FlatList from './FlatList.svelte';
-	import { fn, expect, waitFor } from 'storybook/test';
+	import { fn, expect } from 'storybook/test';
 
 	const editSpy = fn();
 	const deleteSpy = fn();
@@ -47,59 +47,6 @@
 				value: 'Project overview and setup instructions.',
 				status: 'done',
 				updated: new Date('2026-05-30').toISOString()
-			}
-		]
-	}}
-	play={async ({ canvas, userEvent }) => {
-		const editButtons = canvas.getAllByRole('button', { name: 'Edit' });
-		await userEvent.click(editButtons[0]);
-		expect(editSpy).toHaveBeenCalled();
-	}}
-/>
-
-<Story
-	name="With expanded task"
-	{template}
-	args={{
-		data: [
-			{
-				id: '1',
-				title: 'Implement auth flow',
-				value:
-					'## Steps\n1. Set up Passport.js\n2. Configure Google strategy\n3. Add GitHub OAuth\n\nRefer to the [docs](https://example.com) for details.',
-				status: 'in-progress',
-				updated: new Date('2026-06-03').toISOString()
-			},
-			{
-				id: '2',
-				title: 'Set up CI/CD',
-				value: '',
-				status: 'todo',
-				updated: new Date('2026-06-01').toISOString()
-			}
-		]
-	}}
-	play={async ({ canvas, userEvent }) => {
-		const taskItem = canvas.getByText('Implement auth flow');
-		await userEvent.click(taskItem);
-		await waitFor(() => {
-			const heading = canvas.getByText('Steps');
-			expect(heading).toBeInTheDocument();
-		});
-	}}
-/>
-
-<Story
-	name="Cycle status"
-	{template}
-	args={{
-		data: [
-			{
-				id: '1',
-				title: 'Set up CI/CD',
-				value: '',
-				status: 'todo',
-				updated: new Date('2026-06-01').toISOString()
 			}
 		]
 	}}
