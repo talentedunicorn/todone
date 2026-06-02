@@ -1,7 +1,7 @@
 <script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import KanbanView from './KanbanView.svelte';
-	import { fn, expect, waitFor } from 'storybook/test';
+	import { fn, expect, waitFor, within } from 'storybook/test';
 
 	const editSpy = fn();
 	const deleteSpy = fn();
@@ -107,8 +107,12 @@
 		]
 	}}
 	play={async ({ canvas, userEvent }) => {
-		const toggleButtons = canvas.getAllByTestId('toggleExpand');
-		await userEvent.click(toggleButtons[0]);
+		const cards = canvas.getAllByRole('listitem');
+		const authFlowCard = cards.find(
+			(card) => card.textContent && card.textContent.includes('Implement auth flow')
+		) as HTMLElement;
+		const toggle = within(authFlowCard).getByTestId('toggleExpand');
+		await userEvent.click(toggle);
 		await waitFor(() => {
 			const heading = canvas.getByText((content) => content.includes('Providers'));
 			expect(heading).toBeInTheDocument();
