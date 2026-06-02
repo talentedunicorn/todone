@@ -80,6 +80,12 @@
 		--border-color: var(--primary);
 	}
 
+	.selected {
+		--button-bg: var(--primary);
+		--button-color: var(--white);
+		--border-color: var(--primary);
+	}
+
 	.link {
 		--button-color: var(--primary);
 		--border-color: var(--white);

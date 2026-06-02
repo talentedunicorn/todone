@@ -118,14 +118,32 @@ Form component with a title and content inputs
 	/>
 
 	{#if isEdit}
-		<div class="Status">
-			<label for="status">Status</label>
-			<select id="status" bind:value={data.status}>
-				<option value="todo">To Do</option>
-				<option value="in-progress">In Progress</option>
-				<option value="done">Done</option>
-			</select>
-		</div>
+		<fieldset class="Status">
+			<legend>Status</legend>
+			<div class="Badges">
+				<Button
+					size="small"
+					selected={data.status === 'todo'}
+					onclick={() => (data.status = 'todo')}
+				>
+					To Do
+				</Button>
+				<Button
+					size="small"
+					selected={data.status === 'in-progress'}
+					onclick={() => (data.status = 'in-progress')}
+				>
+					In Progress
+				</Button>
+				<Button
+					size="small"
+					selected={data.status === 'done'}
+					onclick={() => (data.status = 'done')}
+				>
+					Done
+				</Button>
+			</div>
+		</fieldset>
 	{/if}
 
 	<label class="visually-hidden" for="content">Content</label>
@@ -205,15 +223,20 @@ Form component with a title and content inputs
 		.Status {
 			display: flex;
 			align-items: center;
-			gap: 0.5rem;
+			gap: 1rem;
 			font-size: 0.9rem;
+			border: none;
+			padding: 0;
+			margin: 0;
 
-			select {
-				padding: 0.2rem;
-				border-radius: 0.3rem;
-				border: 1px solid var(--gray);
-				background: var(--white);
-				font-family: inherit;
+			legend {
+				font-weight: bold;
+				margin-bottom: 1rem;
+			}
+
+			.Badges {
+				display: flex;
+				gap: 1rem;
 			}
 		}
 
