@@ -168,6 +168,7 @@
 			border-radius: 0;
 			top: 0;
 			height: 100dvh;
+			overflow-y: auto;
 		}
 	}
 </style>

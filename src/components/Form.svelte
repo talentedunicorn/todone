@@ -174,17 +174,13 @@ Form component with a title and content inputs
 	</div>
 	{#if !invalid}
 		<div class="Actions" transition:fly={{ y: 5 }}>
-			<div class="Delete">
-				{#if isEdit && onDelete}
-					<Button variant="link" onclick={() => onDelete(data as Todo)}>Delete</Button>
-				{/if}
-			</div>
-			<div class="Save">
-				<Button data-testid="cancel" data-umami-event="Cancel edit" onclick={clear}>Cancel</Button>
-				<Button data-testid="submit" data-umami-event="Save" type="submit" variant="primary"
-					>{buttonText}</Button
-				>
-			</div>
+			{#if isEdit && onDelete}
+				<Button variant="link" onclick={() => onDelete(data as Todo)}>Delete</Button>
+			{/if}
+			<Button data-testid="cancel" data-umami-event="Cancel edit" onclick={clear}>Cancel</Button>
+			<Button data-testid="submit" data-umami-event="Save" type="submit" variant="primary"
+				>{buttonText}</Button
+			>
 		</div>
 	{/if}
 </form>
