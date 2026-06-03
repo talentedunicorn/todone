@@ -148,26 +148,28 @@ Form component with a title and content inputs
 
 	<label class="visually-hidden" for="content">Content</label>
 	<div class="editor-wrapper open">
-		<div
-			use:themeObserver={{
-				createInstance: () => createEditorCarta({ enableCodeHighlighting: true }),
-				onUpdate: (c) => (carta = c)
-			}}
-		>
-			{#if isBrowser && carta}
-				{#key carta}
-					<MarkdownEditor
-						{carta}
-						bind:value={data.value}
-						userLabels={{
-							iconsLabels: {
-								heading: 'Heading'
-							}
-						}}
-						mode="tabs"
-					/>
-				{/key}
-			{/if}
+		<div class="inner">
+			<div
+				use:themeObserver={{
+					createInstance: () => createEditorCarta({ enableCodeHighlighting: true }),
+					onUpdate: (c) => (carta = c)
+				}}
+			>
+				{#if isBrowser && carta}
+					{#key carta}
+						<MarkdownEditor
+							{carta}
+							bind:value={data.value}
+							userLabels={{
+								iconsLabels: {
+									heading: 'Heading'
+								}
+							}}
+							mode="tabs"
+						/>
+					{/key}
+				{/if}
+			</div>
 		</div>
 	</div>
 	{#if !invalid}
@@ -230,6 +232,10 @@ Form component with a title and content inputs
 			overflow: hidden;
 			display: grid;
 			grid-template-rows: 1fr;
+
+			& .inner {
+				overflow: hidden;
+			}
 		}
 
 		input {
@@ -287,6 +293,11 @@ Form component with a title and content inputs
 	:global(.carta-icon) {
 		width: 2rem !important;
 		height: 2rem !important;
+		flex-shrink: 0 !important;
+	}
+
+	:global(.carta-toolbar-right) {
+		flex-shrink: 0 !important;
 	}
 
 	:global(.carta-font-code) {
