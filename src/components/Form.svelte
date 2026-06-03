@@ -187,22 +187,21 @@ Form component with a title and content inputs
 
 <style>
 	form {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		min-height: 0;
 		gap: 1rem;
 		padding: 1rem;
 		border-radius: 1rem;
 		border: 0.2em solid var(--gray);
 
-		&,
 		& .Actions {
 			display: flex;
-			flex-wrap: wrap;
-		}
-
-		& .Actions {
-			align-self: end;
 			gap: 1rem;
 			align-items: center;
 			justify-content: space-between;
+			margin-top: auto;
 		}
 
 		.Status {
@@ -227,6 +226,8 @@ Form component with a title and content inputs
 
 		.editor-wrapper {
 			width: 100%;
+			flex: 1;
+			min-height: 0;
 			border-radius: 1rem;
 			border: 0.2em solid var(--black);
 			overflow: hidden;
@@ -239,7 +240,7 @@ Form component with a title and content inputs
 		}
 
 		input {
-			flex: 100%;
+			width: 100%;
 			font-size: 1.5rem;
 			font-weight: bold;
 			font-family: inherit;
@@ -263,7 +264,7 @@ Form component with a title and content inputs
 	}
 
 	:global(.carta-renderer, .carta-input) {
-		max-height: 25rem; /* Sets a maximum height for the editor and input */
+		min-height: 10rem;
 	}
 
 	:global(.carta-toolbar) {
