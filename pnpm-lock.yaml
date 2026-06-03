@@ -58,7 +58,7 @@ importers:
     devDependencies:
       '@auth0/auth0-spa-js':
         specifier: ^2.20.0
-        version: 2.20.0
+        version: 2.21.1
       '@babel/core':
         specifier: ^7.29.7
         version: 7.29.7
@@ -215,11 +215,11 @@ packages:
   '@asamuzakjp/nwsapi@2.3.9':
     resolution: {integrity: sha512-n8GuYSrI9bF7FFZ/SjhwevlHc8xaVlb/7HmHelnc/PZXBD2ZR49NnN9sMMuDdEGPeeRQ5d0hqlSlEpgCX3Wl0Q==}
 
-  '@auth0/auth0-auth-js@1.6.0':
-    resolution: {integrity: sha512-/WYYNlsqhWA6I60pMVLFVeOgjOUCLdJThEAsjN8pAgYY09BTxbPaRIEVDgGu6ckoJpkmKvEYlHPO/vwRNrvX6w==}
+  '@auth0/auth0-auth-js@1.7.0':
+    resolution: {integrity: sha512-SxF5WcPehbLOPwGrM+mqqVhnwZ3ZHEfM2wI/Yc3h0Kn1MM78seegxj7PrKoEMMRIfslDyHG+UNlOuobY8YOcKg==}
 
-  '@auth0/auth0-spa-js@2.20.0':
-    resolution: {integrity: sha512-XKIfFgsz4M1h2qyGhxLb33k1i8eL7Nost+EmYIOY5givxZuzWOCmhzmwnXjprqYsT+dRGu6ORT29IuTd1rwDYQ==}
+  '@auth0/auth0-spa-js@2.21.1':
+    resolution: {integrity: sha512-Z4HfUZ/bSJLjobcWvRzh762jsJjXZdqh4Lmu+Ho8qNfldL6B+6RUMw3BJmwRMiWPoeLFvL25eTAMCxaLiULFSQ==}
 
   '@babel/code-frame@7.29.7':
     resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
@@ -2491,6 +2491,7 @@ packages:
   chromatic@17.1.0:
     resolution: {integrity: sha512-TApQvyoFJHmeSqgvtGQ8JVQmHcPENub76B/uJGBx+G2Ju6AVo2f4Buh3Rhe0IcBh2N/fBdqEU4MDavhJeVnS+Q==}
     engines: {node: '>=22.0.0'}
+    deprecated: Deprecating backend data format
     hasBin: true
     peerDependencies:
       '@chromatic-com/cypress': ^0.*.* || ^1.0.0
@@ -5126,14 +5127,14 @@ snapshots:
 
   '@asamuzakjp/nwsapi@2.3.9': {}
 
-  '@auth0/auth0-auth-js@1.6.0':
+  '@auth0/auth0-auth-js@1.7.0':
     dependencies:
       jose: 6.2.3
       openid-client: 6.8.4
 
-  '@auth0/auth0-spa-js@2.20.0':
+  '@auth0/auth0-spa-js@2.21.1':
     dependencies:
-      '@auth0/auth0-auth-js': 1.6.0
+      '@auth0/auth0-auth-js': 1.7.0
       browser-tabs-lock: 1.3.0
       dpop: 2.1.1
       es-cookie: 1.3.2
