@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
 	import Button from './Button.svelte';
 	import Toast from './Toast.svelte';
 	import { defineMeta } from '@storybook/addon-svelte-csf';

@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
 	import Form from './Form.svelte';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import { expect, fn } from 'storybook/test';
