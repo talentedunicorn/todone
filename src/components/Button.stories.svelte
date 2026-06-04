@@ -41,3 +41,20 @@
 <Story name="Sizes - Small" {template} args={{ size: 'small' }} />
 
 <Story name="Sizes - Large" {template} args={{ size: 'large' }} />
+
+<!-- Combo variants -->
+<Story name="Primary + Large" {template} args={{ variant: 'primary', size: 'large' }} />
+
+<Story name="Primary + Small" {template} args={{ variant: 'primary', size: 'small' }} />
+
+<Story name="Primary + Disabled" {template} args={{ variant: 'primary', disabled: true }} />
+
+<Story
+	name="Selected pill"
+	{template}
+	args={{ variant: 'pill', selected: true }}
+	play={async ({ canvas }) => {
+		const button = canvas.getByRole('button');
+		expect(button.className).toContain('selected');
+	}}
+/>
