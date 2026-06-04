@@ -11,17 +11,13 @@
 	});
 </script>
 
-<Story name="Gallery">
+<Story name="Custom icons" description="Custom icons for the editor">
 	<div
-		style="display: flex; gap: 1rem; align-items: center; padding: 0.5rem; background: #f5f5f5; border-radius: 0.5rem; width: fit-content;"
+		style="display: flex; gap: 1rem; align-items: center; padding: 0.5rem; background: var(--white); color: var(--black); border-radius: 0.5rem; width: fit-content;"
 	>
-		<span style="font-size: 0.8rem; font-weight: 600; color: #666; padding: 0 0.5rem;">H2</span>
 		<IconH2 />
-		<span style="font-size: 0.8rem; font-weight: 600; color: #666; padding: 0 0.5rem;">H3</span>
 		<IconH3 />
-		<span style="font-size: 0.8rem; font-weight: 600; color: #666; padding: 0 0.5rem;">Image</span>
 		<IconImage />
-		<span style="font-size: 0.8rem; font-weight: 600; color: #666; padding: 0 0.5rem;">Table</span>
 		<IconTable />
 	</div>
 </Story>
