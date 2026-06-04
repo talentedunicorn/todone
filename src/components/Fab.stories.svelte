@@ -1,20 +1,36 @@
 <script module lang="ts">
 	import Fab from './Fab.svelte';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import { fn } from 'storybook/test';
+	import { fn, expect } from 'storybook/test';
+
+	const clickSpy = fn();
 
 	const { Story } = defineMeta({
 		title: 'Fab',
 		component: Fab,
-		args: {
-			onclick: fn()
-		},
+		parameters: { layout: 'centered' },
 		argTypes: {
-			visible: { control: 'boolean', default: true }
+			visible: { control: 'boolean' }
+		},
+		args: {
+			onclick: clickSpy,
+			visible: true
 		}
 	});
 </script>
 
-<Story name="Visible" args={{ visible: true }} />
+{#snippet template(args)}
+	<Fab {...args} />
+{/snippet}
 
-<Story name="Hidden" args={{ visible: false }} />
+<Story
+	name="Visible"
+	{template}
+	play={async ({ canvas, userEvent }) => {
+		const btn = canvas.getByRole('button', { name: 'New task' });
+		await userEvent.click(btn);
+		expect(clickSpy).toHaveBeenCalled();
+	}}
+/>
+
+<Story name="Hidden" {template} args={{ visible: false }} />
