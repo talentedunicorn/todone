@@ -94,3 +94,37 @@
 		expect(toggleExpandSpy).toHaveBeenCalledWith('4', false);
 	}}
 />
+
+<Story
+	name="Empty description"
+	{template}
+	args={{
+		task: {
+			id: '5',
+			title: 'No description',
+			value: '',
+			status: 'todo',
+			updated: new Date()
+		},
+		expanded: true
+	}}
+	play={async ({ canvas }) => {
+		expect(canvas.getByText('No description')).toBeInTheDocument();
+	}}
+/>
+
+<Story
+	name="Very long title"
+	{template}
+	args={{
+		task: {
+			id: '6',
+			title:
+				'This is an extremely long task title that should wrap gracefully across multiple lines without causing any layout issues or horizontal overflow in the Kanban card',
+			value: "Make sure text wraps and doesn't overflow.",
+			status: 'in-progress',
+			updated: new Date()
+		},
+		expanded: false
+	}}
+/>
