@@ -5,6 +5,7 @@
 	const { Story } = defineMeta({
 		title: 'Icon',
 		component: Icon,
+		parameters: { layout: 'centered' },
 		argTypes: {
 			size: { control: { type: 'range', min: 8, max: 64, step: 2 } },
 			strokeWidth: { control: { type: 'range', min: 0.5, max: 4, step: 0.5 } },

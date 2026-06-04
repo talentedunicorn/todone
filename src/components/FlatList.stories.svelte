@@ -10,6 +10,7 @@
 	const { Story } = defineMeta({
 		title: 'FlatList',
 		component: FlatList,
+		parameters: { layout: 'fullscreen' },
 		args: {
 			onEdit: editSpy,
 			onDelete: deleteSpy,

@@ -10,6 +10,7 @@
 	const { Story } = defineMeta({
 		title: 'KanbanView',
 		component: KanbanView,
+		parameters: { layout: 'fullscreen' },
 		args: {
 			onEdit: editSpy,
 			onDelete: deleteSpy,

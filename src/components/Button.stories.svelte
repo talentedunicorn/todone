@@ -6,6 +6,7 @@
 	const { Story } = defineMeta({
 		title: 'Button',
 		component: Button,
+		parameters: { layout: 'centered' },
 		argTypes: {
 			variant: { control: 'select', options: ['', 'primary', 'link', 'pill'], default: '' },
 			size: { control: 'radio', options: ['', 'large', 'small'], default: '' },
