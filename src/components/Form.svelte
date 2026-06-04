@@ -241,7 +241,19 @@ Form component with a title and content inputs
 			grid-template-rows: 1fr;
 
 			& .inner {
+				display: flex;
+				flex-direction: column;
 				overflow: hidden;
+				height: 100%;
+				min-height: 0;
+
+				/* Theme observer div — fill available height */
+				> :global(div) {
+					flex: 1;
+					min-height: 0;
+					display: flex;
+					flex-direction: column;
+				}
 			}
 		}
 
@@ -339,6 +351,34 @@ Form component with a title and content inputs
 
 	:global([data-theme='dark'] .carta-input .shiki, [data-theme='dark'] .carta-input .shiki span) {
 		color: var(--shiki-dark) !important;
+	}
+
+	/* Override carta-md default fixed 600px height — make editor fill available space */
+	:global(.carta-theme__default.carta-editor) {
+		flex: 1;
+		min-height: 0;
+	}
+
+	:global(.carta-theme__default .carta-wrapper) {
+		flex: 1;
+		min-height: 0;
+		height: auto;
+		display: flex;
+		flex-direction: column;
+	}
+
+	:global(.carta-theme__default .carta-container) {
+		flex: 1;
+		min-height: 0;
+	}
+
+	:global(.carta-theme__default .carta-input) {
+		height: 100% !important;
+		min-height: 75px; /* Works on devices with keyboards */
+	}
+
+	:global(.carta-theme__default .carta-container > .carta-input) {
+		margin: 0;
 	}
 
 	@media (prefers-color-scheme: dark) {
