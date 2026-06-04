@@ -153,3 +153,22 @@
 		expect(statusSpy).toHaveBeenCalledWith('1', 'in-progress');
 	}}
 />
+
+<Story
+	name="Many items in To Do"
+	{template}
+	args={{
+		data: Array.from({ length: 12 }, (_, i) => ({
+			id: String(i + 1),
+			title: `Task ${i + 1}`,
+			value: `Description for task ${i + 1}`,
+			status: 'todo' as const,
+			updated: new Date(2026, 5, i + 1).toISOString()
+		}))
+	}}
+	play={async ({ canvas }) => {
+		const column = canvas.getByRole('region', { name: 'To Do' });
+		const cards = within(column).getAllByRole('listitem');
+		expect(cards).toHaveLength(12);
+	}}
+/>

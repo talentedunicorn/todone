@@ -67,3 +67,37 @@
 		expect(emptyMsg).toBeInTheDocument();
 	}}
 />
+
+<Story
+	name="Single item"
+	{template}
+	args={{
+		data: [
+			{
+				id: '1',
+				title: 'Quick task',
+				value: 'A single task to do.',
+				status: 'todo',
+				updated: new Date('2026-06-01').toISOString()
+			}
+		]
+	}}
+/>
+
+<Story
+	name="Many items"
+	{template}
+	args={{
+		data: Array.from({ length: 15 }, (_, i) => ({
+			id: String(i + 1),
+			title: `Task ${i + 1}`,
+			value: `Description for task ${i + 1}.`,
+			status: (['todo', 'in-progress', 'done'] as const)[i % 3],
+			updated: new Date(2026, 5, i + 1).toISOString()
+		}))
+	}}
+	play={async ({ canvas }) => {
+		expect(canvas.getByText('Task 15')).toBeInTheDocument();
+		expect(canvas.getAllByRole('button', { name: /edit/i }).length).toBeGreaterThanOrEqual(10);
+	}}
+/>
