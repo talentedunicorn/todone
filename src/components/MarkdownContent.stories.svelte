@@ -21,8 +21,8 @@
 	{template}
 	args={{ value: 'Hello, **world**!' }}
 	play={async ({ canvas }) => {
-		expect(canvas.getByText('Hello,')).toBeInTheDocument();
-		expect(canvas.getByText('world!')).toBeInTheDocument();
+		expect(await canvas.findByText('Hello,')).toBeInTheDocument();
+		expect(await canvas.findByText('world!')).toBeInTheDocument();
 	}}
 />
 
@@ -33,9 +33,9 @@
 		value: `# Heading 1\n\n## Heading 2\n\n- List item A\n- List item B\n- List item C`
 	}}
 	play={async ({ canvas }) => {
-		expect(canvas.getByRole('heading', { name: 'Heading 1' })).toBeInTheDocument();
-		expect(canvas.getByRole('heading', { name: 'Heading 2' })).toBeInTheDocument();
-		expect(canvas.getByText('List item A')).toBeInTheDocument();
+		expect(await canvas.findByRole('heading', { name: 'Heading 1' })).toBeInTheDocument();
+		expect(await canvas.findByRole('heading', { name: 'Heading 2' })).toBeInTheDocument();
+		expect(await canvas.findByText('List item A')).toBeInTheDocument();
 	}}
 />
 
@@ -47,7 +47,7 @@
 	}}
 	play={async ({ canvas }) => {
 		// Code blocks render inside <code> or <pre> elements
-		expect(canvas.getByText('greeting')).toBeInTheDocument();
+		expect(await canvas.findByText('greeting')).toBeInTheDocument();
 	}}
 />
 
@@ -58,8 +58,8 @@
 		value: `| Name  | Status |\n|-------|--------|\n| CI/CD | ✅ Done |\n| Docs  | 🚧 WIP |\n| Tests | 📝 Todo |`
 	}}
 	play={async ({ canvas }) => {
-		expect(canvas.getByText('CI/CD')).toBeInTheDocument();
-		expect(canvas.getByText('Done')).toBeInTheDocument();
+		expect(await canvas.findByText('CI/CD')).toBeInTheDocument();
+		expect(await canvas.findByText('Done')).toBeInTheDocument();
 	}}
 />
 

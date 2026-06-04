@@ -63,8 +63,8 @@
 	{template}
 	args={{ title: 'To Do', status: 'todo' as TaskStatus, tasks: sampleTasks, collapsed: false }}
 	play={async ({ canvas }) => {
-		expect(canvas.getByText('To Do')).toBeInTheDocument();
-		expect(canvas.getByText('Set up CI/CD')).toBeInTheDocument();
+		expect(await canvas.findByText('To Do')).toBeInTheDocument();
+		expect(await canvas.findByText('Set up CI/CD')).toBeInTheDocument();
 	}}
 />
 
@@ -73,7 +73,7 @@
 	{template}
 	args={{ title: 'In Progress', status: 'in-progress' as TaskStatus, tasks: [], collapsed: false }}
 	play={async ({ canvas }) => {
-		expect(canvas.getByText('No tasks')).toBeInTheDocument();
+		expect(await canvas.findByText('No tasks')).toBeInTheDocument();
 	}}
 />
 
@@ -98,7 +98,7 @@
 		clearLabel: 'Clear all'
 	}}
 	play={async ({ canvas, userEvent }) => {
-		const clearBtn = canvas.getByText('Clear all');
+		const clearBtn = await canvas.findByText('Clear all');
 		await userEvent.click(clearBtn);
 		expect(clearSpy).toHaveBeenCalled();
 	}}
