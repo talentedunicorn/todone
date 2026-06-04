@@ -1,5 +1,6 @@
 <script module lang="ts">
 	import TaskShell from './TaskShell.svelte';
+	import Button from './Button.svelte';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import { fn } from 'storybook/test';
 
@@ -85,27 +86,136 @@
 	});
 
 	const mockDb = createMockDb(sampleTodos);
+
+	const statusLabels: Record<string, string> = {
+		todo: 'To Do',
+		'in-progress': 'In Progress',
+		done: 'Done'
+	};
+
+	const statusColors: Record<string, string> = {
+		todo: 'var(--gray)',
+		'in-progress': 'var(--yellow)',
+		done: 'var(--green)'
+	};
 </script>
 
 <Story name="Default">
 	<TaskShell db={mockDb}>
 		{#snippet children(data: Todo[], handlers)}
-			<div style="display: flex; flex-direction: column; gap: 0.5rem;">
+			<div class="task-list">
 				{#each data as task (task.id)}
-					<div
-						style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: 1px solid #ddd; border-radius: 0.5rem; background: white;"
-					>
-						<span
-							style="flex: 1; text-decoration: {task.status === 'done' ? 'line-through' : 'none'};"
-						>
-							{task.title}
-						</span>
-						<span style="font-size: 0.75rem; color: #888;">{task.status}</span>
-						<button onclick={() => handlers.handleEdit(task)}>✏️</button>
-						<button onclick={() => handlers.handleDelete(task)}>🗑️</button>
+					<div class="task-item" class:done={task.status === 'done'}>
+						<div class="item-header">
+							<span class="status-badge" style="--badge-color: {statusColors[task.status]}">
+								{statusLabels[task.status]}
+							</span>
+							<span class="item-title">{task.title}</span>
+							<div class="item-actions">
+								<Button
+									size="small"
+									variant="link"
+									aria-label="Edit"
+									onclick={() => handlers.handleEdit(task)}
+								>
+									<svg
+										width="16"
+										height="16"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									>
+										<path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+										<path d="m15 5 4 4" />
+									</svg>
+								</Button>
+								<Button
+									size="small"
+									variant="link"
+									aria-label="Delete"
+									onclick={() => handlers.handleDelete(task)}
+								>
+									<svg
+										width="16"
+										height="16"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									>
+										<path d="M3 6h18" />
+										<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+										<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+									</svg>
+								</Button>
+							</div>
+						</div>
 					</div>
 				{/each}
 			</div>
 		{/snippet}
 	</TaskShell>
 </Story>
+
+<style>
+	.task-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.task-item {
+		background: var(--white);
+		border: 1px solid var(--gray-light);
+		border-radius: 0.75rem;
+		padding: 0.75rem 1rem;
+	}
+
+	.task-item.done {
+		opacity: 0.6;
+	}
+
+	.item-header {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.status-badge {
+		font-size: 0.7rem;
+		font-weight: 600;
+		padding: 0.2em 0.6em;
+		border-radius: 999px;
+		border: 1px solid var(--badge-color, var(--gray));
+		color: var(--badge-color, var(--gray));
+		background: transparent;
+		white-space: nowrap;
+		flex-shrink: 0;
+	}
+
+	.item-title {
+		flex: 1;
+		font-size: 0.95rem;
+		font-weight: 500;
+	}
+
+	.task-item.done .item-title {
+		text-decoration: line-through;
+	}
+
+	.item-actions {
+		display: flex;
+		gap: 0.25rem;
+		opacity: 0;
+		transition: opacity 0.15s;
+	}
+
+	.task-item:hover .item-actions {
+		opacity: 1;
+	}
+</style>
