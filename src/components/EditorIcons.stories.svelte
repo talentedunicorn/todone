@@ -6,7 +6,8 @@
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 
 	const { Story } = defineMeta({
-		title: 'EditorIcons'
+		title: 'EditorIcons',
+		tags: ['!autodocs']
 	});
 </script>
 
