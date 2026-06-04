@@ -97,20 +97,18 @@
 
 		&:hover:not(:disabled) {
 			opacity: 0.8;
-			background-color: var(--gray-light);
+			background-color: color-mix(in srgb, var(--primary) 40%, transparent);
 		}
 	}
 
 	.link {
 		--button-color: var(--primary);
-		--border-color: var(--white);
-		--border-width: 0;
+		--border-color: transparent;
 	}
 
 	.link.selected:not(:disabled),
 	.link:hover:not(:disabled) {
-		--button-bg: transparent;
-		--border-color: var(--button-bg);
+		--button-bg: color-mix(in srgb, var(--primary) 40%, transparent);
 		--button-color: var(--black);
 	}
 

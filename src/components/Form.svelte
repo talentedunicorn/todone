@@ -174,13 +174,16 @@ Form component with a title and content inputs
 	</div>
 	{#if !invalid}
 		<div class="Actions" transition:fly={{ y: 5 }}>
-			{#if isEdit && onDelete}
-				<Button variant="link" onclick={() => onDelete(data as Todo)}>Delete</Button>
-			{/if}
 			<Button data-testid="cancel" data-umami-event="Cancel edit" onclick={clear}>Cancel</Button>
-			<Button data-testid="submit" data-umami-event="Save" type="submit" variant="primary"
-				>{buttonText}</Button
-			>
+
+			<div>
+				{#if isEdit && onDelete}
+					<Button variant="link" onclick={() => onDelete(data as Todo)}>Delete</Button>
+				{/if}
+				<Button data-testid="submit" data-umami-event="Save" type="submit" variant="primary"
+					>{buttonText}</Button
+				>
+			</div>
 		</div>
 	{/if}
 </form>
@@ -202,6 +205,12 @@ Form component with a title and content inputs
 			align-items: center;
 			justify-content: space-between;
 			margin-top: auto;
+
+			& > div {
+				display: flex;
+				gap: 1rem;
+				align-items: center;
+			}
 		}
 
 		.Status {
@@ -261,10 +270,6 @@ Form component with a title and content inputs
 		background: var(--gray-light);
 		padding: 2px 4px;
 		border-radius: 3px;
-	}
-
-	:global(.carta-renderer, .carta-input) {
-		min-height: 10rem;
 	}
 
 	:global(.carta-toolbar) {
