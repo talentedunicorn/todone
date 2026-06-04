@@ -195,9 +195,6 @@ Form component with a title and content inputs
 		flex: 1;
 		min-height: 0;
 		gap: 1rem;
-		padding: 1rem;
-		border-radius: 1rem;
-		border: 0.2em solid var(--gray);
 
 		& .Actions {
 			display: flex;
