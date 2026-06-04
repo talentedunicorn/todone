@@ -1,92 +1,105 @@
 <script module lang="ts">
 	import KanbanColumn from './KanbanColumn.svelte';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import { fn } from 'storybook/test';
+	import type { Todo, TaskStatus } from '../domain/todo';
+	import { fn, expect } from 'storybook/test';
+
+	const editSpy = fn();
+	const deleteSpy = fn();
+	const statusSpy = fn();
+	const toggleExpandSpy = fn();
+	const toggleCollapseSpy = fn();
+	const clearSpy = fn();
 
 	const { Story } = defineMeta({
-		title: 'KanbanColumn'
+		title: 'KanbanColumn',
+		component: KanbanColumn,
+		argTypes: {
+			collapsed: { control: 'boolean' },
+			title: { control: 'text' },
+			status: { control: 'select', options: ['todo', 'in-progress', 'done'] }
+		},
+		args: {
+			onToggleExpand: toggleExpandSpy,
+			onEdit: editSpy,
+			onDelete: deleteSpy,
+			onStatusChange: statusSpy,
+			onToggleCollapse: toggleCollapseSpy,
+			expandedTasks: new Set()
+		}
 	});
-</script>
 
-<script lang="ts">
-	const baseHandlers = {
-		onToggleExpand: fn(),
-		onEdit: fn(),
-		onDelete: fn(),
-		onStatusChange: fn()
-	};
-
-	const sampleTasks = [
+	const sampleTasks: Todo[] = [
 		{
 			id: '1',
 			title: 'Set up CI/CD',
 			value: 'Configure GitHub Actions',
-			status: 'todo' as const,
+			status: 'todo',
 			updated: new Date()
 		},
 		{
 			id: '2',
 			title: 'Write documentation',
 			value: 'API docs',
-			status: 'todo' as const,
+			status: 'todo',
 			updated: new Date()
 		},
 		{
 			id: '3',
 			title: 'Add dark mode',
 			value: 'CSS variables',
-			status: 'todo' as const,
+			status: 'todo',
 			updated: new Date()
 		}
 	];
 </script>
 
-<Story name="With tasks">
-	<KanbanColumn
-		title="To Do"
-		status="todo"
-		tasks={sampleTasks}
-		collapsed={false}
-		expandedTasks={new Set()}
-		onToggleCollapse={fn()}
-		{...baseHandlers}
-	/>
-</Story>
+{#snippet template(args)}
+	<KanbanColumn {...args} />
+{/snippet}
 
-<Story name="Empty">
-	<KanbanColumn
-		title="In Progress"
-		status="in-progress"
-		tasks={[]}
-		collapsed={false}
-		expandedTasks={new Set()}
-		onToggleCollapse={fn()}
-		{...baseHandlers}
-	/>
-</Story>
+<Story
+	name="With tasks"
+	{template}
+	args={{ title: 'To Do', status: 'todo' as TaskStatus, tasks: sampleTasks, collapsed: false }}
+	play={async ({ canvas }) => {
+		expect(canvas.getByText('To Do')).toBeInTheDocument();
+		expect(canvas.getByText('Set up CI/CD')).toBeInTheDocument();
+	}}
+/>
 
-<Story name="Collapsed">
-	<KanbanColumn
-		title="Done"
-		status="done"
-		tasks={sampleTasks}
-		collapsed={true}
-		expandedTasks={new Set()}
-		onToggleCollapse={fn()}
-		{...baseHandlers}
-	/>
-</Story>
+<Story
+	name="Empty"
+	{template}
+	args={{ title: 'In Progress', status: 'in-progress' as TaskStatus, tasks: [], collapsed: false }}
+	play={async ({ canvas }) => {
+		expect(canvas.getByText('No tasks')).toBeInTheDocument();
+	}}
+/>
 
-<Story name="With clear button">
-	<KanbanColumn
-		title="Done"
-		status="done"
-		tasks={sampleTasks}
-		collapsed={false}
-		expandedTasks={new Set()}
-		onToggleCollapse={fn()}
-		onClear={fn()}
-		clearLabel="Clear all"
-		{...baseHandlers}
-	/>
-</Story>
+<Story
+	name="Collapsed"
+	{template}
+	args={{ title: 'Done', status: 'done' as TaskStatus, tasks: sampleTasks, collapsed: true }}
+	play={async ({ canvas }) => {
+		expect(canvas.queryByText('Set up CI/CD')).not.toBeInTheDocument();
+	}}
+/>
+
+<Story
+	name="With clear button"
+	{template}
+	args={{
+		title: 'Done',
+		status: 'done' as TaskStatus,
+		tasks: sampleTasks,
+		collapsed: false,
+		onClear: clearSpy,
+		clearLabel: 'Clear all'
+	}}
+	play={async ({ canvas, userEvent }) => {
+		const clearBtn = canvas.getByText('Clear all');
+		await userEvent.click(clearBtn);
+		expect(clearSpy).toHaveBeenCalled();
+	}}
+/>
