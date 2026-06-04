@@ -2,16 +2,14 @@
 	import TaskShell from './TaskShell.svelte';
 	import Button from './Button.svelte';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import { fn } from 'storybook/test';
-
-	const { Story } = defineMeta({
-		title: 'TaskShell'
-	});
-</script>
-
-<script lang="ts">
 	import type { TaskDatabase, Stream } from '../adapters/database';
 	import type { Todo, TaskStatus } from '../domain/todo';
+	import { fn, expect } from 'storybook/test';
+
+	const { Story } = defineMeta({
+		title: 'TaskShell',
+		component: TaskShell
+	});
 
 	const sampleTodos: Todo[] = [
 		{
@@ -100,8 +98,8 @@
 	};
 </script>
 
-<Story name="Default">
-	<TaskShell db={mockDb}>
+{#snippet template(args)}
+	<TaskShell db={args.db}>
 		{#snippet children(data: Todo[], handlers)}
 			<div class="task-list">
 				{#each data as task (task.id)}
@@ -160,7 +158,18 @@
 			</div>
 		{/snippet}
 	</TaskShell>
-</Story>
+{/snippet}
+
+<Story
+	name="Default"
+	{template}
+	args={{ db: mockDb }}
+	play={async ({ canvas }) => {
+		expect(canvas.getByText('Set up CI/CD')).toBeInTheDocument();
+		expect(canvas.getByText('Fix login bug')).toBeInTheDocument();
+		expect(canvas.getAllByText('To Do')).toHaveLength(2);
+	}}
+/>
 
 <style>
 	.task-list {
