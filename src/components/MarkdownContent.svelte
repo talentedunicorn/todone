@@ -45,6 +45,9 @@
 		:global(table) {
 			border-collapse: collapse;
 			width: 100%;
+			overflow-x: auto;
+			display: block;
+			max-width: 100%;
 		}
 
 		:global(th),
