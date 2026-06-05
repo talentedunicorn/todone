@@ -50,6 +50,7 @@
 		flex: 1;
 		min-height: 0;
 		overflow-y: auto;
+		overflow-x: auto;
 		padding: 0.5rem 0;
 		font-size: 0.95rem;
 		line-height: 1.6;

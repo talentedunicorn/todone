@@ -36,6 +36,11 @@
 			overflow-x: auto;
 		}
 
+		:global(pre) {
+			overflow-x: auto;
+			max-width: 100%;
+		}
+
 		:global(img) {
 			max-width: 100%;
 			height: auto;
