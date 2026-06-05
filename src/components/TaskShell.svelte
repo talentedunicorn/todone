@@ -2,6 +2,7 @@
 	import { type Snippet } from 'svelte';
 	import Fab from './Fab.svelte';
 	import FullScreenEditor from './FullScreenEditor.svelte';
+	import ContentViewDialog from './ContentViewDialog.svelte';
 	import Button from './Button.svelte';
 	import { toastActions, toastMessage } from '../stores';
 	import { type Todo, type TaskStatus } from '../domain/todo';
@@ -14,6 +15,7 @@
 			[
 				data: Todo[],
 				handlers: {
+					handleViewContent: (task: Todo) => void;
 					handleEdit: (task: Todo) => void;
 					handleDelete: (task: Todo) => void;
 					handleStatusChange: (id: string, status: TaskStatus) => void;
@@ -37,6 +39,9 @@
 	let editorTask = $state<Todo | null | undefined>(undefined);
 	let showEditor = $derived(editorTask !== undefined);
 
+	// Content viewer dialog state
+	let viewTask = $state<Todo | null>(null);
+
 	let showFab = $derived(editorTask === undefined);
 
 	const focusSearch = () => {
@@ -44,6 +49,9 @@
 	};
 
 	const handlers = {
+		handleViewContent: (task: Todo) => {
+			viewTask = task;
+		},
 		handleEdit: (selected: Todo) => {
 			editorTask = { ...selected };
 		},
@@ -124,8 +132,9 @@
 			},
 			{
 				key: 'n',
-				handler: () => {
+				handler: (e) => {
 					if (!isInputFocused()) {
+						e.preventDefault();
 						handleFabClick();
 					}
 				},
@@ -147,8 +156,9 @@
 			},
 			{
 				key: 'd',
-				handler: () => {
+				handler: (e) => {
 					if (!isInputFocused()) {
+						e.preventDefault();
 						const active = data.filter(
 							(t) => t.status === 'todo' || t.status === 'in-progress' || t.status === 'done'
 						);
@@ -255,6 +265,20 @@
 		onSave={handleSave}
 		onClose={handleDialogClose}
 		onDelete={handlers.handleDelete}
+	/>
+
+	<ContentViewDialog
+		open={viewTask !== null}
+		task={viewTask}
+		onClose={() => (viewTask = null)}
+		onEdit={(task) => {
+			viewTask = null;
+			handlers.handleEdit(task);
+		}}
+		onDelete={(task) => {
+			viewTask = null;
+			handlers.handleDelete(task);
+		}}
 	/>
 </div>
 
