@@ -26,7 +26,7 @@
 <Dialog
 	{open}
 	label={task?.title ?? ''}
-	maxWidth="36rem"
+	maxWidth="69rem"
 	onClose={() => {
 		/* Dialog handles native close; caller resets task */
 		onClose();
