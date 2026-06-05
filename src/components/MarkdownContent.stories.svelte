@@ -21,8 +21,16 @@
 	{template}
 	args={{ value: 'Hello, **world**!' }}
 	play={async ({ canvas }) => {
-		expect(await canvas.findByText('Hello,')).toBeInTheDocument();
-		expect(await canvas.findByText('world!')).toBeInTheDocument();
+		expect(
+			await canvas.findByText((_content, el) => el.textContent.includes('Hello,'), {
+				selector: 'p'
+			})
+		).toBeInTheDocument();
+		expect(
+			await canvas.findByText((_content, el) => el.textContent.includes('world!'), {
+				selector: 'p'
+			})
+		).toBeInTheDocument();
 	}}
 />
 
@@ -35,7 +43,11 @@
 	play={async ({ canvas }) => {
 		expect(await canvas.findByRole('heading', { name: 'Heading 1' })).toBeInTheDocument();
 		expect(await canvas.findByRole('heading', { name: 'Heading 2' })).toBeInTheDocument();
-		expect(await canvas.findByText('List item A')).toBeInTheDocument();
+		expect(
+			await canvas.findByText((_content, el) => el.textContent.includes('List item A'), {
+				selector: 'li'
+			})
+		).toBeInTheDocument();
 	}}
 />
 
@@ -47,7 +59,11 @@
 	}}
 	play={async ({ canvas }) => {
 		// Code blocks render inside <code> or <pre> elements
-		expect(await canvas.findByText('greeting')).toBeInTheDocument();
+		expect(
+			await canvas.findByText((_content, el) => el.textContent.includes('greeting'), {
+				selector: 'code'
+			})
+		).toBeInTheDocument();
 	}}
 />
 
@@ -58,8 +74,14 @@
 		value: `| Name  | Status |\n|-------|--------|\n| CI/CD | ✅ Done |\n| Docs  | 🚧 WIP |\n| Tests | 📝 Todo |`
 	}}
 	play={async ({ canvas }) => {
-		expect(await canvas.findByText('CI/CD')).toBeInTheDocument();
-		expect(await canvas.findByText('Done')).toBeInTheDocument();
+		expect(
+			await canvas.findByText((_content, el) => el.textContent.includes('CI/CD'), {
+				selector: 'td'
+			})
+		).toBeInTheDocument();
+		expect(
+			await canvas.findByText((_content, el) => el.textContent.includes('Done'), { selector: 'td' })
+		).toBeInTheDocument();
 	}}
 />
 
