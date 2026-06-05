@@ -1,0 +1,5 @@
+allowBuilds:
+  '@sentry/cli': false
+  browser-tabs-lock: false
+  esbuild: false
+  nx: false
