@@ -279,6 +279,7 @@ Form component with a title and content inputs
 		background: var(--gray-light);
 		padding: 2px 4px;
 		border-radius: 3px;
+		word-wrap: break-word;
 	}
 
 	:global(.carta-toolbar) {
