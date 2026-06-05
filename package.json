@@ -82,5 +82,18 @@
 		"zod": "^4.4.3"
 	},
 	"packageManager": "pnpm@11.5.2",
-	"nx": {}
+	"nx": {},
+	"pnpm": {
+		"overrides": {
+			"axios": "^1.15.2",
+			"fast-uri": "^3.1.2",
+			"@babel/plugin-transform-modules-systemjs": "^7.29.4",
+			"brace-expansion": "^5.0.6",
+			"yaml": "^2.8.3",
+			"follow-redirects": "^1.16.0",
+			"ws": "^8.20.1",
+			"qs": "^6.15.2",
+			"serialize-javascript": "^7.0.0"
+		}
+	}
 }
