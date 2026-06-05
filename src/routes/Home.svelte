@@ -28,6 +28,7 @@
 			{#snippet children(data, handlers)}
 				<FlatList
 					{data}
+					onView={handlers.handleViewContent}
 					onEdit={handlers.handleEdit}
 					onDelete={handlers.handleDelete}
 					onStatusChange={handlers.handleStatusChange}
