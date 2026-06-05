@@ -1,16 +1,16 @@
 <script lang="ts">
 	import type { Todo, TaskStatus } from '../domain/todo';
 	import KanbanColumn from './KanbanColumn.svelte';
-	import { expandedTasks } from '../stores';
 
 	interface Props {
 		data: Todo[];
+		onView: (task: Todo) => void;
 		onEdit: (task: Todo) => void;
 		onDelete: (task: Todo) => void;
 		onStatusChange: (id: string, status: TaskStatus) => void;
 	}
 
-	let { data, onEdit, onDelete, onStatusChange }: Props = $props();
+	let { data, onView, onEdit, onDelete, onStatusChange }: Props = $props();
 
 	let collapsedColumns = $state(new Set<string>());
 
@@ -30,14 +30,6 @@
 		if (taskId) onStatusChange(taskId, status);
 	};
 
-	const handleToggleExpand = (id: string, expanded: boolean) => {
-		expandedTasks.update((set) => {
-			if (expanded) set.add(id);
-			else set.delete(id);
-			return new Set(set);
-		});
-	};
-
 	const clearDone = () => {
 		for (const task of doneTasks) {
 			onDelete(task);
@@ -52,8 +44,7 @@
 		tasks={todoTasks}
 		collapsed={collapsedColumns.has('todo')}
 		onToggleCollapse={() => toggleCollapse('todo')}
-		expandedTasks={$expandedTasks}
-		onToggleExpand={handleToggleExpand}
+		{onView}
 		{onEdit}
 		{onDelete}
 		{onStatusChange}
@@ -66,8 +57,7 @@
 		tasks={inProgressTasks}
 		collapsed={collapsedColumns.has('in-progress')}
 		onToggleCollapse={() => toggleCollapse('in-progress')}
-		expandedTasks={$expandedTasks}
-		onToggleExpand={handleToggleExpand}
+		{onView}
 		{onEdit}
 		{onDelete}
 		{onStatusChange}
@@ -80,8 +70,7 @@
 		tasks={doneTasks}
 		collapsed={collapsedColumns.has('done')}
 		onToggleCollapse={() => toggleCollapse('done')}
-		expandedTasks={$expandedTasks}
-		onToggleExpand={handleToggleExpand}
+		{onView}
 		{onEdit}
 		{onDelete}
 		{onStatusChange}
@@ -95,7 +84,7 @@
 <style>
 	.kanban {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: 1.5rem;
 		overflow-x: auto;
 		scroll-snap-type: x mandatory;

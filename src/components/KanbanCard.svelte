@@ -1,18 +1,20 @@
 <script lang="ts">
 	import type { Todo } from '../domain/todo';
 	import type { TaskStatus } from '../domain/todo';
-	import MarkdownContent from './MarkdownContent.svelte';
+	import { nextStatus } from '../lib/task';
 
 	interface Props {
 		task: Todo;
-		expanded: boolean;
-		onToggleExpand: (id: string, expanded: boolean) => void;
+		onView: (task: Todo) => void;
 		onEdit: (task: Todo) => void;
 		onDelete: (task: Todo) => void;
 		onStatusChange: (id: string, status: TaskStatus) => void;
+		draggable?: boolean;
 	}
 
-	let { task, expanded, onToggleExpand, onEdit, onDelete, onStatusChange }: Props = $props();
+	let { task, onView, onEdit, onDelete, onStatusChange, draggable = true }: Props = $props();
+
+	let dragging = $state(false);
 
 	const statusColors: Record<string, string> = {
 		todo: 'var(--gray, #9ca3af)',
@@ -27,18 +29,27 @@
 	};
 
 	const cycleStatus = () => {
-		const order: TaskStatus[] = ['todo', 'in-progress', 'done'];
-		const idx = order.indexOf(task.status);
-		const next = idx < order.length - 1 ? order[idx + 1] : order[0];
-		onStatusChange(task.id, next);
+		onStatusChange(task.id, nextStatus(task.status));
+	};
+
+	const handleDragStart = (e: DragEvent) => {
+		e.dataTransfer?.setData('text/plain', task.id);
+		e.dataTransfer?.setData('application/x-source-status', task.status);
+		dragging = true;
+	};
+
+	const handleDragEnd = () => {
+		dragging = false;
 	};
 </script>
 
 <div
 	class="card"
-	class:expanded
-	draggable="true"
-	ondragstart={(e) => e.dataTransfer?.setData('text/plain', task.id)}
+	class:dragging
+	class:done={task.status === 'done'}
+	{draggable}
+	ondragstart={handleDragStart}
+	ondragend={handleDragEnd}
 	role="listitem"
 >
 	<div class="card-header">
@@ -83,30 +94,6 @@
 					/>
 				</svg>
 			</button>
-			<button
-				class="icon-btn"
-				onclick={() => onToggleExpand(task.id, !expanded)}
-				title={expanded ? 'Collapse' : 'Expand'}
-				aria-label={expanded ? 'Collapse' : 'Expand'}
-				data-testid="toggleExpand"
-			>
-				<svg
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					{#if expanded}
-						<polyline points="18 15 12 9 6 15" />
-					{:else}
-						<polyline points="6 9 12 15 18 9" />
-					{/if}
-				</svg>
-			</button>
 		</div>
 	</div>
 
@@ -114,22 +101,16 @@
 		class="card-title"
 		role="button"
 		tabindex="0"
-		onclick={() => onToggleExpand(task.id, !expanded)}
+		onclick={() => onView(task)}
 		onkeydown={(e) => {
 			if (e.key === 'Enter' || e.key === ' ') {
 				e.preventDefault();
-				onToggleExpand(task.id, !expanded);
+				onView(task);
 			}
 		}}
 	>
 		{task.title}
 	</div>
-
-	{#if expanded && task.value}
-		<div class="card-body">
-			<MarkdownContent value={task.value} />
-		</div>
-	{/if}
 </div>
 
 <style>
@@ -141,7 +122,8 @@
 		cursor: grab;
 		transition:
 			box-shadow 0.2s,
-			transform 0.2s;
+			transform 0.2s,
+			opacity 0.15s;
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
@@ -153,6 +135,14 @@
 
 	.card:hover {
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.card.dragging {
+		opacity: 0.3;
+	}
+
+	.card.done {
+		opacity: 0.6;
 	}
 
 	.card-header {
@@ -216,29 +206,8 @@
 		font-weight: 500;
 		line-height: 1.4;
 		cursor: pointer;
-		word-break: break-word;
-	}
-
-	.card-body {
-		font-size: 0.85rem;
-		line-height: 1.5;
-
-		:global(.shiki) {
-			padding: 0.5rem;
-			font-size: 0.85rem;
-			border-radius: 0.25rem;
-			overflow: auto;
-		}
-
-		:global(.TableWrapper) {
-			overflow-x: auto;
-			border: 1px solid var(--gray-light);
-			border-radius: 0.5rem;
-		}
-
-		:global(img) {
-			max-width: 100%;
-			border-radius: 0.25rem;
-		}
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 </style>

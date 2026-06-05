@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { slide } from 'svelte/transition';
 	import type { Todo, TaskStatus } from '../domain/todo';
 	import KanbanCard from './KanbanCard.svelte';
 
@@ -9,8 +8,7 @@
 		tasks: Todo[];
 		collapsed: boolean;
 		onToggleCollapse: () => void;
-		expandedTasks: Set<string>;
-		onToggleExpand: (id: string, expanded: boolean) => void;
+		onView: (task: Todo) => void;
 		onEdit: (task: Todo) => void;
 		onDelete: (task: Todo) => void;
 		onStatusChange: (id: string, status: TaskStatus) => void;
@@ -22,12 +20,11 @@
 
 	let {
 		title,
-		status: _status,
+		status: columnStatus,
 		tasks,
 		collapsed,
 		onToggleCollapse,
-		expandedTasks,
-		onToggleExpand,
+		onView,
 		onEdit,
 		onDelete,
 		onStatusChange,
@@ -36,9 +33,44 @@
 		ondrop,
 		ondragover
 	}: Props = $props();
+
+	let isDragOver = $state(false);
+	let columnEl: HTMLDivElement | undefined = $state();
+
+	const handleDragEnter = (e: DragEvent) => {
+		// Don't highlight when dragging over the source column
+		const sourceStatus = e.dataTransfer?.getData('application/x-source-status');
+		if (sourceStatus === columnStatus) return;
+
+		isDragOver = true;
+	};
+
+	const handleDragLeave = (e: DragEvent) => {
+		// Only clear when actually leaving the column (not entering a child element)
+		const related = e.relatedTarget as Node | null;
+		if (related && columnEl?.contains(related)) return;
+
+		isDragOver = false;
+	};
+
+	const handleDrop = (e: DragEvent) => {
+		isDragOver = false;
+		ondrop?.(e);
+	};
 </script>
 
-<div class="column" class:collapsed role="region" aria-label={title} {ondrop} {ondragover}>
+<div
+	bind:this={columnEl}
+	class="column"
+	class:collapsed
+	class:drag-over={isDragOver}
+	role="region"
+	aria-label={title}
+	ondrop={handleDrop}
+	{ondragover}
+	ondragenter={handleDragEnter}
+	ondragleave={handleDragLeave}
+>
 	<div
 		class="column-header"
 		onclick={onToggleCollapse}
@@ -80,18 +112,17 @@
 		</svg>
 	</div>
 	{#if !collapsed}
-		<div class="column-body" transition:slide={{ duration: 150 }}>
+		<div class="column-body">
+			{#if isDragOver}
+				<div class="ghost-card" role="presentation" aria-hidden="true">
+					<div class="ghost-badge"></div>
+					<div class="ghost-title"></div>
+				</div>
+			{/if}
 			{#each tasks as task (task.id)}
-				<KanbanCard
-					{task}
-					expanded={expandedTasks.has(task.id)}
-					{onToggleExpand}
-					{onEdit}
-					{onDelete}
-					{onStatusChange}
-				/>
+				<KanbanCard {task} {onView} {onEdit} {onDelete} {onStatusChange} />
 			{/each}
-			{#if tasks.length === 0}
+			{#if tasks.length === 0 && !isDragOver}
 				<p class="empty">No tasks</p>
 			{/if}
 		</div>
@@ -109,10 +140,13 @@
 		border-radius: 0.75rem;
 		padding: 1rem;
 		min-height: auto;
+		transition: background 0.15s;
+	}
 
-		@media screen and (min-width: 40rem) {
-			min-width: 40rem;
-		}
+	.column.drag-over {
+		background: color-mix(in srgb, var(--primary) 8%, var(--gray-bg));
+		outline: 2px dashed var(--primary);
+		outline-offset: -4px;
 	}
 
 	.column.collapsed {
@@ -181,6 +215,32 @@
 		flex-direction: column;
 		gap: 0.5rem;
 		overflow: hidden;
+	}
+
+	.ghost-card {
+		border: 2px dashed var(--gray);
+		border-radius: 0.5rem;
+		padding: 0.75rem;
+		min-height: 60px;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		opacity: 0.5;
+		pointer-events: none;
+	}
+
+	.ghost-badge {
+		width: 4rem;
+		height: 1.1rem;
+		border-radius: 999px;
+		background: var(--gray-light);
+	}
+
+	.ghost-title {
+		height: 0.85rem;
+		border-radius: 4px;
+		background: var(--gray-light);
+		width: 70%;
 	}
 
 	.empty {
