@@ -1,8 +1,9 @@
 <script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import KanbanView from './KanbanView.svelte';
-	import { fn, expect, waitFor, within } from 'storybook/test';
+	import { fn, expect, within } from 'storybook/test';
 
+	const viewSpy = fn();
 	const editSpy = fn();
 	const deleteSpy = fn();
 	const statusSpy = fn();
@@ -12,6 +13,7 @@
 		component: KanbanView,
 		parameters: { layout: 'fullscreen' },
 		args: {
+			onView: viewSpy,
 			onEdit: editSpy,
 			onDelete: deleteSpy,
 			onStatusChange: statusSpy
@@ -76,48 +78,6 @@
 		const editButtons = canvas.getAllByRole('button', { name: 'Edit' });
 		await userEvent.click(editButtons[0]);
 		expect(editSpy).toHaveBeenCalled();
-	}}
-/>
-
-<Story
-	name="Expanded task"
-	{template}
-	args={{
-		data: [
-			{
-				id: '1',
-				title: 'Implement auth flow',
-				value: '## Providers\n- Google\n- GitHub\n\nUse Passport.js for strategy management.',
-				status: 'in-progress',
-				updated: new Date('2026-06-03').toISOString()
-			},
-			{
-				id: '2',
-				title: 'Set up CI/CD',
-				value: '',
-				status: 'todo',
-				updated: new Date('2026-06-01').toISOString()
-			},
-			{
-				id: '3',
-				title: 'Write README',
-				value: 'Project overview.',
-				status: 'done',
-				updated: new Date('2026-05-30').toISOString()
-			}
-		]
-	}}
-	play={async ({ canvas, userEvent }) => {
-		const cards = canvas.getAllByRole('listitem');
-		const authFlowCard = cards.find(
-			(card) => card.textContent && card.textContent.includes('Implement auth flow')
-		) as HTMLElement;
-		const toggle = within(authFlowCard).getByTestId('toggleExpand');
-		await userEvent.click(toggle);
-		await waitFor(() => {
-			const heading = canvas.getByRole('heading', { name: 'Providers' });
-			expect(heading).toBeInTheDocument();
-		});
 	}}
 />
 

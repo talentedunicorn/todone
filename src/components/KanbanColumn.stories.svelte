@@ -4,10 +4,10 @@
 	import type { Todo, TaskStatus } from '../domain/todo';
 	import { fn, expect } from 'storybook/test';
 
+	const viewSpy = fn();
 	const editSpy = fn();
 	const deleteSpy = fn();
 	const statusSpy = fn();
-	const toggleExpandSpy = fn();
 	const toggleCollapseSpy = fn();
 	const clearSpy = fn();
 
@@ -20,12 +20,11 @@
 			status: { control: 'select', options: ['todo', 'in-progress', 'done'] }
 		},
 		args: {
-			onToggleExpand: toggleExpandSpy,
+			onView: viewSpy,
 			onEdit: editSpy,
 			onDelete: deleteSpy,
 			onStatusChange: statusSpy,
-			onToggleCollapse: toggleCollapseSpy,
-			expandedTasks: new Set()
+			onToggleCollapse: toggleCollapseSpy
 		}
 	});
 

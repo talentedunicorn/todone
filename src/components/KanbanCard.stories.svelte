@@ -1,26 +1,25 @@
 <script module lang="ts">
 	import KanbanCard from './KanbanCard.svelte';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import { fn, expect } from 'storybook/test';
+	import { fn, expect, userEvent } from 'storybook/test';
 
+	const viewSpy = fn();
 	const editSpy = fn();
 	const deleteSpy = fn();
 	const statusSpy = fn();
-	const toggleExpandSpy = fn();
 
 	const { Story } = defineMeta({
 		title: 'KanbanCard',
 		component: KanbanCard,
 		argTypes: {
-			expanded: { control: 'boolean' },
 			task: { control: 'object' }
 		},
 		args: {
-			onToggleExpand: toggleExpandSpy,
+			onView: viewSpy,
 			onEdit: editSpy,
 			onDelete: deleteSpy,
 			onStatusChange: statusSpy,
-			expanded: false
+			draggable: true
 		}
 	});
 </script>
@@ -39,8 +38,7 @@
 			value: 'Configure GitHub Actions workflow',
 			status: 'todo',
 			updated: new Date()
-		},
-		expanded: false
+		}
 	}}
 />
 
@@ -54,8 +52,7 @@
 			value: 'Document all endpoints',
 			status: 'in-progress',
 			updated: new Date()
-		},
-		expanded: false
+		}
 	}}
 />
 
@@ -69,47 +66,32 @@
 			value: 'Session timeout reduced',
 			status: 'done',
 			updated: new Date()
-		},
-		expanded: false
+		}
 	}}
 />
 
 <Story
-	name="Expanded"
+	name="Click title opens viewer"
 	{template}
 	args={{
 		task: {
 			id: '4',
 			title: 'Add dark mode',
-			value:
-				'# Steps\n\n- [x] Define CSS vars\n- [ ] Update components\n- [ ] Test in dark mode\n\n```css\n:root { --bg: white; }\n```',
+			value: '# Steps\n\n- [x] Define CSS vars\n- [ ] Update components',
 			status: 'in-progress',
 			updated: new Date()
-		},
-		expanded: true
-	}}
-	play={async ({ canvas, userEvent }) => {
-		const toggle = canvas.getByTestId('toggleExpand');
-		await userEvent.click(toggle);
-		expect(toggleExpandSpy).toHaveBeenCalledWith('4', false);
-	}}
-/>
-
-<Story
-	name="Empty description"
-	{template}
-	args={{
-		task: {
-			id: '5',
-			title: 'No description',
-			value: '',
-			status: 'todo',
-			updated: new Date()
-		},
-		expanded: true
+		}
 	}}
 	play={async ({ canvas }) => {
-		expect(canvas.getByText('No description')).toBeInTheDocument();
+		const title = canvas.getByText('Add dark mode');
+		await userEvent.click(title);
+		expect(viewSpy).toHaveBeenCalledWith({
+			id: '4',
+			title: 'Add dark mode',
+			value: '# Steps\n\n- [x] Define CSS vars\n- [ ] Update components',
+			status: 'in-progress',
+			updated: expect.any(Date)
+		});
 	}}
 />
 
@@ -118,13 +100,12 @@
 	{template}
 	args={{
 		task: {
-			id: '6',
+			id: '5',
 			title:
-				'This is an extremely long task title that should wrap gracefully across multiple lines without causing any layout issues or horizontal overflow in the Kanban card',
-			value: "Make sure text wraps and doesn't overflow.",
+				'This is an extremely long task title that should be truncated with an ellipsis instead of wrapping or overflowing in the card',
+			value: '',
 			status: 'in-progress',
 			updated: new Date()
-		},
-		expanded: false
+		}
 	}}
 />

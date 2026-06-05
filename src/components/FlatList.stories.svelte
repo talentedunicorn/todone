@@ -3,6 +3,7 @@
 	import FlatList from './FlatList.svelte';
 	import { fn, expect } from 'storybook/test';
 
+	const viewSpy = fn();
 	const editSpy = fn();
 	const deleteSpy = fn();
 	const statusSpy = fn();
@@ -12,6 +13,7 @@
 		component: FlatList,
 		parameters: { layout: 'fullscreen' },
 		args: {
+			onView: viewSpy,
 			onEdit: editSpy,
 			onDelete: deleteSpy,
 			onStatusChange: statusSpy
