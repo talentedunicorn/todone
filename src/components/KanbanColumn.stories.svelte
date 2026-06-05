@@ -63,7 +63,7 @@
 	{template}
 	args={{ title: 'To Do', status: 'todo' as TaskStatus, tasks: sampleTasks, collapsed: false }}
 	play={async ({ canvas }) => {
-		expect(await canvas.findByText('To Do')).toBeInTheDocument();
+		expect(await canvas.findByRole('heading', { name: 'To Do' })).toBeInTheDocument();
 		expect(await canvas.findByText('Set up CI/CD')).toBeInTheDocument();
 	}}
 />
