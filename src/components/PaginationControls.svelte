@@ -42,7 +42,7 @@
 
 {#if show}
 	<div class="Pagination" role="navigation" aria-label="Pagination">
-		<span class="PageInfo">{startItem}–{endItem} of {totalCount}</span>
+		<span class="PageInfo">{startItem} — {endItem} of {totalCount}</span>
 		<Button
 			variant="link"
 			size="small"
