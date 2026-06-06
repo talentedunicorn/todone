@@ -4,6 +4,7 @@
 	import KanbanView from '../components/KanbanView.svelte';
 	import ViewToggle from '../components/ViewToggle.svelte';
 	import SortControl from '../components/SortControl.svelte';
+	import PaginationControls from '../components/PaginationControls.svelte';
 	import Button from '../components/Button.svelte';
 	import { isLoggedin, user } from '../stores';
 	import { logout } from '../auth';
@@ -38,13 +39,23 @@
 	{#await createTaskDatabase()}
 		<p class="Message">Loading database... 👩🏼‍🔧</p>
 	{:then db}
-		<TaskShell {db} onToggleView={() => toggleView(view === 'list' ? 'kanban' : 'list')}>
+		<TaskShell
+			{db}
+			pageSize={view === 'list' ? 50 : 10000}
+			onToggleView={() => toggleView(view === 'list' ? 'kanban' : 'list')}
+		>
 			{#snippet toolbar(sortState)}
 				<ViewToggle {view} onToggle={toggleView} />
 				<SortControl
 					field={sortState.sortField}
 					dir={sortState.sortDir}
 					onChange={(f, d) => sortState.onSortChange(f, d)}
+				/>
+				<PaginationControls
+					page={sortState.page}
+					totalCount={sortState.totalCount}
+					pageSize={sortState.pageSize}
+					onChange={sortState.onPageChange}
 				/>
 			{/snippet}
 			{#snippet children(data, handlers)}

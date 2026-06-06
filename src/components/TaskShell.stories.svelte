@@ -49,6 +49,19 @@
 				return () => {};
 			}
 		}),
+		getTodosPage: ({ searchQuery }) => ({
+			subscribe: (cb: (value: { todos: Todo[]; total: number }) => void) => {
+				let filtered = todos;
+				if (searchQuery) {
+					filtered = todos.filter((t) => t.title.toLowerCase().includes(searchQuery.toLowerCase()));
+				}
+				const sorted = [...filtered].sort(
+					(a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime()
+				);
+				cb({ todos: sorted, total: sorted.length });
+				return () => {};
+			}
+		}),
 		add: fn().mockResolvedValue({
 			id: 'new',
 			title: '',

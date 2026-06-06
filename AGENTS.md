@@ -99,6 +99,8 @@ When adding a new data operation:
 2. Implement it in `RxDBTaskDatabase` in `rxdb-adapter.ts`
 3. Export a convenience wrapper in `db.ts`
 
+**Key query method — `getTodosPage`:** All list and kanban views use `getTodosPage()` which combines search (`$regex`), sort (`.sort()`), and pagination (`.skip()/.limit()`) at the RxDB level. The `TaskShell` component subscribes via `$effect` and provides page data + total count to children through snippets. The `pageSize` prop controls the page size (50 for list, 10000 for kanban).
+
 ### 4. Dialog shell pattern
 
 Complex dialogs use a shared `<Dialog>` shell (`src/components/Dialog.svelte`) that manages `<dialog>` lifecycle, backdrop click, close button, and transitions. Consumers provide content via snippets:
@@ -112,3 +114,27 @@ Complex dialogs use a shared `<Dialog>` shell (`src/components/Dialog.svelte`) t
 ### 5. Icon pattern
 
 Icons follow a consistent pattern using a base `<Icon>` component with named wrappers (e.g., `IconX.svelte`, `IconH2.svelte`). Each wrapper is a thin Svelte component that passes SVG children to `<Icon>`.
+
+### 6. Pagination pattern
+
+`PaginationControls.svelte` is a standalone component for paginating list results. It auto-hides when all items fit on a single page.
+
+**Props:** `page` (0-indexed), `totalCount`, `pageSize`, `onChange`
+
+**Usage:** Placed in `TaskShell`'s `toolbar` snippet alongside `ViewToggle` and `SortControl`. Only rendered in list view (controlled by parent):
+
+```svelte
+<PaginationControls
+	page={sortState.page}
+	totalCount={sortState.totalCount}
+	pageSize={sortState.pageSize}
+	onChange={sortState.onPageChange}
+/>
+```
+
+**Behavior:**
+
+- Hidden when `totalCount <= pageSize` (single page)
+- Hidden when `totalCount === 0` (empty)
+- Previous disabled on first page, Next disabled on last page
+- Shared `$effect` lifecycle with sort and search (changing page tears down and recreates the RxDB subscription)

@@ -15,6 +15,7 @@
 		sortField: SortField;
 		sortDir: SortDir;
 		page: number;
+		pageSize: number;
 		totalCount: number;
 		onSortChange: (field: SortField, dir: SortDir) => void;
 		onPageChange: (page: number) => void;
@@ -36,9 +37,10 @@
 		>;
 		toolbar?: Snippet<[state: ToolbarState]>;
 		onToggleView?: () => void;
+		pageSize?: number;
 	}
 
-	let { db, children, toolbar, onToggleView }: Props = $props();
+	let { db, children, toolbar, onToggleView, pageSize = 10000 }: Props = $props();
 
 	function loadPref<T>(key: string, fallback: T): T {
 		if (typeof localStorage === 'undefined') return fallback;
@@ -61,9 +63,8 @@
 		page = 0;
 	};
 
-	// --- Page state (Phase 1: effectively unlimited) ---
+	// --- Page state ---
 	let page = $state(0);
-	let pageSize = 10000;
 
 	const setPage = (p: number) => {
 		page = p;
@@ -280,6 +281,7 @@
 					sortField,
 					sortDir,
 					page,
+					pageSize,
 					totalCount,
 					onSortChange: setSort,
 					onPageChange: setPage
