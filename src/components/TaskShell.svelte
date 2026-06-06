@@ -81,8 +81,9 @@
 	let debouncedQuery = $state('');
 
 	$effect(() => {
+		const q = query;
 		const timer = setTimeout(() => {
-			debouncedQuery = query;
+			debouncedQuery = q;
 		}, 150);
 		return () => clearTimeout(timer);
 	});

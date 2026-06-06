@@ -46,7 +46,8 @@ const createDatabase = (name: string) =>
 	createRxDatabase({
 		name,
 		storage,
-		ignoreDuplicate: import.meta.env.DEV
+		ignoreDuplicate: import.meta.env.DEV,
+		allowSlowCount: true
 	});
 
 const migrationStrategies = {
