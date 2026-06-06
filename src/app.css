@@ -104,27 +104,33 @@ table {
 	width: 100%;
 }
 
+table th,
+table td {
+	padding: 0.5rem 0.75rem;
+	border: 1px solid var(--gray);
+	text-align: left;
+}
+
 table thead tr {
-	border-bottom: var(--border);
+	border-bottom: 1px solid var(--gray);
+	background: var(--gray-light);
 	white-space: nowrap;
 }
 
-table tr:nth-child(even) {
-	background: var(--gray-light);
+table thead th {
+	font-weight: 700;
 }
 
-table th,
-table td {
-	padding: 0.5rem;
+table tbody tr:nth-child(even) {
+	background: color-mix(in srgb, var(--gray-light) 50%, transparent);
 }
 
-table th:not(:last-child) {
-	border-right: var(--border);
+table tbody tr:hover {
+	background: color-mix(in srgb, var(--primary) 12%, transparent);
 }
 
 .Content table th {
 	font-size: 1.2rem;
-	white-space: nowrap;
 }
 
 blockquote {
