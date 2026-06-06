@@ -47,7 +47,6 @@
 	});
 
 	let titleInput: HTMLInputElement;
-	let titleFocused = $state(false);
 
 	let data = $state<FormTodo>({ title: '', value: '', status: 'todo' });
 
@@ -174,6 +173,7 @@ Form component with a title and content inputs
 	form {
 		display: flex;
 		flex-direction: column;
+		align-items: start;
 		flex: 1;
 		min-height: 0;
 		gap: 1rem;
