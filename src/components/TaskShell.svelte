@@ -3,7 +3,6 @@
 	import Fab from './Fab.svelte';
 	import FullScreenEditor from './FullScreenEditor.svelte';
 	import ContentViewDialog from './ContentViewDialog.svelte';
-	import Button from './Button.svelte';
 	import { toastActions, toastMessage } from '../stores';
 	import { type Todo, type TaskStatus } from '../domain/todo';
 	import type { TaskDatabase } from '../adapters/database';
@@ -31,7 +30,6 @@
 
 	let searchInput: HTMLInputElement;
 	let query = $state('');
-	let showSearch = $state(false);
 	let undoTask = $state<Todo | null>(null);
 	let undoTimeout = $state<ReturnType<typeof setTimeout> | null>(null);
 
@@ -65,7 +63,7 @@
 					label: 'Undo',
 					callback: () => {
 						if (undoTask) {
-							db.add(undoTask);
+							db.restore(undoTask);
 							undoTask = null;
 						}
 						toastMessage.set(null);
@@ -188,64 +186,10 @@
 			type="search"
 			name="query"
 			id="search"
-			class:visually-hidden={!showSearch}
 			bind:value={query}
 			bind:this={searchInput}
 			placeholder="Type to search"
 		/>
-		{#if showSearch}
-			<Button
-				onclick={() => {
-					showSearch = false;
-					query = '';
-				}}
-				size="small"
-				variant="link"
-			>
-				<svg
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="currentColor"
-					xmlns="http://www.w3.org/2000/svg"
-					aria-label="Hide search"
-					><path
-						fill="none"
-						stroke="currentColor"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="m9 6l6 6l-6 6"
-					/>
-				</svg>
-			</Button>
-		{:else}
-			<Button
-				onclick={() => {
-					showSearch = true;
-					searchInput.focus();
-				}}
-				size="small"
-				variant="link"
-			>
-				<svg
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="currentColor"
-					xmlns="http://www.w3.org/2000/svg"
-					aria-label="Show search"
-					><path
-						fill="none"
-						stroke="currentColor"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M11.36 20.213L9 21v-8.5L4.52 7.572A2 2 0 0 1 4 6.227V4h16v2.172a2 2 0 0 1-.586 1.414L15 12m0 6a3 3 0 1 0 6 0a3 3 0 1 0-6 0m5.2 2.2L22 22"
-					/>
-				</svg>
-			</Button>
-		{/if}
 	</form>
 
 	{#await loadTodos()}
