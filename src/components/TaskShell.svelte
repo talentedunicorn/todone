@@ -360,9 +360,10 @@
 
 	.ToolbarActions {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
-		gap: 0.5rem;
-		flex-shrink: 0;
+		justify-content: space-between;
+		gap: 1rem;
 	}
 
 	.Shell {
