@@ -76,6 +76,11 @@ export const importTodos = async (data: Todo[]) => {
 	return db.importTodos(data);
 };
 
+export const restore = async (task: Todo) => {
+	const db = await initDB();
+	return db.restore(task);
+};
+
 export const createTaskDatabase = initDB;
 
 export type { Todo, Stream };

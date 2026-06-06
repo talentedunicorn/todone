@@ -12,6 +12,7 @@ export interface TaskDatabase {
 	update(data: { id: string; title: string; value: string; status: TaskStatus }): Promise<unknown>;
 	remove(id: string): Promise<unknown>;
 	setStatus(id: string, status: TaskStatus): Promise<unknown>;
+	restore(task: Todo): Promise<unknown>;
 	exportTodos(): Promise<Todo[]>;
 	importTodos(data: Todo[]): Promise<unknown>;
 	getDocCount(): Promise<{

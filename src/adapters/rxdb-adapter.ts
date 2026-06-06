@@ -161,9 +161,15 @@ export class RxDBTaskDatabase implements TaskDatabase {
 
 	async setStatus(id: string, status: TaskStatus): Promise<unknown> {
 		const db = this.getDb();
+		const now = new Date().toISOString();
 		return db.todos.findOne({ selector: { id } }).update({
-			$set: { status }
+			$set: { status, updated: now }
 		});
+	}
+
+	async restore(task: Todo): Promise<unknown> {
+		const db = this.getDb();
+		return db.todos.upsert(task);
 	}
 
 	async exportTodos(): Promise<Todo[]> {
