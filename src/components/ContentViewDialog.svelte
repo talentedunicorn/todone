@@ -3,6 +3,8 @@
 	import MarkdownContent from './MarkdownContent.svelte';
 	import Button from './Button.svelte';
 	import type { Todo } from '../domain/todo';
+	import { formatTimestamp } from '../lib/format-time';
+	import { useRelativeTime } from '../lib/use-relative-time.svelte';
 
 	interface Props {
 		open: boolean;
@@ -13,6 +15,8 @@
 	}
 
 	let { open, task, onClose, onEdit, onDelete }: Props = $props();
+
+	const time = useRelativeTime(() => task?.updated);
 
 	const handleEdit = () => {
 		if (task) onEdit(task);
@@ -32,6 +36,9 @@
 		onClose();
 	}}
 >
+	{#if task}
+		<span class="updated-at" title={formatTimestamp(task.updated)}>{time.relativeTime}</span>
+	{/if}
 	<div class="viewer-body">
 		{#if task?.value}
 			<MarkdownContent value={task.value} />
@@ -46,6 +53,13 @@
 </Dialog>
 
 <style>
+	.updated-at {
+		font-size: 0.75rem;
+		color: var(--gray);
+		display: block;
+		margin-bottom: 0.5rem;
+	}
+
 	.viewer-body {
 		flex: 1;
 		min-height: 0;

@@ -2,6 +2,8 @@
 	import type { Todo } from '../domain/todo';
 	import type { TaskStatus } from '../domain/todo';
 	import { nextStatus } from '../lib/task';
+	import { formatTimestamp } from '../lib/format-time';
+	import { useRelativeTime } from '../lib/use-relative-time.svelte';
 
 	interface Props {
 		task: Todo;
@@ -15,6 +17,8 @@
 	let { task, onView, onEdit, onDelete, onStatusChange, draggable = true }: Props = $props();
 
 	let dragging = $state(false);
+
+	const time = useRelativeTime(() => task.updated);
 
 	const statusColors: Record<string, string> = {
 		todo: 'var(--gray, #9ca3af)',
@@ -111,6 +115,10 @@
 	>
 		{task.title}
 	</div>
+
+	<span class="updated-at" title={formatTimestamp(task.updated)}>
+		{time.relativeTime}
+	</span>
 </div>
 
 <style>
@@ -209,5 +217,11 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+
+	.updated-at {
+		font-size: 0.75rem;
+		color: var(--gray);
+		margin-top: 0.25rem;
 	}
 </style>
