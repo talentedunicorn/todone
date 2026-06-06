@@ -128,7 +128,7 @@ Form component with a title and content inputs
 	{/if}
 
 	<label class="visually-hidden" for="content">Content</label>
-	<div class="editor-wrapper open">
+	<div class="editor-wrapper">
 		<div class="inner">
 			<div
 				use:themeObserver={{
