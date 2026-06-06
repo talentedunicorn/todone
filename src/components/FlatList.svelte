@@ -11,14 +11,10 @@
 	}
 
 	let { data, onView, onEdit, onDelete, onStatusChange }: Props = $props();
-
-	let activeTasks = $derived(
-		[...data].sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime())
-	);
 </script>
 
 <div class="list">
-	{#each activeTasks as task (task.id)}
+	{#each data as task (task.id)}
 		<KanbanCard {task} draggable={false} {onView} {onEdit} {onDelete} {onStatusChange} />
 	{:else}
 		<p class="empty">No tasks yet. Press <kbd>n</kbd> or tap + to create one.</p>

@@ -34,6 +34,17 @@ export const getTodos = async () => {
 	return db.getTodos();
 };
 
+export const getTodosPage = async (opts: {
+	sortField: 'updated' | 'created';
+	sortDir: 'asc' | 'desc';
+	searchQuery?: string;
+	skip: number;
+	limit: number;
+}) => {
+	const db = await initDB();
+	return db.getTodosPage(opts);
+};
+
 export const add = async (data: { title: string; value: string }) => {
 	const db = await initDB();
 	return db.add(data);

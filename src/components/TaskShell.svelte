@@ -8,6 +8,18 @@
 	import type { TaskDatabase } from '../adapters/database';
 	import { registerShortcuts, isInputFocused } from '../lib/keyboard';
 
+	type SortField = 'updated' | 'created';
+	type SortDir = 'asc' | 'desc';
+
+	interface ToolbarState {
+		sortField: SortField;
+		sortDir: SortDir;
+		page: number;
+		totalCount: number;
+		onSortChange: (field: SortField, dir: SortDir) => void;
+		onPageChange: (page: number) => void;
+	}
+
 	interface Props {
 		db: TaskDatabase;
 		children: Snippet<
@@ -22,29 +34,90 @@
 				}
 			]
 		>;
+		toolbar?: Snippet<[state: ToolbarState]>;
+		onToggleView?: () => void;
 	}
 
-	let { db, children }: Props = $props();
+	let { db, children, toolbar, onToggleView }: Props = $props();
 
-	let data = $state<Todo[]>([]);
+	function loadPref<T>(key: string, fallback: T): T {
+		if (typeof localStorage === 'undefined') return fallback;
+		const val = localStorage.getItem(key);
+		return (val !== null ? val : fallback) as unknown as T;
+	}
 
+	// --- Sort state ---
+	let sortField = $state<SortField>(loadPref('todone:sortField', 'updated'));
+	let sortDir = $state<SortDir>(loadPref('todone:sortDir', 'desc'));
+
+	$effect(() => {
+		localStorage.setItem('todone:sortField', sortField);
+		localStorage.setItem('todone:sortDir', sortDir);
+	});
+
+	const setSort = (field: SortField, dir: SortDir) => {
+		sortField = field;
+		sortDir = dir;
+		page = 0;
+	};
+
+	// --- Page state (Phase 1: effectively unlimited) ---
+	let page = $state(0);
+	let pageSize = 10000;
+
+	const setPage = (p: number) => {
+		page = p;
+	};
+
+	// --- Data subscription ---
+	let pageData = $state<Todo[]>([]);
+	let totalCount = $state(0);
+	let loaded = $state(false);
+
+	// --- Search ---
 	let searchInput: HTMLInputElement;
 	let query = $state('');
-	let undoTask = $state<Todo | null>(null);
-	let undoTimeout = $state<ReturnType<typeof setTimeout> | null>(null);
+	let debouncedQuery = $state('');
 
-	// Editor dialog state
-	let editorTask = $state<Todo | null | undefined>(undefined);
-	let showEditor = $derived(editorTask !== undefined);
+	$effect(() => {
+		const timer = setTimeout(() => {
+			debouncedQuery = query;
+		}, 150);
+		return () => clearTimeout(timer);
+	});
 
-	// Content viewer dialog state
-	let viewTask = $state<Todo | null>(null);
-
-	let showFab = $derived(editorTask === undefined);
+	$effect(() => {
+		const stream = db.getTodosPage({
+			sortField,
+			sortDir,
+			searchQuery: debouncedQuery || undefined,
+			skip: page * pageSize,
+			limit: pageSize
+		});
+		const unsub = stream.subscribe(({ todos, total }) => {
+			pageData = todos;
+			totalCount = total;
+			loaded = true;
+		});
+		return () => unsub();
+	});
 
 	const focusSearch = () => {
 		searchInput?.focus();
 	};
+
+	// --- Undo state ---
+	let undoTask = $state<Todo | null>(null);
+	let undoTimeout = $state<ReturnType<typeof setTimeout> | null>(null);
+
+	// --- Editor dialog state ---
+	let editorTask = $state<Todo | null | undefined>(undefined);
+	let showEditor = $derived(editorTask !== undefined);
+
+	// --- Content viewer dialog state ---
+	let viewTask = $state<Todo | null>(null);
+
+	let showFab = $derived(editorTask === undefined);
 
 	const handlers = {
 		handleViewContent: (task: Todo) => {
@@ -143,10 +216,7 @@
 				handler: (e) => {
 					if (!isInputFocused()) {
 						e.preventDefault();
-						const active = data.filter(
-							(t) => t.status === 'todo' || t.status === 'in-progress' || t.status === 'done'
-						);
-						const target = active[0];
+						const target = pageData[0];
 						if (target) handlers.handleToggleComplete(target);
 					}
 				},
@@ -157,32 +227,32 @@
 				handler: (e) => {
 					if (!isInputFocused()) {
 						e.preventDefault();
-						const active = data.filter(
-							(t) => t.status === 'todo' || t.status === 'in-progress' || t.status === 'done'
-						);
-						const target = active[0];
+						const target = pageData[0];
 						if (target) handlers.handleDelete(target);
 					}
 				},
 				description: 'Delete first task'
+			},
+			{
+				key: 'v',
+				handler: (e) => {
+					if (!isInputFocused()) {
+						e.preventDefault();
+						onToggleView?.();
+					}
+				},
+				description: 'Toggle view'
 			}
 		]);
 
 		return cleanup;
 	});
 
-	const loadTodos = async () => {
-		const todos = await db.getTodos();
-		todos?.subscribe((tasks) => {
-			data = tasks;
-		});
-	};
-
 	// Keep viewTask in sync when data updates from RxDB
 	$effect(() => {
 		const current = viewTask;
 		if (current) {
-			const updated = data.find((t) => t.id === current.id);
+			const updated = pageData.find((t) => t.id === current.id);
 			if (updated && updated !== current) {
 				viewTask = updated;
 			}
@@ -191,26 +261,38 @@
 </script>
 
 <div class="Shell">
-	<form class="Search">
-		<label for="search" class="visually-hidden">Search by title</label>
-		<input
-			type="search"
-			name="query"
-			id="search"
-			bind:value={query}
-			bind:this={searchInput}
-			placeholder="Type to search"
-		/>
-	</form>
+	<div class="ToolbarRow">
+		<form class="Search">
+			<label for="search" class="visually-hidden">Search by title</label>
+			<input
+				type="search"
+				name="query"
+				id="search"
+				bind:value={query}
+				bind:this={searchInput}
+				placeholder="Type to search"
+			/>
+		</form>
 
-	{#await loadTodos()}
+		{#if toolbar}
+			<div class="ToolbarActions">
+				{@render toolbar({
+					sortField,
+					sortDir,
+					page,
+					totalCount,
+					onSortChange: setSort,
+					onPageChange: setPage
+				})}
+			</div>
+		{/if}
+	</div>
+
+	{#if loaded}
+		{@render children(pageData, handlers)}
+	{:else}
 		<p class="Message">Loading data... 👩🏼‍🔧</p>
-	{:then _}
-		{@render children(
-			data.filter((t) => !query || t.title.toLowerCase().includes(query.toLowerCase())),
-			handlers
-		)}
-	{/await}
+	{/if}
 
 	<Fab onclick={handleFabClick} visible={showFab} />
 
@@ -243,15 +325,20 @@
 		font-size: 1.5rem;
 	}
 
-	.Search {
-		margin-left: auto;
-		align-self: flex-end;
-		display: inline-flex;
-		gap: 1rem;
+	.ToolbarRow {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5rem;
 		padding: 0.5rem;
 		background: var(--white);
 		border-radius: 0.5rem;
 		border: var(--gray-light) 1px solid;
+	}
+
+	.Search {
+		display: inline-flex;
+		flex: 1;
 	}
 
 	.Search input {
@@ -263,6 +350,17 @@
 		font-family: inherit;
 		background: transparent;
 		color: var(--black);
+	}
+
+	.Search input:focus {
+		outline: none;
+	}
+
+	.ToolbarActions {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		flex-shrink: 0;
 	}
 
 	.Shell {

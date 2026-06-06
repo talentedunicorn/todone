@@ -18,7 +18,7 @@
 	import NotFound from './routes/NotFound.svelte';
 	import Login from './routes/Login.svelte';
 	import Home from './routes/Home.svelte';
-	import Kanban from './routes/Kanban.svelte';
+	import Redirect from './routes/Redirect.svelte';
 	import { checkAuth, initAuth0Client } from './auth';
 	import { setAuth0Client } from './lib/auth-client';
 	import { toastActions, toastMessage, status, isLoggedin } from './stores';
@@ -96,19 +96,7 @@
 				}
 			]
 		}),
-		'/kanban': wrap({
-			component: Kanban,
-			conditions: [
-				() => {
-					if (!synced) return true;
-					if (!$isLoggedin) {
-						push('/login');
-						return false;
-					}
-					return true;
-				}
-			]
-		}),
+		'/kanban': Redirect,
 
 		'*': NotFound
 	};
@@ -128,9 +116,6 @@
 	</header>
 	<aside class="Menu">
 		<Menu>
-			<Button size="large" variant="link" onclick={() => push('/')}>List</Button>
-			<Button size="large" variant="link" onclick={() => push('/kanban')}>Kanban</Button>
-
 			<Button size="large" variant="link" onclick={() => push('/about')}>About</Button>
 		</Menu>
 	</aside>

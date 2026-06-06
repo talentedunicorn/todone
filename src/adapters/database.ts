@@ -8,6 +8,13 @@ import type { TaskStatus } from '../domain/todo';
 
 export interface TaskDatabase {
 	getTodos(): Stream<Todo[]>;
+	getTodosPage(opts: {
+		sortField: 'updated' | 'created';
+		sortDir: 'asc' | 'desc';
+		searchQuery?: string;
+		skip: number;
+		limit: number;
+	}): Stream<{ todos: Todo[]; total: number }>;
 	add(data: { title: string; value: string }): Promise<Todo>;
 	update(data: { id: string; title: string; value: string; status: TaskStatus }): Promise<unknown>;
 	remove(id: string): Promise<unknown>;

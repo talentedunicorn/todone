@@ -5,7 +5,7 @@ import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
 import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv';
-import { map } from 'rxjs/operators';
+import { combineLatest, map } from 'rxjs';
 import type { Observable } from 'rxjs';
 
 if (import.meta.env.DEV) {
@@ -23,7 +23,7 @@ const storage = wrappedValidateAjvStorage({
 import type { Todo, TaskStatus } from '../domain/todo';
 
 const todoSchema: RxJsonSchema<Todo> = {
-	version: 2,
+	version: 3,
 	primaryKey: 'id',
 	type: 'object',
 	properties: {
@@ -36,10 +36,10 @@ const todoSchema: RxJsonSchema<Todo> = {
 			maxLength: 20,
 			enum: ['todo', 'in-progress', 'done']
 		},
-		updated: { type: 'string', format: 'date-time' }
+		updated: { type: 'string', format: 'date-time', maxLength: 30 }
 	},
 	required: ['id', 'title', 'value', 'updated', 'status'],
-	indexes: ['status']
+	indexes: ['status', 'updated']
 };
 
 const createDatabase = (name: string) =>
@@ -62,6 +62,10 @@ const migrationStrategies = {
 			oldDoc.status = 'done';
 		}
 		return oldDoc;
+	},
+	3: (oldDoc: any) => {
+		// v2→v3: add 'updated' index — no data transform needed
+		return oldDoc;
 	}
 };
 
@@ -78,6 +82,10 @@ const createCollection = async <T extends object>(
 		}
 	});
 };
+
+function escapeRegex(str: string): string {
+	return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 import { type TaskDatabase, type Stream, type DbConfig } from './database';
 export type { TaskDatabase, Stream, DbConfig };
@@ -127,6 +135,34 @@ export class RxDBTaskDatabase implements TaskDatabase {
 			.sort({ updated: 'desc' })
 			.$.pipe(map((docs) => docs.map((d) => d.toJSON() as Todo)));
 		return new RxDBStream(observable);
+	}
+
+	getTodosPage(opts: {
+		sortField: 'updated' | 'created';
+		sortDir: 'asc' | 'desc';
+		searchQuery?: string;
+		skip: number;
+		limit: number;
+	}): Stream<{ todos: Todo[]; total: number }> {
+		const db = this.getDb();
+		const field = opts.sortField === 'created' ? 'id' : 'updated';
+
+		const selector = opts.searchQuery
+			? { title: { $regex: `.*${escapeRegex(opts.searchQuery)}.*`, $options: 'i' } }
+			: undefined;
+
+		const todos$ = db.todos
+			.find({ selector })
+			.sort({ [field]: opts.sortDir })
+			.skip(opts.skip)
+			.limit(opts.limit)
+			.$.pipe(map((docs) => docs.map((d) => d.toJSON() as Todo)));
+
+		const count$ = db.todos.count({ selector }).$;
+
+		return new RxDBStream(
+			combineLatest([todos$, count$]).pipe(map(([todos, total]) => ({ todos, total })))
+		);
 	}
 
 	async add(data: { title: string; value: string }): Promise<Todo> {
