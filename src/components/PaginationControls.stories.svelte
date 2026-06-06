@@ -24,7 +24,7 @@
 	{template}
 	args={{ page: 0, totalCount: 87, pageSize: 50 }}
 	play={async ({ canvas }) => {
-		const info = canvas.getByText('1–50 of 87');
+		const info = canvas.getByText('1 — 50 of 87');
 		expect(info).toBeInTheDocument();
 		const prev = canvas.getByLabelText('Previous page');
 		expect(prev).toBeDisabled();
@@ -38,7 +38,7 @@
 	{template}
 	args={{ page: 1, totalCount: 87, pageSize: 50 }}
 	play={async ({ canvas }) => {
-		const info = canvas.getByText('51–87 of 87');
+		const info = canvas.getByText('51 — 87 of 87');
 		expect(info).toBeInTheDocument();
 		const prev = canvas.getByLabelText('Previous page');
 		expect(prev).not.toBeDisabled();
@@ -72,7 +72,7 @@
 	{template}
 	args={{ page: 0, totalCount: 51, pageSize: 50 }}
 	play={async ({ canvas }) => {
-		const info = canvas.getByText('1–50 of 51');
+		const info = canvas.getByText('1 — 50 of 51');
 		expect(info).toBeInTheDocument();
 		const prev = canvas.getByLabelText('Previous page');
 		expect(prev).toBeDisabled();
@@ -106,7 +106,7 @@
 	{template}
 	args={{ page: 9, totalCount: 500, pageSize: 50 }}
 	play={async ({ canvas }) => {
-		const info = canvas.getByText('451–500 of 500');
+		const info = canvas.getByText('451 — 500 of 500');
 		expect(info).toBeInTheDocument();
 		const prev = canvas.getByLabelText('Previous page');
 		expect(prev).not.toBeDisabled();

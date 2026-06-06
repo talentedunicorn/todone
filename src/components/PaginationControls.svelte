@@ -1,8 +1,8 @@
 <script lang="ts">
 	/**
-	 * PaginationControls — prev/next pagination with "X–Y of Z" label.
+	 * PaginationControls — prev/next pagination with "X—Y of Z" label.
 	 *
-	 * Displays "21–40 of 87" with Prev/Next link buttons.
+	 * Displays "21—40 of 87" with Prev/Next link buttons.
 	 * Automatically hides when all items fit on a single page.
 	 *
 	 * Re-exports:
