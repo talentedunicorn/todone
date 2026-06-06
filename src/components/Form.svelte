@@ -6,6 +6,8 @@
 	import { createEditorCarta } from '../lib/carta';
 	import { themeObserver } from '../lib/theme-observer';
 	import type { Todo, TaskStatus } from '../domain/todo';
+	import { nextStatus } from '../lib/task';
+	import StatusBadge from './StatusBadge.svelte';
 	import { fly } from 'svelte/transition';
 
 	type Content = { title: string; value: string };
@@ -118,32 +120,12 @@ Form component with a title and content inputs
 	/>
 
 	{#if isEdit}
-		<fieldset class="Status">
-			<legend>Status</legend>
-			<div class="Badges">
-				<Button
-					variant="pill"
-					selected={data.status === 'todo'}
-					onclick={() => (data.status = 'todo')}
-				>
-					To Do
-				</Button>
-				<Button
-					variant="pill"
-					selected={data.status === 'in-progress'}
-					onclick={() => (data.status = 'in-progress')}
-				>
-					In Progress
-				</Button>
-				<Button
-					variant="pill"
-					selected={data.status === 'done'}
-					onclick={() => (data.status = 'done')}
-				>
-					Done
-				</Button>
-			</div>
-		</fieldset>
+		<StatusBadge
+			status={data.status as TaskStatus}
+			onclick={() => {
+				data.status = nextStatus(data.status as TaskStatus);
+			}}
+		/>
 	{/if}
 
 	<label class="visually-hidden" for="content">Content</label>
@@ -207,26 +189,6 @@ Form component with a title and content inputs
 				display: flex;
 				gap: 1rem;
 				align-items: center;
-			}
-		}
-
-		.Status {
-			display: flex;
-			align-items: center;
-			gap: 1rem;
-			font-size: 0.9rem;
-			border: none;
-			padding: 0;
-			margin: 0;
-
-			legend {
-				font-weight: bold;
-				margin-bottom: 1rem;
-			}
-
-			.Badges {
-				display: flex;
-				gap: 1rem;
 			}
 		}
 

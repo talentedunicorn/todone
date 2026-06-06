@@ -2,7 +2,9 @@
 	import Dialog from './Dialog.svelte';
 	import MarkdownContent from './MarkdownContent.svelte';
 	import Button from './Button.svelte';
-	import type { Todo } from '../domain/todo';
+	import type { Todo, TaskStatus } from '../domain/todo';
+	import { nextStatus } from '../lib/task';
+	import StatusBadge from './StatusBadge.svelte';
 	import { formatTimestamp } from '../lib/format-time';
 	import { useRelativeTime } from '../lib/use-relative-time.svelte';
 
@@ -12,9 +14,10 @@
 		onClose: () => void;
 		onEdit: (task: Todo) => void;
 		onDelete: (task: Todo) => void;
+		onStatusChange?: (id: string, status: TaskStatus) => void;
 	}
 
-	let { open, task, onClose, onEdit, onDelete }: Props = $props();
+	let { open, task, onClose, onEdit, onDelete, onStatusChange }: Props = $props();
 
 	const time = useRelativeTime(() => task?.updated);
 
@@ -37,7 +40,13 @@
 	}}
 >
 	{#if task}
-		<span class="updated-at" title={formatTimestamp(task.updated)}>{time.relativeTime}</span>
+		<div class="meta-row">
+			<StatusBadge
+				status={task.status}
+				onclick={() => onStatusChange?.(task.id, nextStatus(task.status))}
+			/>
+			<span class="updated-at" title={formatTimestamp(task.updated)}>{time.relativeTime}</span>
+		</div>
 	{/if}
 	<div class="viewer-body">
 		{#if task?.value}
@@ -53,11 +62,16 @@
 </Dialog>
 
 <style>
+	.meta-row {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin-bottom: 0.5rem;
+	}
+
 	.updated-at {
 		font-size: 0.75rem;
 		color: var(--gray);
-		display: block;
-		margin-bottom: 0.5rem;
 	}
 
 	.viewer-body {

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { Todo } from '../domain/todo';
-	import type { TaskStatus } from '../domain/todo';
+	import type { Todo, TaskStatus } from '../domain/todo';
 	import { nextStatus } from '../lib/task';
 	import { formatTimestamp } from '../lib/format-time';
+	import StatusBadge from './StatusBadge.svelte';
 	import { useRelativeTime } from '../lib/use-relative-time.svelte';
 
 	interface Props {
@@ -19,22 +19,6 @@
 	let dragging = $state(false);
 
 	const time = useRelativeTime(() => task.updated);
-
-	const statusColors: Record<string, string> = {
-		todo: 'var(--gray, #9ca3af)',
-		'in-progress': 'var(--yellow, #eab308)',
-		done: 'var(--green, #22c55e)'
-	};
-
-	const statusLabels: Record<string, string> = {
-		todo: 'To Do',
-		'in-progress': 'In Progress',
-		done: 'Done'
-	};
-
-	const cycleStatus = () => {
-		onStatusChange(task.id, nextStatus(task.status));
-	};
 
 	const handleDragStart = (e: DragEvent) => {
 		e.dataTransfer?.setData('text/plain', task.id);
@@ -57,14 +41,10 @@
 	role="listitem"
 >
 	<div class="card-header">
-		<button
-			class="status-badge"
-			style="--badge-color: {statusColors[task.status] || statusColors.todo}"
-			onclick={cycleStatus}
-			title={statusLabels[task.status]}
-		>
-			{statusLabels[task.status]}
-		</button>
+		<StatusBadge
+			status={task.status}
+			onclick={() => onStatusChange(task.id, nextStatus(task.status))}
+		/>
 		<div class="card-actions">
 			<button class="icon-btn" onclick={() => onEdit(task)} title="Edit" aria-label="Edit">
 				<svg
@@ -158,23 +138,6 @@
 		align-items: center;
 		justify-content: space-between;
 		gap: 0.5rem;
-	}
-
-	.status-badge {
-		font-size: 0.75rem;
-		font-weight: 500;
-		padding: 0.2em 0.6em;
-		border-radius: 999px;
-		border: 1px solid var(--badge-color, var(--gray));
-		color: var(--badge-color, var(--gray));
-		background: transparent;
-		cursor: pointer;
-		transition: background 0.15s;
-		white-space: nowrap;
-	}
-
-	.status-badge:hover {
-		background: color-mix(in srgb, var(--badge-color, var(--gray)) 10%, transparent);
 	}
 
 	.card-actions {

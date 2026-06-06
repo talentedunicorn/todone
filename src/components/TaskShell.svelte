@@ -223,6 +223,7 @@
 			viewTask = null;
 			handlers.handleDelete(task);
 		}}
+		onStatusChange={handlers.handleStatusChange}
 	/>
 </div>
 
