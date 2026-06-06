@@ -177,6 +177,17 @@
 			data = tasks;
 		});
 	};
+
+	// Keep viewTask in sync when data updates from RxDB
+	$effect(() => {
+		const current = viewTask;
+		if (current) {
+			const updated = data.find((t) => t.id === current.id);
+			if (updated && updated !== current) {
+				viewTask = updated;
+			}
+		}
+	});
 </script>
 
 <div class="Shell">
