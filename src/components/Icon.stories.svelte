@@ -1,0 +1,109 @@
+<script module lang="ts">
+	import Icon from './Icon.svelte';
+	import IconX from './IconX.svelte';
+	import IconH2 from './IconH2.svelte';
+	import IconH3 from './IconH3.svelte';
+	import IconImage from './IconImage.svelte';
+	import IconTable from './IconTable.svelte';
+	import { defineMeta } from '@storybook/addon-svelte-csf';
+
+	const { Story } = defineMeta({
+		title: 'Icon',
+		component: Icon,
+		parameters: { layout: 'centered' },
+		argTypes: {
+			size: { control: { type: 'range', min: 8, max: 64, step: 2 } },
+			strokeWidth: { control: { type: 'range', min: 0.5, max: 4, step: 0.5 } },
+			color: { control: 'color' }
+		}
+	});
+</script>
+
+{#snippet crossIcon()}
+	<line x1="12" y1="5" x2="12" y2="19" />
+	<line x1="5" y1="12" x2="19" y2="12" />
+{/snippet}
+
+{#snippet plus(args: Record<string, any>)}
+	<Icon
+		size={args.size ?? 24}
+		strokeWidth={args.strokeWidth ?? 2}
+		{...args.color ? { color: args.color, stroke: args.color } : {}}
+	>
+		{@render crossIcon()}
+	</Icon>
+{/snippet}
+
+<Story name="Playground" template={plus} args={{ size: 24, strokeWidth: 2 }} />
+
+{#snippet sizesGallery()}
+	<div style="display: flex; align-items: center; gap: 2rem; padding: 1rem;">
+		<Icon size={16} strokeWidth={2}>
+			{@render crossIcon()}
+		</Icon>
+		<Icon size={24} strokeWidth={2}>
+			{@render crossIcon()}
+		</Icon>
+		<Icon size={32} strokeWidth={2}>
+			{@render crossIcon()}
+		</Icon>
+		<Icon size={48} strokeWidth={2}>
+			{@render crossIcon()}
+		</Icon>
+	</div>
+{/snippet}
+
+<Story name="Sizes" template={sizesGallery} />
+
+{#snippet strokeWidthsGallery()}
+	<div style="display: flex; align-items: center; gap: 2rem; padding: 1rem;">
+		<Icon size={32} strokeWidth={1}>
+			{@render crossIcon()}
+		</Icon>
+		<Icon size={32} strokeWidth={2}>
+			{@render crossIcon()}
+		</Icon>
+		<Icon size={32} strokeWidth={3}>
+			{@render crossIcon()}
+		</Icon>
+	</div>
+{/snippet}
+
+<Story name="Stroke widths" template={strokeWidthsGallery} />
+
+{#snippet colorsGallery()}
+	<div style="display: flex; align-items: center; gap: 2rem; padding: 1rem;">
+		<Icon size={32} strokeWidth={2} color="red" stroke="red">
+			{@render crossIcon()}
+		</Icon>
+		<Icon size={32} strokeWidth={2} color="green" stroke="green">
+			{@render crossIcon()}
+		</Icon>
+		<Icon size={32} strokeWidth={2} color="blue" stroke="blue">
+			{@render crossIcon()}
+		</Icon>
+	</div>
+{/snippet}
+
+<Story name="Custom color" template={colorsGallery} />
+
+{#snippet variantsGallery()}
+	<div style="display: flex; align-items: center; gap: 2rem; padding: 1rem;">
+		<IconX />
+	</div>
+{/snippet}
+
+<Story name="Variants" template={variantsGallery} />
+
+{#snippet editorIconsGallery()}
+	<div
+		style="display: flex; gap: 1rem; align-items: center; padding: 0.5rem; background: var(--white); color: var(--black); border-radius: 0.5rem; width: fit-content;"
+	>
+		<IconH2 />
+		<IconH3 />
+		<IconImage />
+		<IconTable />
+	</div>
+{/snippet}
+
+<Story name="Editor icons" template={editorIconsGallery} />

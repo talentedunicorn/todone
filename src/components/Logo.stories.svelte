@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import Logo from './Logo.svelte';
 
@@ -8,4 +8,4 @@
 	});
 </script>
 
-<Story name="Default Logo" />
+<Story name="Default" />

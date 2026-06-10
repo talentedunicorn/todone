@@ -1,7 +1,7 @@
 {
 	"name": "todone",
 	"private": true,
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
@@ -19,7 +19,10 @@
 		"test-storybook": "vitest run",
 		"test-storybook:coverage": "vitest run --coverage",
 		"chromatic": "npx chromatic",
-		"upgrade:packages": "nx migrate latest"
+		"upgrade:packages": "nx migrate latest",
+		"release:patch": "commit-and-tag-version --release-as patch",
+		"release:minor": "commit-and-tag-version --release-as minor",
+		"release:major": "commit-and-tag-version --release-as major"
 	},
 	"devDependencies": {
 		"@auth0/auth0-spa-js": "^2.21.1",
@@ -49,6 +52,7 @@
 		"autoprefixer": "^10.5.0",
 		"babel-loader": "^10.1.1",
 		"chromatic": "^17.2.0",
+		"commit-and-tag-version": "^12.7.3",
 		"husky": "^9.1.7",
 		"jiti": "2.7.0",
 		"nx": "22.7.5",

@@ -1,5 +1,5 @@
 import type { TaskDatabase, Stream } from '../../src/adapters/database';
-import type { Todo } from '../../src/domain/todo';
+import type { Todo, TaskStatus } from '../../src/domain/todo';
 
 class SimpleStream<T> implements Stream<T> {
 	private listeners = new Set<(value: T) => void>();
@@ -37,7 +37,7 @@ export class MemoryTaskDatabase implements TaskDatabase {
 
 	async add(data: { title: string; value: string }): Promise<Todo> {
 		const now = new Date().toISOString();
-		const todo: Todo = { ...data, id: now, completed: false, updated: now };
+		const todo: Todo = { ...data, id: now, status: 'todo', updated: now };
 		this.todos.set(todo.id, todo);
 		this.persist();
 		return todo;
@@ -47,7 +47,7 @@ export class MemoryTaskDatabase implements TaskDatabase {
 		id: string;
 		title: string;
 		value: string;
-		completed: boolean;
+		status: TaskStatus;
 	}): Promise<void> {
 		const existing = this.todos.get(data.id);
 		if (!existing) return;
@@ -61,10 +61,10 @@ export class MemoryTaskDatabase implements TaskDatabase {
 		this.persist();
 	}
 
-	async setCompleted(id: string, completed: boolean): Promise<void> {
+	async setStatus(id: string, status: TaskStatus): Promise<void> {
 		const todo = this.todos.get(id);
 		if (!todo) return;
-		this.todos.set(id, { ...todo, completed });
+		this.todos.set(id, { ...todo, status });
 		this.persist();
 	}
 
@@ -81,23 +81,31 @@ export class MemoryTaskDatabase implements TaskDatabase {
 		this.persist();
 	}
 
-	async getDocCount(): Promise<{ complete: Stream<number>; incomplete: Stream<number> }> {
-		const complete = new SimpleStream<number>(0);
-		const incomplete = new SimpleStream<number>(0);
+	async getDocCount(): Promise<{
+		todo: Stream<number>;
+		inProgress: Stream<number>;
+		done: Stream<number>;
+	}> {
+		const todo = new SimpleStream<number>(0);
+		const inProgress = new SimpleStream<number>(0);
+		const done = new SimpleStream<number>(0);
 
 		const update = () => {
-			let c = 0,
-				i = 0;
-			for (const t of this.todos.values()) {
-				if (t.completed) c++;
-				else i++;
+			let t = 0,
+				ip = 0,
+				d = 0;
+			for (const tsk of this.todos.values()) {
+				if (tsk.status === 'todo') t++;
+				else if (tsk.status === 'in-progress') ip++;
+				else if (tsk.status === 'done') d++;
 			}
-			complete.emit(c);
-			incomplete.emit(i);
+			todo.emit(t);
+			inProgress.emit(ip);
+			done.emit(d);
 		};
 
 		this.stream.subscribe(update);
 
-		return { complete, incomplete };
+		return { todo, inProgress, done };
 	}
 }

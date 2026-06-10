@@ -20,7 +20,7 @@
 	import Home from './routes/Home.svelte';
 	import { checkAuth, initAuth0Client } from './auth';
 	import { setAuth0Client } from './lib/auth-client';
-	import { toastActions, toastMessage, status, isLoggedin, currentTab, tabs } from './stores';
+	import { toastActions, toastMessage, status, isLoggedin } from './stores';
 	import themeStore from './stores/theme';
 
 	let auth0 = $state<Auth0Client>();
@@ -60,17 +60,6 @@
 		handleBackToTop();
 		if (synced && !auth0) initializeAuth();
 	});
-
-	let menuItems = $derived(
-		tabs.map((item) => ({
-			...item,
-			selected: item.label === $currentTab
-		}))
-	);
-
-	const handleMenu = (path: string) => {
-		currentTab.set(path);
-	};
 
 	const routes = {
 		'/about': About,
@@ -123,7 +112,7 @@
 		<ToggleTheme />
 	</header>
 	<aside class="Menu">
-		<Menu {menuItems} goTo={handleMenu}>
+		<Menu>
 			<Button size="large" variant="link" onclick={() => push('/about')}>About</Button>
 		</Menu>
 	</aside>
@@ -183,6 +172,7 @@
 		.Header {
 			align-self: flex-end;
 			display: flex;
+			align-items: center;
 			gap: 2rem;
 			flex-direction: row-reverse;
 			padding-top: 1rem;

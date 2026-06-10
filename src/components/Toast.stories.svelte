@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
 	import Button from './Button.svelte';
 	import Toast from './Toast.svelte';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
@@ -30,6 +30,21 @@
 {/snippet}
 
 <Story name="Default" {template} />
+
+<Story
+	name="Long message"
+	{template}
+	args={{
+		message:
+			'This is a very long notification message that should wrap across multiple lines to test how the toast handles overflowing text content in the UI.'
+	}}
+/>
+
+<Story
+	name="Error notification"
+	{template}
+	args={{ message: 'Failed to save task. Please try again.' }}
+/>
 
 <Story
 	name="With footer action"

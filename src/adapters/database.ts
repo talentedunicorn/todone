@@ -4,15 +4,29 @@ export interface Stream<T> {
 	subscribe(callback: (value: T) => void): () => void;
 }
 
+import type { TaskStatus } from '../domain/todo';
+
 export interface TaskDatabase {
 	getTodos(): Stream<Todo[]>;
+	getTodosPage(opts: {
+		sortField: 'updated' | 'created';
+		sortDir: 'asc' | 'desc';
+		searchQuery?: string;
+		skip: number;
+		limit: number;
+	}): Stream<{ todos: Todo[]; total: number }>;
 	add(data: { title: string; value: string }): Promise<Todo>;
-	update(data: { id: string; title: string; value: string; completed: boolean }): Promise<unknown>;
+	update(data: { id: string; title: string; value: string; status: TaskStatus }): Promise<unknown>;
 	remove(id: string): Promise<unknown>;
-	setCompleted(id: string, completed: boolean): Promise<unknown>;
+	setStatus(id: string, status: TaskStatus): Promise<unknown>;
+	restore(task: Todo): Promise<unknown>;
 	exportTodos(): Promise<Todo[]>;
 	importTodos(data: Todo[]): Promise<unknown>;
-	getDocCount(): Promise<{ complete: Stream<number>; incomplete: Stream<number> }>;
+	getDocCount(): Promise<{
+		todo: Stream<number>;
+		inProgress: Stream<number>;
+		done: Stream<number>;
+	}>;
 }
 
 export interface DbConfig {

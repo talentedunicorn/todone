@@ -6,14 +6,18 @@ import type { Todo } from '../domain/todo';
 export const setupReplication = (
 	db: RxDatabase,
 	url: string,
-	getAuthToken: () => string | null
+	getAuthToken: () => string | null,
+	onTokenExpired?: () => Promise<string | null>
 ) => {
-	const authGetter = getAuthToken;
+	let retried = false;
+	let refreshing = false;
 
 	const fetchWithAuth = async (url: RequestInfo | URL, options?: RequestInit) => {
 		const headers = new Headers(options?.headers);
-		const authToken = authGetter();
-		headers.set('Authorization', `Bearer ${authToken}`);
+		const authToken = getAuthToken();
+		if (authToken) {
+			headers.set('Authorization', `Bearer ${authToken}`);
+		}
 
 		const response = await fetch(url, {
 			...options,
@@ -21,11 +25,40 @@ export const setupReplication = (
 		});
 
 		if (!response.ok) {
-			const { error, reason }: { error: string; reason: string } = await response.json();
-			if (reason === 'exp not in future') {
-				throw new Error('Token expired');
+			// Try to parse the error body — CouchDB may return non-JSON for 401
+			let reason = 'Sync request failed';
+			try {
+				const body = await response.clone().json();
+				reason = body.reason || reason;
+			} catch {
+				// Non-JSON response (e.g. HTML from a proxy), use status text
+				reason = response.statusText || reason;
 			}
+
+			const isAuthError = response.status === 401;
+			const isTokenExpired = reason.toLowerCase().includes('exp');
+			if (isAuthError && onTokenExpired && !refreshing && (!retried || isTokenExpired)) {
+				refreshing = true;
+				retried = true;
+				const newToken = await onTokenExpired();
+				refreshing = false;
+				if (newToken) {
+					headers.set('Authorization', `Bearer ${newToken}`);
+					const retryResponse = await fetch(url, { ...options, headers });
+					if (retryResponse.ok) {
+						retried = false;
+						return retryResponse;
+					}
+				}
+				retried = false;
+			}
+
+			// Don't leak the token in error logs
+			throw new Error(reason);
 		}
+
+		// Reset retry flag on success
+		retried = false;
 
 		return response;
 	};

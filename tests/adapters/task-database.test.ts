@@ -58,22 +58,22 @@ describe.each(factories)('TaskDatabase (%s)', ({ name, create }) => {
 			expect(result.updated).toBeDefined();
 			expect(result.title).toBe('Test');
 			expect(result.value).toBe('Content');
-			expect(result.completed).toBe(false);
+			expect(result.status).toBe('todo');
 		});
 
 		it('update modifies existing todo', async () => {
 			const created = await db.add({ title: 'Test', value: 'Content' });
-			await db.update({ ...created, title: 'Updated', completed: true });
+			await db.update({ ...created, title: 'Updated', status: 'done' });
 			const todos = await db.exportTodos();
 			expect(todos[0].title).toBe('Updated');
-			expect(todos[0].completed).toBe(true);
+			expect(todos[0].status).toBe('done');
 		});
 
-		it('setCompleted toggles boolean', async () => {
+		it('setStatus sets task status', async () => {
 			const created = await db.add({ title: 'Test', value: 'Content' });
-			await db.setCompleted(created.id, true);
+			await db.setStatus(created.id, 'done');
 			const todos = await db.exportTodos();
-			expect(todos[0].completed).toBe(true);
+			expect(todos[0].status).toBe('done');
 		});
 
 		it('remove deletes todo', async () => {
@@ -85,12 +85,14 @@ describe.each(factories)('TaskDatabase (%s)', ({ name, create }) => {
 	});
 
 	describe('getDocCount streams', () => {
-		it('returns separate complete/incomplete streams', async () => {
-			const { complete, incomplete } = await db.getDocCount();
-			expect(complete).toBeDefined();
-			expect(incomplete).toBeDefined();
-			expect(typeof complete.subscribe).toBe('function');
-			expect(typeof incomplete.subscribe).toBe('function');
+		it('returns separate status streams', async () => {
+			const { todo, inProgress, done } = await db.getDocCount();
+			expect(todo).toBeDefined();
+			expect(inProgress).toBeDefined();
+			expect(done).toBeDefined();
+			expect(typeof todo.subscribe).toBe('function');
+			expect(typeof inProgress.subscribe).toBe('function');
+			expect(typeof done.subscribe).toBe('function');
 		});
 	});
 
@@ -104,7 +106,7 @@ describe.each(factories)('TaskDatabase (%s)', ({ name, create }) => {
 				expect(t).toHaveProperty('id');
 				expect(t).toHaveProperty('title');
 				expect(t).toHaveProperty('value');
-				expect(t).toHaveProperty('completed');
+				expect(t).toHaveProperty('status');
 				expect(t).toHaveProperty('updated');
 			}
 		});
@@ -126,14 +128,14 @@ describe.each(factories)('TaskDatabase (%s)', ({ name, create }) => {
 					id: 'import-1',
 					title: 'Imported',
 					value: '',
-					completed: false,
+					status: 'todo',
 					updated: new Date().toISOString()
 				},
 				{
 					id: 'import-2',
 					title: 'Also',
 					value: '',
-					completed: true,
+					status: 'done',
 					updated: new Date().toISOString()
 				}
 			]);
@@ -147,7 +149,7 @@ describe.each(factories)('TaskDatabase (%s)', ({ name, create }) => {
 				{
 					...original,
 					title: 'Updated via import',
-					completed: true,
+					status: 'done',
 					updated: new Date().toISOString()
 				}
 			]);

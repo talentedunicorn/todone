@@ -15,6 +15,7 @@
 	--black: light-dark(hsl(0, 0%, 5%), hsl(0, 0%, 99%));
 	--gray: hsl(210, 11%, 71%);
 	--gray-light: light-dark(hsl(210, 11%, 92%), hsl(210, 11%, 31%));
+	--gray-bg: light-dark(hsl(210, 11%, 96%), hsl(210, 11%, 10%));
 	--red: hsl(0, 100%, 71%);
 	--yellow: hsl(44, 95%, 56%);
 	--font: 'Dosis', sans-serif;
@@ -103,26 +104,33 @@ table {
 	width: 100%;
 }
 
-table thead tr {
-	border-bottom: var(--border);
-}
-
-table tr:nth-child(even) {
-	background: var(--gray-light);
-}
-
 table th,
 table td {
-	padding: 0.5rem;
+	padding: 0.5rem 0.75rem;
+	border: 1px solid var(--gray);
+	text-align: left;
 }
 
-table th:not(:last-child) {
-	border-right: var(--border);
+table thead tr {
+	border-bottom: 1px solid var(--gray);
+	background: var(--gray-light);
+	white-space: nowrap;
+}
+
+table thead th {
+	font-weight: 700;
+}
+
+table tbody tr:nth-child(even) {
+	background: color-mix(in srgb, var(--gray-light) 50%, transparent);
+}
+
+table tbody tr:hover {
+	background: color-mix(in srgb, var(--primary) 12%, transparent);
 }
 
 .Content table th {
 	font-size: 1.2rem;
-	white-space: nowrap;
 }
 
 blockquote {

@@ -5,10 +5,13 @@
 	import Button from './Button.svelte';
 	import { createEditorCarta } from '../lib/carta';
 	import { themeObserver } from '../lib/theme-observer';
-	import type { Todo } from '../db';
+	import type { Todo, TaskStatus } from '../domain/todo';
+	import { nextStatus } from '../lib/task';
+	import StatusBadge from './StatusBadge.svelte';
 	import { fly } from 'svelte/transition';
 
 	type Content = { title: string; value: string };
+	type FormTodo = Omit<Todo, 'id' | 'updated'> & { status?: TaskStatus };
 
 	interface Props {
 		defaultValue?: Todo | null;
@@ -16,9 +19,17 @@
 		onClear: () => void;
 		onUpdate: (data: Todo) => Promise<void> | void;
 		onSubmit: (data: Todo) => Promise<void> | void;
+		onDelete?: (task: Todo) => Promise<void> | void;
 	}
 
-	let { defaultValue, enableEditor = true, onClear, onSubmit, onUpdate }: Props = $props();
+	let {
+		defaultValue,
+		enableEditor = true,
+		onClear,
+		onSubmit,
+		onUpdate,
+		onDelete
+	}: Props = $props();
 
 	let carta = $state<Carta | null>(null);
 	let isBrowser = $state(false);
@@ -36,9 +47,8 @@
 	});
 
 	let titleInput: HTMLInputElement;
-	let titleFocused = $state(false);
 
-	let data = $state<Todo | Content>({ title: '', value: '' });
+	let data = $state<FormTodo>({ title: '', value: '', status: 'todo' });
 
 	$effect(() => {
 		if (defaultValue) {
@@ -48,10 +58,6 @@
 
 	const isEdit = $derived(defaultValue !== null);
 
-	const showEditor = $derived(
-		isEdit || data.title.trim().length > 0 || data.value.trim().length > 0
-	);
-
 	const isEmpty = $derived(data.value.trim().length < 1);
 
 	const invalid = $derived(data.title.trim().length < 1 || isEmpty);
@@ -59,7 +65,7 @@
 
 	const clear = () => {
 		defaultValue = null;
-		data = { title: '', value: '' };
+		data = { title: '', value: '', status: 'todo' };
 		onClear();
 	};
 
@@ -111,8 +117,18 @@ Form component with a title and content inputs
 		bind:value={data.title}
 		bind:this={titleInput}
 	/>
+
+	{#if isEdit}
+		<StatusBadge
+			status={data.status as TaskStatus}
+			onclick={() => {
+				data.status = nextStatus(data.status as TaskStatus);
+			}}
+		/>
+	{/if}
+
 	<label class="visually-hidden" for="content">Content</label>
-	<div class="editor-wrapper" class:open={showEditor}>
+	<div class="editor-wrapper">
 		<div class="inner">
 			<div
 				use:themeObserver={{
@@ -140,53 +156,71 @@ Form component with a title and content inputs
 	{#if !invalid}
 		<div class="Actions" transition:fly={{ y: 5 }}>
 			<Button data-testid="cancel" data-umami-event="Cancel edit" onclick={clear}>Cancel</Button>
-			<Button data-testid="submit" data-umami-event="Save" type="submit" variant="primary"
-				>{buttonText}</Button
-			>
+
+			<div>
+				{#if isEdit && onDelete}
+					<Button variant="link" onclick={() => onDelete(data as Todo)}>Delete</Button>
+				{/if}
+				<Button data-testid="submit" data-umami-event="Save" type="submit" variant="primary"
+					>{buttonText}</Button
+				>
+			</div>
 		</div>
 	{/if}
 </form>
 
 <style>
 	form {
+		display: flex;
+		flex-direction: column;
+		align-items: start;
+		flex: 1;
+		min-height: 0;
 		gap: 1rem;
-		padding: 1rem;
-		border-radius: 1rem;
-		border: 0.2em solid var(--gray);
 
-		&,
 		& .Actions {
 			display: flex;
-			flex-wrap: wrap;
-		}
-
-		& .Actions {
-			align-self: end;
 			gap: 1rem;
-			align-items: flex-end;
+			align-items: center;
 			justify-content: space-between;
+			margin-top: auto;
+
+			& > div {
+				display: flex;
+				gap: 1rem;
+				align-items: center;
+			}
 		}
 
 		.editor-wrapper {
 			width: 100%;
+			flex: 1;
+			min-height: 0;
 			border-radius: 1rem;
 			border: 0.2em solid var(--black);
-			display: grid;
-			grid-template-rows: 0fr;
-			transition: grid-template-rows 0.3s ease-out;
 			overflow: hidden;
-
-			&.open {
-				grid-template-rows: 1fr;
-			}
+			display: grid;
+			grid-template-rows: 1fr;
 
 			& .inner {
+				display: flex;
+				flex-direction: column;
 				overflow: hidden;
+				height: 100%;
+				min-height: 0;
+
+				/* Theme observer div — fill available height */
+				> :global(div) {
+					flex: 1;
+					min-height: 0;
+					display: flex;
+					flex-direction: column;
+				}
 			}
 		}
 
 		input {
-			flex: 100%;
+			width: 100%;
 			font-size: 1.5rem;
 			font-weight: bold;
 			font-family: inherit;
@@ -207,10 +241,7 @@ Form component with a title and content inputs
 		background: var(--gray-light);
 		padding: 2px 4px;
 		border-radius: 3px;
-	}
-
-	:global(.carta-renderer, .carta-input) {
-		max-height: 25rem; /* Sets a maximum height for the editor and input */
+		word-wrap: break-word;
 	}
 
 	:global(.carta-toolbar) {
@@ -240,6 +271,11 @@ Form component with a title and content inputs
 	:global(.carta-icon) {
 		width: 2rem !important;
 		height: 2rem !important;
+		flex-shrink: 0 !important;
+	}
+
+	:global(.carta-toolbar-right) {
+		flex-shrink: 0 !important;
 	}
 
 	:global(.carta-font-code) {
@@ -278,6 +314,34 @@ Form component with a title and content inputs
 
 	:global([data-theme='dark'] .carta-input .shiki, [data-theme='dark'] .carta-input .shiki span) {
 		color: var(--shiki-dark) !important;
+	}
+
+	/* Override carta-md default fixed 600px height — make editor fill available space */
+	:global(.carta-theme__default.carta-editor) {
+		flex: 1;
+		min-height: 0;
+	}
+
+	:global(.carta-theme__default .carta-wrapper) {
+		flex: 1;
+		min-height: 0;
+		height: auto;
+		display: flex;
+		flex-direction: column;
+	}
+
+	:global(.carta-theme__default .carta-container) {
+		flex: 1;
+		min-height: 0;
+	}
+
+	:global(.carta-theme__default .carta-input) {
+		height: 100% !important;
+		min-height: 75px; /* Works on devices with keyboards */
+	}
+
+	:global(.carta-theme__default .carta-container > .carta-input) {
+		margin: 0;
 	}
 
 	@media (prefers-color-scheme: dark) {

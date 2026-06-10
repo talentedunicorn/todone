@@ -3,8 +3,9 @@ import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
 import { RxDBQueryBuilderPlugin } from 'rxdb/plugins/query-builder';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
+import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
 import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv';
-import { map } from 'rxjs/operators';
+import { combineLatest, map } from 'rxjs';
 import type { Observable } from 'rxjs';
 
 if (import.meta.env.DEV) {
@@ -13,34 +14,61 @@ if (import.meta.env.DEV) {
 
 addRxPlugin(RxDBUpdatePlugin);
 addRxPlugin(RxDBQueryBuilderPlugin);
+addRxPlugin(RxDBMigrationSchemaPlugin);
 
 const storage = wrappedValidateAjvStorage({
 	storage: getRxStorageDexie()
 });
 
-import type { Todo } from '../domain/todo';
+import type { Todo, TaskStatus } from '../domain/todo';
 
 const todoSchema: RxJsonSchema<Todo> = {
-	version: 0,
+	version: 3,
 	primaryKey: 'id',
 	type: 'object',
 	properties: {
 		id: { type: 'string', maxLength: 100 },
 		title: { type: 'string' },
 		value: { type: 'string' },
-		completed: { type: 'boolean', default: false },
-		updated: { type: 'string', format: 'date-time' }
+		status: {
+			type: 'string',
+			default: 'todo',
+			maxLength: 20,
+			enum: ['todo', 'in-progress', 'done']
+		},
+		updated: { type: 'string', format: 'date-time', maxLength: 30 }
 	},
-	required: ['id', 'title', 'value', 'updated', 'completed'],
-	indexes: ['completed']
+	required: ['id', 'title', 'value', 'updated', 'status'],
+	indexes: ['status', 'updated']
 };
 
 const createDatabase = (name: string) =>
 	createRxDatabase({
 		name,
 		storage,
-		ignoreDuplicate: import.meta.env.DEV
+		ignoreDuplicate: import.meta.env.DEV,
+		allowSlowCount: true
 	});
+
+const migrationStrategies = {
+	1: (oldDoc: any) => {
+		// v0 had 'completed: boolean', v1 uses 'status: string'
+		oldDoc.status = oldDoc.completed ? 'done' : 'todo';
+		delete oldDoc.completed;
+		return oldDoc;
+	},
+	2: (oldDoc: any) => {
+		// v1 had 'archived' status, v2 restricts to ['todo', 'in-progress', 'done']
+		if (oldDoc.status === 'archived') {
+			oldDoc.status = 'done';
+		}
+		return oldDoc;
+	},
+	3: (oldDoc: any) => {
+		// v2→v3: add 'updated' index — no data transform needed
+		return oldDoc;
+	}
+};
 
 const createCollection = async <T extends object>(
 	db: RxDatabase,
@@ -49,10 +77,16 @@ const createCollection = async <T extends object>(
 ) => {
 	await db.addCollections({
 		[collectionName]: {
-			schema
+			schema,
+			migrationStrategies,
+			autoMigrate: true
 		}
 	});
 };
+
+function escapeRegex(str: string): string {
+	return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 import { type TaskDatabase, type Stream, type DbConfig } from './database';
 export type { TaskDatabase, Stream, DbConfig };
@@ -104,17 +138,45 @@ export class RxDBTaskDatabase implements TaskDatabase {
 		return new RxDBStream(observable);
 	}
 
+	getTodosPage(opts: {
+		sortField: 'updated' | 'created';
+		sortDir: 'asc' | 'desc';
+		searchQuery?: string;
+		skip: number;
+		limit: number;
+	}): Stream<{ todos: Todo[]; total: number }> {
+		const db = this.getDb();
+		const field = opts.sortField === 'created' ? 'id' : 'updated';
+
+		const selector = opts.searchQuery
+			? { title: { $regex: `.*${escapeRegex(opts.searchQuery)}.*`, $options: 'i' } }
+			: undefined;
+
+		const todos$ = db.todos
+			.find({ selector })
+			.sort({ [field]: opts.sortDir })
+			.skip(opts.skip)
+			.limit(opts.limit)
+			.$.pipe(map((docs) => docs.map((d) => d.toJSON() as Todo)));
+
+		const count$ = db.todos.count({ selector }).$;
+
+		return new RxDBStream(
+			combineLatest([todos$, count$]).pipe(map(([todos, total]) => ({ todos, total })))
+		);
+	}
+
 	async add(data: { title: string; value: string }): Promise<Todo> {
 		const db = this.getDb();
 		const now = new Date().toISOString();
-		return db.todos.insert({ ...data, updated: now, id: now });
+		return db.todos.insert({ ...data, status: 'todo', updated: now, id: now });
 	}
 
 	async update(data: {
 		id: string;
 		title: string;
 		value: string;
-		completed: boolean;
+		status: TaskStatus;
 	}): Promise<unknown> {
 		const db = this.getDb();
 		const now = new Date().toISOString();
@@ -123,7 +185,7 @@ export class RxDBTaskDatabase implements TaskDatabase {
 			$set: {
 				title: data.title,
 				value: data.value,
-				completed: data.completed,
+				status: data.status,
 				updated: now
 			}
 		});
@@ -134,11 +196,17 @@ export class RxDBTaskDatabase implements TaskDatabase {
 		return db.todos.findOne({ selector: { id } }).remove();
 	}
 
-	async setCompleted(id: string, completed: boolean): Promise<unknown> {
+	async setStatus(id: string, status: TaskStatus): Promise<unknown> {
 		const db = this.getDb();
+		const now = new Date().toISOString();
 		return db.todos.findOne({ selector: { id } }).update({
-			$set: { completed }
+			$set: { status, updated: now }
 		});
+	}
+
+	async restore(task: Todo): Promise<unknown> {
+		const db = this.getDb();
+		return db.todos.upsert(task);
 	}
 
 	async exportTodos(): Promise<Todo[]> {
@@ -149,14 +217,33 @@ export class RxDBTaskDatabase implements TaskDatabase {
 
 	async importTodos(data: Todo[]): Promise<unknown> {
 		const db = this.getDb();
-		return db.todos.bulkUpsert(data);
+		// Migrate legacy imports
+		const migrated = data.map((doc) => {
+			const d = doc as Todo & { completed?: boolean };
+			// v0 had 'completed: boolean' instead of 'status: string'
+			if (d.completed !== undefined && !d.status) {
+				d.status = d.completed ? 'done' : 'todo';
+				delete d.completed;
+			}
+			// v1 had 'archived' status, removed in v2
+			if ((d as any).status === 'archived') {
+				(d as any).status = 'done';
+			}
+			return d;
+		});
+		return db.todos.bulkUpsert(migrated);
 	}
 
-	async getDocCount(): Promise<{ complete: Stream<number>; incomplete: Stream<number> }> {
+	async getDocCount(): Promise<{
+		todo: Stream<number>;
+		inProgress: Stream<number>;
+		done: Stream<number>;
+	}> {
 		const db = this.getDb();
-		const complete = new RxDBStream(db.todos.count({ selector: { completed: true } }).$);
-		const incomplete = new RxDBStream(db.todos.count({ selector: { completed: false } }).$);
-		return { complete, incomplete };
+		const todo = new RxDBStream(db.todos.count({ selector: { status: 'todo' } }).$);
+		const inProgress = new RxDBStream(db.todos.count({ selector: { status: 'in-progress' } }).$);
+		const done = new RxDBStream(db.todos.count({ selector: { status: 'done' } }).$);
+		return { todo, inProgress, done };
 	}
 }
 

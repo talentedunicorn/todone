@@ -1,18 +1,14 @@
 <script lang="ts">
+	import Icon from './Icon.svelte';
 </script>
 
-<svg
-	width="16"
-	height="16"
-	viewBox="0 0 24 24"
-	fill="none"
-	stroke="currentColor"
-	stroke-width="1.5"
-	stroke-linecap="round"
-	stroke-linejoin="round"
->
-	<path d="M4 12h6" />
-	<path d="M4 18V6" />
-	<path d="M12 18V6" />
-	<path d="M17 12l4 2v4l-4 2" />
-</svg>
+<Icon size="16" strokeWidth="1.5">
+	<path
+		fill="none"
+		stroke="currentColor"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		stroke-width="1.5"
+		d="M3.5 5v14m10-14v14m3-2a2 2 0 1 0 2-2a2 2 0 1 0-2-2m-13-1h10"
+	/>
+</Icon>

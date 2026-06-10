@@ -1,15 +1,38 @@
+import { get } from 'svelte/store';
 import { type TaskDatabase, RxDBTaskDatabase } from './adapters/rxdb-adapter';
 import { setupReplication } from './sync/replication';
 import { type Todo } from './domain/todo';
 import type { Stream } from './adapters/database';
-import { get } from 'svelte/store';
-import { token } from './stores/auth';
+import { token, isLoggedin, user } from './stores/auth';
+import { getAuth0Client } from './lib/auth-client';
 
 const dbName = import.meta.env.VITE_DB_NAME || 'Todone';
 const synced = import.meta.env.VITE_SYNCED === 'true';
 const remoteUrl = import.meta.env.VITE_REMOTE_DB;
 
 let dbInstance: TaskDatabase | null = null;
+
+const onTokenExpired = async (): Promise<string | null> => {
+	const auth0 = getAuth0Client();
+	if (!auth0) return null;
+
+	try {
+		const { id_token } = await auth0.getTokenSilently({
+			authorizationParams: {
+				redirect_uri: window.location.origin
+			},
+			detailedResponse: true
+		});
+		token.set(id_token);
+		return id_token;
+	} catch {
+		isLoggedin.set(false);
+		user.set({});
+		token.set(null);
+		window.location.href = '/login';
+		return null;
+	}
+};
 
 const initDB = async (): Promise<TaskDatabase> => {
 	if (!dbInstance) {
@@ -18,7 +41,7 @@ const initDB = async (): Promise<TaskDatabase> => {
 		dbInstance = rxDb;
 
 		if (synced && remoteUrl) {
-			setupReplication(rxDb.getDatabase(), remoteUrl, () => get(token) ?? null);
+			setupReplication(rxDb.getDatabase(), remoteUrl, () => get(token) ?? null, onTokenExpired);
 		}
 	}
 	return dbInstance;
@@ -34,24 +57,37 @@ export const getTodos = async () => {
 	return db.getTodos();
 };
 
+export const getTodosPage = async (opts: {
+	sortField: 'updated' | 'created';
+	sortDir: 'asc' | 'desc';
+	searchQuery?: string;
+	skip: number;
+	limit: number;
+}) => {
+	const db = await initDB();
+	return db.getTodosPage(opts);
+};
+
 export const add = async (data: { title: string; value: string }) => {
 	const db = await initDB();
 	return db.add(data);
 };
 
+import type { TaskStatus } from './domain/todo';
+
 export const update = async ({
 	id,
 	title,
 	value,
-	completed
+	status
 }: {
 	id: string;
 	title: string;
 	value: string;
-	completed: boolean;
+	status: TaskStatus;
 }) => {
 	const db = await initDB();
-	return db.update({ id, title, value, completed });
+	return db.update({ id, title, value, status });
 };
 
 export const remove = async (id: string) => {
@@ -59,9 +95,9 @@ export const remove = async (id: string) => {
 	return db.remove(id);
 };
 
-export const setCompleted = async (id: string, completed: boolean) => {
+export const setStatus = async (id: string, status: TaskStatus) => {
 	const db = await initDB();
-	return db.setCompleted(id, completed);
+	return db.setStatus(id, status);
 };
 
 export const exportTodos = async () => {
@@ -72,6 +108,11 @@ export const exportTodos = async () => {
 export const importTodos = async (data: Todo[]) => {
 	const db = await initDB();
 	return db.importTodos(data);
+};
+
+export const restore = async (task: Todo) => {
+	const db = await initDB();
+	return db.restore(task);
 };
 
 export const createTaskDatabase = initDB;
