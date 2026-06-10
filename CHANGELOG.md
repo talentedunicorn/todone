@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## 2.0.2 (2026-06-10)
+
+
+### Bug Fixes
+
+* removed sentry feedback form due to overlap with FAB ([5a9ffde](https://github.com/talentedunicorn/todone/commit/5a9ffdea66ffa0eaeea7c1d4d706342b6d3ca97f))
+* update dependencies and resolve security vulnerabilities ([#576](https://github.com/talentedunicorn/todone/issues/576)) ([e02c6bc](https://github.com/talentedunicorn/todone/commit/e02c6bc8dcc8498d63841dd80ff0e5496405773a))
+
 ## [2.0.1](https://github.com/talentedunicorn/todone/compare/v2.0.0...v2.0.1) (2026-06-10)
 
 ### Bug Fixes
