@@ -2,6 +2,7 @@
 	import { Markdown } from 'carta-md';
 	import 'carta-md/default.css';
 	import ExportImport from '../components/ExportImport.svelte';
+	import { APP_VERSION } from '../lib/version';
 	import { getDocCount } from '../db';
 	import { createViewerCarta } from '../lib/carta';
 
@@ -44,6 +45,7 @@
 		<p>{todo} &#8212; to do</p>
 		<p>{inProgress} &#8212; in progress</p>
 		<p>{done} &#8212; done</p>
+		<p>Version — {APP_VERSION}</p>
 		<nav>
 			<ExportImport />
 		</nav>
