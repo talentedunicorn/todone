@@ -10,6 +10,7 @@ export const setupReplication = (
 	onTokenExpired?: () => Promise<string | null>
 ) => {
 	let retried = false;
+	let refreshing = false;
 
 	const fetchWithAuth = async (url: RequestInfo | URL, options?: RequestInit) => {
 		const headers = new Headers(options?.headers);
@@ -35,9 +36,12 @@ export const setupReplication = (
 			}
 
 			const isAuthError = response.status === 401;
-			if (isAuthError && onTokenExpired && !retried) {
+			const isTokenExpired = reason.toLowerCase().includes('exp');
+			if (isAuthError && onTokenExpired && !refreshing && (!retried || isTokenExpired)) {
+				refreshing = true;
 				retried = true;
 				const newToken = await onTokenExpired();
+				refreshing = false;
 				if (newToken) {
 					headers.set('Authorization', `Bearer ${newToken}`);
 					const retryResponse = await fetch(url, { ...options, headers });
@@ -45,10 +49,8 @@ export const setupReplication = (
 						retried = false;
 						return retryResponse;
 					}
-					// Retry also failed, fall through to throw
-				} else {
-					// Refresh returned null — token definitely expired, stop retrying
 				}
+				retried = false;
 			}
 
 			// Don't leak the token in error logs
