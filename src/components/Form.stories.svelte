@@ -54,7 +54,8 @@
 		enableEditor: true,
 		defaultValue: {
 			title: 'Things to do',
-			value: '- Write todos'
+			value: '- Write todos',
+			status: 'todo'
 		}
 	}}
 	play={async ({ canvas }) => {
