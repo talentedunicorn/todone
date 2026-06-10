@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.1](https://github.com/talentedunicorn/todone/compare/v2.0.0...v2.0.1) (2026-06-10)
+
+### Bug Fixes
+
+- handle expired token from server and reauthenticate ([25a6508](https://github.com/talentedunicorn/todone/commit/25a65080969337c65f6d65e29d64d7409a2e0d89))
+
 ## 2.0.0 (2026-06-10)
 
 ### Features
