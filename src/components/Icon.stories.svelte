@@ -1,5 +1,10 @@
 <script module lang="ts">
 	import Icon from './Icon.svelte';
+	import IconX from './IconX.svelte';
+	import IconH2 from './IconH2.svelte';
+	import IconH3 from './IconH3.svelte';
+	import IconImage from './IconImage.svelte';
+	import IconTable from './IconTable.svelte';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 
 	const { Story } = defineMeta({
@@ -81,3 +86,24 @@
 {/snippet}
 
 <Story name="Custom color" template={colorsGallery} />
+
+{#snippet variantsGallery()}
+	<div style="display: flex; align-items: center; gap: 2rem; padding: 1rem;">
+		<IconX />
+	</div>
+{/snippet}
+
+<Story name="Variants" template={variantsGallery} />
+
+{#snippet editorIconsGallery()}
+	<div
+		style="display: flex; gap: 1rem; align-items: center; padding: 0.5rem; background: var(--white); color: var(--black); border-radius: 0.5rem; width: fit-content;"
+	>
+		<IconH2 />
+		<IconH3 />
+		<IconImage />
+		<IconTable />
+	</div>
+{/snippet}
+
+<Story name="Editor icons" template={editorIconsGallery} />

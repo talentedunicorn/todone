@@ -8,4 +8,4 @@
 	});
 </script>
 
-<Story name="Default Logo" />
+<Story name="Default" />
