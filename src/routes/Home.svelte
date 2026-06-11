@@ -8,10 +8,7 @@
 	import Button from '../components/Button.svelte';
 	import { isLoggedin, user } from '../stores';
 	import { logout } from '../auth';
-	import { getAuth0Client } from '../lib/auth-client';
 	import { createTaskDatabase } from '../db';
-
-	let auth0 = getAuth0Client;
 
 	let view = $state<'list' | 'kanban'>(
 		typeof localStorage !== 'undefined'
@@ -33,7 +30,7 @@
 	{#if $isLoggedin}
 		<div class="Profile">
 			<img src={$user.picture} alt={$user.nickname} />
-			<Button onclick={() => auth0() && logout(auth0()!)}>Log out</Button>
+			<Button onclick={logout}>Log out</Button>
 		</div>
 	{/if}
 	{#await createTaskDatabase()}

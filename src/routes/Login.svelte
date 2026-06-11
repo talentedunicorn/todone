@@ -2,9 +2,6 @@
 	import Button from '../components/Button.svelte';
 	import { login } from '../auth';
 	import { isLoggedin } from '../stores';
-	import { getAuth0Client } from '../lib/auth-client';
-
-	let auth0 = getAuth0Client;
 </script>
 
 <svelte:head>
@@ -15,7 +12,7 @@
 	{#if $isLoggedin}
 		<p>You are already logged in.</p>
 	{:else}
-		<Button onclick={() => auth0() && login(auth0()!)}>Log in</Button>
+		<Button onclick={login}>Log in</Button>
 	{/if}
 </main>
 
