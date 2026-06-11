@@ -12,7 +12,10 @@ export const setupReplication = (
 	let retried = false;
 	let refreshing = false;
 
-	const fetchWithAuth = async (url: RequestInfo | URL, options?: RequestInit) => {
+	const fetchWithAuth = async (
+		url: RequestInfo | URL,
+		options?: RequestInit
+	): Promise<Response> => {
 		const headers = new Headers(options?.headers);
 		const authToken = getAuthToken();
 		if (authToken) {
@@ -25,35 +28,35 @@ export const setupReplication = (
 		});
 
 		if (!response.ok) {
-			// Try to parse the error body — CouchDB may return non-JSON for 401
 			let reason = 'Sync request failed';
 			try {
 				const body = await response.clone().json();
 				reason = body.reason || reason;
 			} catch {
-				// Non-JSON response (e.g. HTML from a proxy), use status text
 				reason = response.statusText || reason;
 			}
 
 			const isAuthError = response.status === 401;
-			const isTokenExpired = reason.toLowerCase().includes('exp');
-			if (isAuthError && onTokenExpired && !refreshing && (!retried || isTokenExpired)) {
+			if (isAuthError && onTokenExpired && !refreshing && !retried) {
 				refreshing = true;
 				retried = true;
 				const newToken = await onTokenExpired();
 				refreshing = false;
 				if (newToken) {
-					headers.set('Authorization', `Bearer ${newToken}`);
-					const retryResponse = await fetch(url, { ...options, headers });
-					if (retryResponse.ok) {
-						retried = false;
-						return retryResponse;
+					try {
+						const retryResponse = await fetchWithAuth(url, options);
+						if (retryResponse.ok) {
+							retried = false;
+							return retryResponse;
+						}
+						reason = 'Sync request failed with refreshed token';
+					} catch {
+						reason = 'Sync request failed with refreshed token';
 					}
 				}
 				retried = false;
 			}
 
-			// Don't leak the token in error logs
 			throw new Error(reason);
 		}
 
