@@ -20,7 +20,8 @@ const onTokenExpired = async (): Promise<string | null> => {
 			authorizationParams: {
 				redirect_uri: window.location.origin
 			},
-			detailedResponse: true
+			detailedResponse: true,
+			cacheMode: 'off'
 		});
 		return id_token;
 	} catch {
@@ -49,7 +50,8 @@ const initDB = async (): Promise<TaskDatabase> => {
 							authorizationParams: {
 								redirect_uri: window.location.origin
 							},
-							detailedResponse: true
+							detailedResponse: true,
+							cacheMode: 'off'
 						});
 						return id_token;
 					} catch {
