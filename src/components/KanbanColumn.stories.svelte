@@ -34,21 +34,21 @@
 			title: 'Set up CI/CD',
 			value: 'Configure GitHub Actions',
 			status: 'todo',
-			updated: new Date()
+			updated: new Date('2024-01-15').toISOString()
 		},
 		{
 			id: '2',
 			title: 'Write documentation',
 			value: 'API docs',
 			status: 'todo',
-			updated: new Date()
+			updated: new Date('2024-01-16').toISOString()
 		},
 		{
 			id: '3',
 			title: 'Add dark mode',
 			value: 'CSS variables',
 			status: 'todo',
-			updated: new Date()
+			updated: new Date('2024-01-17').toISOString()
 		}
 	];
 </script>

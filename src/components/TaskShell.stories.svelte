@@ -17,28 +17,28 @@
 			title: 'Set up CI/CD',
 			value: 'Configure GitHub Actions',
 			status: 'done',
-			updated: new Date()
+			updated: new Date('2024-01-15').toISOString()
 		},
 		{
 			id: '2',
 			title: 'Write documentation',
 			value: 'API docs and user guide',
 			status: 'in-progress',
-			updated: new Date()
+			updated: new Date('2024-01-16').toISOString()
 		},
 		{
 			id: '3',
 			title: 'Fix login bug',
 			value: 'Session expires too early',
 			status: 'todo',
-			updated: new Date()
+			updated: new Date('2024-01-17').toISOString()
 		},
 		{
 			id: '4',
 			title: 'Add dark mode',
 			value: 'CSS variables approach',
 			status: 'todo',
-			updated: new Date()
+			updated: new Date('2024-01-18').toISOString()
 		}
 	];
 
@@ -67,7 +67,7 @@
 			title: '',
 			value: '',
 			status: 'todo' as TaskStatus,
-			updated: new Date()
+			updated: new Date('2024-01-15').toISOString()
 		}),
 		update: fn().mockResolvedValue(undefined),
 		remove: fn().mockResolvedValue(undefined),

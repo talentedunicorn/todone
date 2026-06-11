@@ -57,7 +57,7 @@
 			title: 'Quick task',
 			value: '',
 			status: 'todo' as const,
-			updated: new Date()
+			updated: new Date('2024-01-15').toISOString()
 		}
 	}}
 	play={async ({ canvas }) => {
