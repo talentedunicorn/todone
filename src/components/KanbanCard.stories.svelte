@@ -90,7 +90,7 @@
 			title: 'Add dark mode',
 			value: '# Steps\n\n- [x] Define CSS vars\n- [ ] Update components',
 			status: 'in-progress',
-			updated: expect.any(String)
+			updated: expect.any(Date)
 		});
 	}}
 />
