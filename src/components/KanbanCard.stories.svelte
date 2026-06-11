@@ -37,7 +37,7 @@
 			title: 'Set up CI/CD',
 			value: 'Configure GitHub Actions workflow',
 			status: 'todo',
-			updated: new Date()
+			updated: new Date('2024-01-15').toISOString()
 		}
 	}}
 />
@@ -51,7 +51,7 @@
 			title: 'Write API docs',
 			value: 'Document all endpoints',
 			status: 'in-progress',
-			updated: new Date()
+			updated: new Date('2024-01-15').toISOString()
 		}
 	}}
 />
@@ -65,7 +65,7 @@
 			title: 'Fix login bug',
 			value: 'Session timeout reduced',
 			status: 'done',
-			updated: new Date()
+			updated: new Date('2024-01-15').toISOString()
 		}
 	}}
 />
@@ -105,7 +105,7 @@
 				'This is an extremely long task title that should be truncated with an ellipsis instead of wrapping or overflowing in the card',
 			value: '',
 			status: 'in-progress',
-			updated: new Date()
+			updated: new Date('2024-01-15').toISOString()
 		}
 	}}
 />

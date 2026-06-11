@@ -45,7 +45,7 @@
 			title: 'Example task',
 			value: '# Things to do\n\n- [ ] First item\n- [ ] Second item',
 			status: 'todo' as const,
-			updated: new Date()
+			updated: new Date('2024-01-15').toISOString()
 		}
 	}}
 	play={async ({ canvas }) => {
@@ -62,7 +62,7 @@
 			title: 'Deletable task',
 			value: 'Some content here.',
 			status: 'done' as const,
-			updated: new Date()
+			updated: new Date('2024-01-15').toISOString()
 		},
 		onDelete: deleteSpy
 	}}

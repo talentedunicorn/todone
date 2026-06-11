@@ -95,7 +95,7 @@
 			title: `Task ${i + 1}`,
 			value: `Description for task ${i + 1}.`,
 			status: (['todo', 'in-progress', 'done'] as const)[i % 3],
-			updated: new Date(2026, 5, i + 1).toISOString()
+			updated: new Date(2024, 0, i + 1).toISOString()
 		}))
 	}}
 	play={async ({ canvas }) => {
