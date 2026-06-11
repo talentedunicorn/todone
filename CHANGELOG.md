@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## 2.0.5 (2026-06-11)
+
+
+### Bug Fixes
+
+* bypass token cache to prevent stale id_token from being served ([8913166](https://github.com/talentedunicorn/todone/commit/8913166f8c37a33c96f28f49413a03336d7705cb))
+* removed sentry feedback form due to overlap with FAB ([#618](https://github.com/talentedunicorn/todone/issues/618)) ([d6afe91](https://github.com/talentedunicorn/todone/commit/d6afe9104f1c8d0c7c7d4240a6b44f4ffd8924f9))
+* update dependencies and resolve security vulnerabilities ([#576](https://github.com/talentedunicorn/todone/issues/576)) ([e02c6bc](https://github.com/talentedunicorn/todone/commit/e02c6bc8dcc8498d63841dd80ff0e5496405773a))
+
 ## 2.0.4 (2026-06-11)
 
 

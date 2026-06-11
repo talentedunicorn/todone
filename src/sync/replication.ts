@@ -6,7 +6,7 @@ import type { Todo } from '../domain/todo';
 export const setupReplication = (
 	db: RxDatabase,
 	url: string,
-	getAuthToken: () => string | null,
+	getAuthToken: () => Promise<string | null>,
 	onTokenExpired?: () => Promise<string | null>
 ) => {
 	let retried = false;
@@ -17,7 +17,7 @@ export const setupReplication = (
 		options?: RequestInit
 	): Promise<Response> => {
 		const headers = new Headers(options?.headers);
-		const authToken = getAuthToken();
+		const authToken = await getAuthToken();
 		if (authToken) {
 			headers.set('Authorization', `Bearer ${authToken}`);
 		}

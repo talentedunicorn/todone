@@ -18,8 +18,7 @@
 	import NotFound from './routes/NotFound.svelte';
 	import Login from './routes/Login.svelte';
 	import Home from './routes/Home.svelte';
-	import { checkAuth, initAuth0Client } from './auth';
-	import { setAuth0Client } from './lib/auth-client';
+	import { checkAuth, initAuth } from './auth';
 	import { toastActions, toastMessage, status, isLoggedin } from './stores';
 	import themeStore from './stores/theme';
 
@@ -49,8 +48,7 @@
 	};
 
 	const initializeAuth = async () => {
-		auth0 = await initAuth0Client();
-		setAuth0Client(auth0);
+		auth0 = await initAuth();
 		await checkAuth(auth0);
 
 		if ($isLoggedin) push(`/`);

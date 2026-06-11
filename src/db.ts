@@ -1,10 +1,9 @@
-import { get } from 'svelte/store';
 import { type TaskDatabase, RxDBTaskDatabase } from './adapters/rxdb-adapter';
 import { setupReplication } from './sync/replication';
 import { type Todo } from './domain/todo';
 import type { Stream } from './adapters/database';
-import { token, isLoggedin, user } from './stores/auth';
-import { getAuth0Client } from './lib/auth-client';
+import { isLoggedin, user } from './stores/auth';
+import { getClient } from './auth';
 
 const dbName = import.meta.env.VITE_DB_NAME || 'Todone';
 const synced = import.meta.env.VITE_SYNCED === 'true';
@@ -13,7 +12,7 @@ const remoteUrl = import.meta.env.VITE_REMOTE_DB;
 let dbInstance: TaskDatabase | null = null;
 
 const onTokenExpired = async (): Promise<string | null> => {
-	const auth0 = getAuth0Client();
+	const auth0 = getClient();
 	if (!auth0) return null;
 
 	try {
@@ -21,14 +20,13 @@ const onTokenExpired = async (): Promise<string | null> => {
 			authorizationParams: {
 				redirect_uri: window.location.origin
 			},
-			detailedResponse: true
+			detailedResponse: true,
+			cacheMode: 'off'
 		});
-		token.set(id_token);
 		return id_token;
 	} catch {
 		isLoggedin.set(false);
 		user.set({});
-		token.set(null);
 		window.location.href = '/login';
 		return null;
 	}
@@ -41,7 +39,27 @@ const initDB = async (): Promise<TaskDatabase> => {
 		dbInstance = rxDb;
 
 		if (synced && remoteUrl) {
-			setupReplication(rxDb.getDatabase(), remoteUrl, () => get(token) ?? null, onTokenExpired);
+			setupReplication(
+				rxDb.getDatabase(),
+				remoteUrl,
+				async () => {
+					const auth0 = getClient();
+					if (!auth0) return null;
+					try {
+						const { id_token } = await auth0.getTokenSilently({
+							authorizationParams: {
+								redirect_uri: window.location.origin
+							},
+							detailedResponse: true,
+							cacheMode: 'off'
+						});
+						return id_token;
+					} catch {
+						return null;
+					}
+				},
+				onTokenExpired
+			);
 		}
 	}
 	return dbInstance;
