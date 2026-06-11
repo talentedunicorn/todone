@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Carta, MarkdownEditor } from 'carta-md';
 	import 'carta-md/default.css';
-	import { onMount, tick } from 'svelte';
 	import Button from './Button.svelte';
 	import { createEditorCarta } from '../lib/carta';
 	import { themeObserver } from '../lib/theme-observer';
@@ -10,7 +9,6 @@
 	import StatusBadge from './StatusBadge.svelte';
 	import { fly } from 'svelte/transition';
 
-	type Content = { title: string; value: string };
 	type FormTodo = Omit<Todo, 'id' | 'updated'> & { status?: TaskStatus };
 
 	interface Props {
@@ -32,19 +30,6 @@
 	}: Props = $props();
 
 	let carta = $state<Carta | null>(null);
-	let isBrowser = $state(false);
-
-	const initializeEditor = async () => {
-		await tick();
-		isBrowser = true;
-		carta = createEditorCarta({ enableCodeHighlighting: true });
-	};
-
-	onMount(() => {
-		if (typeof window === 'undefined' || !enableEditor) return;
-
-		void initializeEditor();
-	});
 
 	let titleInput: HTMLInputElement;
 
@@ -136,7 +121,7 @@ Form component with a title and content inputs
 					onUpdate: (c) => (carta = c)
 				}}
 			>
-				{#if isBrowser && carta}
+				{#if carta}
 					{#key carta}
 						<MarkdownEditor
 							{carta}
