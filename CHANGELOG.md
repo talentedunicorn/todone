@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## 2.0.6 (2026-06-19)
+
+
+### Bug Fixes
+
+* added packageManager property ([b1a5024](https://github.com/talentedunicorn/todone/commit/b1a5024bbada6ca8bb686d9cd984051d664cb93c))
+* downgraded pnpm to v10 since vercel doesn't support v11 yet ([419372e](https://github.com/talentedunicorn/todone/commit/419372e74d53d79a495ced6b489c60258e318bce))
+* removed sentry feedback form due to overlap with FAB ([#618](https://github.com/talentedunicorn/todone/issues/618)) ([d6afe91](https://github.com/talentedunicorn/todone/commit/d6afe9104f1c8d0c7c7d4240a6b44f4ffd8924f9))
+* update dependencies and resolve security vulnerabilities ([#576](https://github.com/talentedunicorn/todone/issues/576)) ([e02c6bc](https://github.com/talentedunicorn/todone/commit/e02c6bc8dcc8498d63841dd80ff0e5496405773a))
+* updated project to properly use pnpm workspace config ([a12decf](https://github.com/talentedunicorn/todone/commit/a12decf0567ebe5e563acf258ad8d678641dc9ba))
+* use fixed dates in storybook stories to prevent snapshot mismatches ([#622](https://github.com/talentedunicorn/todone/issues/622)) ([5e0f94b](https://github.com/talentedunicorn/todone/commit/5e0f94bf7c1929e62ef61c0d57ff01c5e35c7fd3))
+
 ## 2.0.5 (2026-06-11)
 
 
