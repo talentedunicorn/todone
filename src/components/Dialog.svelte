@@ -68,6 +68,7 @@
 		background: rgba(0, 0, 0, 0.4);
 		padding: 0;
 		overflow: hidden;
+		overscroll-behaviour: contain;
 	}
 
 	.dialog-overlay::backdrop {
