@@ -1,7 +1,7 @@
 {
 	"name": "todone",
 	"private": true,
-	"version": "2.0.5",
+	"version": "2.0.6",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
@@ -85,19 +85,6 @@
 		"vite-plugin-pwa": "^1.3.0",
 		"zod": "^4.4.3"
 	},
-	"packageManager": "pnpm@11.5.2",
 	"nx": {},
-	"pnpm": {
-		"overrides": {
-			"axios": "^1.15.2",
-			"fast-uri": "^3.1.2",
-			"@babel/plugin-transform-modules-systemjs": "^7.29.4",
-			"brace-expansion": "^5.0.6",
-			"yaml": "^2.8.3",
-			"follow-redirects": "^1.16.0",
-			"ws": "^8.20.1",
-			"qs": "^6.15.2",
-			"serialize-javascript": "^7.0.0"
-		}
-	}
+	"packageManager": "pnpm@10.27.0"
 }
