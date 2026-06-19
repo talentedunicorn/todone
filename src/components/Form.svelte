@@ -164,6 +164,7 @@ Form component with a title and content inputs
 		gap: 1rem;
 
 		& .Actions {
+			width: 100%;
 			display: flex;
 			gap: 1rem;
 			align-items: center;
