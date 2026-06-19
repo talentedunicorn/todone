@@ -86,7 +86,5 @@
 		"zod": "^4.4.3"
 	},
 	"nx": {},
-	"engines": {
-		"pnpm": ">=10 <11"
-	}
+	"packageManager": "pnpm@10.27.0"
 }
