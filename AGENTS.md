@@ -110,9 +110,11 @@ Stateless helpers with no reactive dependencies go in plain `.ts` files:
 The database layer follows a clean interface-driven pattern:
 
 ```
+src/domain/todo.ts            — Todo model + TaskStatus type (shared by all layers)
 src/adapters/database.ts      — TaskDatabase interface (contract)
 src/adapters/rxdb-adapter.ts  — RxDBTaskDatabase implementation
 src/db.ts                     — Convenience exports + singleton init
+src/stores/                   — Svelte stores for app state: auth, sync, theme, ui (toasts)
 ```
 
 When adding a new data operation:
