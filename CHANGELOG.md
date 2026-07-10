@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## 2.0.8 (2026-07-10)
+
+
+### Bug Fixes
+
+* removed sentry feedback form due to overlap with FAB ([#618](https://github.com/talentedunicorn/todone/issues/618)) ([d6afe91](https://github.com/talentedunicorn/todone/commit/d6afe9104f1c8d0c7c7d4240a6b44f4ffd8924f9))
+* update dependencies and resolve security vulnerabilities ([#576](https://github.com/talentedunicorn/todone/issues/576)) ([e02c6bc](https://github.com/talentedunicorn/todone/commit/e02c6bc8dcc8498d63841dd80ff0e5496405773a))
+* use fixed dates in storybook stories to prevent snapshot mismatches ([#622](https://github.com/talentedunicorn/todone/issues/622)) ([5e0f94b](https://github.com/talentedunicorn/todone/commit/5e0f94bf7c1929e62ef61c0d57ff01c5e35c7fd3))
+
 ## 2.0.7 (2026-07-04)
 
 
