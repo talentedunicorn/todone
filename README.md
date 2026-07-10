@@ -42,6 +42,10 @@ Component development uses Storybook:
 pnpm storybook
 ```
 
+### Releases
+
+Releases are automated with [release-please](https://github.com/googleapis/release-please-action). Every merge to `master` updates a running release PR; merging that PR bumps the version, updates the changelog, tags the merged commit, and publishes a GitHub Release. PR titles must follow [Conventional Commits](https://www.conventionalcommits.org) (enforced by CI), since squash merges use the PR title as the commit subject.
+
 ## Building
 
 ```bash

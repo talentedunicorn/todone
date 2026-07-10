@@ -19,10 +19,7 @@
 		"test-storybook": "vitest run",
 		"test-storybook:coverage": "vitest run --coverage",
 		"chromatic": "npx chromatic",
-		"upgrade:packages": "nx migrate latest",
-		"release:patch": "commit-and-tag-version --release-as patch",
-		"release:minor": "commit-and-tag-version --release-as minor",
-		"release:major": "commit-and-tag-version --release-as major"
+		"upgrade:packages": "nx migrate latest"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.29.7",
@@ -51,7 +48,6 @@
 		"autoprefixer": "^10.5.2",
 		"babel-loader": "^10.1.1",
 		"chromatic": "^18.0.1",
-		"commit-and-tag-version": "^12.7.3",
 		"husky": "^9.1.7",
 		"jiti": "2.7.0",
 		"nx": "23.0.1",
