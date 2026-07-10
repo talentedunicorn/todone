@@ -5,21 +5,17 @@ All notable changes to this project will be documented in this file. See [commit
 ## 2.0.7 (2026-07-04)
 
 
-### Bug Fixes
+### Chores
 
-* removed sentry feedback form due to overlap with FAB ([#618](https://github.com/talentedunicorn/todone/issues/618)) ([d6afe91](https://github.com/talentedunicorn/todone/commit/d6afe9104f1c8d0c7c7d4240a6b44f4ffd8924f9))
-* update dependencies and resolve security vulnerabilities ([#576](https://github.com/talentedunicorn/todone/issues/576)) ([e02c6bc](https://github.com/talentedunicorn/todone/commit/e02c6bc8dcc8498d63841dd80ff0e5496405773a))
-* use fixed dates in storybook stories to prevent snapshot mismatches ([#622](https://github.com/talentedunicorn/todone/issues/622)) ([5e0f94b](https://github.com/talentedunicorn/todone/commit/5e0f94bf7c1929e62ef61c0d57ff01c5e35c7fd3))
+* fix remaining esbuild vulnerability via pnpm override ([18b44eb](https://github.com/talentedunicorn/todone/commit/18b44ebd9adaf88fbcd8c37070e7f1f083fc36c7))
+* update pnpm to v11 ([#607](https://github.com/talentedunicorn/todone/issues/607)) ([8e4f900](https://github.com/talentedunicorn/todone/commit/8e4f900003cefeddde6d7c58e42d2a2187c688ac))
+* update dependencies (chromatic v18, nx v23, patch and minor updates)
 
 ## 2.0.6 (2026-06-19)
 
 
 ### Bug Fixes
 
-* added packageManager property ([b1a5024](https://github.com/talentedunicorn/todone/commit/b1a5024bbada6ca8bb686d9cd984051d664cb93c))
-* downgraded pnpm to v10 since vercel doesn't support v11 yet ([419372e](https://github.com/talentedunicorn/todone/commit/419372e74d53d79a495ced6b489c60258e318bce))
-* removed sentry feedback form due to overlap with FAB ([#618](https://github.com/talentedunicorn/todone/issues/618)) ([d6afe91](https://github.com/talentedunicorn/todone/commit/d6afe9104f1c8d0c7c7d4240a6b44f4ffd8924f9))
-* update dependencies and resolve security vulnerabilities ([#576](https://github.com/talentedunicorn/todone/issues/576)) ([e02c6bc](https://github.com/talentedunicorn/todone/commit/e02c6bc8dcc8498d63841dd80ff0e5496405773a))
 * updated project to properly use pnpm workspace config ([a12decf](https://github.com/talentedunicorn/todone/commit/a12decf0567ebe5e563acf258ad8d678641dc9ba))
 * use fixed dates in storybook stories to prevent snapshot mismatches ([#622](https://github.com/talentedunicorn/todone/issues/622)) ([5e0f94b](https://github.com/talentedunicorn/todone/commit/5e0f94bf7c1929e62ef61c0d57ff01c5e35c7fd3))
 
@@ -29,8 +25,6 @@ All notable changes to this project will be documented in this file. See [commit
 ### Bug Fixes
 
 * bypass token cache to prevent stale id_token from being served ([8913166](https://github.com/talentedunicorn/todone/commit/8913166f8c37a33c96f28f49413a03336d7705cb))
-* removed sentry feedback form due to overlap with FAB ([#618](https://github.com/talentedunicorn/todone/issues/618)) ([d6afe91](https://github.com/talentedunicorn/todone/commit/d6afe9104f1c8d0c7c7d4240a6b44f4ffd8924f9))
-* update dependencies and resolve security vulnerabilities ([#576](https://github.com/talentedunicorn/todone/issues/576)) ([e02c6bc](https://github.com/talentedunicorn/todone/commit/e02c6bc8dcc8498d63841dd80ff0e5496405773a))
 
 ## 2.0.4 (2026-06-11)
 
@@ -38,8 +32,6 @@ All notable changes to this project will be documented in this file. See [commit
 ### Bug Fixes
 
 * refreshed token not applied on retry due to race condition and bare fetch usage ([4689632](https://github.com/talentedunicorn/todone/commit/46896323cbdebc7a0f653a65432c74c663881b5f))
-* removed sentry feedback form due to overlap with FAB ([#618](https://github.com/talentedunicorn/todone/issues/618)) ([d6afe91](https://github.com/talentedunicorn/todone/commit/d6afe9104f1c8d0c7c7d4240a6b44f4ffd8924f9))
-* update dependencies and resolve security vulnerabilities ([#576](https://github.com/talentedunicorn/todone/issues/576)) ([e02c6bc](https://github.com/talentedunicorn/todone/commit/e02c6bc8dcc8498d63841dd80ff0e5496405773a))
 
 ## 2.0.3 (2026-06-11)
 
@@ -48,7 +40,6 @@ All notable changes to this project will be documented in this file. See [commit
 
 * removed sentry feedback form due to overlap with FAB ([#618](https://github.com/talentedunicorn/todone/issues/618)) ([d6afe91](https://github.com/talentedunicorn/todone/commit/d6afe9104f1c8d0c7c7d4240a6b44f4ffd8924f9))
 * removed unnecessary carta init in form ([77a9bed](https://github.com/talentedunicorn/todone/commit/77a9bed22303042e4210f3aa377274f8c6c7e078))
-* update dependencies and resolve security vulnerabilities ([#576](https://github.com/talentedunicorn/todone/issues/576)) ([e02c6bc](https://github.com/talentedunicorn/todone/commit/e02c6bc8dcc8498d63841dd80ff0e5496405773a))
 
 ## 2.0.2 (2026-06-10)
 
@@ -56,7 +47,6 @@ All notable changes to this project will be documented in this file. See [commit
 ### Bug Fixes
 
 * removed sentry feedback form due to overlap with FAB ([5a9ffde](https://github.com/talentedunicorn/todone/commit/5a9ffdea66ffa0eaeea7c1d4d706342b6d3ca97f))
-* update dependencies and resolve security vulnerabilities ([#576](https://github.com/talentedunicorn/todone/issues/576)) ([e02c6bc](https://github.com/talentedunicorn/todone/commit/e02c6bc8dcc8498d63841dd80ff0e5496405773a))
 
 ## [2.0.1](https://github.com/talentedunicorn/todone/compare/v2.0.0...v2.0.1) (2026-06-10)
 
@@ -149,55 +139,3 @@ All notable changes to this project will be documented in this file. See [commit
 - use --black for all column text colors ([54259a5](https://github.com/talentedunicorn/todone/commit/54259a5b5c4619adbb060de4be97966ba3ccb0ea))
 - use --black for modal title and close button colors ([f8eb379](https://github.com/talentedunicorn/todone/commit/f8eb3795571b6681ff364e2954f2648f95feffd1))
 - use findBy\* queries in story play functions to handle async rendering ([b5f5dae](https://github.com/talentedunicorn/todone/commit/b5f5dae4e2b992fd9b9bef2c0051c766f99a7fd9))
-
-## [2.0.0] — 2025-05-15
-
-### Added
-
-- Kanban board view with drag-and-drop column support
-- Paginated list view with RxDB-level search, sort, and pagination
-- Unified route (`/`) with view toggle between list and kanban
-- Content viewer dialog for reading task content
-- Task status badge component with cycle-to-next behavior
-- `UpdatedAt` timestamp display on task cards and content viewer
-- Reactive relative-time composable (`useRelativeTime`) with 30s ticker
-- `restore()` method on TaskDatabase interface
-- Shared StatusBadge component
-- Keyboard shortcut registration utility with input-focus scoping
-- Carta Markdown editor and viewer with code highlighting
-- ToggleTheme component (light/dark/system)
-- Export/Import JSON data controls
-- About page with task statistics
-- PWA support with offline service worker
-
-### Changed
-
-- Refactored FullScreenEditor to use shared Dialog shell
-- Unified KanbanCard across list and kanban views
-- Replaced inline status buttons with StatusBadge
-- Migrated flat list items to use KanbanCard
-- Improved table styles with cell borders, hover, and alternating rows
-- Relocated database adapters to adapter pattern (TaskDatabase interface)
-- Svelte 5 migration with runes ($state, $derived, $effect)
-
-### Fixed
-
-- Search not filtering due to Svelte 5 $effect dependency tracking
-- Keyboard shortcuts typing into input fields
-- Clipped editor on small screens
-- SVG icon visibility in ToggleTheme
-- Code and table overflow in MarkdownContent
-- Break word on code tags
-
-### Tests
-
-- Added Storybook stories for Dialog, ContentViewDialog, IconX, FlatList, KanbanView
-- Edge-case stories for KanbanCard, Toast, Button
-- Database interface tests with in-memory adapter
-- Vitest setup with Testing Library
-
-### Chores
-
-- Updated dependencies with Renovate bot
-- Bumped pnpm version
-- Package maintenance and orphaned file cleanup
