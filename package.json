@@ -86,5 +86,5 @@
 		"zod": "^4.4.3"
 	},
 	"nx": {},
-	"packageManager": "pnpm@11.8.0"
+	"packageManager": "pnpm@11.13.0"
 }
