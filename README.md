@@ -1,3 +1,5 @@
+> Moved to https://gitlab.com/talentedunicorn/todo
+
 [![Tests](https://github.com/talentedunicorn/todone/actions/workflows/tests.yml/badge.svg)](https://github.com/talentedunicorn/todone/actions/workflows/tests.yml)
 
 ![Logo](public/logo.svg)
